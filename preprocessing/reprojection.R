@@ -1,7 +1,7 @@
 ## Environmental stuff
 
 ## set working directory
-setwd("Diplomarbeit/") #Linux
+setwd("/home/schmingo/Diplomarbeit/") #Linux
 setwd("D:/Diplomarbeit/") #Windows
 
 # Libraries

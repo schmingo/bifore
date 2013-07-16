@@ -1,7 +1,8 @@
 ## Environmental stuff
 
 # Working directory
-setwd("/media/permanent/complementary_works/simon")
+setwd("Diplomarbeit/") #Linux
+setwd("D:/Diplomarbeit/") #Windows
 
 # Libraries
 lib <- c("rgdal", "raster", "parallel")
@@ -11,7 +12,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Landsat data
 
 # List files
-fls.ls <- list.files("Daten/satellite/Landsat8_2013-07-07_hai/Level1_GeoTIFF_Data_Product", 
+fls.ls <- list.files("src/satellite/Landsat8_2013-07-07_hai/Level1_GeoTIFF_Data_Product/", 
                      pattern = ".TIF$", full.names = TRUE)
 
 # # Reorder files
@@ -26,7 +27,7 @@ prj.ls <- CRS(projection(rst.ls[[1]]))
 ## Station data
 
 # List center files
-fls.hai.ctr <- list.files("Daten", pattern = "hai_plot_center.csv$", full.names = TRUE)
+fls.hai.ctr <- list.files("src/csv/", pattern = "hai_plot_center.csv$", full.names = TRUE)
 
 # Import center files as SpatialPointsDataframe objects
 tbl.hai.ctr <- read.csv2(fls.hai.ctr, dec = ".", stringsAsFactors = FALSE)
@@ -36,7 +37,7 @@ projection(tbl.hai.ctr) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 tbl.hai.ctr <- spTransform(tbl.hai.ctr, CRS = prj.ls)
 
 # List corner files
-fls.hai <- list.files("Daten", pattern = "hai_corner.csv$", full.names = TRUE)
+fls.hai <- list.files("src/csv/", pattern = "hai_corner.csv$", full.names = TRUE)
 
 # Import corner files as SpatialPointsDataframe objects
 tbl.hai <- read.csv2(fls.hai, dec = ".", stringsAsFactors = FALSE)

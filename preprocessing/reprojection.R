@@ -1,7 +1,8 @@
 ## Environmental stuff
 
-# Working directory
-setwd("/media/permanent/complementary_works/simon")
+## set working directory
+setwd("Diplomarbeit/") #Linux
+setwd("D:/Diplomarbeit/") #Windows
 
 # Libraries
 lib <- c("rgdal", "raster", "parallel")
@@ -11,7 +12,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Landsat data
 
 # List files
-fls.ls <- list.files("Daten/satellite/Landsat8_2013-07-07_hai/Level1_GeoTIFF_Data_Product", 
+fls.ls <- list.files("src/satellite/Landsat8_2013-07-07_hai/Level1_GeoTIFF_Data_Product/", 
                      pattern = ".TIF$", full.names = TRUE)
 
 # # Reorder files
@@ -26,7 +27,7 @@ prj.ls <- CRS(projection(rst.ls[[1]]))
 ## Station data
 
 # List files
-fls.ex <- list.files("Daten", pattern = ".csv$", full.names = TRUE)
+fls.ex <- list.files("src/csv/", pattern = ".csv$", full.names = TRUE)
 
 # Import files as SpatialPointsDataframe objects
 tbl.ex <- lapply(fls.ex, function(i) {
@@ -50,7 +51,7 @@ clusterEvalQ(clstr, lapply(lib, function(i) require(i, character.only = TRUE, qu
 # Reproject and save rasters
 rst.ls.rpj <- parLapply(clstr, rst.ls, function(i) {
   projectRaster(i, crs = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"), 
-                filename = paste("Daten/satellite/Landsat8_2013-07-07_hai/Level1_GeoTIFF_Data_Product/", 
+                filename = paste("src/satellite/Landsat8_2013-07-07_hai/Level1_GeoTIFF_Data_Product/", 
                                  substr(basename(rst.ls[[1]]@file@name), 1, nchar(basename(rst.ls[[1]]@file@name)) - 4), 
                                  "_longlat", sep = ""), overwrite = TRUE, format = "GTiff")
 })

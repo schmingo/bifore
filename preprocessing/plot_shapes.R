@@ -1,7 +1,8 @@
 ## Environmental stuff
 
 # Working directory
-setwd("/media/permanent/complementary_works/simon")
+setwd("Diplomarbeit/") #Linux
+setwd("D:/Diplomarbeit/") #Windows
 
 # Libraries
 lib <- c("rgdal", "raster", "parallel")
@@ -11,8 +12,8 @@ lapply(lib, function(...) require(..., character.only = TRUE, quietly = TRUE))
 ## Data import
 
 # Import shapefiles
-shp.exp <- readOGR(dsn = "Daten/Exploratorien_shp", layer = "exploratorien_gebiet")
-shp.dtl <- readOGR(dsn = "Daten/maps/src/verwaltungsgrenzen_deutschland", layer = "vg2500_sta")
+shp.exp <- readOGR(dsn = "src/shapefiles/exploratories", layer = "exploratorien_gebiet")
+shp.dtl <- readOGR(dsn = "src/shapefiles/verwaltungsgrenzen_deutschland", layer = "vg2500_sta")
 
 # Plot shapefiles
 plot(shp.dtl)

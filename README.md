@@ -1,6 +1,15 @@
-dipl_scripts
+R-scripts for diploma thesis
 ============
 
-* Das Datenverzeichnis '/Daten' liegt auf der gleichen Ebene wie der Ordner des Repositories '/scripts'
-* Die Satelliten Daten befinden sich im entsprechenden Unterordner von '/Daten'
-* *.csv Dateien befinden sich direkt in '/Daten'
+### File Organization Tree
+
+- Diplomarbeit
+    - scripts
+        - preprocessing
+        - read_view
+    - src
+        - csv
+        - satellite
+            - Landsat8_2013-07-07
+            - MODIS_2013-07-07
+        - shapefiles

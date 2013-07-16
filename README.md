@@ -10,6 +10,6 @@ R-scripts for diploma thesis
     - src
         - csv
         - satellite
-            - Landsat8_2013-07-07
-            - MODIS_2013-07-07
+            - Landsat8_2013-07-07_hai
+            - MODIS_2013-07-07_hai_sch
         - shapefiles

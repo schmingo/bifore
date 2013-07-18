@@ -79,3 +79,7 @@ coordinates(val.hai.all) <- c("Longitude", "Latitude")
 
 # Deregister parallel backend
 stopCluster(clstr)
+
+# show data
+show(val.hai.all)
+show(val.hai.all$B1)

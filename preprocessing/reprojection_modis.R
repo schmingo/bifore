@@ -17,7 +17,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ### MODIS Data ###
 
 ## List MODIS files
-files.list <- list.files("src/satellite/MODIS_2013-07-07_hai_sch/", 
+files.list <- list.files("src/satellite/MODIS_2013-07-07_hai_sch_alb/", 
                      pattern = ".tif", full.names = TRUE)
 
 ## Import MODIS files as RasterLayer objects

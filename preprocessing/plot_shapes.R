@@ -1,5 +1,8 @@
 ## Environmental stuff
 
+## Clear workspace
+rm(list = ls(all = TRUE))
+
 # Working directory
 setwd("/home/schmingo/Diplomarbeit/") #Linux
 setwd("D:/Diplomarbeit/") #Windows

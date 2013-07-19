@@ -15,7 +15,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Landsat data
 
 # List files
-fls.ls <- list.files("src/satellite/MODIS_2013-07-07_hai_sch/mrt_out/", 
+fls.ls <- list.files("src/satellite/MODIS_2013-07-07_hai_sch/", 
                      pattern = ".tif", full.names = TRUE)
 
 # # Reorder files

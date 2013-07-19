@@ -15,7 +15,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Landsat data
 
 # List files
-fls.ls <- list.files("src/satellite/MODIS_2013-07-07_hai_sch/", 
+fls.ls <- list.files("src/satellite/MODIS_2013-07-07_hai_sch/mrt_out/", 
                      pattern = ".tif", full.names = TRUE)
 
 # # Reorder files
@@ -24,7 +24,7 @@ fls.ls <- list.files("src/satellite/MODIS_2013-07-07_hai_sch/",
 
 # Import files as RasterLayer objects
 rst.ls <- lapply(fls.ls, raster)
-prj.ls <- CRS(projection(rst.ls[[1]])) ## <- PROBLEM! in eingelesenen Daten ist keine Projektion angegeben!
+prj.ls <- CRS(projection(rst.ls[[1]]))
 
 
 # ## Station data

@@ -1,4 +1,6 @@
-## Environmental stuff
+##########################
+## Reproject MODIS Data ##
+##########################
 
 ## Clear workspace
 rm(list = ls(all = TRUE))
@@ -7,40 +9,36 @@ rm(list = ls(all = TRUE))
 setwd("/home/schmingo/Diplomarbeit/") #Linux
 setwd("D:/Diplomarbeit/") #Windows
 
-# Libraries
+## Load Libraries
 lib <- c("rgdal", "raster", "parallel")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 
-## Landsat data
+### MODIS Data ###
 
-# List files
-fls.ls <- list.files("src/satellite/MODIS_2013-07-07_hai_sch/", 
+## List MODIS files
+files.list <- list.files("src/satellite/MODIS_2013-07-07_hai_sch/", 
                      pattern = ".tif", full.names = TRUE)
 
-# # Reorder files
-# tmp <- sapply(strsplit(substr(basename(fls.ls), 1, nchar(basename(fls.ls)) - 4), "_"), "[[", 2)
-# fls.ls <- fls.ls[order(as.numeric(substr(tmp, 2, nchar(tmp))))]
-
-# Import files as RasterLayer objects
-rst.ls <- lapply(fls.ls, raster)
-prj.ls <- CRS(projection(rst.ls[[1]]))
+## Import MODIS files as RasterLayer objects
+raster.list <- lapply(files.list, raster)
+proj.list <- CRS(projection(raster.list[[1]]))
 
 
 # ## Station data
 # 
 # # List files
-# fls.ex <- list.files("src/csv/", pattern = ".csv$", full.names = TRUE)
+# files.expl <- list.files("src/csv/", pattern = ".csv$", full.names = TRUE)
 # 
 # # Import files as SpatialPointsDataframe objects
-# tbl.ex <- lapply(fls.ex, function(i) {
-#   tmp.tbl <- read.csv2(i, dec = ".", stringsAsFactors = FALSE)
-#   coordinates(tmp.tbl) <- c("Longitude", "Latitude")
-#   projection(tmp.tbl) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+# table.expl <- lapply(files.expl, function(i) {
+#   temp.table <- read.csv2(i, dec = ".", stringsAsFactors = FALSE)
+#   coordinates(temp.table) <- c("Longitude", "Latitude")
+#   projection(temp.table) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 #   
-#   tmp.tbl <- spTransform(tmp.tbl, CRS = prj.ls)
+#   temp.table <- spTransform(temp.table, CRS = proj.list)
 #   
-#   return(tmp.tbl)
+#   return(temp.table)
 # })
 # 
 # 
@@ -48,14 +46,14 @@ prj.ls <- CRS(projection(rst.ls[[1]]))
 # 
 # # Parallelization
 # clstr <- makePSOCKcluster(n.cores <- detectCores())
-# clusterExport(clstr, c("lib", "rst.ls"))
+# clusterExport(clstr, c("lib", "raster.list"))
 # clusterEvalQ(clstr, lapply(lib, function(i) require(i, character.only = TRUE, quietly = TRUE)))
 # 
 # # Reproject and save rasters
-# rst.ls.rpj <- parLapply(clstr, rst.ls, function(i) {
+# raster.list.rpj <- parLapply(clstr, raster.list, function(i) {
 #   projectRaster(i, crs = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"), 
 #                 filename = paste("src/satellite/Landsat8_2013-07-07_hai/Level1_GeoTIFF_Data_Product/", 
-#                                  substr(basename(rst.ls[[1]]@file@name), 1, nchar(basename(rst.ls[[1]]@file@name)) - 4), 
+#                                  substr(basename(raster.list[[1]]@file@name), 1, nchar(basename(raster.list[[1]]@file@name)) - 4), 
 #                                  "_longlat", sep = ""), overwrite = TRUE, format = "GTiff")
 # })
 # 

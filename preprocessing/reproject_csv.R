@@ -40,6 +40,11 @@ coords.sch <- read.csv(file.coords.sch, header = TRUE, sep = ";",dec = ".",
 # [,1]    [,2]
 # [1,] -48636.65 1109577
 # [2,] 213372.05 5546301
+
+coordinates(coords.alb) <- c("Longitude", "Latitude")
+#projection(coords.alb) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs" 
+tmp.tbl <- spTransform(coordinates(coords.alb), CRS("+proj=utm +datum=WGS84 +units=m"))
+
 ###############################################################################
 ?spTransform
 

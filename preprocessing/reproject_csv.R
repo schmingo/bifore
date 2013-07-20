@@ -43,7 +43,7 @@ coords.sch <- read.csv(file.coords.sch, header = TRUE, sep = ";",dec = ".",
 
 coordinates(coords.alb) <- c("Longitude", "Latitude")
 #projection(coords.alb) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs" 
-tmp.tbl <- spTransform(coordinates(coords.alb), CRS("+proj=utm +datum=WGS84 +units=m"))
+tmp.tbl <- spTransform(coordinates(coords.alb), CRS("+proj=utm +datum=WGS84 +units=m")) #BUG!!!
 
 ###############################################################################
 ?spTransform

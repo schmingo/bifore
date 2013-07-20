@@ -6,10 +6,14 @@ rm(list = ls(all = TRUE))
 ## Required libraries
 
 
+## set working directory
+setwd("/home/schmingo/Diplomarbeit/") #Linux
+setwd("D:/Diplomarbeit/") #Windows
+
 ## set filepaths
-file.coords.alb <- "D:/Dropbox/Diplomarbeit/Daten/src/coordinates/alb_corner.csv"
-file.coords.hai <- "D:/Dropbox/Diplomarbeit/Daten/src/coordinates/hai_corner.csv"
-file.coords.sch <- "D:/Dropbox/Diplomarbeit/Daten/src/coordinates/sch_corner.csv"
+file.coords.alb <- "src/csv/alb_corner.csv"
+file.coords.hai <- "src/csv/hai_corner.csv"
+file.coords.sch <- "src/csv/sch_corner.csv"
 
 ## set working directory
 #setwd(D:/Dropbox/Diplomarbeit/Daten&read_view/)

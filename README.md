@@ -1,6 +1,7 @@
-R-scripts for diploma thesis
+BiFoRe scripts
 ============
-
+## Forecasting biodiversity using remote sensing
+- - -
 ### File Organization Tree
 
 - Diplomarbeit

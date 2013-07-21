@@ -59,3 +59,5 @@ temp.table.utm <- project(coordinates(coords.alb), output.proj) #seems to work!
 show(temp.table.utm)
 
 ## NEXT STEP -> write projected coordinates to csv
+
+#tmp.df <- data.frame(tbl.hai.ctr, ls_grey_value = tmp.val)

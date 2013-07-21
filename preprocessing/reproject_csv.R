@@ -57,3 +57,5 @@ show(temp.table.utm)
 ## Version 2 using 'project'
 temp.table.utm <- project(coordinates(coords.alb), output.proj) #seems to work!
 show(temp.table.utm)
+
+## NEXT STEP -> write projected coordinates to csv

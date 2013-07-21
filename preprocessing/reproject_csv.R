@@ -33,6 +33,7 @@ coords.sch <- read.csv(file.coords.sch, header = TRUE, sep = ";",dec = ".",
 ###############################################################################
 ###############################################################################
 ## ideas to continue
+?spTransform
 ?project
 # library(rgdal)
 # xy <- cbind(c(118, 119), c(10, 50))
@@ -40,11 +41,17 @@ coords.sch <- read.csv(file.coords.sch, header = TRUE, sep = ";",dec = ".",
 # [,1]    [,2]
 # [1,] -48636.65 1109577
 # [2,] 213372.05 5546301
-
-coordinates(coords.alb) <- c("Longitude", "Latitude")
-#projection(coords.alb) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs" 
-tmp.tbl <- spTransform(coordinates(coords.alb), CRS("+proj=utm +datum=WGS84 +units=m")) #BUG!!!
-
 ###############################################################################
-?spTransform
+###############################################################################
 
+### Transformation
+coordinates(coords.alb) <- c("Longitude", "Latitude") # import coordinates as SpatialPointsDataframe
+print(coordinates(coords.alb))
+
+## Version 1 using spTransform
+temp.table.utm <- spTransform(coordinates(coords.alb), CRS("+proj=utm +zone=32 +datum=WGS84")) #BUG!!!
+print(temp.table.utm)
+
+## Version 2 using project
+temp.table.utm <- project(coordinates(coords.alb), "+proj=utm +zone=32 ellps=WGS84") # seems to work!
+print(temp.table.utm)

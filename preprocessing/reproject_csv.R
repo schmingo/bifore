@@ -20,7 +20,7 @@ file.coords.sch <- "src/csv/sch_corner.csv"
 
 ## projection settings
 input.proj <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
-output.proj <- "+proj=utm +zone=32 ellps=WGS84" # ToDo: check if it really works :)
+output.proj <- "+proj=utm +zone=32 ellps=WGS84 +units=m"
 
 ## read data
 coords.alb <- read.csv(file.coords.alb, header = TRUE, sep = ";",dec = ".",
@@ -44,14 +44,16 @@ coords.sch <- read.csv(file.coords.sch, header = TRUE, sep = ";",dec = ".",
 ###############################################################################
 ###############################################################################
 
-### Transformation
-coordinates(coords.alb) <- c("Longitude", "Latitude") # import coordinates as SpatialPointsDataframe
-print(coordinates(coords.alb))
+### Reprojection
 
-## Version 1 using spTransform
-temp.table.utm <- spTransform(coordinates(coords.alb), CRS("+proj=utm +zone=32 +datum=WGS84")) #BUG!!!
-print(temp.table.utm)
+## Import coordinates as SpatialPointsDataframe
+coordinates(coords.alb) <- c("Longitude", "Latitude") 
+show(coordinates(coords.alb))
 
-## Version 2 using project
-temp.table.utm <- project(coordinates(coords.alb), "+proj=utm +zone=32 ellps=WGS84") # seems to work!
-print(temp.table.utm)
+## Version 1 using 'spTransform'
+temp.table.utm <- spTransform(coordinates(coords.alb), CRS(output.proj)) #BUG!!!
+show(temp.table.utm)
+
+## Version 2 using 'project'
+temp.table.utm <- project(coordinates(coords.alb), output.proj) #seems to work!
+show(temp.table.utm)

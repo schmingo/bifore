@@ -10,13 +10,13 @@ lib <- c("rgdal", "sp", "raster")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-# setwd("/home/schmingo/Diplomarbeit/") #Linux
-setwd("E:/repositories/scripts/") #Windows
+setwd("/home/schmingo/Diplomarbeit/scripts/") #Linux
+setwd("D:/Diplomarbeit/scripts/") #Windows
 
 ## set filepaths
-# file.coords.alb <- "src/csv/alb_corner.csv"
-file.coords.hai <- "E:/complementary_works/simon/Daten/hai_corner.csv"
-#file.coords.sch <- "src/csv/sch_corner.csv"
+# file.coords.alb <- "csv/alb_corner.csv"
+file.coords.hai <- "csv/hai_corner.csv"
+#file.coords.sch <- "csv/sch_corner.csv"
 
 ## projection settings
 input.proj <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"

@@ -12,6 +12,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## set working directory
 setwd("/home/schmingo/Diplomarbeit/scripts/") #Linux
 setwd("D:/Diplomarbeit/scripts/") #Windows
+setwd("hier_kommt_der_Flo ;-)")
 
 ## set filepaths
 # file.coords.alb <- "csv/alb_corner.csv"
@@ -32,17 +33,6 @@ coords.hai <- read.csv(file.coords.hai, header = TRUE, sep = ";",dec = ".",
 
 ###############################################################################
 ###############################################################################
-## ideas to continue
-#?spTransform
-#?project
-# library(rgdal)
-# xy <- cbind(c(118, 119), c(10, 50))
-# project(xy, "+proj=utm +zone=51 ellps=WGS84")
-# [,1]    [,2]
-# [1,] -48636.65 1109577
-# [2,] 213372.05 5546301
-###############################################################################
-###############################################################################
 
 ### Reprojection
 
@@ -53,16 +43,11 @@ coordinates(coords.hai) <- c("Longitude", "Latitude")
 ## Set projection of imported data
 projection(coords.hai) <-  input.proj
 
-## Version 1 using 'spTransform'
-temp.table.utm <- spTransform(coords.hai, CRS(output.proj)) #BUG!!!
+## Reproject coordinates
+temp.table.utm <- spTransform(coords.hai, CRS(output.proj))
 show(temp.table.utm)
 
-## Version 2 using 'project'
-# temp.table.utm <- project(coordinates(coords.alb), output.proj) #seems to work!
-#show(temp.table.utm)
-# Note: you cannot reproject a spatial object with an unknown CRS!
-
-## NEXT STEP -> write projected coordinates to csv
-temp.dataframe <- data.frame(temp.table.utm)
-names(temp.dataframe)[c(6, 7)] <- c("x", "y") # rename coordinate columns
-table.latlong.utm <- merge(data.frame(coords.hai), temp.dataframe) # 
+## Write projected coordinates to csv
+temp.dataframe <- data.frame(temp.table.utm) # create a dataframe
+names(temp.dataframe)[c(6, 7)] <- c("utm_x", "utm_y") # rename coordinate columns
+table.latlong.utm <- merge(data.frame(coords.hai), temp.dataframe) # merge data

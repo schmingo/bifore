@@ -10,26 +10,26 @@ lib <- c("rgdal", "sp", "raster")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-setwd("/home/schmingo/Diplomarbeit/scripts/") #Linux
-setwd("D:/Diplomarbeit/scripts/") #Windows
-setwd("hier_kommt_der_Flo ;-)")
+setwd("/home/schmingo/Diplomarbeit/scripts/") # Linux
+setwd("D:/Diplomarbeit/scripts/") # Windows
+setwd("hier_kommt_der_Flo ;-)") # Linux
+setwd("hier_kommt_der_Flo ;-)") # Windows
 
-## set filepaths
-# file.coords.alb <- "csv/alb_corner.csv"
-file.coords.hai <- "csv/hai_corner.csv"
-#file.coords.sch <- "csv/sch_corner.csv"
+## Set filepath
+file.coords <- "csv/all_plot_corner.csv"
 
 ## projection settings
 input.proj <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 output.proj <- "+proj=utm +zone=32 ellps=WGS84 +units=m"
 
+## Set output filename
+out.name <- substr(basename(file.coords), 1, nchar(basename(file.coords)) - 4)
+out.name <- paste("csv/", paste(out.name, "_utm", sep = ""), ".csv", sep = "")
+print(out.name)
+
 ## read data
-# coords.alb <- read.csv(file.coords.alb, header = TRUE, sep = ";",dec = ".",
-#                        fill = FALSE, stringsAsFactors = FALSE)
-coords.hai <- read.csv(file.coords.hai, header = TRUE, sep = ";",dec = ".",
+coords <- read.csv(file.coords, header = TRUE, sep = ";",dec = ".",
                       fill = FALSE, stringsAsFactors = FALSE)
-#coords.sch <- read.csv(file.coords.sch, header = TRUE, sep = ";",dec = ".",
-#                       fill = FALSE, stringsAsFactors = FALSE)
 
 ###############################################################################
 ###############################################################################
@@ -37,20 +37,21 @@ coords.hai <- read.csv(file.coords.hai, header = TRUE, sep = ";",dec = ".",
 ### Reprojection
 
 ## Import coordinates as SpatialPointsDataframe
-coordinates(coords.hai) <- c("Longitude", "Latitude") 
-#show(coordinates(coords.hai))
+coordinates(coords) <- c("Longitude", "Latitude") 
+#show(coordinates(coords))
 
 ## Set projection of imported data
-projection(coords.hai) <- input.proj
+projection(coords) <- input.proj
 
 ## Reproject coordinates
-temp.table.utm <- spTransform(coords.hai, CRS(output.proj))
+temp.table.utm <- spTransform(coords, CRS(output.proj))
 show(temp.table.utm)
 
-## Write projected coordinates to csv
+## Merge reprojected coordinates to csv
 temp.dataframe <- data.frame(temp.table.utm) # create a dataframe
 names(temp.dataframe)[c(6, 7)] <- c("utm_x", "utm_y") # rename coordinate columns
-table.latlong.utm <- merge(data.frame(coords.hai), temp.dataframe) # merge data
+table.latlong.utm <- merge(data.frame(coords), temp.dataframe) # merge dataframes
 
-write.table(table.latlong.utm, file = "csv/hai_corner_utm.csv", dec = ".", 
-            quote = FALSE, col.names = TRUE, row.names = FALSE, sep =";")
+## Write data to new csv
+write.table(table.latlong.utm, file = out.name, dec = ".", quote = FALSE, 
+            col.names = TRUE, row.names = FALSE, sep =";")

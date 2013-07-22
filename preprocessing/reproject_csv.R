@@ -11,30 +11,30 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
 setwd("/home/schmingo/Diplomarbeit/") #Linux
-setwd("D:/Diplomarbeit/") #Windows
+#setwd("D:/Diplomarbeit/") #Windows
 
 ## set filepaths
 file.coords.alb <- "src/csv/alb_corner.csv"
-file.coords.hai <- "src/csv/hai_corner.csv"
-file.coords.sch <- "src/csv/sch_corner.csv"
+#file.coords.hai <- "src/csv/hai_corner.csv"
+#file.coords.sch <- "src/csv/sch_corner.csv"
 
 ## projection settings
-input.proj <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+#input.proj <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 output.proj <- "+proj=utm +zone=32 ellps=WGS84 +units=m"
 
 ## read data
 coords.alb <- read.csv(file.coords.alb, header = TRUE, sep = ";",dec = ".",
                        fill = FALSE, stringsAsFactors = FALSE)
-coords.hai <- read.csv(file.coords.hai, header = TRUE, sep = ";",dec = ".",
-                       fill = FALSE, stringsAsFactors = FALSE)
-coords.sch <- read.csv(file.coords.sch, header = TRUE, sep = ";",dec = ".",
-                       fill = FALSE, stringsAsFactors = FALSE)
+#coords.hai <- read.csv(file.coords.hai, header = TRUE, sep = ";",dec = ".",
+#                       fill = FALSE, stringsAsFactors = FALSE)
+#coords.sch <- read.csv(file.coords.sch, header = TRUE, sep = ";",dec = ".",
+#                       fill = FALSE, stringsAsFactors = FALSE)
 
 ###############################################################################
 ###############################################################################
 ## ideas to continue
-?spTransform
-?project
+#?spTransform
+#?project
 # library(rgdal)
 # xy <- cbind(c(118, 119), c(10, 50))
 # project(xy, "+proj=utm +zone=51 ellps=WGS84")
@@ -48,16 +48,16 @@ coords.sch <- read.csv(file.coords.sch, header = TRUE, sep = ";",dec = ".",
 
 ## Import coordinates as SpatialPointsDataframe
 coordinates(coords.alb) <- c("Longitude", "Latitude") 
-show(coordinates(coords.alb))
+#show(coordinates(coords.alb))
 
 ## Version 1 using 'spTransform'
-temp.table.utm <- spTransform(coordinates(coords.alb), CRS(output.proj)) #BUG!!!
-show(temp.table.utm)
+#temp.table.utm <- spTransform(coordinates(coords.alb), CRS(output.proj)) #BUG!!!
+#show(temp.table.utm)
 
 ## Version 2 using 'project'
 temp.table.utm <- project(coordinates(coords.alb), output.proj) #seems to work!
-show(temp.table.utm)
+#show(temp.table.utm)
 
 ## NEXT STEP -> write projected coordinates to csv
-
-#tmp.df <- data.frame(tbl.hai.ctr, ls_grey_value = tmp.val)
+temp.dataframe <- data.frame(temp.table.utm)
+table.latlong.utm <- merge(coords.alb, temp.dataframe) # 

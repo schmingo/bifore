@@ -49,7 +49,7 @@ show(temp.table.utm)
 
 ## Merge reprojected coordinates to csv
 temp.dataframe <- data.frame(temp.table.utm) # create a dataframe
-names(temp.dataframe)[c(6, 7)] <- c("utm_x", "utm_y") # rename coordinate columns
+names(temp.dataframe)[c(6, 7)] <- c("utm_x", "utm_y") # rename coordinate columns (IMPORTANT: check number of columns!)
 table.latlong.utm <- merge(data.frame(coords), temp.dataframe) # merge dataframes
 
 ## Write data to new csv

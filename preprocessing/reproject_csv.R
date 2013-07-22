@@ -41,7 +41,7 @@ coordinates(coords.hai) <- c("Longitude", "Latitude")
 #show(coordinates(coords.hai))
 
 ## Set projection of imported data
-projection(coords.hai) <-  input.proj
+projection(coords.hai) <- input.proj
 
 ## Reproject coordinates
 temp.table.utm <- spTransform(coords.hai, CRS(output.proj))
@@ -51,3 +51,6 @@ show(temp.table.utm)
 temp.dataframe <- data.frame(temp.table.utm) # create a dataframe
 names(temp.dataframe)[c(6, 7)] <- c("utm_x", "utm_y") # rename coordinate columns
 table.latlong.utm <- merge(data.frame(coords.hai), temp.dataframe) # merge data
+
+write.table(table.latlong.utm, file = "csv/hai_corner_utm.csv", dec = ".", 
+            quote = FALSE, col.names = TRUE, row.names = FALSE, sep =";")

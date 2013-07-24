@@ -3,7 +3,7 @@
 ##
 ## REPROJECT LANDSAT8 Data
 ##
-## Author: Simon Schlauss
+## Author: Simon Schlauss (sschlauss@gmail.com)
 ## Version: 2013-07-23
 ##
 ################################################################################

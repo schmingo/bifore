@@ -3,7 +3,7 @@
 ##
 ## PLOT SHAPEFILES
 ##
-## Author: Simon Schlauss
+## Author: Simon Schlauss (sschlauss@gmail.com)
 ## Version: 2013-07-23
 ##
 ################################################################################

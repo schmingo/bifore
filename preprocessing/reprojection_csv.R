@@ -16,13 +16,13 @@ lib <- c("rgdal", "sp", "raster")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-setwd("/home/schmingo/Diplomarbeit/scripts/") # Linux
-setwd("D:/Diplomarbeit/scripts/") # Windows
+setwd("/home/schmingo/Diplomarbeit/") # Linux
+setwd("D:/Diplomarbeit/") # Windows
 setwd("hier_kommt_der_Flo ;-)") # Linux
 setwd("hier_kommt_der_Flo ;-)") # Windows
 
 ## Set filepath
-file.coords <- "csv/all_plot_corner.csv"
+file.coords <- "src/csv/all_plot_corner.csv"
 
 ## projection settings
 input.proj <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
@@ -30,7 +30,7 @@ output.proj <- "+proj=utm +zone=32 ellps=WGS84 +units=m"
 
 ## Set output filename
 out.name <- substr(basename(file.coords), 1, nchar(basename(file.coords)) - 4)
-out.name <- paste("csv/", paste(out.name, "_utm", sep = ""), ".csv", sep = "")
+out.name <- paste("src/csv/", paste(out.name, "_utm", sep = ""), ".csv", sep = "")
 print(out.name)
 
 ## read data

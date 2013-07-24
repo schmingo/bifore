@@ -40,7 +40,7 @@ prj.ls <- CRS(projection(rst.ls[[1]]))
 ### Station data
 
 ## List files
-fls.ex <- list.files("scripts/csv/", pattern = ".csv$", full.names = TRUE)
+fls.ex <- list.files("src/csv/", pattern = ".csv$", full.names = TRUE)
 
 ## Import files as SpatialPointsDataframe objects
 tbl.ex <- lapply(fls.ex, function(i) {

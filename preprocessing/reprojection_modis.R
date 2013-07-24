@@ -1,20 +1,28 @@
-##########################
-## Reproject MODIS Data ##
-##########################
+################################################################################
+## BiFoRe Scripts
+##
+## REPROJECT MODIS DATA
+##
+## Author: Simon Schlauss
+## Version: 2013-07-23
+##
+################################################################################
 
 ## Clear workspace
 rm(list = ls(all = TRUE))
 
-## set working directory
-setwd("/home/schmingo/Diplomarbeit/") #Linux
-setwd("D:/Diplomarbeit/") #Windows
-
-## Load Libraries
-lib <- c("rgdal", "raster", "parallel")
+## Required libraries
+lib <- c("rgdal", "parallel", "raster")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
+## set working directory
+setwd("/home/schmingo/Diplomarbeit/") # Linux
+setwd("D:/Diplomarbeit/") # Windows
+setwd("hier_kommt_der_Flo ;-)") # Linux
+setwd("hier_kommt_der_Flo ;-)") # Windows
 
-### MODIS Data ###
+
+### MODIS Data
 
 ## List MODIS files
 files.list <- list.files("src/satellite/MODIS_2013-07-07_hai_sch_alb/", 

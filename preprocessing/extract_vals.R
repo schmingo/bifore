@@ -94,5 +94,10 @@ coordinates(val.hai.all) <- c("Longitude", "Latitude")
 stopCluster(clstr)
 
 # show data
+str(val.hai.all)
 show(val.hai.all)
 show(val.hai.all$B1)
+
+## Write data to new csv
+write.table(val.hai.all, file = "src/csv/hai_landsat8_values.csv", dec = ".", quote = FALSE, 
+            col.names = TRUE, row.names = FALSE, sep =";")

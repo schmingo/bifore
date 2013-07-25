@@ -99,5 +99,5 @@ show(val.hai.all)
 show(val.hai.all$B1)
 
 ## Write data to new csv
-write.table(val.hai.all, file = "src/csv/hai_landsat8_values.csv", dec = ".", quote = FALSE, 
+write.table(val.hai.all, file = "src/csv/hai_greyvalues_landsat8.csv", dec = ".", quote = FALSE, 
             col.names = TRUE, row.names = FALSE, sep =";")

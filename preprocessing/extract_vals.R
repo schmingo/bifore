@@ -39,17 +39,17 @@ projection.layers <- CRS(projection(raster.layers[[1]]))
 
 ### Create extends from *.csv
 
-# ## Option 1: List CENTER files
-# files.hai.center <- list.files("src/csv/", pattern = "hai_plot_center.csv$", full.names = TRUE)
-# 
-# ## Import CENTER files as SpatialPointsDataframe objects
-# table.hai.center <- read.csv2(files.hai.center, dec = ".", stringsAsFactors = FALSE)
-# coordinates(table.hai.center) <- c("Longitude", "Latitude")
-# projection(table.hai.center) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
-# 
-# table.hai.center <- spTransform(table.hai.center, CRS = projection.layers)
+## List CENTER files
+files.hai.center <- list.files("src/csv/", pattern = "hai_plot_center.csv$", full.names = TRUE)
 
-## Option 2: List CORNER files
+## Import CENTER files as SpatialPointsDataframe objects
+table.hai.center <- read.csv2(files.hai.center, dec = ".", stringsAsFactors = FALSE)
+coordinates(table.hai.center) <- c("Longitude", "Latitude")
+projection(table.hai.center) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+ 
+table.hai.center <- spTransform(table.hai.center, CRS = projection.layers)
+
+## List CORNER files
 files.hai.corner <- list.files("src/csv/", pattern = "hai_corner.csv$", full.names = TRUE)
 
 ## Import CORNER files as SpatialPointsDataframe objects

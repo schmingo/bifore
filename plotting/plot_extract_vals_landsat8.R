@@ -16,26 +16,24 @@ lib <- c("ggplot2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Diplomarbeit/") # Linux
+#setwd("/home/schmingo/Diplomarbeit/") # Linux
 setwd("D:/Diplomarbeit/") # Windows
-setwd("hier_kommt_der_Flo ;-)") # Linux
-setwd("hier_kommt_der_Flo ;-)") # Windows
+#setwd("hier_kommt_der_Flo ;-)") # Linux
+#setwd("hier_kommt_der_Flo ;-)") # Windows
 
 ## Import files
-table.all <- read.csv2("src/csv/hai_greyvalues_landsat8.csv", dec = ".", stringsAsFactors = FALSE))
+table.all <- read.csv2("src/csv/hai_greyvalues_landsat8.csv", dec = ".", stringsAsFactors = FALSE)
 
 
 ## Create Subsets
 table.grass <- subset(table.all, Location == "Grassland")
-table.hai.forest <- subset(table.all, Location == "Forest")
+table.forest <- subset(table.all, Location == "Forest")
 
 table.grass <- table.grass[, -c(2:6)] # deletes unused columns
 table.forest <- table.forest[, -c(2:6)]
 
 #df <- df[, c(1, 5:10)] # fügt bestimmt spalten zusammen
 #df <- df[, -c(2:4)] # löscht bestimmte spalten
-
-
 
 ## Plot greyvalues of a specific channel
 scatter.ggplot <- ggplot(aes(x = Plotname, y = B1), data = table.grass)

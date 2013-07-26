@@ -41,4 +41,4 @@ g.sc <- scatter.ggplot + geom_point()
 print(g.sc)
 
 ## Plot using qplot
-qplot(Plotname, B1, data = table.grass, geom = "point"
+qplot(Plotname, B1, data = table.grass, geom = "point")

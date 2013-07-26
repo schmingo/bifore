@@ -39,3 +39,6 @@ table.forest <- table.forest[, -c(2:6)]
 scatter.ggplot <- ggplot(aes(x = Plotname, y = B1), data = table.grass)
 g.sc <- scatter.ggplot + geom_point()
 print(g.sc)
+
+## Plot using qplot
+qplot(Plotname, B1, data = table.grass, geom = "point"

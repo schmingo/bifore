@@ -15,8 +15,13 @@ rm(list = ls(all = TRUE))
 lib <- c("ggplot2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
-## set working directory
+## Set working directory
 setwd("/home/schmingo/Diplomarbeit/") # Linux
 setwd("D:/Diplomarbeit/") # Windows
 setwd("hier_kommt_der_Flo ;-)") # Linux
 setwd("hier_kommt_der_Flo ;-)") # Windows
+
+
+## Import files
+table.hai.land8 <- "src/csv/hai_greyvalues_landsat8.csv$"
+

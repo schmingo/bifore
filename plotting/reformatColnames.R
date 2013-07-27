@@ -5,7 +5,7 @@ reformatColnames <- function(x) {
   tmp.bands <- as.numeric(sapply(strsplit(tmp.names, "B"), "[[", 2))
   tmp.bands <- formatC(tmp.bands, width = 2, format = "d", flag = "0")
   
-  names(x)[2:(ncol(i)-1)] <- paste("B", tmp.bands, sep = "")
+  names(x)[2:(ncol(x)-1)] <- paste("B", tmp.bands, sep = "")
   
   # Rearrange columns in ascending order
   x <- x[, c(1, order(names(x)[2:ncol(x)]) + 1)]

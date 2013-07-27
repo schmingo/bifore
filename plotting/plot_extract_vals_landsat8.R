@@ -4,7 +4,7 @@
 ## PLOTTING EXTRACTED VALUES FROM SATELLITE DATA
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-07-26
+## Version: 2013-07-27
 ##
 ################################################################################
 
@@ -34,16 +34,6 @@ table.forest <- subset(table.all, Location == "Forest")
 table.grass <- table.grass[, -c(2:6)] # deletes unused columns
 table.forest <- table.forest[, -c(2:6)]
 
-#df <- df[, c(1, 5:10)] # fügt bestimmt spalten zusammen
-#df <- df[, -c(2:4)] # löscht bestimmte spalten
-
-# Load and execute function to reformat colnames of input data
-source("scripts/plotting/reformatColnames.R")
-
-table.grass <- reformatColnames(table.grass)
-table.forest <- reformatColnames(table.forest)
-
-
 ## Plot greyvalues of a specific channel
 scatter.ggplot <- ggplot(aes(x = Plotname, y = B1), data = table.grass)
 g.sc <- scatter.ggplot + geom_point()
@@ -57,11 +47,3 @@ table.grass.heg01 <- subset(table.grass, Plotname == "HEG01")
 xyplot(table.grass.heg01[, 2:ncol(table.grass.heg01)] ~ 
          as.factor(names(table.grass.heg01[2:ncol(table.grass.heg01)])), 
        type = "b", xlab = "Bands", ylab = "Grey value")
-
-## Same Plot as above using ggplot2
-gg.greyval.heg01 <- ggplot(aes(x = as.factor(names(table.grass.heg01[2:ncol(table.grass.heg01)])),
-                               y = table.grass.heg01[, 2:ncol(table.grass.heg01)]),
-                               data = table.grass.heg01)
-gg.scatter <- gg.greyval.heg01 + geom_point()
-print(gg.scatter)
-                           

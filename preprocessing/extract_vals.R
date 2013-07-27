@@ -97,14 +97,14 @@ coordinates(values.hai.all) <- c("Longitude", "Latitude")
 stopCluster(clstr)
 
 ## Reformat Colnames ###########################################################
-tmp.names <- names(values.hai.all)[5:(ncol(values.hai.all))]
+tmp.names <- names(values.hai.all)[5:(ncol(values.hai.all)-1)]
 tmp.bands <- as.numeric(sapply(strsplit(tmp.names, "B"), "[[", 2))
 tmp.bands <- formatC(tmp.bands, width = 2, format = "d", flag = "0")
 
-names(values.hai.all)[5:(ncol(x)-1)] <- paste("B", tmp.bands, sep = "")
+names(values.hai.all)[5:(ncol(values.hai.all)-1)] <- paste("B", tmp.bands, sep = "")
 
 # Rearrange columns in ascending order
-values.hai.all <- values.hai.all[, c(1, order(names(x)[5:ncol(x)]) + 1)]
+values.hai.all <- values.hai.all[, c(1, order(names(values.hai.all)[5:ncol(values.hai.all)]) + 1)]
 ################################################################################
 
 ## Write data to new csv

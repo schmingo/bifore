@@ -28,10 +28,6 @@ setwd("hier_kommt_der_Flo ;-)") # Windows
 files.list.sat <- list.files("src/satellite/Landsat8_2013-07-07_hai/Level1_GeoTIFF_Data_Product/", 
                      pattern = ".TIF$", full.names = TRUE)
 
-# ## Reorder files
-# tmp <- sapply(strsplit(substr(basename(files.list.sat), 1, nchar(basename(files.list.sat)) - 4), "_"), "[[", 2)
-# files.list.sat <- files.list.sat[order(as.numeric(substr(tmp, 2, nchar(tmp))))]
-
 ## Import files as RasterLayer objects
 raster.layers <- lapply(files.list.sat, raster)
 projection.layers <- CRS(projection(raster.layers[[1]]))
@@ -96,16 +92,13 @@ coordinates(values.hai.all) <- c("Longitude", "Latitude")
 ## Deregister parallel backend
 stopCluster(clstr)
 
-## Reformat Colnames ###########################################################
+## Reformat Colnames
 tmp.names <- names(values.hai.all)[5:(ncol(values.hai.all)-1)]
 tmp.bands <- as.numeric(sapply(strsplit(tmp.names, "B"), "[[", 2))
 tmp.bands <- formatC(tmp.bands, width = 2, format = "d", flag = "0")
 
 names(values.hai.all)[5:(ncol(values.hai.all)-1)] <- paste("B", tmp.bands, sep = "")
-
-# Rearrange columns in ascending order
-values.hai.all <- values.hai.all[, c(1, order(names(values.hai.all)[5:ncol(values.hai.all)]) + 1)]
-################################################################################
+show(values.hai.all)
 
 ## Write data to new csv
 write.table(values.hai.all, file = "src/csv/hai_greyvalues_landsat8.csv", dec = ".", quote = FALSE, 

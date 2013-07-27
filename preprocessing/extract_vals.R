@@ -96,6 +96,17 @@ coordinates(values.hai.all) <- c("Longitude", "Latitude")
 ## Deregister parallel backend
 stopCluster(clstr)
 
+## Reformat Colnames ###########################################################
+tmp.names <- names(values.hai.all)[5:(ncol(values.hai.all))]
+tmp.bands <- as.numeric(sapply(strsplit(tmp.names, "B"), "[[", 2))
+tmp.bands <- formatC(tmp.bands, width = 2, format = "d", flag = "0")
+
+names(values.hai.all)[5:(ncol(x)-1)] <- paste("B", tmp.bands, sep = "")
+
+# Rearrange columns in ascending order
+values.hai.all <- values.hai.all[, c(1, order(names(x)[5:ncol(x)]) + 1)]
+################################################################################
+
 ## Write data to new csv
 write.table(values.hai.all, file = "src/csv/hai_greyvalues_landsat8.csv", dec = ".", quote = FALSE, 
             col.names = TRUE, row.names = FALSE, sep =";")

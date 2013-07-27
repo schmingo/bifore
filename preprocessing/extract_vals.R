@@ -98,7 +98,10 @@ tmp.bands <- as.numeric(sapply(strsplit(tmp.names, "B"), "[[", 2))
 tmp.bands <- formatC(tmp.bands, width = 2, format = "d", flag = "0")
 
 names(values.hai.all)[5:(ncol(values.hai.all)-1)] <- paste("B", tmp.bands, sep = "")
-show(values.hai.all)
+
+values.hai.all <- values.hai.all[, c("Plotname","Plotid","Status","Location", 
+                                       "B01","B02","B03","B04","B05","B06", 
+                                       "B07", "B08", "B09", "B10", "B11", "BQA")]
 
 ## Write data to new csv
 write.table(values.hai.all, file = "src/csv/hai_greyvalues_landsat8.csv", dec = ".", quote = FALSE, 

@@ -57,3 +57,11 @@ table.grass.heg01 <- subset(table.grass, Plotname == "HEG01")
 xyplot(table.grass.heg01[, 2:ncol(table.grass.heg01)] ~ 
          as.factor(names(table.grass.heg01[2:ncol(table.grass.heg01)])), 
        type = "b", xlab = "Bands", ylab = "Grey value")
+
+## Same Plot as above using ggplot2
+gg.greyval.heg01 <- ggplot(aes(x = as.factor(names(table.grass.heg01[2:ncol(table.grass.heg01)])),
+                               y = table.grass.heg01[, 2:ncol(table.grass.heg01)]),
+                               data = table.grass.heg01)
+gg.scatter <- gg.greyval.heg01 + geom_point()
+print(gg.scatter)
+                           

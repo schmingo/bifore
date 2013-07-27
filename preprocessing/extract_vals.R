@@ -4,7 +4,7 @@
 ## EXTRACT GREYVALUES FROM SATELLITE DATA USING CORNER COORDINATES
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-07-26
+## Version: 2013-07-27
 ##
 ################################################################################
 

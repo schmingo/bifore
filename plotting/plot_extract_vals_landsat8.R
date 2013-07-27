@@ -38,7 +38,7 @@ table.forest <- table.forest[, -c(2:6)]
 #df <- df[, -c(2:4)] # löscht bestimmte spalten
 
 # Load and execute function to reformat colnames of input data
-source("plotting/reformatColnames.R")
+source("scripts/plotting/reformatColnames.R")
 
 table.grass <- reformatColnames(table.grass)
 table.forest <- reformatColnames(table.forest)

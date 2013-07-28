@@ -16,15 +16,14 @@ lib <- c("ggplot2", "latticeExtra")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Diplomarbeit/") # Linux
+#setwd("/home/schmingo/Diplomarbeit/") # Linux
 setwd("D:/Diplomarbeit/") # Windows
 # setwd("hier_kommt_der_Flo ;-)") # Linux
-setwd("E:/repositories/scripts") # Windows
+#setwd("E:/repositories/scripts") # Windows
 
 ## Import files
 table.all <- read.csv2("src/csv/hai_greyvalues_landsat8.csv", dec = ".", stringsAsFactors = FALSE)
-table.all <- read.csv2("C:/Users/fdetsch/Downloads/hai_greyvalues_landsat8.csv", 
-                       dec = ".", stringsAsFactors = FALSE)
+#table.all <- read.csv2("C:/Users/fdetsch/Downloads/hai_greyvalues_landsat8.csv", dec = ".", stringsAsFactors = FALSE)
 
 
 ## Create Subsets
@@ -51,10 +50,14 @@ xyplot(table.grass.heg01[, 2:ncol(table.grass.heg01)] ~
 ## ggplot try
 str(table.grass.heg01)
 print(colnames(table.grass.heg01))
-print(as.factor(table.grass.heg01[1,2:13]))
+print(table.grass.heg01[1,2:13])
 print(table.grass.heg01)
+print(table.grass)
+summary(table.grass.heg01)
+str(table.grass.heg01)
+show(table.grass.heg01)
 
-ggplot(data = table.grass.heg01, aes(x = as.factor(names(table.grass.heg01[2:ncol(table.grass.heg01)])), 
-                                     y = table.grass.heg01[1,2:13])) +  geom_point()
-
-qplot(as.factor(names(table.grass.heg01[2:ncol(table.grass.heg01)])), table.grass.heg01[1,2:13], data = table.grass.heg01, geom = "point")
+hefeweizen <- ggplot(data = table.grass, aes(x = as.factor(names(table.grass[2:ncol(table.grass)])), 
+                                     y = table.grass[1,2:ncol(table.grass)])  +  geom_point()
+                     
+qplot(as.factor(names(table.grass.heg01[2:ncol(table.grass.heg01)])), data.frame(table.grass.heg01[1,2:13]), data = table.grass.heg01, geom = "bar")

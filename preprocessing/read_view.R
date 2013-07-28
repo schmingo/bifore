@@ -1,4 +1,12 @@
-## READ AND VIEW COORDINATES
+################################################################################
+## BiFoRe Scripts
+##
+## Import and view csv files
+##
+## Author: Simon Schlauss (sschlauss@gmail.com)
+## Version: 2013-07-28
+##
+################################################################################
 
 ## Clear workspace
 rm(list = ls(all = TRUE))

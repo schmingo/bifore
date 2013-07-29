@@ -51,6 +51,9 @@ grass.123.t <- data.frame(t(grass.123))
 ## melt dataframes for boxplot
 grass.melt <- melt(grass)
 forest.melt <- melt(forest)
+grass.t.melt <- melt(grass.t)
+forest.t.melt <- melt(forest.t)
+grass.123.t.melt <- melt(grass.123.t)
 
 ## IMPORTANT
 ggplot(data = grass.melt, aes(x = variable, y = value))+ geom_boxplot()
@@ -61,7 +64,9 @@ summary(forest$B05)
 
 
 ### scatterplot (under construction)
-ggplot(data = grass.t, aes(rownames(grass.t), HEG01)) + geom_point()
+qplot(data=grass.t.melt,x=variable,y=value,facets = variable~value)
+qplot
+ggplot(data = grass.melt, aes(x = variable, y = value)) + geom_point()
 
 ## scatterplot (qplot-version)
 qplot(rownames(grass.t),HEG01, data = grass.t, geom=c("point"))

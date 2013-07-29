@@ -51,10 +51,12 @@ grass.123.t <- data.frame(t(grass.123))
 ## melt dataframes for boxplot
 grass.t.melt <- melt(grass.t) # melt dataframes for boxplot
 grass.123.t.melt <- melt(grass.123.t) # melt dataframes for boxplot
+grass.melt <- melt(grass)
 
 ggplot(data = grass.123.t.melt, aes(x = variable, y = value))+ geom_boxplot()
 ggplot(data = grass.t.melt, aes(x = variable, y = value))+ geom_boxplot()
-
+ggplot(data = grass.melt, aes(x = variable, y = value))+ geom_boxplot()
+summary(grass$B05)
 
 ### scatterplot
 ggplot(data = grass.t, aes(rownames(grass.t), HEG01)) + geom_point()

@@ -23,20 +23,20 @@ setwd("/home/schmingo/Diplomarbeit/") # Linux
 
 ## Import data 
 table.all <- read.csv2("src/csv/hai_greyvalues_landsat8.csv", dec = ".",
-                       header = TRUE, row.names = 1, stringsAsFactors = FALSE)
+                       header = TRUE, stringsAsFactors = FALSE)
 #table.all <- read.csv2("C:/Users/fdetsch/Downloads/hai_greyvalues_landsat8.csv", dec = ".", stringsAsFactors = FALSE)
 str(table.all)
 
 ## Transpose data
-table.all.trans <- data.frame(t(table.all))
-str(table.all.trans)
+#table.all.trans <- data.frame(t(table.all))
+#str(table.all.trans)
 
 ## Create Subsets
 table.grass <- subset(table.all, Location == "Grassland")
 table.forest <- subset(table.all, Location == "Forest")
 
-table.grass <- table.grass[, -c(1:5)] # deletes unused columns
-table.forest <- table.forest[, -c(1:5)]
+table.grass <- table.grass[, -c(2:6)] # deletes unused columns
+table.forest <- table.forest[, -c(2:6)]
 
 table.grass.trans <- data.frame(t(table.grass))
 table.forest.trans <- data.frame(t(table.forest))

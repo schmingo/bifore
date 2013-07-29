@@ -17,7 +17,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
 setwd("/home/schmingo/Diplomarbeit/") # Linux
-#setwd("D:/Diplomarbeit/") # Windows
+setwd("D:/Diplomarbeit/") # Windows
 # setwd("hier_kommt_der_Flo ;-)") # Linux
 #setwd("E:/repositories/scripts") # Windows
 
@@ -49,14 +49,21 @@ grass.123.t <- data.frame(t(grass.123))
 
 ### boxplot
 ## melt dataframes for boxplot
-grass.t.melt <- melt(grass.t) # melt dataframes for boxplot
-grass.123.t.melt <- melt(grass.123.t) # melt dataframes for boxplot
+grass.t.melt <- melt(grass.t)
+grass.123.t.melt <- melt(grass.123.t)
 grass.melt <- melt(grass)
+forest.melt <- melt(forest)
 
 ggplot(data = grass.123.t.melt, aes(x = variable, y = value))+ geom_boxplot()
 ggplot(data = grass.t.melt, aes(x = variable, y = value))+ geom_boxplot()
+
+## IMPORTANT
 ggplot(data = grass.melt, aes(x = variable, y = value))+ geom_boxplot()
+ggplot(data = forest.melt, aes(x = variable, y = value))+ geom_boxplot()
+
 summary(grass$B05)
+summary(forest$B05)
+
 
 ### scatterplot
 ggplot(data = grass.t, aes(rownames(grass.t), HEG01)) + geom_point()

@@ -23,7 +23,7 @@ setwd("/home/schmingo/Diplomarbeit/") # Linux
 
 ## Import data 
 table.all <- read.csv2("src/csv/hai_greyvalues_landsat8.csv", dec = ".",
-                       header = TRUE, stringsAsFactors = FALSE)
+                       header = TRUE, row.name = 1, stringsAsFactors = FALSE)
 #table.all <- read.csv2("C:/Users/fdetsch/Downloads/hai_greyvalues_landsat8.csv", dec = ".", stringsAsFactors = FALSE)
 str(table.all)
 
@@ -35,11 +35,12 @@ str(table.all)
 table.grass <- subset(table.all, Location == "Grassland")
 table.forest <- subset(table.all, Location == "Forest")
 
-table.grass <- table.grass[, -c(2:6)] # deletes unused columns
-table.forest <- table.forest[, -c(2:6)]
+table.grass <- table.grass[, -c(1:5)] # deletes unused columns
+table.forest <- table.forest[, -c(1:5)]
 
 table.grass.trans <- data.frame(t(table.grass))
 table.forest.trans <- data.frame(t(table.forest))
+rownames(table.grass.trans)
 
 str(table.grass.trans)
 summary(table.grass.trans)
@@ -50,7 +51,7 @@ print(row.names(table.grass.trans))
 ################################################################################
 
 ## ggplot try
-ggplot(table.grass.trans, aes(rownames(table.grass.trans),X1)) + geom_point()
+ggplot(table.grass.trans, aes(rownames(table.grass.trans), HEG01)) + geom_bar()
 
 
 

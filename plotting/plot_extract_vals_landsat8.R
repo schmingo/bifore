@@ -4,7 +4,7 @@
 ## PLOTTING EXTRACTED VALUES FROM SATELLITE DATA
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-07-27
+## Version: 2013-07-28
 ##
 ################################################################################
 
@@ -49,13 +49,14 @@ str(table.grass.trans)
 ######################### Plotting #############################################
 ################################################################################
 
-## ggplot try
-table.grass.melt <- melt(table.grass)
+## melt dataframes for boxplot
 table.grass.trans.melt <- melt(table.grass.trans)
 table.grass.123.trans.melt <- melt(table.grass.123.trans)
 
+## ggplot2 boxplot
 ggplot(data = table.grass.123.trans.melt, aes(x = variable, y = value)) + geom_boxplot()
 
+## ggplot2 point
 ggplot(data = table.grass.trans, aes(rownames(table.grass.trans), HEG01)) + geom_point()
 qplot(rownames(table.grass.trans),HEG01, data = table.grass.trans, geom=c("point"))
 

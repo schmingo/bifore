@@ -23,7 +23,7 @@ setwd("D:/Diplomarbeit/") # Windows
 
 ## Import data 
 all <- read.csv2("src/csv/hai_greyvalues_landsat8.csv", dec = ".",
-                       header = TRUE, row.name = 1, stringsAsFactors = FALSE)
+                       header = TRUE, stringsAsFactors = FALSE)
 
 
 ### Create Subsets
@@ -33,43 +33,31 @@ grass <- subset(all, Location == "Grassland")
 forest <- subset(all, Location == "Forest")
 
 ## delete redundant columns (coordinates, etc.)
-grass <- grass[, -c(1:5)]
-forest <- forest[, -c(1:5)]
+grass <- grass[, -c(2:6)]
+forest <- forest[, -c(2:6)]
 
 ## special exploratories-plots
 grass.123 <- grass[c(1:3),]
 
 ## transpose dataframes
-grass.t <- data.frame(t(grass))
-forest.t <- data.frame(t(forest))
-grass.123.t <- data.frame(t(grass.123))
+# grass.t <- data.frame(t(grass))
+# forest.t <- data.frame(t(forest))
+# grass.123.t <- data.frame(t(grass.123))
 
 ########################### Plotting ###########################################
 
 
 ### boxplot
 ## melt dataframes for boxplot
-grass.melt <- melt(grass)
-forest.melt <- melt(forest)
-grass.t.melt <- melt(grass.t)
-forest.t.melt <- melt(forest.t)
-grass.123.t.melt <- melt(grass.123.t)
+grass.melt <- melt(grass, id = c("Plotname"), measured = c(grass[,2:nrow(grass)]))
+forest.melt <- melt(forest, id = c("Plotname"), measured = c(forest[,2:nrow(forest)]))
+grass.123.melt <- melt(grass.123, id = c("Plotname"), measured = c(grass.123[,2:nrow(grass.123)]))
 
-## IMPORTANT
+## plot using ggplot2 package
 ggplot(data = grass.melt, aes(x = variable, y = value))+ geom_boxplot()
 ggplot(data = forest.melt, aes(x = variable, y = value))+ geom_boxplot()
+ggplot(data = grass.123.melt, aes(x = variable, y = value))+ geom_boxplot()
 
-summary(grass$B05)
-summary(forest$B05)
-
-
-### scatterplot (under construction)
-qplot(data=grass.t.melt,x=variable,y=value,facets = variable~value)
-qplot
-ggplot(data = grass.melt, aes(x = variable, y = value)) + geom_point()
-
-## scatterplot (qplot-version)
-qplot(rownames(grass.t),HEG01, data = grass.t, geom=c("point"))
 
 ################################################################################
 # ## Plot by Florian

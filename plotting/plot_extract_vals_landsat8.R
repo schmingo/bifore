@@ -12,7 +12,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("ggplot2", "latticeExtra", "reshape2")
+lib <- c("ggplot2", "latticeExtra", "reshape2", "RColorBrewer", "colorspace")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory

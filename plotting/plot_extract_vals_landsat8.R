@@ -56,7 +56,7 @@ grass.123.melt <- melt(grass.123, id = c("Plotname"), measured = c(grass.123[,2:
 ## plot using ggplot2 package
 ggplot(data = grass.melt, aes(x = variable, y = value))+ geom_boxplot()
 ggplot(data = forest.melt, aes(x = variable, y = value))+ geom_boxplot()
-ggplot(data = grass.123.melt, aes(x = variable, y = value))+ geom_boxplot()
+ggplot(data = grass.123.melt, aes(x = variable, y = value, colour=Plotname)) + geom_point()
 
 
 ################################################################################

@@ -53,11 +53,16 @@ grass.melt <- melt(grass, id = c("Plotname"), measured = c(grass[,2:nrow(grass)]
 forest.melt <- melt(forest, id = c("Plotname"), measured = c(forest[,2:nrow(forest)]))
 grass.123.melt <- melt(grass.123, id = c("Plotname"), measured = c(grass.123[,2:nrow(grass.123)]))
 
+all.melt <- melt(all, 
+                 id = c("Plotname", "Plotid","Status", "Location", "Longitude", "Latitude"),
+                 measured = c(all[,7:nrow(all)]))
+
 ## plot using ggplot2 package
 ggplot(data = grass.melt, aes(x = variable, y = value))+ geom_boxplot()
 ggplot(data = forest.melt, aes(x = variable, y = value))+ geom_boxplot()
 ggplot(data = grass.123.melt, aes(x = variable, y = value, colour=Plotname)) + geom_point()
 
+ggplot(data = all.melt, aes(x = variable, y = value, colour=Location)) + geom_boxplot()
 
 ################################################################################
 # ## Plot by Florian

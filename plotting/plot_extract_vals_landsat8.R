@@ -76,7 +76,7 @@ ggplot(data = tmp, aes(x = Band, y = value, group = Plotname)) +
 ### subset lineplot with facets
 tmp2 <- subset(tmp, Plotname %in% c("HEG01", "HEG02", "HEG03", "HEG04", "HEG05"))
 ggplot(data = tmp2, aes(x = Band, y = value, group = Plotname)) + 
-  #   geom_point() + 
+  geom_point() + 
   geom_line(aes(colour = Plotname)) + 
   facet_wrap(~ Plotname, nrow = 2, ncol = 3)
 

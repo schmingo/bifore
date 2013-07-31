@@ -37,12 +37,12 @@ grass <- grass[, -c(2:6)]
 forest <- forest[, -c(2:6)]
 
 ## special exploratories-plots
-grass.123 <- grass[c(1:3),]
+grass.select <- grass[c(1:8),]
 
 ## transpose dataframes
 # grass.t <- data.frame(t(grass))
 # forest.t <- data.frame(t(forest))
-# grass.123.t <- data.frame(t(grass.123))
+# grass.select.t <- data.frame(t(grass.select))
 
 ########################### Plotting ###########################################
 
@@ -51,7 +51,7 @@ grass.123 <- grass[c(1:3),]
 ## melt dataframes for boxplot
 grass.melt <- melt(grass, id = c("Plotname"), measured = c(grass[,2:nrow(grass)]))
 forest.melt <- melt(forest, id = c("Plotname"), measured = c(forest[,2:nrow(forest)]))
-grass.123.melt <- melt(grass.123, id = c("Plotname"), measured = c(grass.123[,2:nrow(grass.123)]))
+grass.select.melt <- melt(grass.select, id = c("Plotname"), measured = c(grass.select[,2:nrow(grass.select)]))
 
 all.melt <- melt(all, 
                  id = c("Plotname", "Plotid","Status", "Location", "Longitude", "Latitude"),
@@ -60,22 +60,29 @@ all.melt <- melt(all,
 
 ## plot using ggplot2 package
 ggplot(data = grass.melt, aes(x = variable, y = value))+ geom_boxplot()
-ggplot(data = forest.melt, aes(x = variable, y = value))+ geom_boxplot()
-ggplot(data = grass.123.melt, aes(x = variable, y = value, colour=Plotname)) + geom_point()
 
-ggplot(data = all.melt, aes(x = variable, y = value, colour=Location)) + geom_boxplot()
+ggplot(data = forest.melt, aes(x = variable, y = value))+ geom_boxplot()
+
+ggplot(data = forest.melt, aes(x = variable, y = value, group=1))+ geom_smooth()
+
+ggplot(data = grass.select.melt, aes(x = variable, y = value, colour=Plotname)) + 
+  geom_point()
+
+ggplot(data = all.melt, aes(x = variable, y = value, colour=Location)) + 
+  geom_boxplot()
 
 
 ### lineplot
-tmp <- melt(all[, c(1, 7:ncol(all))], id.vars = "Plotname", variable.name = "Band")
-tmp <- tmp[order(tmp$Plotname), ]
-ggplot(data = tmp, aes(x = Band, y = value, group = Plotname)) + 
+tmp.line <- melt(all[, c(1, 7:ncol(all))], id.vars = "Plotname", variable.name = "Band")
+tmp.line <- tmp.line[order(tmp.line$Plotname), ]
+
+ggplot(data = tmp.line, aes(x = Band, y = value, group = Plotname)) + 
   geom_line(aes(colour = Plotname))
 
 
 ### subset lineplot with facets
-tmp2 <- subset(tmp, Plotname %in% c("HEG01", "HEG02", "HEG03", "HEG04", "HEG05"))
-ggplot(data = tmp2, aes(x = Band, y = value, group = Plotname)) + 
+tmp2.line <- subset(tmp.line, Plotname %in% c("HEG01", "HEG02", "HEG03", "HEG04", "HEG05"))
+ggplot(data = tmp2.line, aes(x = Band, y = value, group = Plotname)) + 
   geom_point() + 
   geom_line(aes(colour = Plotname)) + 
   facet_wrap(~ Plotname, nrow = 2, ncol = 3)

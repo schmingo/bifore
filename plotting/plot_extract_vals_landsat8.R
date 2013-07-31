@@ -82,7 +82,7 @@ ggplot(data = tmp2, aes(x = Band, y = value, group = Plotname)) +
 
 
 cbind(tmp2, sequence = seq(nrow(tmp2))) # generate column with seqence of nrow of tmp2
-
+y <- cbind(tmp2, abundance=sample(1:20, nrow(tmp2), replace = TRUE)) # generate column with random Nr. between 1 and 20
 ################################################################################
 # ## Plot by Florian
 # grass.heg01 <- subset(grass[1], Plotname == "HEG01")

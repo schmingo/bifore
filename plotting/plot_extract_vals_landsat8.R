@@ -81,7 +81,7 @@ ggplot(data = tmp2, aes(x = Band, y = value, group = Plotname)) +
   facet_wrap(~ Plotname, nrow = 2, ncol = 3)
 
 
-cbind(tmp2, sequence = seq(nrow(tmp2))) # generate column with seqence of nrow of tmp2
+# cbind(tmp2, sequence = seq(nrow(tmp2))) # generate column with seqence of nrow of tmp2
 y <- cbind(tmp2, abundance=sample(1:20, nrow(tmp2), replace = TRUE)) # generate column with random Nr. between 1 and 20
 ################################################################################
 # ## Plot by Florian

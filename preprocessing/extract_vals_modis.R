@@ -26,7 +26,7 @@ setwd("hier_kommt_der_Flo ;-)") # Windows
 
 ## List files
 files.list.sat <- list.files("src/satellite/MODIS_2013-07-07_hai_sch_alb/", 
-                     pattern = ".TIF$", full.names = TRUE)
+                             pattern = ".tif$", full.names = TRUE)
 
 ## Import files as RasterLayer objects
 raster.layers <- lapply(files.list.sat, raster)

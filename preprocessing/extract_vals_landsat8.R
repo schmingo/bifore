@@ -1,10 +1,10 @@
 ################################################################################
 ## BiFoRe Scripts
 ##
-## EXTRACT GREYVALUES FROM SATELLITE DATA USING CORNER COORDINATES
+## EXTRACT GREYVALUES FROM LANDSAT 8 SATELLITE DATA USING CORNER COORDINATES
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-07-27
+## Version: 2013-08-01
 ##
 ################################################################################
 

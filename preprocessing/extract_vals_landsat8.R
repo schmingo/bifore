@@ -17,15 +17,15 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
 setwd("/home/schmingo/Diplomarbeit/") # Linux
-setwd("D:/Diplomarbeit/") # Windows
-setwd("hier_kommt_der_Flo ;-)") # Linux
-setwd("hier_kommt_der_Flo ;-)") # Windows
+#setwd("D:/Diplomarbeit/") # Windows
+#setwd("hier_kommt_der_Flo ;-)") # Linux
+#setwd("hier_kommt_der_Flo ;-)") # Windows
 
 
 ### Import Landsat data
 
 ## List files
-files.list.sat <- list.files("src/satellite/Landsat8_2013-07-07_hai/Level1_GeoTIFF_Data_Product/", 
+files.list.sat <- list.files("src/satellite/Landsat8/hai/", 
                      pattern = ".TIF$", full.names = TRUE)
 
 ## Import files as RasterLayer objects

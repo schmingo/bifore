@@ -1,0 +1,99 @@
+################################################################################
+## BiFoRe Scripts
+##
+## PLOTTING EXTRACTED VALUES FROM LANDSAT8 SATELLITE DATA
+##
+## Author: Simon Schlauss (sschlauss@gmail.com)
+## Version: 2013-08-01
+##
+################################################################################
+
+## Clear workspace
+rm(list = ls(all = TRUE))
+
+## Required libraries
+lib <- c("ggplot2", "latticeExtra", "reshape2", "RColorBrewer", "colorspace")
+lapply(lib, function(...) require(..., character.only = TRUE))
+
+## Set working directory
+setwd("/home/schmingo/Diplomarbeit/") # Linux
+setwd("D:/Diplomarbeit/") # Windows
+# setwd("hier_kommt_der_Flo ;-)") # Linux
+#setwd("E:/repositories/scripts") # Windows
+
+## Import data 
+all <- read.csv2("src/csv/all_greyvalues_modis.csv", dec = ".",
+                       header = TRUE, stringsAsFactors = FALSE)
+
+
+### Create Subsets
+
+## different locations
+grass <- subset(all, Location == "Grassland")
+forest <- subset(all, Location == "Forest")
+
+## delete redundant columns (coordinates, etc.)
+grass <- grass[, -c(2:3)]
+forest <- forest[, -c(2:3)]
+
+## special exploratories-plots
+grass.select <- grass[c(1:8),]
+
+## transpose dataframes
+# grass.t <- data.frame(t(grass))
+# forest.t <- data.frame(t(forest))
+# grass.select.t <- data.frame(t(grass.select))
+
+########################### Plotting ###########################################
+
+
+### boxplot
+## melt dataframes for boxplot
+grass.melt <- melt(grass, id = c("Plotname","Location", "Longitude", "Latitude"), measured = c(grass[,5:nrow(grass)]))
+forest.melt <- melt(forest, id = c("Plotname","Location", "Longitude", "Latitude"), measured = c(forest[,5:nrow(forest)]))
+grass.select.melt <- melt(grass.select, id = c("Plotname","Location", "Longitude", "Latitude"), measured = c(grass.select[,5:nrow(grass.select)]))
+
+all.melt <- melt(all, 
+                 id = c("Plotname", "Plotid","Status", "Location", "Longitude", "Latitude"),
+                 measured = c(all[,7:nrow(all)]))
+
+
+## plot using ggplot2 package
+ggplot(data = grass.melt, aes(x = variable, y = value))+ geom_boxplot()
+
+ggplot(data = forest.melt, aes(x = variable, y = value))+ geom_boxplot()
+
+ggplot(data = forest.melt, aes(x = variable, y = value, group=1))+ geom_smooth()
+
+ggplot(data = grass.select.melt, aes(x = variable, y = value, colour=Plotname)) + 
+  geom_point()
+
+ggplot(data = all.melt, aes(x = variable, y = value, colour=Location)) + 
+  geom_boxplot()
+
+
+### lineplot
+tmp.line <- melt(all[, c(1, 7:ncol(all))], id.vars = "Plotname", variable.name = "Band")
+tmp.line <- tmp.line[order(tmp.line$Plotname), ]
+
+ggplot(data = tmp.line, aes(x = Band, y = value, group = Plotname)) + 
+  geom_line(aes(colour = Plotname))
+
+
+### subset lineplot with facets
+tmp2.line <- subset(tmp.line, Plotname %in% c("HEG01", "HEG02", "HEG03", "HEG04", "HEG05"))
+ggplot(data = tmp2.line, aes(x = Band, y = value, group = Plotname)) + 
+  geom_point() + 
+  geom_line(aes(colour = Plotname)) + 
+  facet_wrap(~ Plotname, nrow = 2, ncol = 3)
+
+
+# cbind(tmp2, sequence = seq(nrow(tmp2))) # generate column with seqence of nrow of tmp2
+y <- cbind(tmp2, abundance=sample(1:20, nrow(tmp2), replace = TRUE)) # generate column with random Nr. between 1 and 20
+################################################################################
+# ## Plot by Florian
+# grass.heg01 <- subset(grass[1], Plotname == "HEG01")
+# 
+# xyplot(grass[1,2:ncol(grass)] ~ 
+#       as.factor(names(grass[2:ncol(grass)])), 
+#       type = "b", xlab = "Bands", ylab = "Grey value")

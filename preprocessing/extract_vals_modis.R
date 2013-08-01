@@ -25,7 +25,7 @@ setwd("hier_kommt_der_Flo ;-)") # Windows
 ### Import Landsat data
 
 ## List files
-files.list.sat <- list.files("src/satellite/MODIS_2013-07-07_hai_sch_alb/", 
+files.list.sat <- list.files("src/satellite/MOD021km_2013-07-07", 
                              pattern = ".tif$", full.names = TRUE)
 
 ## Import files as RasterLayer objects
@@ -46,7 +46,7 @@ projection(table.all.center) <- "+proj=utm +zone=32 ellps=WGS84 +units=m"
 table.all.center <- spTransform(table.all.center, CRS = projection.layers)
 
 ## List CORNER files
-files.all.corner <- list.files("src/csv/", pattern = "all_corner_utm.csv$", full.names = TRUE)
+files.all.corner <- list.files("src/csv/", pattern = "all_plot_corner_utm.csv$", full.names = TRUE)
 
 ## Import CORNER files as SpatialPointsDataframe objects
 table.all <- read.csv2(files.all.corner, dec = ".", stringsAsFactors = FALSE)
@@ -63,7 +63,7 @@ extent.all <- lapply(seq(1, nrow(table.all), 4), function(i) {
 
 ### Extraction
 
-## Parallelization
+## Parallelization ## BUG!
 clstr <- makePSOCKcluster(n.cores <- 4)
 clusterExport(clstr, c("lib", "raster.layers", "extent.all", "table.all.center", "table.all"))
 clusterEvalQ(clstr, lapply(lib, function(i) require(i, character.only = TRUE, quietly = TRUE)))

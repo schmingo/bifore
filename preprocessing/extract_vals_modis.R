@@ -25,7 +25,7 @@ setwd("/home/schmingo/Diplomarbeit/") # Linux
 ### Import Landsat data
 
 ## List files
-files.list.sat <- list.files("src/satellite/MOD021km_2013-07-07", 
+files.list.sat <- list.files("src//satellite//MOD021km_LATLONG_2013-07-07", 
                              pattern = ".tif$", full.names = TRUE)
 
 ## Import files as RasterLayer objects
@@ -36,7 +36,7 @@ projection.layers <- CRS(projection(raster.layers[[1]]))
 ### Create extends from *.csv
 
 ## List CENTER files
-files.all.center <- list.files("src/csv/", pattern = "all_plot_center_utm.csv$", full.names = TRUE)
+files.all.center <- list.files("src/csv/", pattern = "all_plot_center.csv$", full.names = TRUE)
 
 ## Import CENTER files as SpatialPointsDataframe objects
 table.all.center <- read.csv2(files.all.center, dec = ".", stringsAsFactors = FALSE)
@@ -46,7 +46,7 @@ projection(table.all.center) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_def
 table.all.center <- spTransform(table.all.center, CRS = projection.layers)
 
 ## List CORNER files
-files.all.corner <- list.files("src/csv/", pattern = "all_plot_corner_utm.csv$", full.names = TRUE)
+files.all.corner <- list.files("src/csv/", pattern = "all_plot_corner.csv$", full.names = TRUE)
 
 ## Import CORNER files as SpatialPointsDataframe objects
 table.all <- read.csv2(files.all.corner, dec = ".", stringsAsFactors = FALSE)
@@ -85,24 +85,13 @@ values.all <- parLapply(clstr, raster.layers, function(h) {
 })
 
 ## Merge single data frames
-values.all.all <- Reduce(function(...) merge(..., by = 1:6), values.all)
-names(values.all.all)[7:18] <- sapply(strsplit(substr(basename(files.list.sat), 1, nchar(basename(files.list.sat)) - 4), "_"), "[[", 2)
-coordinates(values.all.all) <- c("Longitude", "Latitude")
+values.all.new <- Reduce(function(...) merge(..., by = 1:6), values.all)
+names(values.all.new)[7:44] <- sapply(strsplit(substr(basename(files.list.sat), 1, nchar(basename(files.list.sat)) - 4), "_"), "[[", 2)
+coordinates(values.all.new) <- c("Longitude", "Latitude")
 
 ## Deregister parallel backend
 stopCluster(clstr)
 
-## Reformat Colnames
-tmp.names <- names(values.all.all)[5:(ncol(values.all.all)-1)]
-tmp.bands <- as.numeric(sapply(strsplit(tmp.names, "B"), "[[", 2))
-tmp.bands <- formatC(tmp.bands, width = 2, format = "d", flag = "0")
-
-names(values.all.all)[5:(ncol(values.all.all)-1)] <- paste("B", tmp.bands, sep = "")
-
-## Reorder Colnames
-values.all.all <- data.frame(values.all.all)
-values.all.all <- values.all.all[, c(1:7,10:17,8,9,18)] 
-
 ## Write data to new csv
-write.table(values.all.all, file = "src/csv/all_greyvalues_modis.csv", dec = ".", quote = FALSE, 
+write.table(values.all.new, file = "src/csv/all_greyvalues_modis.csv", dec = ".", quote = FALSE, 
             col.names = TRUE, row.names = FALSE, sep =";")

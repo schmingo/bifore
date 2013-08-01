@@ -17,9 +17,9 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
 setwd("/home/schmingo/Diplomarbeit/") # Linux
-setwd("D:/Diplomarbeit/") # Windows
-setwd("hier_kommt_der_Flo ;-)") # Linux
-setwd("hier_kommt_der_Flo ;-)") # Windows
+#setwd("D:/Diplomarbeit/") # Windows
+#setwd("hier_kommt_der_Flo ;-)") # Linux
+#setwd("hier_kommt_der_Flo ;-)") # Windows
 
 
 ### Import Landsat data
@@ -40,8 +40,8 @@ files.all.center <- list.files("src/csv/", pattern = "all_plot_center_utm.csv$",
 
 ## Import CENTER files as SpatialPointsDataframe objects
 table.all.center <- read.csv2(files.all.center, dec = ".", stringsAsFactors = FALSE)
-coordinates(table.all.center) <- c("utm_x", "utm_y")
-projection(table.all.center) <- "+proj=utm +zone=32 ellps=WGS84 +units=m"
+coordinates(table.all.center) <- c("Longitude", "Latitude")
+projection(table.all.center) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
  
 table.all.center <- spTransform(table.all.center, CRS = projection.layers)
 
@@ -50,8 +50,8 @@ files.all.corner <- list.files("src/csv/", pattern = "all_plot_corner_utm.csv$",
 
 ## Import CORNER files as SpatialPointsDataframe objects
 table.all <- read.csv2(files.all.corner, dec = ".", stringsAsFactors = FALSE)
-coordinates(table.all) <- c("utm_x", "utm_y")
-projection(table.all) <- "+proj=utm +zone=32 ellps=WGS84 +units=m"
+coordinates(table.all) <- c("Longitude", "Latitude")
+projection(table.all) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
   
 table.all <- spTransform(table.all, CRS = projection.layers)
 
@@ -63,12 +63,12 @@ extent.all <- lapply(seq(1, nrow(table.all), 4), function(i) {
 
 ### Extraction
 
-## Parallelization ## BUG!
+## Parallelization
 clstr <- makePSOCKcluster(n.cores <- 4)
 clusterExport(clstr, c("lib", "raster.layers", "extent.all", "table.all.center", "table.all"))
 clusterEvalQ(clstr, lapply(lib, function(i) require(i, character.only = TRUE, quietly = TRUE)))
 
-## Extract and AVERAGE cell values
+## Extract and AVERAGE cell values ## BUG!
 values.all <- parLapply(clstr, raster.layers, function(h) {
   temp.values <- sapply(extent.all, function(i) {
     temp.extract <- extract(h, i)
@@ -87,7 +87,7 @@ values.all <- parLapply(clstr, raster.layers, function(h) {
 ## Merge single data frames
 values.all.all <- Reduce(function(...) merge(..., by = 1:6), values.all)
 names(values.all.all)[7:18] <- sapply(strsplit(substr(basename(files.list.sat), 1, nchar(basename(files.list.sat)) - 4), "_"), "[[", 2)
-coordinates(values.all.all) <- c("utm_x", "utm_y")
+coordinates(values.all.all) <- c("Longitude", "Latitude")
 
 ## Deregister parallel backend
 stopCluster(clstr)

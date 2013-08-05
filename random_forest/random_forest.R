@@ -18,5 +18,5 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## set working directory
 setwd("/home/schmingo/Diplomarbeit/") # Linux
 setwd("D:/Diplomarbeit/") # Windows
-setwd("hier_kommt_der_Flo ;-)") # Linux
-setwd("hier_kommt_der_Flo ;-)") # Windows
+#setwd("Flo")
+

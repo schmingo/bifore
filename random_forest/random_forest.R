@@ -12,7 +12,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("randomForest")
+lib <- c("randomForest", "maptools", "raster", "rgdal", "sp")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory

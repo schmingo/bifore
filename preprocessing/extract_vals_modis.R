@@ -68,7 +68,7 @@ clstr <- makePSOCKcluster(n.cores <- 4)
 clusterExport(clstr, c("lib", "raster.layers", "extent.all", "table.all.center", "table.all"))
 clusterEvalQ(clstr, lapply(lib, function(i) require(i, character.only = TRUE, quietly = TRUE)))
 
-## Extract and AVERAGE cell values ## BUG!
+## Extract and AVERAGE cell values
 values.all <- parLapply(clstr, raster.layers, function(h) {
   temp.values <- sapply(extent.all, function(i) {
     temp.extract <- extract(h, i)

@@ -22,7 +22,7 @@ setwd("D:/Diplomarbeit/") # Windows
 #setwd("E:/repositories/scripts") # Windows
 
 ## Import data 
-all <- read.csv2("src/csv/all_greyvalues_modis.csv", dec = ".",
+all <- read.csv2("src/csv/all_greyvalues_modis_NA.csv", dec = ".",
                        header = TRUE, stringsAsFactors = FALSE)
 
 

@@ -44,7 +44,7 @@ rm(list = ls(all = TRUE))
 # lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-setwd("/home/schmingo/Diplomarbeit/") # Linux
+#setwd("/home/schmingo/Diplomarbeit/") # Linux
 setwd("D:/Diplomarbeit/") # Windows
 #setwd("Flo")
 
@@ -67,3 +67,13 @@ Fund Reihenname und Spaltenname ausgeben.
 2. Funktion
 Alle Werte im data frame >32767 sollen NA gesetzt werden
 '''
+
+### replace values with na
+
+## v1
+data.sub <- data[,7:ncol(data)]
+data.sub[data.sub > 32767] <- NA
+data[,7:ncol(data)] <- data.sub
+
+## v2
+data[, 7:ncol(data)][data[, 7:ncol(data)] > 32767] <- NA

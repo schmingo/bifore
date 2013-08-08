@@ -4,7 +4,7 @@
 ## EXTRACT GREYVALUES FROM MODIS SATELLITE DATA USING CORNER COORDINATES
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-08-01
+## Version: 2013-08-08
 ##
 ################################################################################
 

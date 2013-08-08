@@ -4,7 +4,7 @@
 ## CHECK MODIS GREYVALUES FOR UNUSEABLE DATA
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-08-07
+## Version: 2013-08-08
 ##
 ################################################################################
 

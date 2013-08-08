@@ -4,7 +4,7 @@
 ## PLOTTING EXTRACTED VALUES FROM LANDSAT8 SATELLITE DATA
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-08-01
+## Version: 2013-08-08
 ##
 ################################################################################
 

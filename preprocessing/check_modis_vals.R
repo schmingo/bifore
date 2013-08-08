@@ -71,9 +71,14 @@ Alle Werte im data frame >32767 sollen NA gesetzt werden
 ### replace values with na
 
 ## v1
-data.sub <- data[,7:ncol(data)]
-data.sub[data.sub > 32767] <- NA
-data[,7:ncol(data)] <- data.sub
+# data.sub <- data[,7:ncol(data)]
+# data.sub[data.sub > 32767] <- NA
+# data[,7:ncol(data)] <- data.sub
 
 ## v2
 data[, 7:ncol(data)][data[, 7:ncol(data)] > 32767] <- NA
+
+
+### write new table
+write.table(data, file = "src/csv/all_greyvalues_modis_NA.csv", dec = ".", quote = FALSE, 
+            col.names = TRUE, row.names = FALSE, sep =";")

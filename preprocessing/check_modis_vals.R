@@ -10,7 +10,7 @@
 
 '''
 REFERING TO: https://www.google.de/url?sa=t&rct=j&q=&esrc=s&source=web&cd=8&ved=0CHoQFjAH&url=ftp%3A%2F%2Fmcst.hbsss-sigma.com%2Fpub%2Fpermanent%2FMCST%2FL1B_docs%2FData_Dictionaries%2FL1B_V4.0.9_V4.1.1_Data_Dcny.doc&ei=kWQCUprgBM3NswaP3YCAAw&usg=AFQjCNGLskc85bT9K92d7tpSmLHdeZ13TQ&sig2=WGQhQZTUNG0X-bx7m68N9A&bvm=bv.50310824,d.Yms
-(S.83f)
+(P.83f)
 ...
 The valid range is [0-32767], inclusive.  Any value above 32767 represents 
 unusable data.  Table 2.2.3 shows the meaning of data values over 32767.
@@ -53,20 +53,10 @@ setwd("D:/Diplomarbeit/") # Windows
 data <- read.csv2("src/csv/all_greyvalues_modis.csv", dec = ".",
                  header = TRUE, stringsAsFactors = FALSE)
 
-### Print unuseable data
-
+## Print unuseable data
 print(ncol(data))
 summary(data[,7:ncol(data)])
 
-'''
-Funktionsbeschreibung:
-1. Funktion
-Der data frame soll nach allen Werten >32767 durchsucht werden und zu jedem
-Fund Reihenname und Spaltenname ausgeben.
-
-2. Funktion
-Alle Werte im data frame >32767 sollen NA gesetzt werden
-'''
 
 ### replace values with na
 

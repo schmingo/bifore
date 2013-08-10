@@ -9,10 +9,10 @@
 ################################################################################
 
 '''
-REFERING TO: Level 1B Product Users Guide V6.1.14
+REFERING TO: Level 1B Product Data Dictionary V6.1.14
 http://mcst.gsfc.nasa.gov/content/l1b-documents
-http://mcst.gsfc.nasa.gov/sites/mcst.gsfc/files/file_attachments/M1054D_PUG_083112_final.pdf
-(P.83f)
+http://mcst.gsfc.nasa.gov/sites/mcst.gsfc/files/file_attachments/M1055_PDD_D_072712final.pdf
+(P.80f)
 ...
 The valid range is [0-32767], inclusive.  Any value above 32767 represents 
 unusable data.  Table 2.2.3 shows the meaning of data values over 32767.

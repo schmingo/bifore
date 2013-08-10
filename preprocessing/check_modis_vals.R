@@ -4,12 +4,14 @@
 ## CHECK MODIS GREYVALUES FOR UNUSEABLE DATA
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-08-08
+## Version: 2013-08-10
 ##
 ################################################################################
 
 '''
-REFERING TO: https://www.google.de/url?sa=t&rct=j&q=&esrc=s&source=web&cd=8&ved=0CHoQFjAH&url=ftp%3A%2F%2Fmcst.hbsss-sigma.com%2Fpub%2Fpermanent%2FMCST%2FL1B_docs%2FData_Dictionaries%2FL1B_V4.0.9_V4.1.1_Data_Dcny.doc&ei=kWQCUprgBM3NswaP3YCAAw&usg=AFQjCNGLskc85bT9K92d7tpSmLHdeZ13TQ&sig2=WGQhQZTUNG0X-bx7m68N9A&bvm=bv.50310824,d.Yms
+REFERING TO: Level 1B Product Users Guide V6.1.14
+http://mcst.gsfc.nasa.gov/content/l1b-documents
+http://mcst.gsfc.nasa.gov/sites/mcst.gsfc/files/file_attachments/M1054D_PUG_083112_final.pdf
 (P.83f)
 ...
 The valid range is [0-32767], inclusive.  Any value above 32767 represents 

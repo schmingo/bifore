@@ -48,7 +48,7 @@ rm(list = ls(all = TRUE))
 ## set working directory
 #setwd("/home/schmingo/Diplomarbeit/") # Linux
 setwd("D:/Diplomarbeit/") # Windows
-#setwd("Flo")
+#setwd("Florian")
 
 
 ### Import dataset with extracted MODIS greyvalues

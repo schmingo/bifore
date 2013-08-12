@@ -60,7 +60,7 @@ print(ncol(data))
 summary(data[,7:ncol(data)])
 
 
-### replace values with na
+### Replace values with NA
 
 ## v1
 # data.sub <- data[,7:ncol(data)]
@@ -70,7 +70,14 @@ summary(data[,7:ncol(data)])
 ## v2
 data[, 7:ncol(data)][data[, 7:ncol(data)] > 32767] <- NA
 
-
-### write new table
+## write new table with NA values
 write.table(data, file = "src/csv/all_greyvalues_modis_NA.csv", dec = ".", quote = FALSE, 
+            col.names = TRUE, row.names = FALSE, sep =";")
+
+
+### add random abundance data
+data.abundance <- cbind(data, abundance=sample(1:20, nrow(data), replace = TRUE))
+
+## Write new table with NA & random abundance data
+write.table(data, file = "src/csv/all_greyvalues_modis_NA_abundance.csv", dec = ".", quote = FALSE, 
             col.names = TRUE, row.names = FALSE, sep =";")

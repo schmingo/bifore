@@ -4,7 +4,7 @@
 ## PLOTTING EXTRACTED VALUES FROM LANDSAT8 SATELLITE DATA
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-08-08
+## Version: 2013-08-12
 ##
 ################################################################################
 
@@ -16,21 +16,20 @@ lib <- c("ggplot2", "latticeExtra", "reshape2", "RColorBrewer", "colorspace")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Diplomarbeit/") # Linux
+#setwd("/home/schmingo/Diplomarbeit/") # Linux
 setwd("D:/Diplomarbeit/") # Windows
-# setwd("hier_kommt_der_Flo ;-)") # Linux
-#setwd("E:/repositories/scripts") # Windows
+#setwd("Florian")
 
 ## Import data 
-all <- read.csv2("src/csv/all_greyvalues_modis_NA.csv", dec = ".",
+data <- read.csv2("src/csv/all_greyvalues_modis_NA.csv", dec = ".",
                        header = TRUE, stringsAsFactors = FALSE)
 
 
 ### Create Subsets
 
 ## different locations
-grass <- subset(all, Location == "Grassland")
-forest <- subset(all, Location == "Forest")
+grass <- subset(data, Location == "Grassland")
+forest <- subset(data, Location == "Forest")
 
 ## delete redundant columns (coordinates, etc.)
 grass <- grass[, -c(2:3)]
@@ -53,9 +52,9 @@ grass.melt <- melt(grass, id = c("Plotname","Location", "Longitude", "Latitude")
 forest.melt <- melt(forest, id = c("Plotname","Location", "Longitude", "Latitude"), measured = c(forest[,5:nrow(forest)]))
 grass.select.melt <- melt(grass.select, id = c("Plotname","Location", "Longitude", "Latitude"), measured = c(grass.select[,5:nrow(grass.select)]))
 
-all.melt <- melt(all, 
+data.melt <- melt(data, 
                  id = c("Plotname", "Plotid","Status", "Location", "Longitude", "Latitude"),
-                 measured = c(all[,7:nrow(all)]))
+                 measured = c(data[,7:nrow(data)]))
 
 
 ## plot using ggplot2 package
@@ -68,12 +67,12 @@ ggplot(data = forest.melt, aes(x = variable, y = value, group=1))+ geom_smooth()
 ggplot(data = grass.select.melt, aes(x = variable, y = value, colour=Plotname)) + 
   geom_point()
 
-ggplot(data = all.melt, aes(x = variable, y = value, colour=Location)) + 
+ggplot(data = data.melt, aes(x = variable, y = value, colour=Location)) + 
   geom_boxplot()
 
 
 ### lineplot
-tmp.line <- melt(all[, c(1, 7:ncol(all))], id.vars = "Plotname", variable.name = "Band")
+tmp.line <- melt(data[, c(1, 7:ncol(data))], id.vars = "Plotname", variable.name = "Band")
 tmp.line <- tmp.line[order(tmp.line$Plotname), ]
 
 ggplot(data = tmp.line, aes(x = Band, y = value, group = Plotname)) + 

@@ -79,5 +79,5 @@ write.table(data, file = "src/csv/all_greyvalues_modis_NA.csv", dec = ".", quote
 data.abundance <- cbind(data, abundance=sample(1:20, nrow(data), replace = TRUE))
 
 ## Write new table with NA & random abundance data
-write.table(data, file = "src/csv/all_greyvalues_modis_NA_abundance.csv", dec = ".", quote = FALSE, 
+write.table(data.abundance, file = "src/csv/all_greyvalues_modis_NA_abundance.csv", dec = ".", quote = FALSE, 
             col.names = TRUE, row.names = FALSE, sep =";")

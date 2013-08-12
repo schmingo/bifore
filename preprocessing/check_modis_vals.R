@@ -4,7 +4,7 @@
 ## CHECK MODIS GREYVALUES FOR UNUSEABLE DATA
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-08-10
+## Version: 2013-08-12
 ##
 ################################################################################
 
@@ -63,12 +63,12 @@ summary(data[,7:ncol(data)])
 ### Replace values with NA
 
 ## v1
+data[, 7:ncol(data)][data[, 7:ncol(data)] > 32767] <- NA
+
+## v2
 # data.sub <- data[,7:ncol(data)]
 # data.sub[data.sub > 32767] <- NA
 # data[,7:ncol(data)] <- data.sub
-
-## v2
-data[, 7:ncol(data)][data[, 7:ncol(data)] > 32767] <- NA
 
 ## write new table with NA values
 write.table(data, file = "src/csv/all_greyvalues_modis_NA.csv", dec = ".", quote = FALSE, 

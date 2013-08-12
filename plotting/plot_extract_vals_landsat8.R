@@ -18,8 +18,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set working directory
 #setwd("/home/schmingo/Diplomarbeit/") # Linux
 setwd("D:/Diplomarbeit/") # Windows
-# setwd("hier_kommt_der_Flo ;-)") # Linux
-#setwd("E:/repositories/scripts") # Windows
+#setwd("Florian")
 
 ## Import data 
 data <- read.csv2("src/csv/hai_greyvalues_landsat8.csv", dec = ".",

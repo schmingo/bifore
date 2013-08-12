@@ -16,10 +16,9 @@ lib <- c("rgdal", "sp", "raster")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-setwd("/home/schmingo/Diplomarbeit/") # Linux
+#setwd("/home/schmingo/Diplomarbeit/") # Linux
 setwd("D:/Diplomarbeit/") # Windows
-setwd("hier_kommt_der_Flo ;-)") # Linux
-setwd("hier_kommt_der_Flo ;-)") # Windows
+#setwd("Florian")
 
 ## Set filepath
 file.coords <- "src/csv/all_plot_corner.csv"

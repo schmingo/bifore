@@ -16,9 +16,9 @@ lib <- c("randomForest", "maptools", "raster", "rgdal", "sp")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-setwd("/home/schmingo/Diplomarbeit/") # Linux
+#setwd("/home/schmingo/Diplomarbeit/") # Linux
 setwd("D:/Diplomarbeit/") # Windows
-#setwd("Flo")
+#setwd("Florian")
 
 ## Import dataset
 data <- read.csv2("src/csv/all_greyvalues_modis_NA_abundance.csv", dec = ".",

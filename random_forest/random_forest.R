@@ -84,3 +84,37 @@ n.cores <- detectCores() # detect cpu cores for parallelization
 ## Define desired parameters
 n.tree <- 500 # Number of trees to grow
 m.try <- 7 # Number of variables randomly sampled as candidates at each split
+
+## Function (parallelized)
+'''
+do.trace:   If set to TRUE, give a more verbose output as randomForest is run. 
+            If set to some integer, then running output is printed for every 
+            do.trace trees.
+
+na.action:  A function to specify the action to be taken if NAs are found. 
+            (NOTE: If given, this argument must be named.)
+'''
+
+parRandomForest <- function(xx, ..., ntree=n.tree, mtry=m.try, importance=TRUE, do.trace=100, 
+                            na.action=na.omit, ncores=n.cores, seed=47) {
+  # Initialize Cluster
+  cl <- makeCluster(ncores)
+  # Initialize RNG and distribute streams to nodes
+  if(!is.null(seed)) 
+    clusterSetRNGStream(cl, seed)
+  # Load randomForest package on cluster
+  clusterEvalQ(cl, library(randomForest))
+  
+  # randomForest function for parLapply
+  rfwrap <- function(xx, ntree, ...)
+    randomForest(x=xx, ntree=ntree, ...)
+  # Execute randomForest
+  rfpar <- parLapply(cl, rep(ceiling(ntree/ncores), ncores), xx=xx, rfwrap, ...)
+  
+  # Stop cluster
+  stopCluster(cl)
+  
+  # Combine resulting randomForest objects
+  do.call(combine, rfpar)
+}
+

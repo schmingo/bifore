@@ -4,7 +4,7 @@
 ## RANDOM FOREST
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-07-25
+## Version: 2013-08-13
 ##
 ################################################################################
 
@@ -12,7 +12,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("randomForest", "maptools", "raster", "rgdal", "sp")
+lib <- c("randomForest", "foreach", "doSNOW", "parallel")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory

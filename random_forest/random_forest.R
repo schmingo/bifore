@@ -120,7 +120,8 @@ parRandomForest <- function(xx, ..., ntree=n.tree, mtry=m.try, importance=TRUE, 
 
 # Call function
 '''
-BUG!! NA not permitted in predictors
+BUG -> NA not permitted in predictors
+Assigned to Issue #4
 
 '''
 system.time(train.rf <- parRandomForest(train.data[,2:ncol(train.data)-1], 

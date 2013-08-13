@@ -119,6 +119,10 @@ parRandomForest <- function(xx, ..., ntree=n.tree, mtry=m.try, importance=TRUE, 
 }
 
 # Call function
+'''
+BUG!! NA not permitted in predictors
+
+'''
 system.time(train.rf <- parRandomForest(train.data[,2:ncol(train.data)-1], 
                                         train.data[ , names(train.data) %in% c("abundance")],
                                         ntree=n.tree, 

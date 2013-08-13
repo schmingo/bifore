@@ -78,3 +78,5 @@ names(train.data)
 
 ### Random Forest
 
+n.cores <- detectCores() # detect cpu cores for parallelization
+

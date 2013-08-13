@@ -77,6 +77,10 @@ names(train.data)
 
 
 ### Random Forest
+?? randomForest
 
 n.cores <- detectCores() # detect cpu cores for parallelization
 
+## Define desired parameters
+n.tree <- 500 # Number of trees to grow
+m.try <- 7 # Number of variables randomly sampled as candidates at each split

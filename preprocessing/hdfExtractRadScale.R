@@ -2,7 +2,11 @@
 ## BiFoRe Scripts
 ##
 ## EXTRACT RADIANCE SCALES FOR EACH MODIS-BAND FROM HDF FILES
-##
+## 
+## 
+## Important Note: This script will only work under Linux!
+## 
+## 
 ## Author: Simon Schlauss (sschlauss@gmail.com)
 ## Version: 2013-08-21
 ##
@@ -21,7 +25,7 @@ setwd(path.wd)
 
 # GDALinfo from HDF
 hdf.info <- GDALinfo("MOD021KM.A2013188.1120.005.2013188200351.hdf", 
-                     returnScaleOffset = F) # will only work under Linux!
+                     returnScaleOffset = F)
 
 # # HDF attributes
 # attributes(hdf.info) # display attributes

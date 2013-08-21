@@ -14,14 +14,15 @@ rm(list = ls(all = TRUE))
 
 # Required packages
 library(rgdal)
+library(h5r)
 
 # Data folder
-path.wd <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/"
+path.wd <- "D:/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/"
 setwd(path.wd)
 
 # GDALinfo from HDF
 hdf.info <- GDALinfo("MOD021KM.A2013188.1120.005.2013188200351.hdf", 
-                     returnScaleOffset = F)
+                     returnScaleOffset = F) # will only work under Linux!
 
 # # HDF attributes
 # attributes(hdf.info) # display attributes

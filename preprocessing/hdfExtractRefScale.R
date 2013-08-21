@@ -35,8 +35,8 @@ refsb <- unlist(strsplit(refsb, "="))[2]
 # GDALinfo from SubDS
 subds.info <- GDALinfo(refsb)
 
-# Extract reflectance scale and offset from SubDS metadata
+# Extract radiance scale from SubDS metadata
 subds.mdata <- attr(subds.info, "mdata")
 
-scales <- subds.mdata[grep("reflectance_scales", subds.mdata)]
-offset <- subds.mdata[grep("reflectance_offsets", subds.mdata)]
+scales.EV_1KM_RefSB <- subds.mdata[grep("radiance_scales", subds.mdata)]
+print(scales.EV_1KM_RefSB)

@@ -1,12 +1,26 @@
+################################################################################
+## BiFoRe Scripts
+##
+## EXTRACT SCALEFACTOR FOR EACH BAND FROM MODIS FILES
+##
+## Author: Simon Schlauss (sschlauss@gmail.com)
+## Version: 2013-08-21
+##
+################################################################################
+
+
+## Clear workspace
+rm(list = ls(all = TRUE))
+
 # Required packages
 library(rgdal)
 
 # Data folder
-path.wd <- "/home/dogbert/Downloads"
+path.wd <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/"
 setwd(path.wd)
 
 # GDALinfo from HDF
-hdf.info <- GDALinfo("MOD021KM.A2013226.2000.005.2013227040327.hdf", 
+hdf.info <- GDALinfo("MOD021KM.A2013188.1120.005.2013188200351.hdf", 
                      returnScaleOffset = F)
 
 # HDF attributes

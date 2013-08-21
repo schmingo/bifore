@@ -14,7 +14,6 @@ rm(list = ls(all = TRUE))
 
 # Required packages
 library(rgdal)
-library(h5r)
 
 # Data folder
 path.wd <- "D:/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/"

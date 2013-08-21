@@ -1,7 +1,7 @@
 ################################################################################
 ## BiFoRe Scripts
 ##
-## EXTRACT SCALEFACTOR FOR EACH BAND FROM MODIS FILES
+## EXTRACT RADIANCE SCALES FOR EACH MODIS-BAND FROM HDF FILES
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
 ## Version: 2013-08-21

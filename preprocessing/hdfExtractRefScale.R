@@ -33,12 +33,14 @@ emissive <- subds[grep("EOS_SWATH.*EV_1KM_Emissive$", subds)]
 refsb250 <- subds[grep("EOS_SWATH.*EV_250_Aggr1km_RefSB$", subds)]
 refsb500 <- subds[grep("EOS_SWATH.*EV_500_Aggr1km_RefSB$", subds)]
 band26 <- subds[grep("EOS_SWATH.*EV_Band26$", subds)]
+
 # Remove irrelevant parts of SubDS name
 refsb <- unlist(strsplit(refsb, "="))[2]
 emissive <- unlist(strsplit(emissive, "="))[2]
 refsb250 <- unlist(strsplit(refsb250, "="))[2]
 refsb500 <- unlist(strsplit(refsb500, "="))[2]
 band26 <- unlist(strsplit(band26, "="))[2]
+
 # GDALinfo from SubDS
 subds.info.refsb <- GDALinfo(refsb)
 subds.info.emissive <- GDALinfo(emissive)

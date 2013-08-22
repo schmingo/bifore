@@ -3,6 +3,9 @@
 ##
 ## EXTRACT GREYVALUES FROM MODIS SATELLITE DATA USING CORNER COORDINATES
 ##
+## Important Note: This script will only work under Linux!
+##
+## 
 ## Author: Simon Schlauss (sschlauss@gmail.com)
 ## Version: 2013-08-08
 ##
@@ -15,10 +18,14 @@ rm(list = ls(all = TRUE))
 lib <- c("rgdal", "parallel", "raster")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
-## set working directory
-#setwd("/home/schmingo/Diplomarbeit/") # Linux
-setwd("D:/Diplomarbeit/") # Windows
-#setwd("Florian") # Linux
+## Set filepaths and filenames
+path.wd <- "/home/schmingo/Diplomarbeit/") # Linux
+#path.wd <- Florian
+path.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/"
+name.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
+
+## Set working directory
+setwd(path.wd)
 
 
 ### Import Landsat data
@@ -90,6 +97,19 @@ coordinates(values.all.new) <- c("Longitude", "Latitude")
 
 ## Deregister parallel backend
 stopCluster(clstr)
+
+
+### Extract radiance_scale from original *.hdf
+
+## Load extraction script
+source("hdfExtractRadScale.R")
+hdfExtractRadScale (path.wd,
+                    path.hdf,
+                    name.hdf,
+                    lib,
+                    #x=c(2,5,8)
+                    ) 
+
 
 ## Write data to new csv
 write.table(values.all.new, file = "src/csv/all_greyvalues_modis.csv", dec = ".", quote = FALSE, 

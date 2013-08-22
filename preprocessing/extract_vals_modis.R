@@ -1,14 +1,14 @@
 ################################################################################
-## BiFoRe Scripts
-##
-## EXTRACT GREYVALUES FROM MODIS SATELLITE DATA USING CORNER COORDINATES
-##
-## Important Note: This script will only work under Linux!
-##
-## 
-## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-08-08
-##
+## BiFoRe Scripts                                                             ##
+##                                                                            ##
+## EXTRACT GREYVALUES FROM MODIS SATELLITE DATA USING CORNER COORDINATES      ##
+##                                                                            ##
+## Important Note: This script will only work under Linux!                    ##
+##                                                                            ##
+##                                                                            ##
+## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
+## Version: 2013-08-22                                                        ##
+##                                                                            ##
 ################################################################################
 
 ## Clear workspace
@@ -105,11 +105,14 @@ stopCluster(clstr)
 source("hdfExtractRadScale.R")
 hdfExtractRadScale (path.wd,
                     path.hdf,
-                    name.hdf,
-                    lib,
-                    #x=c(2,5,8)
-                    ) 
+                    name.hdf
+                    )
 
+print(scales.EV_1KM_RefSB)
+print(scales.EV_1KM_Emissive)
+print(scales.EV_250_Aggr1km_RefSB)
+print(scales.EV_500_Aggr1km_RefSB)
+print(scales.EV_BAND26)
 
 ## Write data to new csv
 write.table(values.all.new, file = "src/csv/all_greyvalues_modis.csv", dec = ".", quote = FALSE, 

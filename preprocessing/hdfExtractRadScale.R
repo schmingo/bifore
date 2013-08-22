@@ -20,7 +20,7 @@ rm(list = ls(all = TRUE))
 library(rgdal)
 
 # Data folder
-path.wd <- "D:/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/"
+path.wd <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/"
 setwd(path.wd)
 
 # GDALinfo from HDF

@@ -1,27 +1,26 @@
 ################################################################################
-## BiFoRe Scripts
-##
-## EXTRACT RADIANCE SCALES FOR EACH MODIS-BAND FROM HDF FILES
-## 
-## 
-## Important Note: This script will only work under Linux!
-## 
-## 
-## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-08-21
-##
+## BiFoRe Scripts                                                             ##
+##                                                                            ##
+## EXTRACT RADIANCE SCALES FOR EACH MODIS-BAND FROM HDF FILES                 ##
+##                                                                            ##
+##                                                                            ##
+## Important Note: This script will only work under Linux!                    ##
+##                                                                            ##
+##                                                                            ##
+## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
+## Version: 2013-08-22                                                        ##
+##                                                                            ##
 ################################################################################
 
 hdfExtractRadScale <- function(path.wd,
                                path.hdf,
-                               name.hdf,
-                               lib,
-                               #x
-                               ) {
+                               name.hdf
+                               )
+  {
 
 
 # Required packages
-  lapply(lib, function(...) require(..., character.only = TRUE))
+  stopifnot(require(rgdal))
 
 # Data folder
   setwd(path.wd)

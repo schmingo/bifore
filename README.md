@@ -2,7 +2,7 @@
 ##### Forecasting biodiversity using remote sensing
 ***
 <br/>
-#### Get a copy of [src](http://bit.ly/17bvfIV "download src filetree") ~150kB
+#### Get a copy of [src](http://bit.ly/17bvfIV "download src filetree") ~210MB
 <br/>
 #### File Organization Tree
 

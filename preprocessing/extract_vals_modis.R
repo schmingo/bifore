@@ -102,7 +102,7 @@ stopCluster(clstr)
 ### Extract radiance_scale from original *.hdf
 
 ## Load extraction script
-source("hdfExtractRadScale.R")
+source("/home/schmingo/Diplomarbeit/scripts/preprocessing/hdfExtractRadScale.R")
 hdfExtractRadScale (path.wd,
                     path.hdf,
                     name.hdf

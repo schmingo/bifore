@@ -26,7 +26,7 @@ hdfExtractRadScale <- function(path.wd,
   setwd(path.wd)
 
 # GDALinfo from HDF
-  hdf.info <- GDALinfo(name.hdf,  # BUG -> cannot open / does not exist
+  hdf.info <- GDALinfo(path.hdf,  # BUG -> cannot open / does not exist
                        returnScaleOffset = F)
 
 # # HDF attributes
@@ -68,10 +68,10 @@ hdfExtractRadScale <- function(path.wd,
   scales.EV_BAND26 <- subds.mdata.band26[grep("radiance_scales", subds.mdata.band26)]
 
 # return radiance scales
-  return(scales.EV_1KM_RefSB)
-  return(scales.EV_1KM_Emissive)
-  return(scales.EV_250_Aggr1km_RefSB)
-  return(scales.EV_500_Aggr1km_RefSB)
-  return(scales.EV_BAND26)
+#   return(scales.EV_1KM_RefSB)
+#   return(scales.EV_1KM_Emissive)
+#   return(scales.EV_250_Aggr1km_RefSB)
+#   return(scales.EV_500_Aggr1km_RefSB)
+#   return(scales.EV_BAND26)
 
 }

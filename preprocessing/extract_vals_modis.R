@@ -19,7 +19,7 @@ lib <- c("rgdal", "parallel", "raster")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set filepaths and filenames
-path.wd <- "/home/schmingo/Diplomarbeit/") # Linux
+path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
 #path.wd <- Florian
 path.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/"
 name.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"

@@ -26,7 +26,7 @@ hdfExtractRadScale <- function(path.wd,
   setwd(path.wd)
 
 # GDALinfo from HDF
-  hdf.info <- GDALinfo(name.hdf, 
+  hdf.info <- GDALinfo(name.hdf,  # BUG -> cannot open / does not exist
                        returnScaleOffset = F)
 
 # # HDF attributes

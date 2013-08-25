@@ -21,24 +21,25 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set filepaths and filenames
 path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
 #path.wd <- Florian
-path.modis <- "/home/schmingo/Diplomarbeit/src/satellite/MOD02_2013-07-07_copy/"
+path.modis <- "/home/schmingo/Diplomarbeit/src/satellite/MOD02_2013-07-07/"
 path.250.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD02QKM.A2013188.1120.005.2013188200351.hdf"
 path.500.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD02HKM.A2013188.1120.005.2013188200351.hdf"
 path.1km.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD021KM.A2013188.1120.005.2013188200351.hdf"
 
+
+
+
+# ## Rename MODIS Files to more meaningfull filenames (e.g. "B01" for "Band 1")
+# source("scripts/preprocessing/rename_modis_files.R")
+# rename_modis_files (path.modis)
+
 ## Set working directory
 setwd(path.wd)
-
-
-## Rename MODIS Files to more meaningfull filenames (e.g. "B01" for "Band 1")
-source("scripts/preprocessing/rename_modis_files.R")
-rename_modis_files (path.modis)
-
 
 ### Import MODIS data
 
 ## List files
-files.list.sat <- list.files("src/satellite//MOD02_2013-07-07", 
+files.list.sat <- list.files("src/satellite/MOD02_2013-07-07", 
                              pattern = ".tif$", full.names = TRUE)
 
 ## Import files as RasterLayer objects

@@ -32,7 +32,7 @@ setwd(path.wd)
 ### Import Landsat data
 
 ## List files
-files.list.sat <- list.files("src//satellite//MOD021km_LATLONG_2013-07-07", 
+files.list.sat <- list.files("src/satellite//MOD02_2013-07-07", 
                              pattern = ".tif$", full.names = TRUE)
 
 ## Import files as RasterLayer objects

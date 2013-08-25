@@ -103,17 +103,13 @@ stopCluster(clstr)
 ### Extract radiance_scale from original *.hdf
 
 ## Load extraction script
-source("/home/schmingo/Diplomarbeit/scripts/preprocessing/hdfExtractRadScale.R")
+source("scripts/preprocessing/hdfExtractRadScale.R")
 hdfExtractRadScale (path.wd,
-                    path.hdf,
-                    name.hdf
+                    path.250.hdf,
+                    path.500.hdf,
+                    path.1km.hdf
                     )
 
-print(scales.EV_1KM_RefSB)
-print(scales.EV_1KM_Emissive)
-print(scales.EV_250_Aggr1km_RefSB)
-print(scales.EV_500_Aggr1km_RefSB)
-print(scales.EV_BAND26)
 
 ## Write data to new csv
 write.table(values.all.new, file = "src/csv/all_greyvalues_modis.csv", dec = ".", quote = FALSE, 

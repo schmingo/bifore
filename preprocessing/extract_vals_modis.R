@@ -7,7 +7,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-08-22                                                        ##
+## Version: 2013-08-25                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -21,7 +21,9 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set filepaths and filenames
 path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
 #path.wd <- Florian
-path.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD021KM.A2013188.1120.005.2013188200351.hdf"
+path.250.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD02QKM.A2013188.1120.005.2013188200351.hdf"
+path.500.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD02HKM.A2013188.1120.005.2013188200351.hdf"
+path.1km.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD021KM.A2013188.1120.005.2013188200351.hdf"
 
 ## Set working directory
 setwd(path.wd)

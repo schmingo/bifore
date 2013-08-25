@@ -8,13 +8,14 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-08-22                                                        ##
+## Version: 2013-08-25                                                        ##
 ##                                                                            ##
 ################################################################################
 
 hdfExtractRadScale <- function(path.wd,
-                               path.hdf,
-                               name.hdf
+                               path.250.hdf,
+                               path.500.hdf,
+                               path.1km.hdf
                                )
   {
 
@@ -25,47 +26,56 @@ hdfExtractRadScale <- function(path.wd,
 # Data folder
   setwd(path.wd)
 
-# GDALinfo from HDF
-  hdf.info <- GDALinfo(path.hdf,
-                       returnScaleOffset = F)
-
-# # HDF attributes
-# attributes(hdf.info) # display attributes
-  subds <- attr(hdf.info, "subdsmdata") # display subdatasets
-
-# Identify relevant SubDS via regular expression
-  refsb <- subds[grep("EOS_SWATH.*EV_1KM_RefSB$", subds)]
-  emissive <- subds[grep("EOS_SWATH.*EV_1KM_Emissive$", subds)]
-  refsb250 <- subds[grep("EOS_SWATH.*EV_250_Aggr1km_RefSB$", subds)]
-  refsb500 <- subds[grep("EOS_SWATH.*EV_500_Aggr1km_RefSB$", subds)]
-  band26 <- subds[grep("EOS_SWATH.*EV_Band26$", subds)]
-
-# Remove irrelevant parts of SubDS name
-  refsb <- unlist(strsplit(refsb, "="))[2]
-  emissive <- unlist(strsplit(emissive, "="))[2]
-  refsb250 <- unlist(strsplit(refsb250, "="))[2]
-  refsb500 <- unlist(strsplit(refsb500, "="))[2]
-  band26 <- unlist(strsplit(band26, "="))[2]
-
-# GDALinfo from SubDS
-  subds.info.refsb <- GDALinfo(refsb)
-  subds.info.emissive <- GDALinfo(emissive)
-  subds.info.refsb250 <- GDALinfo(refsb250)
-  subds.info.refsb500 <- GDALinfo(refsb500)
-  subds.info.band26 <- GDALinfo(band26)
-
-# Extract radiance scale from SubDS metadata
-  subds.mdata.refsb <- attr(subds.info.refsb, "mdata")
-  subds.mdata.emissive <- attr(subds.info.emissive, "mdata")
-  subds.mdata.refsb250 <- attr(subds.info.refsb250, "mdata")
-  subds.mdata.refsb500 <- attr(subds.info.refsb500, "mdata")
-  subds.mdata.band26 <- attr(subds.info.band26, "mdata")
-
-  scales.EV_1KM_RefSB <- subds.mdata.refsb[grep("radiance_scales", subds.mdata.refsb)]
-  scales.EV_1KM_Emissive <- subds.mdata.emissive[grep("radiance_scales", subds.mdata.emissive)]
-  scales.EV_250_Aggr1km_RefSB <- subds.mdata.refsb250[grep("radiance_scales", subds.mdata.refsb250)]
-  scales.EV_500_Aggr1km_RefSB <- subds.mdata.refsb500[grep("radiance_scales", subds.mdata.refsb500)]
-  scales.EV_BAND26 <- subds.mdata.band26[grep("radiance_scales", subds.mdata.band26)]
+  ## GDALinfo from HDF
+  info.250.hdf <- GDALinfo(path.250.hdf, returnScaleOffset = F)
+  info.500.hdf <- GDALinfo(path.500.hdf, returnScaleOffset = F)
+  info.1km.hdf <- GDALinfo(path.1km.hdf, returnScaleOffset = F)
+  
+  ## HDF attributes
+  #attributes(info.250.hdf) # display attributes
+  subds.250 <- attr(info.250.hdf, "subdsmdata") # display subdatasets
+  subds.500 <- attr(info.500.hdf, "subdsmdata") # display subdatasets
+  subds.1km <- attr(info.1km.hdf, "subdsmdata") # display subdatasets
+  
+  ## Identify relevant SubDS via regular expression
+  refsb.250 <- subds.250[grep("EOS_SWATH.*EV_250_RefSB$", subds.250)]
+  refsb.500 <- subds.500[grep("EOS_SWATH.*EV_500_RefSB$", subds.500)]
+  refsb.1km <- subds.1km[grep("EOS_SWATH.*EV_1KM_RefSB$", subds.1km)]
+  emiss.1km <- subds.1km[grep("EOS_SWATH.*EV_1KM_Emissive$", subds.1km)]
+  
+  ## Remove irrelevant parts of SubDS name
+  refsb.250 <- unlist(strsplit(refsb.250, "="))[2]
+  refsb.500 <- unlist(strsplit(refsb.500, "="))[2]
+  refsb.1km <- unlist(strsplit(refsb.1km, "="))[2]
+  emiss.1km <- unlist(strsplit(emiss.1km, "="))[2]
+  
+  ## GDALinfo from SubDS
+  info.subds.refsb.250 <- GDALinfo(refsb.250)
+  info.subds.refsb.500 <- GDALinfo(refsb.500)
+  info.subds.refsb.1km <- GDALinfo(refsb.1km)
+  info.subds.emiss.1km <- GDALinfo(emiss.1km)
+  
+  ## Extract radiance scale from SubDS metadata
+  mdata.subds.refsb.250 <- attr(info.subds.refsb.250, "mdata")
+  mdata.subds.refsb.500 <- attr(info.subds.refsb.500, "mdata")
+  mdata.subds.refsb.1km <- attr(info.subds.refsb.1km, "mdata")
+  mdata.subds.emiss.1km <- attr(info.subds.emiss.1km, "mdata")
+  
+  scales.refsb.250 <- mdata.subds.refsb.250[grep("radiance_scales", mdata.subds.refsb.250)]
+  scales.refsb.500 <- mdata.subds.refsb.500[grep("radiance_scales", mdata.subds.refsb.500)]
+  scales.refsb.1km <- mdata.subds.refsb.1km[grep("radiance_scales", mdata.subds.refsb.1km)]
+  scales.emiss.1km <- mdata.subds.emiss.1km[grep("radiance_scales", mdata.subds.emiss.1km)]
+  
+  scales.refsb.250 <- unlist(strsplit(scales.refsb.250, "="))[2]
+  scales.refsb.500 <- unlist(strsplit(scales.refsb.500, "="))[2]
+  scales.refsb.1km <- unlist(strsplit(scales.refsb.1km, "="))[2]
+  scales.emiss.1km <- unlist(strsplit(scales.emiss.1km, "="))[2]
+  
+  ## Print radiance scales
+  print(scales.refsb.250)
+  print(scales.refsb.500)
+  print(scales.refsb.1km)
+  print(scales.emiss.1km)
 
 # return radiance scales
 #   return(scales.EV_1KM_RefSB)

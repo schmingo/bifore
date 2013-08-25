@@ -32,7 +32,7 @@ setwd(path.wd)
 
 ## Rename MODIS Files to more meaningfull filenames (e.g. "B01" for "Band 1")
 source("scripts/preprocessing/rename_modis_files.R")
-hdfExtractRadScale (path.modis)
+rename_modis_files (path.modis)
 
 
 ### Import MODIS data

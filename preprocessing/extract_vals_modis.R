@@ -30,7 +30,7 @@ path.1km.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/
 setwd(path.wd)
 
 
-## Rename MODIS Files
+## Rename MODIS Files to more meaningfull filenames (e.g. "B01" for "Band 1")
 source("scripts/preprocessing/rename_modis_files.R")
 hdfExtractRadScale (path.modis)
 

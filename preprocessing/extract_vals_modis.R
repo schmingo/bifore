@@ -21,6 +21,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set filepaths and filenames
 path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
 #path.wd <- Florian
+path.modis <- "/home/schmingo/Diplomarbeit/src/satellite/MOD02_2013-07-07_copy/"
 path.250.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD02QKM.A2013188.1120.005.2013188200351.hdf"
 path.500.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD02HKM.A2013188.1120.005.2013188200351.hdf"
 path.1km.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD021KM.A2013188.1120.005.2013188200351.hdf"
@@ -29,7 +30,12 @@ path.1km.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/
 setwd(path.wd)
 
 
-### Import Landsat data
+## Rename MODIS Files
+source("scripts/preprocessing/rename_modis_files.R")
+hdfExtractRadScale (path.modis)
+
+
+### Import MODIS data
 
 ## List files
 files.list.sat <- list.files("src/satellite//MOD02_2013-07-07", 

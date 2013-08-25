@@ -100,7 +100,7 @@ values.all <- parLapply(clstr, raster.layers, function(h) {
 
 ## Merge single data frames
 values.all.new <- Reduce(function(...) merge(..., by = 1:6), values.all)
-names(values.all.new)[7:44] <- sapply(strsplit(substr(basename(files.list.sat), 1, nchar(basename(files.list.sat)) - 4), "_"), "[[", 2)
+names(values.all.new)[7:44] <- substr(basename(files.list.sat),1,nchar(basename(files.list.sat))-4)
 coordinates(values.all.new) <- c("Longitude", "Latitude")
 
 ## Deregister parallel backend

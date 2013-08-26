@@ -107,15 +107,19 @@ coordinates(values.all.new) <- c("Longitude", "Latitude")
 stopCluster(clstr)
 
 
-### Extract radiance_scale from original *.hdf
-
-## Load extraction script
+## Extract radiance_scale from original *.hdf
 source("scripts/preprocessing/hdfExtractRadScale.R")
-hdfExtractRadScale (path.wd,
-                    path.250.hdf,
-                    path.500.hdf,
-                    path.1km.hdf
-                    )
+scales <- hdfExtractRadScale (path.wd,
+                                 path.250.hdf,
+                                 path.500.hdf,
+                                 path.1km.hdf
+                                 )
+
+
+scales.refsb.250 <- scales[1]
+scales.refsb.500 <- scales[2]
+scales.refsb.1km <- scales[3]
+scales.emiss.1km <- scales[4]
 
 
 ## Write data to new csv

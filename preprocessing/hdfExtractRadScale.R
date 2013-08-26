@@ -76,12 +76,17 @@ hdfExtractRadScale <- function(path.wd,
   print(scales.refsb.500)
   print(scales.refsb.1km)
   print(scales.emiss.1km)
-
-# return radiance scales
-#   return(scales.EV_1KM_RefSB)
-#   return(scales.EV_1KM_Emissive)
-#   return(scales.EV_250_Aggr1km_RefSB)
-#   return(scales.EV_500_Aggr1km_RefSB)
-#   return(scales.EV_BAND26)
+  
+  # strsplit(dein.vector, ", ")
+  # sapply(strsplit(dein.vector, ", "), as.numeric)
+  
+  
+  sapply(strsplit(scales.refsb.250, ", "), as.numeric)
+  sapply(strsplit(scales.refsb.500, ", "), as.numeric)
+  sapply(strsplit(scales.refsb.1km, ", "), as.numeric)
+  sapply(strsplit(scales.emiss.1km, ", "), as.numeric)
+  
+  # "es funktioniert nur 1 return() befehl!"
+  return(list(scales.refsb.250, scales.refsb.500, scales.refsb.1km, scales.emiss.1km))
 
 }

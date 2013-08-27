@@ -22,6 +22,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set filepaths and filenames
 path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
+path.wd <- "D:/Diplomarbeit/" # Windows
 
 path.modis <- "/home/schmingo/Diplomarbeit/src/satellite/MOD02_2013-07-07/"
 path.250.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD02QKM.A2013188.1120.005.2013188200351.hdf"
@@ -139,6 +140,7 @@ coordinates(values.all.new) <- c("Longitude", "Latitude")
 stopCluster(clstr)
 
 ## Extract radiance_scale from original *.hdf
+# Important Note: This script will only work in Linux (GDAL support) !
 source("scripts/preprocessing/hdfExtractRadScale.R")
 scales <- hdfExtractRadScale (path.wd,
                                  path.250.hdf,
@@ -153,5 +155,8 @@ scales.emiss.1km <- scales[4]
 
 
 ## Write values to new CSV-file
-write.table(values.all.new, file = "src/csv/all_greyvalues_modis.csv", dec = ".", quote = FALSE, 
-            col.names = TRUE, row.names = FALSE, sep =";")
+write.table(values.all.new, file = "src/csv/all_greyvalues_modis.csv", 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE, sep =";")

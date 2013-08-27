@@ -97,7 +97,7 @@ extent.all <- lapply(seq(1, nrow(table.all), 4), function(i) {
 ### Extraction of cell values ##################################################
 
 ## Parallelization
-clstr <- makePSOCKcluster(n.cores <- 4)
+clstr <- makePSOCKcluster(n.cores <- detectCores()-1)
 
 clusterExport(clstr, c("lib", 
                        "raster.layers", 

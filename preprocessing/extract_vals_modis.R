@@ -3,7 +3,7 @@
 ##                                                                            ##
 ## EXTRACT GREYVALUES FROM MODIS SATELLITE DATA USING CORNER COORDINATES      ##
 ##                                                                            ##
-## Important Note: This script will only work under Linux!                    ##
+## Important Note: Parts of this script will only work under Linux!           ##
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##

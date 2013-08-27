@@ -14,56 +14,73 @@
 ## Clear workspace
 rm(list = ls(all = TRUE))
 
+
 ## Required libraries
 lib <- c("rgdal", "parallel", "raster")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
+
 ## Set filepaths and filenames
 path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
-#path.wd <- Florian
+
 path.modis <- "/home/schmingo/Diplomarbeit/src/satellite/MOD02_2013-07-07/"
 path.250.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD02QKM.A2013188.1120.005.2013188200351.hdf"
 path.500.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD02HKM.A2013188.1120.005.2013188200351.hdf"
 path.1km.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD021KM.A2013188.1120.005.2013188200351.hdf"
 
 
+################################################################################
+### Rename MODIS files #########################################################
 
-
-# ## Rename MODIS Files to more meaningfull filenames (e.g. "B01" for "Band 1")
 # source("scripts/preprocessing/rename_modis_files.R")
 # rename_modis_files (path.modis)
 
-## Set working directory
+
+################################################################################
+### Set working directory ######################################################
+
 setwd(path.wd)
 
-### Import MODIS data
+################################################################################
+### Import MODIS data ##########################################################
 
 ## List files
 files.list.sat <- list.files("src/satellite/MOD02_2013-07-07", 
                              pattern = ".tif$", full.names = TRUE)
+
 
 ## Import files as RasterLayer objects
 raster.layers <- lapply(files.list.sat, raster)
 projection.layers <- CRS(projection(raster.layers[[1]]))
 
 
-### Create extends from *.csv
+################################################################################
+### Create extends from CSV-files ##############################################
 
 ## List CENTER files
-files.all.center <- list.files("src/csv/", pattern = "all_plot_center.csv$", full.names = TRUE)
+files.all.center <- list.files("src/csv/", 
+                               pattern = "all_plot_center.csv$", 
+                               full.names = TRUE)
 
 ## Import CENTER files as SpatialPointsDataframe objects
-table.all.center <- read.csv2(files.all.center, dec = ".", stringsAsFactors = FALSE)
+table.all.center <- read.csv2(files.all.center, dec = ".", 
+                              stringsAsFactors = FALSE)
+
 coordinates(table.all.center) <- c("Longitude", "Latitude")
 projection(table.all.center) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
  
 table.all.center <- spTransform(table.all.center, CRS = projection.layers)
 
 ## List CORNER files
-files.all.corner <- list.files("src/csv/", pattern = "all_plot_corner.csv$", full.names = TRUE)
+files.all.corner <- list.files("src/csv/", 
+                               pattern = "all_plot_corner.csv$", 
+                               full.names = TRUE)
 
 ## Import CORNER files as SpatialPointsDataframe objects
-table.all <- read.csv2(files.all.corner, dec = ".", stringsAsFactors = FALSE)
+table.all <- read.csv2(files.all.corner, 
+                       dec = ".", 
+                       stringsAsFactors = FALSE)
+
 coordinates(table.all) <- c("Longitude", "Latitude")
 projection(table.all) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
   
@@ -75,12 +92,21 @@ extent.all <- lapply(seq(1, nrow(table.all), 4), function(i) {
   })
 
 
-### Extraction
+################################################################################
+### Extraction of greyvalues ###################################################
 
 ## Parallelization
 clstr <- makePSOCKcluster(n.cores <- 4)
-clusterExport(clstr, c("lib", "raster.layers", "extent.all", "table.all.center", "table.all"))
-clusterEvalQ(clstr, lapply(lib, function(i) require(i, character.only = TRUE, quietly = TRUE)))
+
+clusterExport(clstr, c("lib", 
+                       "raster.layers", 
+                       "extent.all", 
+                       "table.all.center", 
+                       "table.all"))
+
+clusterEvalQ(clstr, lapply(lib, function(i) require(i, 
+                                                    character.only = TRUE, 
+                                                    quietly = TRUE)))
 
 ## Extract and AVERAGE cell values
 values.all <- parLapply(clstr, raster.layers, function(h) {
@@ -100,12 +126,15 @@ values.all <- parLapply(clstr, raster.layers, function(h) {
 
 ## Merge single data frames
 values.all.new <- Reduce(function(...) merge(..., by = 1:6), values.all)
-names(values.all.new)[7:44] <- substr(basename(files.list.sat),1,nchar(basename(files.list.sat))-4)
+
+names(values.all.new)[7:44] <- substr(basename(files.list.sat),
+                                      1,
+                                      nchar(basename(files.list.sat))-4)
+
 coordinates(values.all.new) <- c("Longitude", "Latitude")
 
 ## Deregister parallel backend
 stopCluster(clstr)
-
 
 ## Extract radiance_scale from original *.hdf
 source("scripts/preprocessing/hdfExtractRadScale.R")
@@ -115,13 +144,12 @@ scales <- hdfExtractRadScale (path.wd,
                                  path.1km.hdf
                                  )
 
-
 scales.refsb.250 <- scales[1]
 scales.refsb.500 <- scales[2]
 scales.refsb.1km <- scales[3]
 scales.emiss.1km <- scales[4]
 
 
-## Write data to new csv
+## Write values to new CSV-file
 write.table(values.all.new, file = "src/csv/all_greyvalues_modis.csv", dec = ".", quote = FALSE, 
             col.names = TRUE, row.names = FALSE, sep =";")

@@ -93,7 +93,7 @@ extent.all <- lapply(seq(1, nrow(table.all), 4), function(i) {
 
 
 ################################################################################
-### Extraction of greyvalues ###################################################
+### Extraction of cell values ##################################################
 
 ## Parallelization
 clstr <- makePSOCKcluster(n.cores <- 4)
@@ -122,7 +122,9 @@ values.all <- parLapply(clstr, raster.layers, function(h) {
   temp.df <- data.frame(table.all.center, ls_grey_value = temp.values)
   
   return(temp.df)
+  print("Extracting cell values... ")
 })
+print("...done!")
 
 ## Merge single data frames
 values.all.new <- Reduce(function(...) merge(..., by = 1:6), values.all)

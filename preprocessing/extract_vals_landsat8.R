@@ -22,20 +22,30 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
 path.wd <- "D:/Diplomarbeit/" # Windows
 
+path.img <- "D:/Diplomarbeit/src/satellite/Landsat8/hai/"
+path.out <- "/src/satellite/Landsat8/hai/out"
+
+patt.corner <- "hai_plot_center.csv$"
+patt.center <- "hai_corner.csv$"
+
 
 ################################################################################
 ### Set working directory ######################################################
 
 setwd(path.wd) # Linux
 
+################################################################################
+### Reproject Landsat 8 Data ###################################################
+                                                                                # BUG!
+# source("scripts/preprocessing/reproject_landsat8.R")
+# reproject_landsat8 (path.wd, path.img, path.out)
 
 ################################################################################
 ### Import Landsat data ########################################################
 
 ## List files
-files.list.sat <- list.files("src/satellite/Landsat8/hai/", 
+files.list.sat <- list.files(path.img, 
                      pattern = ".TIF$", full.names = TRUE)
-
 
 ## Import files as RasterLayer objects
 raster.layers <- lapply(files.list.sat, raster)
@@ -47,7 +57,7 @@ projection.layers <- CRS(projection(raster.layers[[1]]))
 
 ## List CENTER files
 files.hai.center <- list.files("src/csv/", 
-                               pattern = "hai_plot_center.csv$", 
+                               pattern = patt.center, 
                                full.names = TRUE)
 
 ## Import CENTER files as SpatialPointsDataframe objects
@@ -62,7 +72,7 @@ table.hai.center <- spTransform(table.hai.center, CRS = projection.layers)
 
 ## List CORNER files
 files.hai.corner <- list.files("src/csv/", 
-                               pattern = "hai_corner.csv$", 
+                               pattern = patt.corner, 
                                full.names = TRUE)
 
 ## Import CORNER files as SpatialPointsDataframe objects

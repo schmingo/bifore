@@ -1,11 +1,11 @@
 ################################################################################
-## BiFoRe Scripts
-##
-## Import and view csv files
-##
-## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-07-28
-##
+## BiFoRe Scripts                                                             ##
+##                                                                            ##
+## Import and view csv files                                                  ##
+##                                                                            ##
+## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
+## Version: 2013-07-28                                                        ##
+##                                                                            ##
 ################################################################################
 
 ## Clear workspace
@@ -15,9 +15,8 @@ rm(list = ls(all = TRUE))
 
 
 ## set working directory
-#setwd("/home/schmingo/Diplomarbeit/") #Linux
+setwd("/home/schmingo/Diplomarbeit/") #Linux
 setwd("D:/Diplomarbeit/") #Windows
-#setwd("Florian")
 
 ## set filepaths
 file.coords.alb <- "src/csv/alb_corner.csv"
@@ -34,8 +33,6 @@ coords.hai <- read.csv(file.coords.hai, header = TRUE, sep = ";",dec = ".",
                        fill = FALSE, stringsAsFactors = FALSE)
 coords.sch <- read.csv(file.coords.sch, header = TRUE, sep = ";",dec = ".",
                        fill = FALSE, stringsAsFactors = FALSE)
-
-## filter data
 
 
 ## show data

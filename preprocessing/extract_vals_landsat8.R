@@ -36,7 +36,7 @@ setwd(path.wd) # Linux
 
 ################################################################################
 ### Reproject Landsat 8 Data ###################################################
-                                                                                # BUG!
+                                                                                # BUG! -> maybe try it without parallelization
 # source("scripts/preprocessing/reproject_landsat8.R")
 # reproject_landsat8 (path.wd, path.img, path.out)
 

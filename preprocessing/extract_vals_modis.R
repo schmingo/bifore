@@ -123,9 +123,7 @@ values.all <- parLapply(clstr, raster.layers, function(h) {
   temp.df <- data.frame(table.all.center, ls_grey_value = temp.values)
   
   return(temp.df)
-  print("Extracting cell values... ")
 })
-print("...done!")
 
 ## Merge single data frames
 values.all.new <- Reduce(function(...) merge(..., by = 1:6), values.all)

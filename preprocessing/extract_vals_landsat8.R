@@ -22,7 +22,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
 path.wd <- "D:/Diplomarbeit/" # Windows
 
-path.img <- "D:/Diplomarbeit/src/satellite/Landsat8/hai/"
+path.img <- "/src/satellite/Landsat8/hai/"
 path.out <- "/src/satellite/Landsat8/hai/out"
 
 patt.corner <- "hai_plot_center.csv$"
@@ -37,8 +37,8 @@ setwd(path.wd) # Linux
 ################################################################################
 ### Reproject Landsat 8 Data ###################################################
                                                                                 # BUG! -> maybe try it without parallelization
-# source("scripts/preprocessing/reproject_landsat8.R")
-# reproject_landsat8 (path.wd, path.img, path.out)
+ source("scripts/preprocessing/reproject_landsat8.R")
+ reproject_landsat8 (path.wd, path.img, path.out)
 
 ################################################################################
 ### Import Landsat data ########################################################

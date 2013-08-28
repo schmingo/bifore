@@ -37,41 +37,27 @@ reproject_landsat8 <- function(path.wd,
   ##############################################################################
   ### Reproject Landsat 8 Data #################################################
   
-  projectRaster(i, crs = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"), 
-                filename = paste(path.out, 
-                substr(basename(rst.ls[[1]]@file@name), 
-                       1, 
-                       nchar(basename(rst.ls[[1]]@file@name)) - 4), 
-                                 "_longlat"
-                                 , sep = ""), 
-                overwrite = TRUE, 
-                format = "GTiff")
-  
-  
-  
-  
-  
-#   ## Parallelization
-#   clstr <- makePSOCKcluster(n.cores <- detectCores()-1)
-#   clusterExport(clstr, c("lib", "rst.ls"))
-#   clusterEvalQ(clstr, lapply(lib, function(i) require(i, 
-#                                                       character.only = TRUE, 
-#                                                       quietly = TRUE)))
-# 
-#   ## Reproject and save rasters
-#   rst.ls.rpj <- parLapply(clstr, rst.ls, path.out, function(i) {
-#     projectRaster(i, crs = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"), 
-#                   filename = paste(path.out, 
-#                                   substr(basename(rst.ls[[1]]@file@name), 
-#                                          1, 
-#                                          nchar(basename(rst.ls[[1]]@file@name)) - 4), 
-#                                   "_longlat"
-#                                    , sep = ""), 
-#                   overwrite = TRUE, 
-#                   format = "GTiff")
-#   })
-# 
-#   ## Deregister parallel backend
-#   stopCluster(clstr)
+  ## Parallelization
+  clstr <- makePSOCKcluster(n.cores <- detectCores()-1)
+  clusterExport(clstr, c("lib", "rst.ls"))
+  clusterEvalQ(clstr, lapply(lib, function(i) require(i, 
+                                                      character.only = TRUE, 
+                                                      quietly = TRUE)))
+
+  ## Reproject and save rasters
+  rst.ls.rpj <- parLapply(clstr, rst.ls, path.out, function(i) {
+    projectRaster(i, crs = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"), 
+                  filename = paste(path.out, 
+                                  substr(basename(rst.ls[[1]]@file@name), 
+                                         1, 
+                                         nchar(basename(rst.ls[[1]]@file@name)) - 4), 
+                                  "_longlat"
+                                   , sep = ""), 
+                  overwrite = TRUE, 
+                  format = "GTiff")
+  })
+
+  ## Deregister parallel backend
+  stopCluster(clstr)
   print("Reprojection done ... ")
 }

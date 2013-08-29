@@ -16,7 +16,7 @@ hdfExtractRadScale <- function(path.250.hdf,
                                path.500.hdf,
                                path.1km.hdf
                                )
-  {
+{
 
   
   print ("Extract Radiance Scale values from MODIS hdf files...")

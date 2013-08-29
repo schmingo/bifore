@@ -12,19 +12,43 @@
 ##                                                                            ##
 ################################################################################
 
-hdfExtractRadScale <- function(path.250.hdf,
-                               path.500.hdf,
-                               path.1km.hdf
-                               )
-{
+## Clear workspace
+rm(list = ls(all = TRUE))
 
-  
-  print ("Extract Radiance Scale values from MODIS hdf files...")
-  
-  
-  ## Required packages
-  stopifnot(require(rgdal))
 
+## Required libraries
+lib <- c("rgdal", "parallel", "raster")
+lapply(lib, function(...) require(..., character.only = TRUE))
+
+
+## Set filepaths and filenames
+path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
+setwd(path.wd)
+path.modis <- "/home/schmingo/Diplomarbeit/src/satellite/MOD02_2013-07-07/"
+path.250.hdf <- "MOD02QKM.A2013188.1120.005.2013188200351.hdf"
+path.500.hdf <- "MOD02HKM.A2013188.1120.005.2013188200351.hdf"
+path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
+
+
+# hdfExtractRadScale <- function(path.250.hdf,
+#                                path.500.hdf,
+#                                path.1km.hdf
+#                                )
+# {
+# 
+#   
+#   print ("Extract Radiance Scale values from MODIS hdf files...")
+#   
+#   
+#   ## Required packages
+#   stopifnot(require(rgdal))
+
+  ## Set MODIS band order (check hdf metadata)
+  bands.refsb.200 = c(1,2)
+  bands.refsb.500 = c(3,4,5,6,7)
+  bands.refsb.1km = c(8,9,10,11,12,13.1,13.2,14.1,14.2,15,16,17,18,19,26)
+  bands.emiss.1km = c(20,21,22,23,24,25,27,28,29,30,31,32,33,34,35,36)
+  
   
   ## GDALinfo from HDF
   info.250.hdf <- GDALinfo(path.250.hdf, returnScaleOffset = F)
@@ -85,6 +109,34 @@ hdfExtractRadScale <- function(path.250.hdf,
   
   
   ## return extracted values to call-script
-  return(list(scales.refsb.250, scales.refsb.500, scales.refsb.1km, scales.emiss.1km))
+#  return(list(scales.refsb.250, scales.refsb.500, scales.refsb.1km, scales.emiss.1km))
+  
+  ##############################################################################
+  ## Write Modis bandnames and radiance scales to new csv ######################
+  
+  # paste bandnames and radiance scale
+  bandnames <- paste(bands.refsb.200, 
+                     bands.refsb.500, 
+                     bands.refsb.1km,
+                     bands.emiss.1km)
+  
+  scales <- paste(scales.refsb.250,
+                  scales.refsb.500,
+                  scales.refsb.1km,
+                  scales.emiss.1km)
+  ##
 
+'''
+  refsb.200.bands = 1,2
+  refsb.500.bands = 3,4,5,6,7
+  refsb.1km.bands = 8,9,10,11,12,13.1,13.2,14.1,14.2,15,16,17,18,19,26
+  emiss.1km.bands = 20,21,22,23,24,25,27,28,29,30,31,32,33,34,35,36
+  scales in entsprechender reihenfolge in neue csv datei schreiben.
+  1. zeile band reihenfolge, 2. zeile scales. anschließend wie beispiel neu sortieren: 
+  
+  tst <- data.frame(band = c("1", "10", "14lo", "14hi", "26", "20"), scale = sample(1:1000, 6))
+  tst[order(tst[, 1]), ]
+  
+  dann neue csv mit greyvalues multiplizieren.
+  '''
 }

@@ -140,11 +140,10 @@ stopCluster(clstr)
 ## Extract radiance_scale from original *.hdf
 # Important Note: This script will only work in Linux (GDAL support) !
 source("scripts/preprocessing/hdfExtractRadScale.R")
-scales <- hdfExtractRadScale (path.wd,
-                                 path.250.hdf,
-                                 path.500.hdf,
-                                 path.1km.hdf
-                                 )
+scales <- hdfExtractRadScale (path.250.hdf,
+                              path.500.hdf,
+                              path.1km.hdf
+                              )
 
 as.numeric(unlist(strsplit(unlist(scales), ", ")))
 

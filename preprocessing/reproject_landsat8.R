@@ -17,7 +17,6 @@ reproject_landsat8 <- function(lib,
    print ("Reproject Landsat8 files ...")
    
   ## Required packages
-  lib <- c("rgdal", "raster", "doParallel")
   sapply(lib, function(...) stopifnot(require(..., character.only = T)))
   
   ## Parallelization

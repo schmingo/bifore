@@ -8,32 +8,14 @@
 ##                                                                            ##
 ################################################################################
 
-
-## Clear workspace
-rm(list = ls(all = TRUE))
-
-
-## Required libraries
-lib <- c("rgdal", "parallel", "raster")
-lapply(lib, function(...) require(..., character.only = TRUE))
-
-
-## Set filepaths and filenames
-path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
-#path.wd <- "D:/Diplomarbeit/" # Windows
-
-path.img <- "src/satellite/Landsat8/hai/"
-path.out <- "src/satellite/Landsat8/hai/out"
-
-
-
-# reproject_landsat8 <- function(path.img,
-#                                path.out
-#                                )
-# {
-#   
-#   print ("Reproject Landsat8 files ...")
-#   
+reproject_landsat8 <- function(lib,
+                               path.img,
+                               path.out
+                               )
+{
+   
+   print ("Reproject Landsat8 files ...")
+   
   ## Required packages
   lib <- c("rgdal", "raster", "doParallel")
   sapply(lib, function(...) stopifnot(require(..., character.only = T)))
@@ -42,7 +24,7 @@ path.out <- "src/satellite/Landsat8/hai/out"
   clstr <- makeCluster(detectCores() - 1)
   registerDoParallel(clstr)  
 
-##############################################################################
+  ##############################################################################
   ### Import Landsat8 Data #####################################################
 
   ## List files

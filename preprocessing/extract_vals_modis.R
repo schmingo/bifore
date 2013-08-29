@@ -132,7 +132,7 @@ names(values.all.new)[7:44] <- substr(basename(files.list.sat),
                                       1,
                                       nchar(basename(files.list.sat))-4)
 
-coordinates(values.all.new) <- c("Longitude", "Latitude")
+# coordinates(values.all.new) <- c("Longitude", "Latitude")
 
 ## Deregister parallel backend
 stopCluster(clstr)

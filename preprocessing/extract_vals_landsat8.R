@@ -14,7 +14,7 @@ rm(list = ls(all = TRUE))
 
 
 ## Required libraries
-lib <- c("rgdal", "parallel", "raster")
+lib <- c("rgdal", "parallel", "doParallel", "raster", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 

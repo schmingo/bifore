@@ -27,21 +27,22 @@ path.out <- "src/satellite/Landsat8/hai/out"
 
 
 
-# reproject_landsat8 <- function(path.wd,
-#                                path.img,
+# reproject_landsat8 <- function(path.img,
 #                                path.out
 #                                )
 # {
 #   
 #   print ("Reproject Landsat8 files ...")
 #   
-#   ## Required packages
-#   stopifnot(require(rgdal, raster, parallel))
-#   
-#   ## Set Working Directory
-   setwd(path.wd)
+  ## Required packages
+  lib <- c("rgdal", "raster", "doParallel")
+  sapply(lib, function(...) stopifnot(require(..., character.only = T)))
   
-  ##############################################################################
+  ## Parallelization
+  clstr <- makeCluster(detectCores() - 1)
+  registerDoParallel(clstr)  
+
+##############################################################################
   ### Import Landsat8 Data #####################################################
 
   ## List files
@@ -55,18 +56,11 @@ path.out <- "src/satellite/Landsat8/hai/out"
 
   ##############################################################################
   ### Reproject Landsat 8 Data #################################################
-  
-  ## Parallelization
-  clstr <- makePSOCKcluster(n.cores <- detectCores()-1)
-  clusterExport(clstr, c("lib","rst.ls"))
-  clusterEvalQ(clstr, lapply(lib, function(i) require(i, 
-                                                      character.only = TRUE, 
-                                                      quietly = TRUE)))
 
   ## Reproject and save rasters
-  rst.ls.rpj <- parLapply(clstr, rst.ls, function(i) {
-    projectRaster(i, crs = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"), 
-                  filename = paste(path.img, 
+  rst.ls.rpj <- foreach(i = rst.ls, .packages = lib) %dopar% {
+    projectRaster(i, crs = CRS("+init=epsg:4326"), 
+                  filename = paste(path.out, 
                                   substr(basename(rst.ls[[1]]@file@name), 
                                          1, 
                                          nchar(basename(rst.ls[[1]]@file@name)) - 4), 
@@ -74,7 +68,7 @@ path.out <- "src/satellite/Landsat8/hai/out"
                                    , sep = ""), 
                   overwrite = TRUE, 
                   format = "GTiff")
-  })
+  }
 
   ## Deregister parallel backend
   stopCluster(clstr)

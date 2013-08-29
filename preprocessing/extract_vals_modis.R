@@ -154,6 +154,12 @@ refsb.500.bands = 3,4,5,6,7
 refsb.1km.bands = 8,9,10,11,12,13lo,13hi,14lo,14hi,15,16,17,18,19,26
 emiss.1km.bands = 20,21,22,23,24,25,27,28,29,30,31,32,33,34,35,36
 scales in entsprechender reihenfolge in neue csv datei schreiben.
+1. zeile band reihenfolge, 2. zeile scales. anschließend wie beispiel neu sortieren: 
+
+tst <- data.frame(band = c("1", "10", "14lo", "14hi", "26", "20"), scale = sample(1:1000, 6))
+tst[order(tst[, 1]), ]
+
+dann neue csv mit greyvalues multiplizieren.
 '''
 
 

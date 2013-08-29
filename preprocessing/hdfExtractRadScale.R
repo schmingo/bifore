@@ -12,20 +12,20 @@
 ##                                                                            ##
 ################################################################################
 
-hdfExtractRadScale <- function(path.wd,
-                               path.250.hdf,
+hdfExtractRadScale <- function(path.250.hdf,
                                path.500.hdf,
                                path.1km.hdf
                                )
   {
 
+  
   print ("Extract Radiance Scale values from MODIS hdf files...")
+  
+  
   ## Required packages
   stopifnot(require(rgdal))
 
-  ## Data folder
-  setwd(path.wd)
-
+  
   ## GDALinfo from HDF
   info.250.hdf <- GDALinfo(path.250.hdf, returnScaleOffset = F)
   info.500.hdf <- GDALinfo(path.500.hdf, returnScaleOffset = F)

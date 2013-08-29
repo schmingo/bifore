@@ -16,8 +16,8 @@ lib <- c("randomForest", "foreach", "doSNOW", "parallel")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-#setwd("/home/schmingo/Diplomarbeit/") # Linux
-setwd("D:/Diplomarbeit/") # Windows
+setwd("/home/schmingo/Diplomarbeit/") # Linux
+#setwd("D:/Diplomarbeit/") # Windows
 #setwd("Florian")
 
 ## Import dataset
@@ -75,8 +75,8 @@ train.data <- data.frame(Plotname,
 detach(data)
 names(train.data)
 
-
-### Random Forest
+################################################################################
+### Random Forest ##############################################################
 ?? randomForest
 
 n.cores <- detectCores() # detect cpu cores for parallelization
@@ -97,28 +97,28 @@ na.action:  A function to specify the action to be taken if NAs are found.
 
 parRandomForest <- function(xx, ..., ntree=n.tree, mtry=m.try, importance=TRUE, do.trace=100, 
                             na.action=na.omit, ncores=n.cores, seed=47) {
-  # Initialize Cluster
+  ## Initialize Cluster
   cl <- makeCluster(ncores)
-  # Initialize RNG and distribute streams to nodes
+  ## Initialize RNG and distribute streams to nodes
   if(!is.null(seed)) 
     clusterSetRNGStream(cl, seed)
-  # Load randomForest package on cluster
+  ## Load randomForest package on cluster
   clusterEvalQ(cl, library(randomForest))
   
-  # randomForest function for parLapply
+  ## randomForest function for parLapply
   rfwrap <- function(xx, ntree, ...)
     randomForest(x=xx, ntree=ntree, ...)
-  # Execute randomForest
+  ## Execute randomForest
   rfpar <- parLapply(cl, rep(ceiling(ntree/ncores), ncores), xx=xx, rfwrap, ...)
   
-  # Stop cluster
+  ## Stop cluster
   stopCluster(cl)
   
-  # Combine resulting randomForest objects
+  ## Combine resulting randomForest objects
   do.call(combine, rfpar)
 }
 
-# Call function
+## Call function
 '''
 BUG -> NA not permitted in predictors
 Assigned to Issue #4

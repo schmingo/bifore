@@ -22,7 +22,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set filepaths and filenames
 path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
-path.wd <- "D:/Diplomarbeit/" # Windows
+#path.wd <- "D:/Diplomarbeit/" # Windows
 
 path.modis <- "/home/schmingo/Diplomarbeit/src/satellite/MOD02_2013-07-07/"
 path.250.hdf <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/MOD02QKM.A2013188.1120.005.2013188200351.hdf"
@@ -146,10 +146,16 @@ scales <- hdfExtractRadScale (path.wd,
                                  path.1km.hdf
                                  )
 
-scales.refsb.250 <- scales[1]
-scales.refsb.500 <- scales[2]
-scales.refsb.1km <- scales[3]
-scales.emiss.1km <- scales[4]
+as.numeric(unlist(strsplit(unlist(scales), ", ")))
+
+'''
+refsb.200.bands = 1,2
+refsb.500.bands = 3,4,5,6,7
+refsb.1km.bands = 8,9,10,11,12,13lo,13hi,14lo,14hi,15,16,17,18,19,26
+emiss.1km.bands = 20,21,22,23,24,25,27,28,29,30,31,32,33,34,35,36
+scales in entsprechender reihenfolge in neue csv datei schreiben.
+'''
+
 
 
 ## Write values to new CSV-file
@@ -158,3 +164,6 @@ write.table(values.all.new, file = "src/csv/all_greyvalues_modis.csv",
             quote = FALSE, 
             col.names = TRUE, 
             row.names = FALSE, sep =";")
+
+table <- read.csv2("/home/schmingo/Diplomarbeit/src/csv/all_greyvalues_modis.csv",header = TRUE, sep = ";",dec = ".",
+                   fill = FALSE, stringsAsFactors = FALSE)

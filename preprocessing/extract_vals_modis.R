@@ -46,7 +46,7 @@ setwd(path.wd)
 ### Import MODIS data ##########################################################
 
 ## List files
-files.list.sat <- list.files("src/satellite/MOD02_2013-07-07", 
+files.list.sat <- list.files(path.modis, 
                              pattern = ".tif$", full.names = TRUE)
 
 

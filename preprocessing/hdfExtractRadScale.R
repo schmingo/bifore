@@ -44,16 +44,6 @@ path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
 #   stopifnot(require(rgdal))
 
 
-  ## Set MODIS band order (check hdf metadata)
-#   bands.refsb.250 = c("1","2")
-#   bands.refsb.500 = c("3","4","5","6","7")
-#   bands.refsb.1km = c("8","9","10","11","12","13.1","13.2","14.1","14.2","15","16","17","18","19","26")
-#   bands.emiss.1km = c("20","21","22","23","24","25","27","28","29","30","31","32","33","34","35","36")
-  
-#   bands.refsb.250 = "01,02"
-#   bands.refsb.500 = "03,04,05,06,07"
-#   bands.refsb.1km = "08,09,10,11,12,13.1,13.2,14.1,14.2,15,16,17,18,19,26"
-#   bands.emiss.1km = "20,21,22,23,24,25,27,28,29,30,31,32,33,34,35,36"
   
   ## GDALinfo from HDF
   info.250.hdf <- GDALinfo(paste(path.modis,path.250.hdf, sep = ""), 

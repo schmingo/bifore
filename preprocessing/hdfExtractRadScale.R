@@ -174,6 +174,7 @@ path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
 
   ## Order dataframe
   radscales <- radscales[ order(radscales[,1]), ]
+  row.names(radscales) <- NULL
   
 
 ## return extracted values to call-script

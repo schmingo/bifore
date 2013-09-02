@@ -68,7 +68,7 @@ table.all.center <- read.csv2(files.all.center, dec = ".",
                               stringsAsFactors = FALSE)
 
 coordinates(table.all.center) <- c("Longitude", "Latitude")
-projection(table.all.center) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+projection(table.all.center) <- "+init=epsg:4326"
  
 table.all.center <- spTransform(table.all.center, CRS = projection.layers)
 
@@ -83,7 +83,7 @@ table.all <- read.csv2(files.all.corner,
                        stringsAsFactors = FALSE)
 
 coordinates(table.all) <- c("Longitude", "Latitude")
-projection(table.all) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+projection(table.all) <- "+init=epsg:4326"
   
 table.all <- spTransform(table.all, CRS = projection.layers)
 

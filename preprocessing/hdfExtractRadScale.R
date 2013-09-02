@@ -175,7 +175,9 @@ path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
   ## Write bandnames and radiance scales to a single dataframe
   radscales <- cbind(bandnames, scales)
 
-
+  ## Order dataframe
+  radscales <- radscales[ order(radscales[,1]), ]
+  
 # ## Write values to new CSV-file
 # radscales <- data.frame(scales)
 # 

@@ -128,13 +128,6 @@ path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
   sapply(strsplit(scales.emiss.1km, ", "), as.numeric)
   
   
-#   if x=="13hi", x <- "13.1" 
-#   sapply(strsplit(bands.refsb.250, ","), as.numeric)
-#   sapply(strsplit(bands.refsb.500, ","), as.numeric)
-#   sapply(strsplit(bands.refsb.1km, ","), as.numeric)
-#   sapply(strsplit(bands.emiss.1km, ","), as.numeric)
-
-  
   ##############################################################################
   ## Write Modis bandnames and radiance scales to new csv ######################
   

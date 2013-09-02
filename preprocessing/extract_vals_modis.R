@@ -140,10 +140,10 @@ stopCluster(clstr)
 
 ## Extract radiance_scale from original *.hdf (only in Linux environment)
 source("scripts/preprocessing/hdfExtractRadScale.R")
-scales <- hdfExtractRadScale (path.raw.modis,
-                              path.250.hdf,
-                              path.500.hdf,
-                              path.1km.hdf)
+radscales <- hdfExtractRadScale (path.raw.modis,
+                                 path.250.hdf,
+                                 path.500.hdf,
+                                 path.1km.hdf)
 
 
 ## Write values to new CSV-file

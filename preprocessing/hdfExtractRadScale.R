@@ -30,7 +30,8 @@ path.500.hdf <- "MOD02HKM.A2013188.1120.005.2013188200351.hdf"
 path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
 
 
-hdfExtractRadScale <- function(path.250.hdf,
+hdfExtractRadScale <- function(path.modis,
+                               path.250.hdf,
                                path.500.hdf,
                                path.1km.hdf
                                )

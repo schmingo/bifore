@@ -30,7 +30,7 @@ hdfExtractRadScale <- function(path.raw.modis,
 
   
   ## GDALinfo from HDF
-  info.250.hdf <- GDALinfo(paste(path..raw.modis,path.250.hdf, sep = ""), 
+  info.250.hdf <- GDALinfo(paste(path.raw.modis,path.250.hdf, sep = ""), 
                            returnScaleOffset = F)
   info.500.hdf <- GDALinfo(paste(path.raw.modis,path.500.hdf, sep = ""), 
                            returnScaleOffset = F)
@@ -149,7 +149,7 @@ hdfExtractRadScale <- function(path.raw.modis,
   ## Order dataframe
   radscales <- radscales[ order(radscales[,1]), ]
   row.names(radscales) <- NULL
-  
+  radscales <- data.frame(t(radscales))
 
   ## return extracted values to call-script
   return(radscales)

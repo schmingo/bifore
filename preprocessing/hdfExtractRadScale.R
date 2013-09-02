@@ -173,22 +173,7 @@ path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
   ## Order dataframe
   radscales <- radscales[ order(radscales[,1]), ]
   
-# ## Write values to new CSV-file
-# radscales <- data.frame(scales)
-# 
-# '''
-#   refsb.200.bands = 1,2
-#   refsb.500.bands = 3,4,5,6,7
-#   refsb.1km.bands = 8,9,10,11,12,13.1,13.2,14.1,14.2,15,16,17,18,19,26
-#   emiss.1km.bands = 20,21,22,23,24,25,27,28,29,30,31,32,33,34,35,36
-#   scales in entsprechender reihenfolge in neue csv datei schreiben.
-#   1. zeile band reihenfolge, 2. zeile scales. anschließend wie beispiel neu sortieren: 
-#   
-#   tst <- data.frame(band = c("1", "10", "14lo", "14hi", "26", "20"), scale = sample(1:1000, 6))
-#   tst[order(tst[, 1]), ]
-#   
-#   dann neue csv mit greyvalues multiplizieren.
-#   '''
+
 ## return extracted values to call-script
 #  return(list(scales.refsb.250, scales.refsb.500, scales.refsb.1km, scales.emiss.1km))
 # }

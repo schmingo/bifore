@@ -127,9 +127,9 @@ values.all <- parLapply(clstr, raster.layers, function(h) {
 })
 
 ## Merge single data frames
-values.all.new <- Reduce(function(...) merge(..., by = 1:6), values.all)
+greyvalues <- Reduce(function(...) merge(..., by = 1:6), values.all)
 
-names(values.all.new)[7:44] <- substr(basename(files.list.sat),
+names(greyvalues)[7:44] <- substr(basename(files.list.sat),
                                       1,
                                       nchar(basename(files.list.sat))-4)
 

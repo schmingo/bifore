@@ -144,12 +144,14 @@ path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
                   scales.emiss.1km,
                   sep = ", ")
 
+  
   ## Write bandnames and radiance scales to separate dataframe
   bandnames <- data.frame(strsplit(unlist(bandnames), ","), stringsAsFactors = F)
   names(bandnames) <- "bands"
   
   scales <- data.frame(strsplit(unlist(scales), ", "), stringsAsFactors = F)
   names(scales) <- "scales"
+  
   
   ## Rename "hi" and "lo" bands to numeric values
   for (i in seq(nrow(bandnames))) {

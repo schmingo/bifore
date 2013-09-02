@@ -145,11 +145,6 @@ scales <- hdfExtractRadScale (path.raw.modis,
                               path.500.hdf,
                               path.1km.hdf)
 
-#as.numeric(unlist(strsplit(unlist(scales), ", ")))
-
-
-
-
 
 ## Write values to new CSV-file
 write.table(values.all.new, file = "src/csv/all_greyvalues_modis.csv", 

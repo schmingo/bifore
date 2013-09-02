@@ -167,6 +167,6 @@ path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
   row.names(radscales) <- NULL
   
 
-## return extracted values to call-script
-#  return(list(scales.refsb.250, scales.refsb.500, scales.refsb.1km, scales.emiss.1km))
-# }
+  ## return extracted values to call-script
+  return(radscales)
+}

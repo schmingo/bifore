@@ -25,6 +25,7 @@ path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
 #path.wd <- "D:/Diplomarbeit/" # Windows
 
 path.modis <- "/home/schmingo/Diplomarbeit/src/satellite/MOD02_2013-07-07/"
+path.raw.modis <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/"
 path.250.hdf <- "MOD02QKM.A2013188.1120.005.2013188200351.hdf"
 path.500.hdf <- "MOD02HKM.A2013188.1120.005.2013188200351.hdf"
 path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"

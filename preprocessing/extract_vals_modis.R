@@ -147,8 +147,8 @@ radscales <- hdfExtractRadScale (path.raw.modis,
 
 
 ## Write values to new CSV-file
-write.table(values.all.new, file = "src/csv/all_greyvalues_modis.csv", 
-            dec = ".", 
-            quote = FALSE, 
-            col.names = TRUE, 
-            row.names = FALSE, sep =";")
+# write.table(values.all.new, file = "src/csv/all_greyvalues_modis.csv", 
+#             dec = ".", 
+#             quote = FALSE, 
+#             col.names = TRUE, 
+#             row.names = FALSE, sep =";")

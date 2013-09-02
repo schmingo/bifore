@@ -169,6 +169,8 @@ path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
     else if (bandnames[i,1] == "14hi")
       bandnames[i,1] <- "14.2"
   }
+  bandnames[,1] <- as.numeric(bandnames[,1])
+  
   
   ## Write bandnames and radiance scales to a single dataframe
   radscales <- cbind(bandnames, scales)

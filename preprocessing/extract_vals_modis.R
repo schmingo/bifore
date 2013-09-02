@@ -145,7 +145,11 @@ radscales <- hdfExtractRadScale (path.raw.modis,
                                  path.500.hdf,
                                  path.1km.hdf)
 
+print(radscales)
+greyvalues <- data.frame(greyvalues,stringsAsFactors = F)
 
+print(greyvalues[1,7:44])
+banana <- rbind(greyvalues[1,7:44], radscales[,2])
 ## Write values to new CSV-file
 # write.table(values.all.new, file = "src/csv/all_greyvalues_modis.csv", 
 #             dec = ".", 

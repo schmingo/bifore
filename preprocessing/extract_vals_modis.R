@@ -137,8 +137,7 @@ names(values.all.new)[7:44] <- substr(basename(files.list.sat),
 ## Deregister parallel backend
 stopCluster(clstr)
 
-## Extract radiance_scale from original *.hdf
-# Important Note: This script will only work in Linux (GDAL support) !
+## Extract radiance_scale from original *.hdf (only in Linux environment)
 source("scripts/preprocessing/hdfExtractRadScale.R")
 scales <- hdfExtractRadScale (path.250.hdf,
                               path.500.hdf,

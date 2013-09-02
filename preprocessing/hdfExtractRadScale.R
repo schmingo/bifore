@@ -12,23 +12,6 @@
 ##                                                                            ##
 ################################################################################
 
-## Clear workspace
-rm(list = ls(all = TRUE))
-
-
-## Required libraries
-lib <- c("rgdal", "parallel", "raster")
-lapply(lib, function(...) require(..., character.only = TRUE))
-
-
-## Set filepaths and filenames
-path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
-setwd(path.wd)
-path.modis <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/"
-path.250.hdf <- "MOD02QKM.A2013188.1120.005.2013188200351.hdf"
-path.500.hdf <- "MOD02HKM.A2013188.1120.005.2013188200351.hdf"
-path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
-
 
 hdfExtractRadScale <- function(path.modis,
                                path.250.hdf,

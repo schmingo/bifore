@@ -149,7 +149,7 @@ hdfExtractRadScale <- function(path.raw.modis,
   ## Order dataframe
   radscales <- radscales[ order(radscales[,1]), ]
   row.names(radscales) <- NULL
-  radscales <- data.frame(t(radscales))
+#  radscales <- data.frame(t(radscales))
 
   ## return extracted values to call-script
   return(radscales)

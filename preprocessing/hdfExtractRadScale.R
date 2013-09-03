@@ -73,10 +73,10 @@ hdfExtractRadScale <- function(path.raw.modis,
   mdata.subds.emiss.1km <- attr(info.subds.emiss.1km, "mdata")
   
   ## Extract radiance scales from metadata
-  scales.refsb.250 <- mdata.subds.refsb.250[grep("radiance_scales", mdata.subds.refsb.250)]
-  scales.refsb.500 <- mdata.subds.refsb.500[grep("radiance_scales", mdata.subds.refsb.500)]
-  scales.refsb.1km <- mdata.subds.refsb.1km[grep("radiance_scales", mdata.subds.refsb.1km)]
-  scales.emiss.1km <- mdata.subds.emiss.1km[grep("radiance_scales", mdata.subds.emiss.1km)]
+  scales.refsb.250 <- mdata.subds.refsb.250[grep("reflectance_scales", mdata.subds.refsb.250)]
+  scales.refsb.500 <- mdata.subds.refsb.500[grep("reflectance_scales", mdata.subds.refsb.500)]
+  scales.refsb.1km <- mdata.subds.refsb.1km[grep("reflectance_scales", mdata.subds.refsb.1km)]
+  scales.emiss.1km <- mdata.subds.emiss.1km[grep("reflectance_scales", mdata.subds.emiss.1km)]
   
   scales.refsb.250 <- unlist(strsplit(scales.refsb.250, "="))[2]
   scales.refsb.500 <- unlist(strsplit(scales.refsb.500, "="))[2]

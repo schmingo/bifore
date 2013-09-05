@@ -16,7 +16,7 @@ rm(list = ls(all = TRUE))
 
 
 ## Required libraries
-lib <- c("rgdal", "parallel", "raster")
+lib <- c("rgdal", "parallel", "raster" ,"reshape2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 
@@ -157,18 +157,15 @@ radscales <- data.frame(radscales, stringsAsFactors = F)
 greyvalues.sub.front <- greyvalues[1:6]
 radscales.sub.scales <- as.numeric(radscales[["scales"]])
 
+## calculate new greyvalues (greyvalue * scalefactor)
 greyvalues.sub.calc <- data.frame(t(t(greyvalues[7:44]) * radscales.sub.scales))
-# veltins <- greyvalues %*% diag(radscales.sub.scales) # variation of code above
 
-'''
-now bring greyvalues.sub.front and greyvalues.sub.calc back together
-then write to csv
-'''
-greyvalues.calc <- merge(greyvalues.sub.front, greyvalues.sub.calc) not really working
+## recombine data frames
+greyvalues.calc <- cbind(greyvalues.sub.front, greyvalues.sub.calc)
 
 ## Write values to new CSV-file
-# write.table(greyvalues.calc, file = "src/csv/all_greyvalues_modis.csv", 
-#             dec = ".", 
-#             quote = FALSE, 
-#             col.names = TRUE, 
-#             row.names = FALSE, sep =";")
+write.table(greyvalues.calc, file = "src/csv/all_greyvalues_modis.csv", 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE, sep =";")

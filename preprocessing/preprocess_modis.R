@@ -143,8 +143,10 @@ stopCluster(clstr)
 ################################################################################
 ### Check for NA values ########################################################
 
-#source("scripts/preprocessing/modis_mod_checkNA.R")
-
+# source("scripts/preprocessing/modis_mod_checkNA.R")
+# greyvalues <- checkNA (...)
+greyvalues.na <- greyvalues
+greyvalues.na[, 7:ncol(greyvalues.na)][greyvalues.na[, 7:ncol(greyvalues.na)] > 32767] <- NA
 
 ################################################################################
 ### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
@@ -160,6 +162,7 @@ modscales <- hdfExtractMODScale (path.raw.modis,
 print(modscales)
 
 greyvalues <- data.frame(greyvalues,stringsAsFactors = F)
+greyvalues.na <- data.frame(greyvalues.na,stringsAsFactors = F)
 modscales <- data.frame(modscales, stringsAsFactors = F)
 
 ## Subset data frames
@@ -167,13 +170,21 @@ greyvalues.sub.front <- greyvalues[1:6]
 modscales.sub.scales <- as.numeric(modscales[["scales"]])
 
 ## Calculate new greyvalues (greyvalue * scalefactor)
+greyvalues.na.sub.calc <- data.frame(t(t(greyvalues.na[7:44]) * modscales.sub.scales))
 greyvalues.sub.calc <- data.frame(t(t(greyvalues[7:44]) * modscales.sub.scales))
 
 ## Recombine data frames
+greyvalues.na.calc <- cbind(greyvalues.sub.front, greyvalues.na.sub.calc)
 greyvalues.calc <- cbind(greyvalues.sub.front, greyvalues.sub.calc)
 
 ## Write values to new CSV-file
-write.table(greyvalues.calc, file = "src/csv/all_greyvalues_modis.csv", 
+write.table(greyvalues.na.calc, file = "src/csv/all_MODIS_greyvalues_NA.csv", 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE, sep =";")
+
+write.table(greyvalues.calc, file = "src/csv/all_MODIS_greyvalues.csv", 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 

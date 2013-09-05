@@ -150,7 +150,9 @@ stopCluster(clstr)
 ### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
 
 ## Extract radiance_scale and reflectance_scale from original *.hdf
+
 source("scripts/preprocessing/modis_mod_hdfExtractScales.R")
+modscales <- hdfExtractMODScale (path.raw.modis,
                                  path.250.hdf,
                                  path.500.hdf,
                                  path.1km.hdf)

@@ -13,7 +13,7 @@
 ################################################################################
 
 
-hdfExtractRadScale <- function(path.raw.modis,
+hdfExtractMODScale <- function(path.raw.modis,
                                path.250.hdf,
                                path.500.hdf,
                                path.1km.hdf
@@ -143,12 +143,12 @@ hdfExtractRadScale <- function(path.raw.modis,
   
   
   ## Write bandnames and radiance scales to a single dataframe
-  radscales <- cbind(bandnames, scales)
+  modscales <- cbind(bandnames, scales)
 
   ## Order data frame
-  radscales <- radscales[ order(radscales[,1]), ]
-  row.names(radscales) <- NULL
+  modscales <- modscales[ order(modscales[,1]), ]
+  row.names(modscales) <- NULL
 
   ## return extracted values to call-script
-  return(radscales)
+  return(modscales)
 }

@@ -137,7 +137,7 @@ names(greyvalues)[7:44] <- substr(basename(files.list.sat),
 ## Deregister parallel backend
 stopCluster(clstr)
 
-## Extract radiance_scale from original *.hdf (only in Linux environment)
+## Extract radiance_scale and reflectance_scale from original *.hdf
 source("scripts/preprocessing/hdfExtractMODScale.R")
 modscales <- hdfExtractMODScale (path.raw.modis,
                                  path.250.hdf,
@@ -148,9 +148,6 @@ print(modscales)
 
 greyvalues <- data.frame(greyvalues,stringsAsFactors = F)
 modscales <- data.frame(modscales, stringsAsFactors = F)
-
-# Spaltennamen von greyvalues in modscales übernehmen
-#names(modscales) <- names(greyvalues[7:44])
 
 ## subset data frames
 greyvalues.sub.front <- greyvalues[1:6]

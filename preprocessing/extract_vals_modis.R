@@ -138,26 +138,26 @@ names(greyvalues)[7:44] <- substr(basename(files.list.sat),
 stopCluster(clstr)
 
 ## Extract radiance_scale from original *.hdf (only in Linux environment)
-source("scripts/preprocessing/hdfExtractRadScale.R")
-radscales <- hdfExtractRadScale (path.raw.modis,
+source("scripts/preprocessing/hdfExtractMODScale.R")
+modscales <- hdfExtractMODScale (path.raw.modis,
                                  path.250.hdf,
                                  path.500.hdf,
                                  path.1km.hdf)
 
-print(radscales)
+print(modscales)
 
 greyvalues <- data.frame(greyvalues,stringsAsFactors = F)
-radscales <- data.frame(radscales, stringsAsFactors = F)
+modscales <- data.frame(modscales, stringsAsFactors = F)
 
-# Spaltennamen von greyvalues in radscales übernehmen
-#names(radscales) <- names(greyvalues[7:44])
+# Spaltennamen von greyvalues in modscales übernehmen
+#names(modscales) <- names(greyvalues[7:44])
 
 ## subset data frames
 greyvalues.sub.front <- greyvalues[1:6]
-radscales.sub.scales <- as.numeric(radscales[["scales"]])
+modscales.sub.scales <- as.numeric(modscales[["scales"]])
 
 ## calculate new greyvalues (greyvalue * scalefactor)
-greyvalues.sub.calc <- data.frame(t(t(greyvalues[7:44]) * radscales.sub.scales))
+greyvalues.sub.calc <- data.frame(t(t(greyvalues[7:44]) * modscales.sub.scales))
 
 ## recombine data frames
 greyvalues.calc <- cbind(greyvalues.sub.front, greyvalues.sub.calc)

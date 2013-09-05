@@ -89,11 +89,11 @@ path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
   mdata.subds.refsb.1km <- attr(info.subds.refsb.1km, "mdata")
   mdata.subds.emiss.1km <- attr(info.subds.emiss.1km, "mdata")
   
-  ## Extract radiance scales from metadata
+  ## Extract radiance-/reflectance_scales from metadata
   scales.refsb.250 <- mdata.subds.refsb.250[grep("reflectance_scales", mdata.subds.refsb.250)]
   scales.refsb.500 <- mdata.subds.refsb.500[grep("reflectance_scales", mdata.subds.refsb.500)]
   scales.refsb.1km <- mdata.subds.refsb.1km[grep("reflectance_scales", mdata.subds.refsb.1km)]
-  scales.emiss.1km <- mdata.subds.emiss.1km[grep("reflectance_scales", mdata.subds.emiss.1km)]
+  scales.emiss.1km <- mdata.subds.emiss.1km[grep("radiance_scales", mdata.subds.emiss.1km)]
   
   scales.refsb.250 <- unlist(strsplit(scales.refsb.250, "="))[2]
   scales.refsb.500 <- unlist(strsplit(scales.refsb.500, "="))[2]
@@ -166,7 +166,6 @@ path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
   ## Order dataframe
   radscales <- radscales[ order(radscales[,1]), ]
   row.names(radscales) <- NULL
-#  radscales <- data.frame(t(radscales))
 
   ## return extracted values to call-script
   return(radscales)

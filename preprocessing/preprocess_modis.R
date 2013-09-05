@@ -36,7 +36,7 @@ path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
 '''
 Rename MODIS *.tif to bandname-corresponding filenames (e.g.: B01, B13.1)
 '''
-# source("scripts/preprocessing/rename_modis_files.R")
+# source("scripts/preprocessing/modis_mod_renameTIF.R")
 # rename_modis_files (path.modis)
 
 
@@ -97,7 +97,7 @@ extent.all <- lapply(seq(1, nrow(table.all), 4), function(i) {
 
 
 ################################################################################
-### Extraction of cell values ##################################################
+### Extraction of cell values from extends #####################################
 
 ## Parallelization
 clstr <- makePSOCKcluster(n.cores <- detectCores()-1)
@@ -141,10 +141,16 @@ names(greyvalues)[7:44] <- substr(basename(files.list.sat),
 stopCluster(clstr)
 
 ################################################################################
+### Check for NA values ########################################################
+
+#source("scripts/preprocessing/modis_mod_checkNA.R")
+
+
+################################################################################
 ### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
 
 ## Extract radiance_scale and reflectance_scale from original *.hdf
-source("scripts/preprocessing/hdfExtractMODScale.R")
+source("scripts/preprocessing/modis_mod_hdfExtractScales.R")
                                  path.250.hdf,
                                  path.500.hdf,
                                  path.1km.hdf)

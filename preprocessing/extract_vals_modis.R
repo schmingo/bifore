@@ -33,6 +33,9 @@ path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
 ################################################################################
 ### Rename MODIS files #########################################################
 
+'''
+Rename MODIS *.tif to bandname-corresponding filenames (e.g.: B01, B13.1)
+'''
 # source("scripts/preprocessing/rename_modis_files.R")
 # rename_modis_files (path.modis)
 

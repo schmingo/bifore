@@ -140,9 +140,11 @@ names(greyvalues)[7:44] <- substr(basename(files.list.sat),
 ## Deregister parallel backend
 stopCluster(clstr)
 
+################################################################################
+### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
+
 ## Extract radiance_scale and reflectance_scale from original *.hdf
 source("scripts/preprocessing/hdfExtractMODScale.R")
-modscales <- hdfExtractMODScale (path.raw.modis,
                                  path.250.hdf,
                                  path.500.hdf,
                                  path.1km.hdf)
@@ -152,14 +154,14 @@ print(modscales)
 greyvalues <- data.frame(greyvalues,stringsAsFactors = F)
 modscales <- data.frame(modscales, stringsAsFactors = F)
 
-## subset data frames
+## Subset data frames
 greyvalues.sub.front <- greyvalues[1:6]
 modscales.sub.scales <- as.numeric(modscales[["scales"]])
 
-## calculate new greyvalues (greyvalue * scalefactor)
+## Calculate new greyvalues (greyvalue * scalefactor)
 greyvalues.sub.calc <- data.frame(t(t(greyvalues[7:44]) * modscales.sub.scales))
 
-## recombine data frames
+## Recombine data frames
 greyvalues.calc <- cbind(greyvalues.sub.front, greyvalues.sub.calc)
 
 ## Write values to new CSV-file

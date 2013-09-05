@@ -1,34 +1,17 @@
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
-## EXTRACT RADIANCE SCALES FOR EACH MODIS-BAND FROM HDF FILES                 ##
+## EXTRACT RADIANCE-/ REFLECTANCE SCALES FOR EACH MODIS-BAND FROM HDF FILES   ##
 ##                                                                            ##
 ##                                                                            ##
 ## Important Note: This script will only work under Linux!                    ##
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-08-25                                                        ##
+## Version: 2013-09-05                                                        ##
 ##                                                                            ##
 ################################################################################
-# ## Clear workspace
-# rm(list = ls(all = TRUE))
-# 
-# 
-# ## Required libraries
-# lib <- c("rgdal", "parallel", "raster")
-# lapply(lib, function(...) require(..., character.only = TRUE))
-# 
-# 
-# ## Set filepaths and filenames
-# path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
-# #path.wd <- "D:/Diplomarbeit/" # Windows
-# 
-# path.modis <- "/home/schmingo/Diplomarbeit/src/satellite/MOD02_2013-07-07/"
-# path.raw.modis <- "/home/schmingo/Diplomarbeit/src/satellite/RAW_MODIS_2013-07-07/"
-# path.250.hdf <- "MOD02QKM.A2013188.1120.005.2013188200351.hdf"
-# path.500.hdf <- "MOD02HKM.A2013188.1120.005.2013188200351.hdf"
-# path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
+
 
 hdfExtractRadScale <- function(path.raw.modis,
                                path.250.hdf,
@@ -43,7 +26,6 @@ hdfExtractRadScale <- function(path.raw.modis,
   
   ## Required packages
   stopifnot(require(rgdal))
-
 
   
   ## GDALinfo from HDF
@@ -163,7 +145,7 @@ hdfExtractRadScale <- function(path.raw.modis,
   ## Write bandnames and radiance scales to a single dataframe
   radscales <- cbind(bandnames, scales)
 
-  ## Order dataframe
+  ## Order data frame
   radscales <- radscales[ order(radscales[,1]), ]
   row.names(radscales) <- NULL
 

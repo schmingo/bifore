@@ -21,7 +21,7 @@ setwd("/home/schmingo/Diplomarbeit/") # Linux
 #setwd("Florian")
 
 ## Import dataset
-data <- read.csv2("src/csv/all_greyvalues_modis_NA_abundance.csv", 
+data <- read.csv2("src/csv/all_MODIS_greyvalues_abundance.csv", 
                   dec = ".", header = TRUE, stringsAsFactors = FALSE)
 
 ## Select data for randomForest

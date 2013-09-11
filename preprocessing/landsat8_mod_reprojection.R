@@ -74,17 +74,17 @@ setwd(path.wd)
 #                   format = "GTiff")
 #   }
 
-  ## OLD FASHION WAY
-  clstr <- makePSOCKcluster(n.cores <- detectCores())
-  clusterExport(clstr, c("lib", "rst.ls"))
-  clusterEvalQ(clstr, lapply(lib, function(i) require(i, character.only = TRUE, quietly = TRUE)))
-  
-  rst.ls.rpj <- parLapply(clstr, rst.ls, function(i) {
-    projectRaster(i, crs = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"), 
-                  filename = paste("src/satellite/Landsat8/hai/out/", 
-                                   substr(basename(rst.ls[[1]]@file@name), 1, nchar(basename(rst.ls[[1]]@file@name)) - 4), 
-                                   "_longlat", sep = ""), overwrite = TRUE, format = "GTiff")
-  })
+  ## OLD FASHION WAY (same problem like above - running endless)
+#   clstr <- makePSOCKcluster(n.cores <- detectCores())
+#   clusterExport(clstr, c("lib", "rst.ls"))
+#   clusterEvalQ(clstr, lapply(lib, function(i) require(i, character.only = TRUE, quietly = TRUE)))
+#   
+#   rst.ls.rpj <- lapply(rst.ls, function(i) {
+#     projectRaster(i, crs = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"), 
+#                   filename = paste("src/satellite/Landsat8/hai/", 
+#                                    substr(basename(rst.ls[[1]]@file@name), 1, nchar(basename(rst.ls[[1]]@file@name)) - 4), 
+#                                    "_longlat", sep = ""), overwrite = TRUE, format = "GTiff")
+#   })
 
 
 

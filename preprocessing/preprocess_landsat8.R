@@ -4,7 +4,7 @@
 ## EXTRACT GREYVALUES FROM LANDSAT 8 SATELLITE DATA USING CORNER COORDINATES  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-08-01                                                        ##
+## Version: 2013-09-11                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -20,10 +20,9 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set filepaths and filenames
 path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
-path.wd <- "D:/Diplomarbeit/" # Windows
 
-path.img <- "/src/satellite/Landsat8/hai/"
-path.out <- "/src/satellite/Landsat8/hai/out"
+path.img <- "src/satellite/Landsat8/hai/"
+path.out <- "src/satellite/Landsat8/hai/out/"
 
 patt.corner <- "hai_plot_center.csv$"
 patt.center <- "hai_corner.csv$"
@@ -32,13 +31,13 @@ patt.center <- "hai_corner.csv$"
 ################################################################################
 ### Set working directory ######################################################
 
-setwd(path.wd) # Linux
+setwd(path.wd)
 
 ################################################################################
 ### Reproject Landsat 8 Data ###################################################
                                                                                 
- source("scripts/preprocessing/reproject_landsat8.R")
- reproject_landsat8 (path.wd, path.img, path.out)
+ source("scripts/preprocessing/landsat8_mod_reprojection.R")
+ reproject_landsat8 (lib, path.img, path.out)
 
 ################################################################################
 ### Import Landsat data ########################################################
@@ -66,7 +65,7 @@ table.hai.center <- read.csv2(files.hai.center,
                               stringsAsFactors = FALSE)
 
 coordinates(table.hai.center) <- c("Longitude", "Latitude")
-projection(table.hai.center) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+projection(table.hai.center) <- "+init=epsg:4326"
  
 table.hai.center <- spTransform(table.hai.center, CRS = projection.layers)
 
@@ -81,7 +80,7 @@ table.hai <- read.csv2(files.hai.corner,
                        stringsAsFactors = FALSE)
 
 coordinates(table.hai) <- c("Longitude", "Latitude")
-projection(table.hai) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+projection(table.hai) <- "+init=epsg:4326"
   
 table.hai <- spTransform(table.hai, CRS = projection.layers)
 

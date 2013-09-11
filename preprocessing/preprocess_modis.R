@@ -189,3 +189,21 @@ write.table(greyvalues.calc, file = "src/csv/all_MODIS_greyvalues.csv",
             quote = FALSE, 
             col.names = TRUE, 
             row.names = FALSE, sep =";")
+
+## add pseudo - abundance data
+data.abundance <- cbind(greyvalues.calc, abundance=sample(1:20, nrow(data), replace = TRUE))
+data.na.abundance <- cbind(greyvalues.na.calc, abundance=sample(1:20, nrow(data), replace = TRUE))
+
+write.table(data.abundance, file = "src/csv/all_MODIS_greyvalues_abundance.csv", 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE, 
+            sep =";")
+
+write.table(data.na.abundance, file = "src/csv/all_MODIS_greyvalues_NA_abundance.csv", 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE, 
+            sep =";")

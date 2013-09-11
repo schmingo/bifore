@@ -14,7 +14,7 @@ reproject_landsat8 <- function(lib,
                                )
 {
    
-   print ("Reproject Landsat8 files ...")
+   print ("Reproject Landsat8 files ... ")
    
   ## Required packages
   sapply(lib, function(...) stopifnot(require(..., character.only = T)))

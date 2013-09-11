@@ -42,8 +42,8 @@ setwd(path.wd)
   sapply(lib, function(...) stopifnot(require(..., character.only = T)))
   
   ## Parallelization
-  clstr <- makeCluster(detectCores())
-  registerDoParallel(clstr)  
+  #clstr <- makeCluster(detectCores())
+  #registerDoParallel(clstr)  
 
   ##############################################################################
   ### Import Landsat8 Data #####################################################
@@ -61,17 +61,32 @@ setwd(path.wd)
   ### Reproject Landsat 8 Data #################################################
 
   ## Reproject and save rasters
-  rst.ls.rpj <- foreach(i = rst.ls, .packages = lib) %dopar% {
-    projectRaster(i, crs = CRS("+init=epsg:4326"), 
-                  filename = paste(path.out, 
-                                  substr(basename(rst.ls[[1]]@file@name), 
-                                         1, 
-                                         nchar(basename(rst.ls[[1]]@file@name)) - 4), 
-                                  "_longlat"
-                                   , sep = ""), 
-                  overwrite = TRUE, 
-                  format = "GTiff")
-  }
+#   rst.ls.rpj <- foreach(i = rst.ls, .packages = lib) %dopar% {
+#     projectRaster(i, crs = CRS("+init=epsg:4326"), 
+#                   filename = paste(path.wd, 
+#                                    path.out,
+#                                    substr(basename(rst.ls[[1]]@file@name), 
+#                                          1, 
+#                                          nchar(basename(rst.ls[[1]]@file@name)) - 4), 
+#                                   "_longlat"
+#                                    , sep = ""), 
+#                   overwrite = TRUE, 
+#                   format = "GTiff")
+#   }
+
+  ## OLD FASHION WAY
+  clstr <- makePSOCKcluster(n.cores <- detectCores())
+  clusterExport(clstr, c("lib", "rst.ls"))
+  clusterEvalQ(clstr, lapply(lib, function(i) require(i, character.only = TRUE, quietly = TRUE)))
+  
+  rst.ls.rpj <- parLapply(clstr, rst.ls, function(i) {
+    projectRaster(i, crs = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"), 
+                  filename = paste("src/satellite/Landsat8/hai/out/", 
+                                   substr(basename(rst.ls[[1]]@file@name), 1, nchar(basename(rst.ls[[1]]@file@name)) - 4), 
+                                   "_longlat", sep = ""), overwrite = TRUE, format = "GTiff")
+  })
+
+
 
   ## Deregister parallel backend
   stopCluster(clstr)

@@ -7,12 +7,34 @@
 ## Version: 2013-07-23                                                        ##
 ##                                                                            ##
 ################################################################################
+## Clear workspace
+rm(list = ls(all = TRUE))
 
-reproject_landsat8 <- function(lib,
-                               path.img,
-                               path.out
-                               )
-{
+
+## Required libraries
+lib <- c("rgdal", "parallel", "doParallel", "raster", "foreach")
+lapply(lib, function(...) require(..., character.only = TRUE))
+
+
+## Set filepaths and filenames
+path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
+
+path.img <- "src/satellite/Landsat8/hai/"
+path.out <- "src/satellite/Landsat8/hai/out/"
+
+patt.corner <- "hai_plot_center.csv$"
+patt.center <- "hai_corner.csv$"
+
+
+################################################################################
+### Set working directory ######################################################
+
+setwd(path.wd)
+# reproject_landsat8 <- function(lib,
+#                                path.img,
+#                                path.out
+#                                )
+# {
    
    print ("Reproject Landsat8 files ... ")
    
@@ -20,7 +42,7 @@ reproject_landsat8 <- function(lib,
   sapply(lib, function(...) stopifnot(require(..., character.only = T)))
   
   ## Parallelization
-  clstr <- makeCluster(detectCores() - 1)
+  clstr <- makeCluster(detectCores())
   registerDoParallel(clstr)  
 
   ##############################################################################

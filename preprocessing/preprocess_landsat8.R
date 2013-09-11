@@ -36,8 +36,8 @@ setwd(path.wd)
 ################################################################################
 ### Reproject Landsat 8 Data ###################################################
                                                                                 
- source("scripts/preprocessing/landsat8_mod_reprojection.R")
- reproject_landsat8 (lib, path.img, path.out)
+#  source("scripts/preprocessing/landsat8_mod_reprojection.R") #BUG!
+#  reproject_landsat8 (lib, path.img, path.out)
 
 ################################################################################
 ### Import Landsat data ########################################################

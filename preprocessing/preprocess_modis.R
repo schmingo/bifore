@@ -190,7 +190,9 @@ write.table(greyvalues.calc, file = "src/csv/all_MODIS_greyvalues.csv",
             col.names = TRUE, 
             row.names = FALSE, sep =";")
 
-## add pseudo - abundance data
+################################################################################
+### add pseudo - abundance data ################################################
+
 data.abundance <- cbind(greyvalues.calc, abundance=sample(1:20, nrow(greyvalues.calc), replace = TRUE))
 data.na.abundance <- cbind(greyvalues.na.calc, abundance=sample(1:20, nrow(greyvalues.na.calc), replace = TRUE))
 

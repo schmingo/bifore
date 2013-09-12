@@ -24,9 +24,6 @@ path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
 path.img <- "src/satellite/Landsat8/hai/"
 path.out <- "src/satellite/Landsat8/hai/out/"
 
-patt.corner <- "hai_plot_center.csv$"
-patt.center <- "hai_corner.csv$"
-
 
 ################################################################################
 ### Set working directory ######################################################
@@ -56,7 +53,7 @@ projection.layers <- CRS(projection(raster.layers[[1]]))
 
 ## List CENTER files
 files.hai.center <- list.files("src/csv/", 
-                               pattern = patt.center, 
+                               pattern = "hai_plot_center.csv$", 
                                full.names = TRUE)
 
 ## Import CENTER files as SpatialPointsDataframe objects
@@ -71,7 +68,7 @@ table.hai.center <- spTransform(table.hai.center, CRS = projection.layers)
 
 ## List CORNER files
 files.hai.corner <- list.files("src/csv/", 
-                               pattern = patt.corner, 
+                               pattern = "hai_corner.csv$", 
                                full.names = TRUE)
 
 ## Import CORNER files as SpatialPointsDataframe objects
@@ -123,9 +120,9 @@ values.hai <- parLapply(clstr, raster.layers, function(h) {
 })
 
 ## Merge single data frames
-values.hai.all <- Reduce(function(...) merge(..., by = 1:7), values.hai)
+values.hai.all <- Reduce(function(...) merge(..., by = 1:6), values.hai)
 
-names(values.hai.all)[8:19] <- sapply(strsplit(substr(basename(files.list.sat), 
+names(values.hai.all)[7:18] <- sapply(strsplit(substr(basename(files.list.sat), 
                                                       1, 
                                                       nchar(basename(files.list.sat)) - 4), 
                                                "_"), "[[", 2)
@@ -136,15 +133,17 @@ names(values.hai.all)[8:19] <- sapply(strsplit(substr(basename(files.list.sat),
 stopCluster(clstr)
 
 ## Reformat Colnames
-tmp.names <- names(values.hai.all)[8:(ncol(values.hai.all)-1)]
+tmp.names <- names(values.hai.all)[7:(ncol(values.hai.all)-1)]
 tmp.bands <- as.numeric(sapply(strsplit(tmp.names, "B"), "[[", 2))
 tmp.bands <- formatC(tmp.bands, width = 2, format = "d", flag = "0")
 
-names(values.hai.all)[8:(ncol(values.hai.all)-1)] <- paste("B", tmp.bands, sep = "")
+names(values.hai.all)[7:(ncol(values.hai.all)-1)] <- paste("B", 
+                                                           tmp.bands, 
+                                                           sep = "")
 
 ## Reorder Colnames
 values.hai.all <- data.frame(values.hai.all)
-values.hai.all <- values.hai.all[, c(1:2,4:7,10:18,8,9,19)]
+values.hai.all <- values.hai.all[, c(1:6,9:17,7,8,18)]
 
 
 ## Write data to new csv

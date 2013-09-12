@@ -123,28 +123,29 @@ values.hai <- parLapply(clstr, raster.layers, function(h) {
 })
 
 ## Merge single data frames
-values.hai.all <- Reduce(function(...) merge(..., by = 1:6), values.hai)
+values.hai.all <- Reduce(function(...) merge(..., by = 1:7), values.hai)
 
-names(values.hai.all)[7:18] <- sapply(strsplit(substr(basename(files.list.sat), 
+names(values.hai.all)[8:19] <- sapply(strsplit(substr(basename(files.list.sat), 
                                                       1, 
                                                       nchar(basename(files.list.sat)) - 4), 
                                                "_"), "[[", 2)
 
-coordinates(values.hai.all) <- c("Longitude", "Latitude")
+# coordinates(values.hai.all) <- c("Longitude", "Latitude")
 
 ## Deregister parallel backend
 stopCluster(clstr)
 
 ## Reformat Colnames
-tmp.names <- names(values.hai.all)[5:(ncol(values.hai.all)-1)]
+tmp.names <- names(values.hai.all)[8:(ncol(values.hai.all)-1)]
 tmp.bands <- as.numeric(sapply(strsplit(tmp.names, "B"), "[[", 2))
 tmp.bands <- formatC(tmp.bands, width = 2, format = "d", flag = "0")
 
-names(values.hai.all)[5:(ncol(values.hai.all)-1)] <- paste("B", tmp.bands, sep = "")
+names(values.hai.all)[8:(ncol(values.hai.all)-1)] <- paste("B", tmp.bands, sep = "")
 
 ## Reorder Colnames
 values.hai.all <- data.frame(values.hai.all)
-values.hai.all <- values.hai.all[, c(1:7,10:17,8,9,18)] 
+values.hai.all <- values.hai.all[, c(1:2,4:7,10:18,8,9,19)]
+
 
 ## Write data to new csv
 write.table(values.hai.all, file = "src/csv/hai_greyvalues_landsat8.csv", 

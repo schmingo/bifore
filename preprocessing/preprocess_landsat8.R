@@ -32,6 +32,7 @@ path.csv <- "src/csv/hai/"
 
 ## Filepath and filename of output csv
 filename.csv.out <- "hai_greyvalues_landsat8.csv"
+filename.csv.out.abundance <- "hai_greyvalues_landsat8_abundance.csv"
 
 
 
@@ -157,7 +158,19 @@ values.all <- values.all[, c(1:6,9:17,7,8,18)]
 
 
 ## Write data to new csv
-write.table(values.all, file = paste(path.csv,filename.csv.out,sep=""), 
+write.table(values.all, file = paste(path.csv, filename.csv.out, sep=""), 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE, 
+            sep =";")
+
+################################################################################
+### Add random abundance values ################################################
+
+values.all.abundance <- cbind(values.all, abundance=sample(1:20, nrow(values.all), replace = TRUE))
+
+write.table(data.abundance, file = paste(path.csv, filename.csv.out.abundance, sep="") 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 

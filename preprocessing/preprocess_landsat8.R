@@ -17,12 +17,22 @@ rm(list = ls(all = TRUE))
 lib <- c("rgdal", "parallel", "doParallel", "raster", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
-
+################################################################################
 ## Set filepaths and filenames
-path.wd <- "/home/schmingo/Diplomarbeit/" # Linux
 
+## Filepath to wd
+path.wd <- "/home/schmingo/Diplomarbeit/"
+
+## Filepath to Landsat8 images
 path.img <- "src/satellite/Landsat8/hai/"
-path.out <- "src/satellite/Landsat8/hai/out/"
+#path.out <- "src/satellite/Landsat8/hai/out/" (only necessary for reprojection)
+
+## Filepath to csv files
+path.csv <- "src/csv/hai/"
+
+## Filepath and filename of output csv
+filename.csv.out <- "hai_greyvalues_landsat8.csv"
+
 
 
 ################################################################################
@@ -52,38 +62,38 @@ projection.layers <- CRS(projection(raster.layers[[1]]))
 ### Create extends from CSV-files ##############################################
 
 ## List CENTER files
-files.hai.center <- list.files("src/csv/", 
-                               pattern = "hai_plot_center.csv$", 
+files.center <- list.files(path.csv, 
+                               pattern = "plot_center.csv$", 
                                full.names = TRUE)
 
 ## Import CENTER files as SpatialPointsDataframe objects
-table.hai.center <- read.csv2(files.hai.center, 
+table.center <- read.csv2(files.center, 
                               dec = ".", 
                               stringsAsFactors = FALSE)
 
-coordinates(table.hai.center) <- c("Longitude", "Latitude")
-projection(table.hai.center) <- "+init=epsg:4326"
+coordinates(table.center) <- c("Longitude", "Latitude")
+projection(table.center) <- "+init=epsg:4326"
  
-table.hai.center <- spTransform(table.hai.center, CRS = projection.layers)
+table.center <- spTransform(table.center, CRS = projection.layers)
 
 ## List CORNER files
-files.hai.corner <- list.files("src/csv/", 
-                               pattern = "hai_corner.csv$", 
+files.corner <- list.files(path.csv, 
+                               pattern = "corner.csv$", 
                                full.names = TRUE)
 
 ## Import CORNER files as SpatialPointsDataframe objects
-table.hai <- read.csv2(files.hai.corner, 
+table.corner <- read.csv2(files.corner, 
                        dec = ".", 
                        stringsAsFactors = FALSE)
 
-coordinates(table.hai) <- c("Longitude", "Latitude")
-projection(table.hai) <- "+init=epsg:4326"
+coordinates(table.corner) <- c("Longitude", "Latitude")
+projection(table.corner) <- "+init=epsg:4326"
   
-table.hai <- spTransform(table.hai, CRS = projection.layers)
+table.corner <- spTransform(table.corner, CRS = projection.layers)
 
 ## Retrieve extent from CORNER coordinates
-extent.hai <- lapply(seq(1, nrow(table.hai), 4), function(i) {
-  extent(coordinates(table.hai[i:(i+3), ]))
+extent <- lapply(seq(1, nrow(table.corner), 4), function(i) {
+  extent(coordinates(table.corner[i:(i+3), ]))
   })
 
 
@@ -95,17 +105,17 @@ clstr <- makePSOCKcluster(n.cores <- detectCores()-1
                           )
 clusterExport(clstr, c("lib", 
                        "raster.layers", 
-                       "extent.hai", 
-                       "table.hai.center", 
-                       "table.hai"))
+                       "extent", 
+                       "table.center", 
+                       "table.corner"))
 
 clusterEvalQ(clstr, lapply(lib, function(i) require(i, 
                                                     character.only = TRUE, 
                                                     quietly = TRUE)))
 
 ## Extract and AVERAGE cell values
-values.hai <- parLapply(clstr, raster.layers, function(h) {
-  temp.values <- sapply(extent.hai, function(i) {
+values <- parLapply(clstr, raster.layers, function(h) {
+  temp.values <- sapply(extent, function(i) {
     temp.extract <- extract(h, i)
     
     if (length(temp.extract) > 1)
@@ -114,40 +124,40 @@ values.hai <- parLapply(clstr, raster.layers, function(h) {
     return(temp.extract)
   })
   
-  temp.df <- data.frame(table.hai.center, ls_grey_value = temp.values)
+  temp.df <- data.frame(table.center, ls_grey_value = temp.values)
   
   return(temp.df)
 })
 
 ## Merge single data frames
-values.hai.all <- Reduce(function(...) merge(..., by = 1:6), values.hai)
+values.all <- Reduce(function(...) merge(..., by = 1:6), values)
 
-names(values.hai.all)[7:18] <- sapply(strsplit(substr(basename(files.list.sat), 
+names(values.all)[7:18] <- sapply(strsplit(substr(basename(files.list.sat), 
                                                       1, 
                                                       nchar(basename(files.list.sat)) - 4), 
                                                "_"), "[[", 2)
 
-# coordinates(values.hai.all) <- c("Longitude", "Latitude")
+# coordinates(values.all) <- c("Longitude", "Latitude")
 
 ## Deregister parallel backend
 stopCluster(clstr)
 
 ## Reformat Colnames
-tmp.names <- names(values.hai.all)[7:(ncol(values.hai.all)-1)]
+tmp.names <- names(values.all)[7:(ncol(values.all)-1)]
 tmp.bands <- as.numeric(sapply(strsplit(tmp.names, "B"), "[[", 2))
 tmp.bands <- formatC(tmp.bands, width = 2, format = "d", flag = "0")
 
-names(values.hai.all)[7:(ncol(values.hai.all)-1)] <- paste("B", 
+names(values.all)[7:(ncol(values.all)-1)] <- paste("B", 
                                                            tmp.bands, 
                                                            sep = "")
 
 ## Reorder Colnames
-values.hai.all <- data.frame(values.hai.all)
-values.hai.all <- values.hai.all[, c(1:6,9:17,7,8,18)]
+values.all <- data.frame(values.all)
+values.all <- values.all[, c(1:6,9:17,7,8,18)]
 
 
 ## Write data to new csv
-write.table(values.hai.all, file = "src/csv/hai_greyvalues_landsat8.csv", 
+write.table(values.all, file = paste(path.csv,filename.csv.out,sep=""), 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 

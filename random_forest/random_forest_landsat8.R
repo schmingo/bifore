@@ -21,7 +21,7 @@ setwd("/home/schmingo/Diplomarbeit/") # Linux
 #setwd("Florian")
 
 ## Import dataset
-data <- read.csv2("src/csv/hai/hai_greyvalues_landsat8.csv", 
+data <- read.csv2("src/csv/hai/hai_greyvalues_landsat8_abundance.csv", 
                   dec = ".", header = TRUE, stringsAsFactors = FALSE)
 
 ## Select data for randomForest
@@ -45,7 +45,7 @@ train.data <- data.frame(Plotname,
                          B11,
                          BQA,
                          abundance
-)
+                         )
 detach(data)
 names(train.data)
 

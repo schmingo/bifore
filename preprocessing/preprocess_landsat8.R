@@ -170,7 +170,7 @@ write.table(values.all, file = paste(path.csv, filename.csv.out, sep=""),
 
 values.all.abundance <- cbind(values.all, abundance=sample(1:20, nrow(values.all), replace = TRUE))
 
-write.table(data.abundance, file = paste(path.csv, filename.csv.out.abundance, sep="") 
+write.table(values.all.abundance, file = paste(path.csv, filename.csv.out.abundance, sep=""), 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 

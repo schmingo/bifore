@@ -5,18 +5,16 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-08-25                                                        ##
+## Version: 2013-09-16                                                        ##
 ##                                                                            ##
 ################################################################################
-'''
-for (i in list.files) {
-
-  if (x = "b0")
-    y <- "B20.tif"
-  else if (x = "b1")
-    y <- "B21.tif"
-}
-'''
+# for (i in list.files) {
+# 
+#   if (x = "b0")
+#     y <- "B20.tif"
+#   else if (x = "b1")
+#     y <- "B21.tif"
+# }
 
 rename_modis_files <- function(path.modis)
 {

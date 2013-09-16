@@ -23,16 +23,16 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set filepaths and filenames
 path.wd <- "/home/schmingo/Diplomarbeit/"
 
-path.modis <- "src/satellite/MOD02_2013-07-07_0940"
-path.raw.modis <- "src/satellite/RAW_MODIS_2013-07-07_0940/"
-path.250.hdf <- "MOD02QKM.A2013188.0940.005.2013188200102.hdf"
-path.500.hdf <- "MOD02HKM.A2013188.0940.005.2013188200102.hdf"
-path.1km.hdf <- "MOD021KM.A2013188.0940.005.2013188200102.hdf"
+path.modis <- "src/satellite/MOD02_2013-07-07_1120"
+path.raw.modis <- "src/satellite/RAW_MODIS_2013-07-07_1120/"
+path.250.hdf <- "MOD02QKM.A2013188.1120.005.2013188200351.hdf"
+path.500.hdf <- "MOD02HKM.A2013188.1120.005.2013188200351.hdf"
+path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
 
-csv.out.NA <- "src/csv/all_MODIS_20130707-0940_greyvalues_NA.csv"
-csv.out <- "src/csv/all_MODIS_20130707-0940_greyvalues.csv"
-csv.out.abundance <- "src/csv/all_MODIS_20130707-0940_greyvalues_abundance.csv"
-csv.out.abundance.NA <- "src/csv/all_MODIS_20130707-0940_greyvalues_NA_abundance.csv"
+csv.out.NA <- "src/csv/all_MODIS_20130707-1120_greyvalues_NA.csv"
+csv.out <- "src/csv/all_MODIS_20130707-1120_greyvalues.csv"
+csv.out.abundance <- "src/csv/all_MODIS_20130707-1120_greyvalues_abundance.csv"
+csv.out.abundance.NA <- "src/csv/all_MODIS_20130707-1120_greyvalues_NA_abundance.csv"
 
 
 ################################################################################

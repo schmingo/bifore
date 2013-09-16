@@ -23,27 +23,26 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set filepaths and filenames
 path.wd <- "/home/schmingo/Diplomarbeit/"
 
-path.modis <- "src/satellite/MOD02_2013-07-07/"
-path.raw.modis <- "src/satellite/RAW_MODIS_2013-07-07/"
-path.250.hdf <- "MOD02QKM.A2013188.1120.005.2013188200351.hdf"
-path.500.hdf <- "MOD02HKM.A2013188.1120.005.2013188200351.hdf"
-path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
-
-
-################################################################################
-### Rename MODIS files #########################################################
-
-'''
-Rename MODIS *.tif to bandname-corresponding filenames (e.g.: B01, B13.1)
-'''
-# source("scripts/preprocessing/modis_mod_renameTIF.R")
-# rename_modis_files (path.modis)
+path.modis <- "src/satellite/MOD02_2013-07-07_0940"
+path.raw.modis <- "src/satellite/RAW_MODIS_2013-07-07_0940/"
+path.250.hdf <- "MOD02QKM.A2013188.0940.005.2013188200102.hdf"
+path.500.hdf <- "MOD02HKM.A2013188.0940.005.2013188200102.hdf"
+path.1km.hdf <- "MOD021KM.A2013188.0940.005.2013188200102.hdf"
 
 
 ################################################################################
 ### Set working directory ######################################################
 
 setwd(path.wd)
+
+
+################################################################################
+### Rename MODIS files #########################################################
+# Rename MODIS *.tif to bandname-corresponding filenames (e.g.: B01, B13.1)
+
+# source("scripts/preprocessing/modis_mod_renameTIF.R")
+# rename_modis_files (path.modis)
+
 
 ################################################################################
 ### Import MODIS data ##########################################################

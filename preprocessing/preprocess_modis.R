@@ -29,6 +29,11 @@ path.250.hdf <- "MOD02QKM.A2013188.0940.005.2013188200102.hdf"
 path.500.hdf <- "MOD02HKM.A2013188.0940.005.2013188200102.hdf"
 path.1km.hdf <- "MOD021KM.A2013188.0940.005.2013188200102.hdf"
 
+csv.out.NA <- "src/csv/all_MODIS_20130707-0940_greyvalues_NA.csv"
+csv.out <- "src/csv/all_MODIS_20130707-0940_greyvalues.csv"
+csv.out.abundance <- "src/csv/all_MODIS_20130707-0940_greyvalues_abundance.csv"
+csv.out.abundance.NA <- "src/csv/all_MODIS_20130707-0940_greyvalues_NA_abundance.csv"
+
 
 ################################################################################
 ### Set working directory ######################################################
@@ -177,13 +182,13 @@ greyvalues.na.calc <- cbind(greyvalues.sub.front, greyvalues.na.sub.calc)
 greyvalues.calc <- cbind(greyvalues.sub.front, greyvalues.sub.calc)
 
 ## Write values to new CSV-file
-write.table(greyvalues.na.calc, file = "src/csv/all_MODIS_greyvalues_NA.csv", 
+write.table(greyvalues.na.calc, file = csv.out.NA, 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 
             row.names = FALSE, sep =";")
 
-write.table(greyvalues.calc, file = "src/csv/all_MODIS_greyvalues.csv", 
+write.table(greyvalues.calc, file = csv.out, 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 
@@ -195,14 +200,14 @@ write.table(greyvalues.calc, file = "src/csv/all_MODIS_greyvalues.csv",
 data.abundance <- cbind(greyvalues.calc, abundance=sample(1:20, nrow(greyvalues.calc), replace = TRUE))
 data.na.abundance <- cbind(greyvalues.na.calc, abundance=sample(1:20, nrow(greyvalues.na.calc), replace = TRUE))
 
-write.table(data.abundance, file = "src/csv/all_MODIS_greyvalues_abundance.csv", 
+write.table(data.abundance, file = csv.out.abundance, 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 
             row.names = FALSE, 
             sep =";")
 
-write.table(data.na.abundance, file = "src/csv/all_MODIS_greyvalues_NA_abundance.csv", 
+write.table(data.na.abundance, file = csv.out.abundance.NA, 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 

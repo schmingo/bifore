@@ -60,14 +60,13 @@ n.tree <- 500 # Number of trees to grow
 m.try <- 7 # Number of variables randomly sampled as candidates at each split
 
 ## Function (parallelized)
-'''
-do.trace:   If set to TRUE, give a more verbose output as randomForest is run. 
-            If set to some integer, then running output is printed for every 
-            do.trace trees.
 
-na.action:  A function to specify the action to be taken if NAs are found. 
-            (NOTE: If given, this argument must be named.)
-'''
+# do.trace:   If set to TRUE, give a more verbose output as randomForest is run. 
+#             If set to some integer, then running output is printed for every 
+#             do.trace trees.
+# 
+# na.action:  A function to specify the action to be taken if NAs are found. 
+#             (NOTE: If given, this argument must be named.)
 
 parRandomForest <- function(xx, ..., ntree=n.tree, mtry=m.try, importance=TRUE, do.trace=100, 
                             na.action=na.omit, ncores=n.cores, seed=47) {
@@ -93,11 +92,10 @@ parRandomForest <- function(xx, ..., ntree=n.tree, mtry=m.try, importance=TRUE, 
 }
 
 ## Call function
-'''
-BUG -> NA not permitted in predictors
-Assigned to Issue #4
 
-'''
+# BUG -> NA not permitted in predictors
+# Assigned to Issue #4
+
 system.time(train.rf <- parRandomForest(train.data[,2:ncol(train.data)-1], 
                                         train.data[ , names(train.data) %in% c("abundance")],
                                         ntree=n.tree, 

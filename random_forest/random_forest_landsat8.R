@@ -4,7 +4,7 @@
 ## RANDOM FOREST
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-09-12
+## Version: 2013-09-22
 ##
 ################################################################################
 

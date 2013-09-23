@@ -4,7 +4,7 @@
 ## RANDOM FOREST
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-08-13
+## Version: 2013-09-23
 ##
 ################################################################################
 
@@ -16,12 +16,10 @@ lib <- c("randomForest", "foreach", "doSNOW", "parallel")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-setwd("/home/schmingo/Diplomarbeit/") # Linux
-#setwd("D:/Diplomarbeit/") # Windows
-#setwd("Florian")
+setwd("/home/schmingo/Google Drive/bifore/")
 
 ## Import dataset
-data <- read.csv2("src/csv/all_MODIS_greyvalues_abundance.csv", 
+data <- read.csv2("src/csv/all_MODIS_20130706-1040_greyvalues_NA_abundance.csv", 
                   dec = ".", header = TRUE, stringsAsFactors = FALSE)
 
 ## Select data for randomForest
@@ -86,14 +84,15 @@ n.tree <- 500 # Number of trees to grow
 m.try <- 7 # Number of variables randomly sampled as candidates at each split
 
 ## Function (parallelized)
-'''
-do.trace:   If set to TRUE, give a more verbose output as randomForest is run. 
-            If set to some integer, then running output is printed for every 
-            do.trace trees.
 
-na.action:  A function to specify the action to be taken if NAs are found. 
-            (NOTE: If given, this argument must be named.)
-'''
+################################################################################
+# do.trace:   If set to TRUE, give a more verbose output as randomForest is run. 
+#             If set to some integer, then running output is printed for every 
+#             do.trace trees.
+# 
+# na.action:  A function to specify the action to be taken if NAs are found. 
+#             (NOTE: If given, this argument must be named.)
+################################################################################
 
 parRandomForest <- function(xx, ..., ntree=n.tree, mtry=m.try, importance=TRUE, do.trace=100, 
                             na.action=na.omit, ncores=n.cores, seed=47) {
@@ -119,14 +118,16 @@ parRandomForest <- function(xx, ..., ntree=n.tree, mtry=m.try, importance=TRUE, 
 }
 
 ## Call function
-'''
-BUG -> NA not permitted in predictors
-Assigned to Issue #4
 
-'''
+################################################################################
+# Error in checkForRemoteErrors(val) : 
+#   4 nodes produced errors; first error: NA not permitted in predictors
+################################################################################
+
 system.time(train.rf <- parRandomForest(train.data[,2:ncol(train.data)-1], 
                                         train.data[ , names(train.data) %in% c("abundance")],
                                         ntree=n.tree, 
                                         mtry=m.try, 
                                         importance=TRUE, 
-                                        na.action=na.omit))
+                                        na.action=na.omit)
+            )

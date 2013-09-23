@@ -16,9 +16,7 @@ lib <- c("randomForest", "foreach", "doSNOW", "parallel")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-setwd("/home/schmingo/Diplomarbeit/") # Linux
-#setwd("D:/Diplomarbeit/") # Windows
-#setwd("Florian")
+setwd("/home/schmingo/Google Drive/bifore/") # Linux
 
 ## Import dataset
 data <- read.csv2("src/csv/hai/hai_greyvalues_landsat8_abundance.csv", 
@@ -61,12 +59,14 @@ m.try <- 7 # Number of variables randomly sampled as candidates at each split
 
 ## Function (parallelized)
 
+################################################################################
 # do.trace:   If set to TRUE, give a more verbose output as randomForest is run. 
 #             If set to some integer, then running output is printed for every 
 #             do.trace trees.
 # 
 # na.action:  A function to specify the action to be taken if NAs are found. 
 #             (NOTE: If given, this argument must be named.)
+################################################################################
 
 parRandomForest <- function(xx, ..., ntree=n.tree, mtry=m.try, importance=TRUE, do.trace=100, 
                             na.action=na.omit, ncores=n.cores, seed=47) {
@@ -93,12 +93,18 @@ parRandomForest <- function(xx, ..., ntree=n.tree, mtry=m.try, importance=TRUE, 
 
 ## Call function
 
-# BUG -> NA not permitted in predictors
+################################################################################
+# BUG -> NA not permitted in predictors <- should work for landsat8 (no NA's)
 # Assigned to Issue #4
+
+# Error in checkForRemoteErrors(val) : 
+#   4 nodes produced errors; first error: Can not handle categorical predictors with more than 32 categories.
+################################################################################
 
 system.time(train.rf <- parRandomForest(train.data[,2:ncol(train.data)-1], 
                                         train.data[ , names(train.data) %in% c("abundance")],
                                         ntree=n.tree, 
                                         mtry=m.try, 
                                         importance=TRUE, 
-                                        na.action=na.omit))
+                                        na.action=na.omit)
+            )

@@ -101,10 +101,20 @@ parRandomForest <- function(xx, ..., ntree=n.tree, mtry=m.try, importance=TRUE, 
 #   4 nodes produced errors; first error: Can not handle categorical predictors with more than 32 categories.
 ################################################################################
 
-system.time(train.rf <- parRandomForest(train.data[,2:ncol(train.data)-1], 
+
+system.time(train.rf <- parRandomForest(train.data[,3:ncol(train.data)-1], 
                                         train.data[ , names(train.data) %in% c("abundance")],
                                         ntree=n.tree, 
                                         mtry=m.try, 
                                         importance=TRUE, 
-                                        na.action=na.omit)
+                                        na.action=na.omit,
+                                        do.trace=50)
             )
+
+randomForest(train.data[,3:ncol(train.data)-1], 
+                train.data[ , names(train.data) %in% c("abundance2")],
+                ntree=n.tree, 
+                mtry=m.try, 
+                importance=TRUE, 
+                na.action=na.omit,
+                do.trace=100)

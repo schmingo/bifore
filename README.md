@@ -2,25 +2,7 @@
 ##### Forecasting biodiversity using remote sensing
 ***
 <br/>
-#### Get a copy of [src](http://bit.ly/17bvfIV "download src filetree") ~200kB
-<br/>
-#### File Organization Tree
-
-+ Diplomarbeit
-    + scripts
-        + preprocessing
-        + read_view
-    + src
-        + csv
-        + satellite
-            + Landsat8
-                + alb
-                + hai
-                + sch
-            + MOD02_2013-07-07
-            + RAW_MODIS_2013-07-07
-        + shapefiles
-
+#### Get a copy of [csv files](http://bit.ly/15mAXYv "download csv files") ~200kB
 <br/>
 ***
 <br/>

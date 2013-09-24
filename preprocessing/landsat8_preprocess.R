@@ -63,14 +63,14 @@ projection.layers <- CRS(projection(raster.layers[[1]]))
 ### Create extends from CSV-files ##############################################
 
 ## List CENTER files
-files.center <- list.files(path.csv, 
-                               pattern = "plot_center.csv$", 
-                               full.names = TRUE)
+files.center <- list.files(path.csv,
+                           pattern = "plot_center.csv$",
+                           full.names = TRUE)
 
 ## Import CENTER files as SpatialPointsDataframe objects
-table.center <- read.csv2(files.center, 
-                              dec = ".", 
-                              stringsAsFactors = FALSE)
+table.center <- read.csv2(files.center,
+                          dec = ".",
+                          stringsAsFactors = FALSE)
 
 coordinates(table.center) <- c("Longitude", "Latitude")
 projection(table.center) <- "+init=epsg:4326"
@@ -78,14 +78,13 @@ projection(table.center) <- "+init=epsg:4326"
 table.center <- spTransform(table.center, CRS = projection.layers)
 
 ## List CORNER files
-files.corner <- list.files(path.csv, 
-                               pattern = "corner.csv$", 
-                               full.names = TRUE)
+files.corner <- list.files(path.csv,
+                           full.names = TRUE)
 
 ## Import CORNER files as SpatialPointsDataframe objects
-table.corner <- read.csv2(files.corner, 
-                       dec = ".", 
-                       stringsAsFactors = FALSE)
+table.corner <- read.csv2(files.corner,
+                          dec = ".",
+                          stringsAsFactors = FALSE)
 
 coordinates(table.corner) <- c("Longitude", "Latitude")
 projection(table.corner) <- "+init=epsg:4326"

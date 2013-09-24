@@ -157,7 +157,30 @@ values.all <- data.frame(values.all)
 values.all <- values.all[, c(1:6,9:17,7,8,18)]
 
 
-## Write data to new csv
+################################################################################
+### Calculate first derivate of greyvalue ######################################
+rm(list = ls(all = TRUE))
+#import table for testing purposes
+values.all <- read.csv2("/home/schmingo/Google Drive/bifore/src/csv/hai/hai_greyvalues_landsat8.csv",
+                        dec = ".",
+                        stringsAsFactors = FALSE)
+
+# subset single column
+sub.values.all <- values.all[1,7:ncol(values.all)]
+
+# difference between all values in vector
+sub.values.all.diff <- diff(as.numeric(sub.values.all),lag=1)
+
+# add 0 in front of vector, because there is no diff for first value in vector
+sub.values.all.diff <- append(sub.values.all.diff, 0, after = 0)
+
+# sum up greyvalues and diff to get first derivate
+sub.values.all.deriv <- sub.values.all+sub.values.all.diff
+
+print(sub.values.all.deriv)
+
+################################################################################
+### Write data to new csv ######################################################
 write.table(values.all, file = paste(path.csv, filename.csv.out, sep=""), 
             dec = ".", 
             quote = FALSE, 

@@ -21,7 +21,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set filepaths and filenames
 
 ## Filepath to wd
-path.wd <- "/home/schmingo/Diplomarbeit/"
+path.wd <- "/home/schmingo/Google Drive/bifore/"
 
 ## Filepath to Landsat8 images
 path.img <- "src/satellite/Landsat8/hai/"

@@ -47,7 +47,7 @@ rm(list = ls(all = TRUE))
 
 ## set working directory
 #setwd("/home/schmingo/Diplomarbeit/") # Linux
-setwd("D:/Diplomarbeit/") # Windows
+setwd("/home/schmingo/Google Drive/bifore/") # Windows
 #setwd("Florian")
 
 

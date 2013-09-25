@@ -21,7 +21,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 
 ## Set filepaths and filenames
-path.wd <- "/home/schmingo/Diplomarbeit/"
+path.wd <- "/home/schmingo/Google Drive/bifore/"
 
 path.modis <- "src/satellite/MOD02_2013-07-07_1120"
 path.raw.modis <- "src/satellite/RAW_MODIS_2013-07-07_1120/"

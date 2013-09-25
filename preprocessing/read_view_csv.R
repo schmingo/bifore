@@ -15,8 +15,7 @@ rm(list = ls(all = TRUE))
 
 
 ## set working directory
-setwd("/home/schmingo/Diplomarbeit/") #Linux
-setwd("D:/Diplomarbeit/") #Windows
+setwd("/home/schmingo/Google Drive/bifore/")
 
 ## set filepaths
 file.coords.alb <- "src/csv/alb_corner.csv"

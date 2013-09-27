@@ -4,7 +4,7 @@
 ## EXTRACT GREYVALUES FROM LANDSAT 8 SATELLITE DATA USING CORNER COORDINATES  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-09-12                                                        ##
+## Version: 2013-09-27                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -14,7 +14,7 @@ rm(list = ls(all = TRUE))
 
 
 ## Required libraries
-lib <- c("rgdal", "parallel", "doParallel", "raster", "foreach")
+lib <- c("rgdal", "parallel", "raster", "matrixStats")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ################################################################################
@@ -79,6 +79,7 @@ table.center <- spTransform(table.center, CRS = projection.layers)
 
 ## List CORNER files
 files.corner <- list.files(path.csv,
+                           pattern = "_corner.csv$",
                            full.names = TRUE)
 
 ## Import CORNER files as SpatialPointsDataframe objects
@@ -158,25 +159,16 @@ values.all <- values.all[, c(1:6,9:17,7,8,18)]
 
 ################################################################################
 ### Calculate first derivate of greyvalue ######################################
-rm(list = ls(all = TRUE))
-#import table for testing purposes
-values.all <- read.csv2("/home/schmingo/Google Drive/bifore/src/csv/hai/hai_greyvalues_landsat8.csv",
-                        dec = ".",
-                        stringsAsFactors = FALSE)
 
-# subset single column
-sub.values.all <- values.all[1,7:ncol(values.all)]
+sub.values.all <- values.all[7:ncol(values.all)]
+diffs <- rowDiffs(as.matrix(sub.values.all)) # calculate row-diffs (first deriv)
 
-# difference between all values in vector
-sub.values.all.diff <- diff(as.numeric(sub.values.all),lag=1)
+# paste dataframes. 
+# add "0-column" because there is no slope for the first greyvalue
+deriv.values.all <- cbind(values.all[1:6],0,diffs)
+names(deriv.values.all) <- names(values.all) # write colnames to new df
 
-# add 0 in front of vector, because there is no diff for first value in vector
-sub.values.all.diff <- append(sub.values.all.diff, 0, after = 0)
-
-# sum up greyvalues and diff to get first derivate
-sub.values.all.deriv <- sub.values.all+sub.values.all.diff
-
-print(sub.values.all.deriv)
+values.all <- deriv.values.all
 
 ################################################################################
 ### Write data to new csv ######################################################
@@ -190,9 +182,15 @@ write.table(values.all, file = paste(path.csv, filename.csv.out, sep=""),
 ################################################################################
 ### Add random abundance values ################################################
 
-values.all.abundance <- cbind(values.all, abundance=sample(1:20, nrow(values.all), replace = TRUE))
+values.all.abundance <- cbind(values.all, 
+                              abundance=sample(1:20, 
+                                               nrow(values.all), 
+                                               replace = TRUE))
 
-write.table(values.all.abundance, file = paste(path.csv, filename.csv.out.abundance, sep=""), 
+write.table(values.all.abundance, 
+            file = paste(path.csv, 
+                         filename.csv.out.abundance, 
+                         sep=""), 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 

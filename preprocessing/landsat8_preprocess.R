@@ -33,6 +33,8 @@ path.csv <- "src/csv/hai/"
 ## Filepath and filename of output csv
 filename.csv.out <- "hai_greyvalues_landsat8.csv"
 filename.csv.out.abundance <- "hai_greyvalues_landsat8_abundance.csv"
+filename.csv.out.deriv <- "hai_greyvalues_landsat8_deriv.csv"
+filename.csv.out.deriv.ab <- "hai_greyvalues_landsat8_deriv_abundance.csv"
 
 
 
@@ -161,14 +163,14 @@ values.all <- values.all[, c(1:6,9:17,7,8,18)]
 ### Calculate first derivate of greyvalue ######################################
 
 sub.values.all <- values.all[7:ncol(values.all)]
-diffs <- rowDiffs(as.matrix(sub.values.all)) # calculate row-diffs (first deriv)
+diffs <- rowDiffs(as.matrix(sub.values.all)) # calculate first derivate (diff)
 
 # paste dataframes. 
 # add "0-column" because there is no slope for the first greyvalue
 deriv.values.all <- cbind(values.all[1:6],0,diffs)
 names(deriv.values.all) <- names(values.all) # write colnames to new df
 
-values.all <- deriv.values.all
+
 
 ################################################################################
 ### Write data to new csv ######################################################
@@ -179,6 +181,14 @@ write.table(values.all, file = paste(path.csv, filename.csv.out, sep=""),
             row.names = FALSE, 
             sep =";")
 
+write.table(deriv.values.all, file = paste(path.csv, filename.csv.out.deriv, sep=""), 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE, 
+            sep =";")
+
+
 ################################################################################
 ### Add random abundance values ################################################
 
@@ -187,9 +197,24 @@ values.all.abundance <- cbind(values.all,
                                                nrow(values.all), 
                                                replace = TRUE))
 
+deriv.values.all.abundance <- cbind(deriv.values.all,
+                                    abundance=sample(1:20,
+                                                     nrow(deriv.values.all),
+                                                     replace = TRUE))
+
 write.table(values.all.abundance, 
             file = paste(path.csv, 
                          filename.csv.out.abundance, 
+                         sep=""), 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE, 
+            sep =";")
+
+write.table(deriv.values.all.abundance, 
+            file = paste(path.csv, 
+                         filename.csv.out.deriv.ab, 
                          sep=""), 
             dec = ".", 
             quote = FALSE, 

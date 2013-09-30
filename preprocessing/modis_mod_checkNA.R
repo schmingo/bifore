@@ -1,11 +1,11 @@
 ################################################################################
-## BiFoRe Scripts
-##
-## CHECK MODIS GREYVALUES FOR UNUSEABLE DATA
-##
-## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-08-12
-##
+## BiFoRe Scripts                                                             ##
+##                                                                            ##
+## CHECK MODIS GREYVALUES FOR UNUSEABLE DATA                                  ##
+##                                                                            ##
+## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
+## Version: 2013-09-30                                                        ##
+##                                                                            ##
 ################################################################################
 
 # REFERING TO: Level 1B Product Data Dictionary V6.1.14

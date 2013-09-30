@@ -57,10 +57,11 @@ f1 <- geom_line(
 
 lineplot <- ggplot() + f0 + f1
 
-plot <- lineplot +
+plot <- geom_abline(linetype = "dashed", colour = "#424242", cex = 0.5)
+        lineplot +
         scale_colour_manual(values = c("red", "black"),
                                name = "HEG01",
                                breaks = c("f(x)", "f'(x)")) +
-        geom_abline(linetype = "dashed", colour = "darkgrey")
+        
 
 plot

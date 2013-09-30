@@ -36,6 +36,7 @@ data.ab <- read.csv2("src/csv/hai/hai_greyvalues_landsat8_abundance.csv",
 data <- cbind(data.ab[,1:4], plot.center[,1:2], data.ab[7:ncol(data.ab)])
 
 ################################################################################
+
 hainich.map <- qmap(location = 'Mülverstedt',
                     color = "bw",
                     legend = "bottomright",
@@ -56,13 +57,13 @@ hainich.map + points
 
 ################################################################################
 
-hainich2 <- get_map("Mülverstedt", zoom = 10)
-hainich2
-hainich2 +
-  stat_density2d(
-    aes(x = Longitude,
-        y = Latitude,
-        fill = ..level.., alpha = ..level..),
-    size = 2, bins = 4,
-    data = abundance,
-    geom = "polygon")
+# hainich2 <- get_map("Mülverstedt", zoom = 10)
+# hainich2
+# hainich2 +
+#   stat_density2d(
+#     aes(x = Longitude,
+#         y = Latitude,
+#         fill = ..level.., alpha = ..level..),
+#     size = 2, bins = 4,
+#     data = abundance,
+#     geom = "polygon")

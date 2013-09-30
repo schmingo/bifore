@@ -47,3 +47,12 @@ sub.select.data.deriv <- subset(sub.data.deriv, Plotname %in% c("HEG01"))
 ################################################################################
 ### Lineplot ###################################################################
 
+f0 <- geom_line(
+  aes(x = Band, y = value, group = Plotname, colour="HEG01 f(x)"), 
+  data = sub.select.data)
+
+f1 <- geom_line(
+  aes(x = Band, y = value, group = Plotname, colour = "HEG01 f'(x)"), 
+  data = sub.select.data.deriv)
+
+ggplot() + f0 + f1

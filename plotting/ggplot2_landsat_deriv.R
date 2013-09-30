@@ -57,6 +57,6 @@ f1 <- geom_line(
 
 lineplot <- ggplot() + f0 + f1
 
-lineplot + scale_colour_manual(values = c("red", "blue"),
+lineplot + scale_colour_manual(values = c("red", "black"),
                                name = "HEG01",
                                breaks = c("f(x)", "f'(x)"))

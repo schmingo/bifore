@@ -48,13 +48,60 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/") # Windows
 
 
 ### Import dataset with extracted MODIS greyvalues
-data <- read.csv2("src/csv/all_MODIS_2013-07-07-1120_RAW.csv", dec = ".",
-                 header = TRUE, stringsAsFactors = FALSE)
+data <- read.csv2("src/csv/all_MODIS_20130707-1120_RAW.csv", 
+                  dec = ".", header = TRUE, stringsAsFactors = FALSE)
+
+
+data.raw <- data
 
 ## Print unuseable data
 print(ncol(data))
 summary(data[,7:ncol(data)])
 
+
+## create error message df
+
+error.value <- c(65500:65535)
+error.message <- c("NAD closed upper limit",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "(reserved for future use)",
+                   "Calibration coefficient b1 could not be computed",
+                   "Rotation of Earth view Sector from nominal science collection position",
+                   "Aggregation algorithm failure",
+                   "TEB radiance or RSB dn** exceeds the maximum of the scaling range",
+                   "RSB dn** below the minimum of the scaling range",
+                   "Detector is dead",
+                   "Cannot compute  zero point DN",
+                   "Detector is saturated",
+                   "L1A DN is missing within a scan",
+                   "FILL VALUE"
+                   )
+df.error <- data.frame(cbind(error.value, error.message))
+
+## replace out-of-range data with actual meaning
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65535] <- "FILL VALUE"
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65534] <- "L1A DN is missing within a scan"
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65533] <- "Detector is saturated"
@@ -68,27 +115,19 @@ data[, 7:ncol(data)][data[, 7:ncol(data)] == 65526] <- "Calibration coefficient 
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65501:65525] <- "(reserved for future use)"
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65500] <- "NAD closed upper limit"
 
+error <- 65530
 
-# 
-# 
-# ### Replace values with NA
-# 
-# ## v1
-# data[, 7:ncol(data)][data[, 7:ncol(data)] > 32767] <- NA
-# 
-# ## v2
-# # data.sub <- data[,7:ncol(data)]
-# # data.sub[data.sub > 32767] <- NA
-# # data[,7:ncol(data)] <- data.sub
-# 
-# ## write new table with NA values
-# write.table(data, file = "src/csv/all_greyvalues_modis_NA.csv", dec = ".", quote = FALSE, 
-#             col.names = TRUE, row.names = FALSE, sep =";")
-# 
-# 
-# ### add random abundance data
-# data.abundance <- cbind(data, abundance=sample(1:20, nrow(data), replace = TRUE))
-# 
-# ## Write new table with NA & random abundance data
-# write.table(data.abundance, file = "src/csv/all_greyvalues_modis_NA_abundance.csv", dec = ".", quote = FALSE, 
-#             col.names = TRUE, row.names = FALSE, sep =";")
+error.statistics <- function(x) {
+  ## count specific error value
+  num.error <- sum(data.raw[, 7:ncol(data.raw)] == error)
+
+  ## count number of all available greyvalues
+  num.greyvals <- ncol(data.raw[,7:ncol(data.raw)])*nrow(data.raw)
+
+  ## percentual calculation
+  error.percent <- (100/num.greyvals)*num.error
+
+  ## message
+  paste("Error ", error, ": ", "count: ", num.error, "  = ",error.percent, "%",  sep="")
+}
+

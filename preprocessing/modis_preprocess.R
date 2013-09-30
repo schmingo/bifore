@@ -33,7 +33,7 @@ csv.out.NA <- "src/csv/all_MODIS_20130707-1120_greyvalues_NA.csv"
 csv.out <- "src/csv/all_MODIS_20130707-1120_greyvalues.csv"
 csv.out.abundance <- "src/csv/all_MODIS_20130707-1120_greyvalues_abundance.csv"
 csv.out.abundance.NA <- "src/csv/all_MODIS_20130707-1120_greyvalues_NA_abundance.csv"
-csv.out.raw <- "src/csv/all_MODIS_20130707_1120_RAW.csv"
+csv.out.raw <- "src/csv/all_MODIS_20130707-1120_RAW.csv"
 
 
 ################################################################################

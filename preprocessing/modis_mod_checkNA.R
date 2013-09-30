@@ -101,6 +101,8 @@ error.message <- c("NAD closed upper limit",
                    )
 df.error <- data.frame(cbind(error.value, error.message))
 
+error.list <- as.list(error.value)
+
 ## replace out-of-range data with actual meaning
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65535] <- "FILL VALUE"
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65534] <- "L1A DN is missing within a scan"
@@ -115,11 +117,9 @@ data[, 7:ncol(data)][data[, 7:ncol(data)] == 65526] <- "Calibration coefficient 
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65501:65525] <- "(reserved for future use)"
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65500] <- "NAD closed upper limit"
 
-error <- 65530
-
 error.statistics <- function(x) {
   ## count specific error value
-  num.error <- sum(data.raw[, 7:ncol(data.raw)] == error)
+  num.error <- sum(data.raw[, 7:ncol(data.raw)] == x)
 
   ## count number of all available greyvalues
   num.greyvals <- ncol(data.raw[,7:ncol(data.raw)])*nrow(data.raw)
@@ -128,6 +128,8 @@ error.statistics <- function(x) {
   error.percent <- (100/num.greyvals)*num.error
 
   ## message
-  paste("Error ", error, ": ", "count: ", num.error, "  = ",error.percent, "%",  sep="")
+  paste("Error ", x, ": ", "count: ", num.error, "  = ", error.percent, "%",  sep="")
 }
 
+error.statistics(65533)
+lapply(error.list, error.statistics)

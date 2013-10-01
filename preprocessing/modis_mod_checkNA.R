@@ -140,3 +140,15 @@ error.statistics(65533)
 
 ## Call function for all error values
 lapply(error.list, error.statistics)
+
+
+################################################################################
+### Write out-of-range table ###################################################
+
+write.table(data, 
+            file = "src/csv/all_MODIS_20130707-1120_OOR-Error.csv", 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE, 
+            sep =";")

@@ -16,20 +16,22 @@ lib <- c("randomForest")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-setwd("/home/schmingo/Google Drive/bifore/")
+setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/")
 
 ## Import dataset
-data <- read.csv2("src/csv/all_MODIS_20130706-1040_greyvalues_NA_abundance.csv", 
+data.raw <- read.csv2("all_MODIS_20130706-1040_greyvalues_NA_abundance.csv", 
                   dec = ".", header = TRUE, stringsAsFactors = FALSE)
+
+data <- data.raw[101:200,]
 
 ## Select data for randomForest
 attach(data) 
 train.data <- data.frame(Plotname, 
-                        #Plotid, 
-                        #Status, 
-                        #Location, 
-                        #Longitude, 
-                        #Latitude, 
+#                         Plotid, 
+#                         Status, 
+#                         Location, 
+#                         Longitude, 
+#                         Latitude, 
                         B01, 
                         B02, 
                         B03, 
@@ -38,19 +40,19 @@ train.data <- data.frame(Plotname,
                         B06, 
                         B07, 
                         B08, 
-                        B09, 
-                        B10, 
-                        B11, 
-                        B12, 
-                        B13.1, 
-                        B13.2, 
-                        B14.1, 
-                        B14.2, 
-                        B15, 
-                        B16, 
-                        B17, 
-                        B18, 
-                        B19, 
+#                         B09, 
+#                         B10, 
+#                         B11, 
+#                         B12, 
+#                         B13.1, 
+#                         B13.2, 
+#                         B14.1, 
+#                         B14.2, 
+#                         B15, 
+#                         B16, 
+#                         B17, 
+#                         B18, 
+#                         B19, 
                         B20, 
                         B21, 
                         B22, 
@@ -74,7 +76,7 @@ detach(data)
 names(train.data)
 
 ################################################################################
-### modify ?predictor variable #################################################
+### modify response variable for rF function ###################################
 
 # Add character to numerical data and write it into a new column. 
 # If Abundance would be a numerical value, rF would automatically perform a
@@ -83,6 +85,8 @@ names(train.data)
 abundance.char <- paste(train.data$abundance, "a", sep = "") 
 train.data <- cbind(train.data,abundance.char)
 
+train.data <- na.omit(train.data)
+
 ################################################################################
 ### Random Forest ##############################################################
 
@@ -90,12 +94,15 @@ train.data <- cbind(train.data,abundance.char)
 n.tree <- 500 # Number of trees to grow
 m.try <- 7 # Number of variables randomly sampled as candidates at each split
 
+
+## Check colnames to get the right predictor values
+names(train.data[,4:ncol(train.data)-2])
 ## Function 
-train.rf <- randomForest(train.data[,3:ncol(train.data)-1],
-                         train.data[ ,names(train.data) %in% c("abundance.char")],
-                         importance=TRUE,
-                         na.action=na.omit,
-                         #type="classification",
-                         do.trace=100)
+train.rf <- randomForest(train.data[,4:ncol(train.data)-2],
+                         train.data[,names(train.data) %in% c("abundance.char")],
+                         importance = TRUE,
+#                          na.action = na.omit(train.data),
+#                          type="classification",
+                         do.trace = 100)
 
 print(train.rf)

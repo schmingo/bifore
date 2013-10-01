@@ -32,10 +32,7 @@
 # 65501 - 65525	(reserved for future use)
 # 65500	 NAD closed upper limit
 
-
-
-
-
+################################################################################
 ## Clear workspace
 rm(list = ls(all = TRUE))
 
@@ -46,20 +43,20 @@ rm(list = ls(all = TRUE))
 ## set working directory
 setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/") # Windows
 
-
-### Import dataset with extracted MODIS greyvalues
+################################################################################
+### Import dataset with extracted MODIS greyvalues #############################
 data <- read.csv2("src/csv/all_MODIS_20130707-1120_RAW.csv", 
                   dec = ".", header = TRUE, stringsAsFactors = FALSE)
 
-
 data.raw <- data
+
 
 ## Print unuseable data
 print(ncol(data))
 summary(data[,7:ncol(data)])
 
-
-## create error message df
+################################################################################
+### Create error message vectors and dataframe  ################################
 
 error.value <- c(65500:65535)
 error.message <- c("NAD closed upper limit",
@@ -103,6 +100,7 @@ df.error <- data.frame(cbind(error.value, error.message))
 
 error.list <- as.list(error.value)
 
+################################################################################
 ## replace out-of-range data with actual meaning
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65535] <- "FILL VALUE"
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65534] <- "L1A DN is missing within a scan"
@@ -117,6 +115,10 @@ data[, 7:ncol(data)][data[, 7:ncol(data)] == 65526] <- "Calibration coefficient 
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65501:65525] <- "(reserved for future use)"
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65500] <- "NAD closed upper limit"
 
+
+################################################################################
+### Error message function #####################################################
+
 error.statistics <- function(x) {
   ## count specific error value
   num.error <- sum(data.raw[, 7:ncol(data.raw)] == x)
@@ -124,12 +126,15 @@ error.statistics <- function(x) {
   ## count number of all available greyvalues
   num.greyvals <- ncol(data.raw[,7:ncol(data.raw)])*nrow(data.raw)
 
-  ## percentual calculation
+  ## percental calculation
   error.percent <- (100/num.greyvals)*num.error
 
-  ## message
+  ## output message
   paste("Error ", x, ": ", "count: ", num.error, "  = ", error.percent, "%",  sep="")
 }
 
+## Call function for single error value
 error.statistics(65533)
+
+## Call function for all error values
 lapply(error.list, error.statistics)

@@ -16,7 +16,8 @@ lib <- c("ggplot2", "latticeExtra", "reshape2", "RColorBrewer", "colorspace")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/")
 
 
 ################################################################################

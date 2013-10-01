@@ -1,7 +1,7 @@
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
-## PLOTTING EXTRACTED VALUES FROM LANDSAT8 SATELLITE DATA                     ##
+## PLOTTING EXTRACTED RAW VALUES FROM LANDSAT8 SATELLITE DATA                 ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
 ## Version: 2013-09-30                                                        ##

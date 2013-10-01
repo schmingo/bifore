@@ -1,10 +1,10 @@
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
-## CHECK MODIS GREYVALUES FOR UNUSEABLE DATA                                  ##
+## CHECK MODIS GREYVALUES FOR OUT-OF-RANGE DATA                               ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-09-30                                                        ##
+## Version: 2013-10-01                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -101,7 +101,8 @@ df.error <- data.frame(cbind(error.value, error.message))
 error.list <- as.list(error.value)
 
 ################################################################################
-## replace out-of-range data with actual meaning
+### replace out-of-range data with actual meaning ##############################
+
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65535] <- "FILL VALUE"
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65534] <- "L1A DN is missing within a scan"
 data[, 7:ncol(data)][data[, 7:ncol(data)] == 65533] <- "Detector is saturated"
@@ -130,7 +131,8 @@ error.statistics <- function(x) {
   error.percent <- (100/num.greyvals)*num.error
 
   ## output message
-  paste("Error ", x, ": ", "count: ", num.error, "  = ", error.percent, "%",  sep="")
+  paste("Error ", x, ": ", "count: ", num.error, "  = ", 
+        error.percent, "%",  sep="")
 }
 
 ## Call function for single error value

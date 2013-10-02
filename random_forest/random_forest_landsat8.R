@@ -1,11 +1,11 @@
 ################################################################################
-## BiFoRe Scripts
-##
-## RANDOM FOREST
-##
-## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-09-22
-##
+## BiFoRe Scripts                                                             ##
+##                                                                            ##
+## RANDOM FOREST USING LANDSAT8 DATA                                          ##
+##                                                                            ##
+## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
+## Version: 2013-10-02                                                        ##
+##                                                                            ##
 ################################################################################
 
 ## Clear workspace
@@ -16,7 +16,8 @@ lib <- c("randomForest")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-setwd("/home/schmingo/Google Drive/bifore/") # Linux
+# setwd("/home/schmingo/Google Drive/bifore/") # Linux
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/") # Windows
 
 ## Import dataset
 data <- read.csv2("src/csv/hai/hai_greyvalues_landsat8_abundance.csv", 
@@ -72,3 +73,15 @@ train.rf <- randomForest(train.data[,3:ncol(train.data)-1],
                          do.trace=100)
 
 print(train.rf)
+
+
+################################################################################
+### Prediction #################################################################
+
+## Create test-df
+
+# testData <- 
+# 
+# 
+# ##  predict RInfo for new data set
+# test.predict <- predict(train.rf, testData[,1:ncol(testData)])

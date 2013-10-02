@@ -77,6 +77,13 @@ train.rf <- randomForest(train.data[,3:ncol(train.data)-1],
 
 print(train.rf)
 
+# # Output information
+# ?randomForest
+# ?getTree
+# # This gives a single score per variable aggregated across the whole forest
+# ?importance
+# ?varImpPlot
+
 
 ################################################################################
 ### Prediction #################################################################

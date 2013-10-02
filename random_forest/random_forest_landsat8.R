@@ -72,7 +72,6 @@ m.try <- 7 # Number of variables randomly sampled as candidates at each split
 train.rf <- randomForest(train.data[,3:ncol(train.data)-1],
                          train.data[ ,names(train.data) %in% c("abundance.char")],
                          importance=TRUE,
-                         na.action=na.omit,
                          #type="classification",
                          do.trace=100)
 

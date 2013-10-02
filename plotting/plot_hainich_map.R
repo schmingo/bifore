@@ -4,7 +4,7 @@
 ## PLOTTING EXTRACTED RAW VALUES FROM LANDSAT8 SATELLITE DATA                 ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-09-30                                                        ##
+## Version: 2013-10-02                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -12,32 +12,44 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("ggplot2", "latticeExtra", "reshape2", "RColorBrewer", "colorspace", "ggmap")
+lib <- c("ggplot2", "ggmap")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################
 ### Import data ################################################################
 
-plot.center <- read.csv2("src/csv/hai/hai_plot_center.csv",
+plot.center <- read.csv2("csv/hai/hai_plot_center.csv",
                         dec = ".",
                         header = TRUE, stringsAsFactors = FALSE)
 
-data.ab <- read.csv2("src/csv/hai/hai_greyvalues_landsat8_abundance.csv",
+data.ab <- read.csv2("csv/hai/hai_greyvalues_landsat8_abundance.csv",
                     dec = ".", 
                     header = TRUE, stringsAsFactors = FALSE)
 
 
 ################################################################################
+### Get geocoordinates from plot center ########################################
 
 data <- cbind(data.ab[,1:4], plot.center[,1:2], data.ab[7:ncol(data.ab)])
 
-################################################################################
 
-hainich.map <- qmap(location = 'Mülverstedt',
+################################################################################
+### Plot Hainich - Abundance map ###############################################
+
+## Define output image | open image port
+png("images/map_hainich_abundance.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
+
+## Plot
+hainich.map <- qmap(location = "Muelverstedt",
                     color = "bw",
                     legend = "bottomright",
                     extent = "device",
@@ -54,16 +66,5 @@ points <- geom_point(
 
 hainich.map + points
 
-
-################################################################################
-
-# hainich2 <- get_map("Mülverstedt", zoom = 10)
-# hainich2
-# hainich2 +
-#   stat_density2d(
-#     aes(x = Longitude,
-#         y = Latitude,
-#         fill = ..level.., alpha = ..level..),
-#     size = 2, bins = 4,
-#     data = abundance,
-#     geom = "polygon")
+## Close image port
+graphics.off()

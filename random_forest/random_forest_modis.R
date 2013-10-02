@@ -1,11 +1,11 @@
 ################################################################################
-## BiFoRe Scripts
-##
-## RANDOM FOREST
-##
-## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-09-23
-##
+## BiFoRe Scripts                                                             ##
+##                                                                            ##
+## RANDOM FOREST FOR MODIS DATA                                               ##
+##                                                                            ##
+## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
+## Version: 2013-10-02                                                        ##
+##                                                                            ##
 ################################################################################
 
 

@@ -16,11 +16,11 @@ lib <- c("randomForest")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-# setwd("/home/schmingo/Google Drive/bifore/") # Linux
-setwd("D:/Dropbox/Diplomarbeit/code/bifore/") # Windows
+# setwd("/home/schmingo/Google Drive/bifore/src/") # Linux
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/") # Windows
 
 ## Import dataset
-data <- read.csv2("src/csv/hai/hai_greyvalues_landsat8_abundance.csv", 
+data <- read.csv2("csv/hai/hai_greyvalues_landsat8_abundance.csv", 
                   dec = ".", header = TRUE, stringsAsFactors = FALSE)
 
 ## Select data for randomForest

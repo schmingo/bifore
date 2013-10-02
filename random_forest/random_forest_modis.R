@@ -91,7 +91,7 @@ names(train.data)
 abundance.char <- paste(train.data$abundance, "a", sep = "") 
 train.data <- cbind(train.data,abundance.char)
 
-## Remove lines with NA values
+## Remove rows with NA values
 train.data <- na.omit(train.data)
 
 

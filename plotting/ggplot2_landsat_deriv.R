@@ -48,21 +48,39 @@ sub.select.data.deriv <- subset(sub.data.deriv, Plotname %in% c("HEG01"))
 ################################################################################
 ### Lineplot ###################################################################
 
-f0 <- geom_line(
-  aes(x = Band, y = value, group = Plotname, colour = "f(x)"), 
-  data = sub.select.data)
+## Define output image | open image port
+png("images/landsat8_compare_DerivToRAW.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
-f1 <- geom_line(
-  aes(x = Band, y = value, group = Plotname, colour = "f'(x)"), 
-  data = sub.select.data.deriv)
+## Plot
+f0 <- geom_line(aes(x = Band,
+                    y = value,
+                    group = Plotname,
+                    colour = "f(x)"),
+                data = sub.select.data)
 
-lineplot <- ggplot() + f0 + f1
+f1 <- geom_line(aes(x = Band, 
+                    y = value, 
+                    group = Plotname, 
+                    colour = "f'(x)"),
+                data = sub.select.data.deriv)
 
-plot <- geom_abline(linetype = "dashed", colour = "#424242", cex = 0.5)
-        lineplot +
-        scale_colour_manual(values = c("red", "black"),
-                               name = "HEG01",
-                               breaks = c("f(x)", "f'(x)")) +
-        
+zero <- geom_abline(linetype = "dashed",
+                    colour = "#424242",
+                    cex = 0.5)
 
-plot
+lineplot <- ggplot() + f0 + f1 + zero +
+            xlab("Landsat8 Bands") +
+            ylab("greyvalue") +
+            ggtitle("Vergleich Grauwert zu 1. Ableitung") +
+            scale_colour_manual(values = c("red", "black"),
+                                name = "HEG01 Landsat8",
+                                breaks = c("f(x)", "f'(x)"))
+
+lineplot
+
+## Close image port
+graphics.off()

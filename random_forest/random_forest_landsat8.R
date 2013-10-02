@@ -57,6 +57,10 @@ names(train.data)
 abundance.char <- paste(train.data$abundance, "a", sep = "") 
 train.data <- cbind(train.data,abundance.char)
 
+## Remove rows with NA values
+train.data <- na.omit(train.data)
+
+
 ################################################################################
 ### Random Forest ##############################################################
 

@@ -8,6 +8,7 @@
 ##
 ################################################################################
 
+
 ## Clear workspace
 rm(list = ls(all = TRUE))
 
@@ -16,11 +17,16 @@ lib <- c("randomForest")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/")
+setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Import dataset
-data.raw <- read.csv2("all_MODIS_20130706-1040_greyvalues_NA_abundance.csv", 
+data.raw <- read.csv2("csv/all_MODIS_20130706-1040_greyvalues_NA_abundance.csv", 
                   dec = ".", header = TRUE, stringsAsFactors = FALSE)
+
+
+################################################################################
+### Subsetting #################################################################
 
 data <- data.raw[101:200,]
 
@@ -76,7 +82,7 @@ detach(data)
 names(train.data)
 
 ################################################################################
-### modify response variable for rF function ###################################
+### Modify response variable for rF function ###################################
 
 # Add character to numerical data and write it into a new column. 
 # If Abundance would be a numerical value, rF would automatically perform a
@@ -85,7 +91,9 @@ names(train.data)
 abundance.char <- paste(train.data$abundance, "a", sep = "") 
 train.data <- cbind(train.data,abundance.char)
 
+## Remove lines with NA values
 train.data <- na.omit(train.data)
+
 
 ################################################################################
 ### Random Forest ##############################################################
@@ -106,3 +114,15 @@ train.rf <- randomForest(train.data[,4:ncol(train.data)-2],
                          do.trace = 100)
 
 print(train.rf)
+
+
+################################################################################
+### Prediction #################################################################
+
+## Create test-df
+
+# testData <- 
+# 
+# 
+# ##  predict RInfo for new data set
+# test.predict <- predict(train.rf, testData[,1:ncol(testData)])

@@ -16,18 +16,18 @@ lib <- c("ggplot2", "latticeExtra", "reshape2", "RColorBrewer", "colorspace")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
-setwd("D:/Dropbox/Diplomarbeit/code/bifore/")
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################
 ### Import data ################################################################
 
-data.deriv <- read.csv2("src/csv/hai/hai_greyvalues_landsat8_deriv.csv",
+data.deriv <- read.csv2("csv/hai/hai_greyvalues_landsat8_deriv.csv",
                         dec = ".",
                         header = TRUE, stringsAsFactors = FALSE)
 
-data <- read.csv2("src/csv/hai/hai_greyvalues_landsat8.csv",
+data <- read.csv2("csv/hai/hai_greyvalues_landsat8.csv",
                   dec = ".", 
                   header = TRUE, stringsAsFactors = FALSE)
 

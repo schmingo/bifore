@@ -12,7 +12,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("ggplot2", "ggmap")
+lib <- c("ggplot2", "ggmap", "ggsubplot")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
@@ -28,8 +28,12 @@ plot.center <- read.csv2("csv/hai/hai_plot_center.csv",
                         header = TRUE, stringsAsFactors = FALSE)
 
 data.ab <- read.csv2("csv/hai/hai_greyvalues_landsat8_abundance.csv",
-                    dec = ".", 
-                    header = TRUE, stringsAsFactors = FALSE)
+                     dec = ".",
+                     header = TRUE, 
+                     stringsAsFactors = TRUE,
+                     )
+
+# data.ab$abundance <- as.factor(data.ab$abundance)
 
 
 ################################################################################
@@ -50,21 +54,36 @@ png("images/map_hainich_abundance.png",
 
 ## Plot
 hainich.map <- qmap(location = "Muelverstedt",
-                    color = "bw",
+                    color = "color",
                     legend = "bottomright",
                     extent = "device",
                     maptype = "terrain")
-hainich.map
 
 points <- geom_point(
                      aes(x = Longitude,
                          y = Latitude,
                          colour = abundance,
-                         fill = abundance,
-                         size = 2),
+#                          fill = abundance,
+                         size = 3),
                      data = data)
 
-hainich.map + points
+# bars <- geom_subplot2d(aes(x = Longitude,
+#                            y = Latitude,
+#                            subplot = geom_bar(aes(
+#                                                   abundance,
+#                                                   ..count..,
+#                                                   size = abundance,
+#                                                   ))),
+#                        bins = 15,
+#                        ref = NULL,
+#                        width = rel(4),
+#                        data = data)
+# ggplot() + bars
+# geom_subplot2d(aes(long, lat, subplot = geom_bar(aes(Age, ..count.., fill = Age))), bins = c(15,12), ref = NULL, width = rel(0.8), data = simdat2))
 
+
+b <- hainich.map + points
+
+b
 ## Close image port
 graphics.off()

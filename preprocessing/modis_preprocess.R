@@ -16,7 +16,7 @@ rm(list = ls(all = TRUE))
 
 
 ## Required libraries
-lib <- c("rgdal", "parallel", "raster")
+lib <- c("rgdal", "parallel", "raster", "matrixStats")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 
@@ -35,6 +35,8 @@ path.1km.hdf <- "MOD021KM.A2013187.1035.005.2013187194950.hdf"
 csv.out.NA <- "src/csv/MODIS_20130706-1040_greyvalues_NA.csv"
 csv.out <- "src/csv/MODIS_20130706-1040_greyvalues.csv"
 csv.out.raw <- "src/csv/MODIS_20130706-1040_RAW.csv"
+
+csv.out.NA.deriv <- "src/csv/MODIS_20130706-1040_greyvalues_NA_derivate.csv"
 
 
 ################################################################################
@@ -186,25 +188,46 @@ greyvalues.sub.calc <- data.frame(t(t(greyvalues.raw[7:44]) * modscales.sub.scal
 greyvalues.na.calc <- cbind(greyvalues.raw.sub.front, greyvalues.na.sub.calc)
 greyvalues.calc <- cbind(greyvalues.raw.sub.front, greyvalues.sub.calc)
 
-## Write values to new CSV-file
+
+################################################################################
+### Calculate first derivate of greyvalues ######################################
+
+sub.greyvalues.na.calc <- greyvalues.na.calc[7:ncol(greyvalues.na.calc)]
+diffs <- rowDiffs(as.matrix(sub.greyvalues.na.calc)) # calculate first derivate (diff)
+
+# paste dataframes
+# add "0-column" because there is no slope for the first greyvalue
+deriv.greyvalues.na.calc <- cbind(greyvalues.na.calc[1:6],0,diffs)
+names(deriv.greyvalues.na.calc) <- names(greyvalues.na.calc) # write colnames to new df
+
+
+################################################################################
+### Write data to new csv ######################################################
+
 write.table(greyvalues.na.calc, file = csv.out.NA, 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 
             row.names = FALSE,
-            sep =";")
+            sep = ";")
 
 write.table(greyvalues.calc, file = csv.out, 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 
             row.names = FALSE,
-            sep =";")
+            sep = ";")
 
 write.table(greyvalues, file = csv.out.raw,
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 
             row.names = FALSE,
-            sep =";")
+            sep = ";")
 
+write.table(deriv.greyvalues.na.calc, file = csv.out.NA.deriv,
+            dec = ".",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")

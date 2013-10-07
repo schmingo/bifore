@@ -134,7 +134,7 @@ values.all <- parLapply(clstr, raster.layers, function(h) {
     return(temp.extract)
   })
   
-  temp.df <- data.frame(table.center, ls_grey_value = temp.values)
+  temp.df <- data.frame(table.center, greyvalue = temp.values)
   
   return(temp.df)
 })

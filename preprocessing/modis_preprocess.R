@@ -47,6 +47,7 @@ setwd(path.wd)
 
 ################################################################################
 ### Rename MODIS files #########################################################
+
 # Rename MODIS *.tif to bandname-corresponding filenames (e.g.: B01, B13.1)
 
 # source(path.renameTIF)
@@ -150,6 +151,7 @@ names(greyvalues)[7:44] <- substr(basename(files.list.mod),
 
 ## Deregister parallel backend
 stopCluster(clstr)
+
 
 ################################################################################
 ### Check for NA values ########################################################

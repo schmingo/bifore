@@ -123,6 +123,7 @@ clusterEvalQ(clstr, lapply(lib, function(i) require(i,
                                                     quietly = TRUE)))
 
 ## Extract and AVERAGE cell values
+print("Extracting cell values...")
 values.all <- parLapply(clstr, raster.layers, function(h) {
   temp.values <- sapply(extent.all, function(i) {
     temp.extract <- extract(h, i)
@@ -162,7 +163,7 @@ greyvalues.raw.na[, 7:ncol(greyvalues.raw.na)][greyvalues.raw.na[, 7:ncol(greyva
 ################################################################################
 ### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
 
-## Extract radiance_scale and reflectance_scale from original *.hdf
+print("Extract radiance_scale and reflectance_scale from original *.hdf")
 
 source(path.hdfExtractScales)
 modscales <- hdfExtractMODScale (path.raw.modis,
@@ -170,7 +171,7 @@ modscales <- hdfExtractMODScale (path.raw.modis,
                                  path.500.hdf,
                                  path.1km.hdf)
 
-print(modscales)
+# print(modscales)
 
 greyvalues.raw <- data.frame(greyvalues.raw, stringsAsFactors = F)
 greyvalues.raw.na <- data.frame(greyvalues.raw.na, stringsAsFactors = F)

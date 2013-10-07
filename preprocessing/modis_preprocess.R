@@ -26,7 +26,7 @@ path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
 path.hdfExtractScales <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_hdfExtractScales.R"
 path.renameTIF <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_renameTIF.R"
 
-path.modis <- "src/satellite/MOD02_2013-07-07_0940/"
+path.modis <- "src/satellite/MOD02_2013-07-06_0940/"
 path.raw.modis <- "src/satellite/RAW_MODIS_2013-07-06_1040/"
 path.250.hdf <- "MOD02QKM.A2013187.1035.005.2013187194950.hdf"
 path.500.hdf <- "MOD02HKM.A2013187.1035.005.2013187194950.hdf"

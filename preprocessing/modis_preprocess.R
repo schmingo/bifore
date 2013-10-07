@@ -124,7 +124,7 @@ clusterEvalQ(clstr, lapply(lib, function(i) require(i,
                                                     quietly = TRUE)))
 
 ## Extract and AVERAGE cell values
-print("Extracting cell values...")
+print("Extracting cell values...(this may take up to 15 minutes)")
 values.all <- parLapply(clstr, raster.layers, function(h) {
   temp.values <- sapply(extent.all, function(i) {
     temp.extract <- extract(h, i)

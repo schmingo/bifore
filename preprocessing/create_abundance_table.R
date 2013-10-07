@@ -44,7 +44,7 @@ data.sub <- data[,1:6]
 
 
 ################################################################################
-### add pseudo - abundance data ################################################
+### create pseudo - abundance data #############################################
 
 data.abundance <- cbind(data.sub,
                         abundance=sample(1:20,

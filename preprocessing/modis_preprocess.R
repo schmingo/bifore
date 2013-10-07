@@ -26,15 +26,15 @@ path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
 path.hdfExtractScales <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_hdfExtractScales.R"
 path.renameTIF <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_renameTIF.R"
 
-path.modis <- "src/satellite/MOD02_2013-07-07_1120"
-path.raw.modis <- "src/satellite/RAW_MODIS_2013-07-07_1120/"
-path.250.hdf <- "MOD02QKM.A2013188.1120.005.2013188200351.hdf"
-path.500.hdf <- "MOD02HKM.A2013188.1120.005.2013188200351.hdf"
-path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
+path.modis <- "src/satellite/MOD02_2013-07-07_0940/"
+path.raw.modis <- "src/satellite/RAW_MODIS_2013-07-06_1040/"
+path.250.hdf <- "MOD02QKM.A2013187.1035.005.2013187194950.hdf"
+path.500.hdf <- "MOD02HKM.A2013187.1035.005.2013187194950.hdf"
+path.1km.hdf <- "MOD021KM.A2013187.1035.005.2013187194950.hdf"
 
-csv.out.NA <- "src/csv/MODIS_20130707-1120_greyvalues_NA.csv"
-csv.out <- "src/csv/MODIS_20130707-1120_greyvalues.csv"
-csv.out.raw <- "src/csv/MODIS_20130707-1120_RAW.csv"
+csv.out.NA <- "src/csv/MODIS_20130706-1040_greyvalues_NA.csv"
+csv.out <- "src/csv/MODIS_20130706-1040_greyvalues.csv"
+csv.out.raw <- "src/csv/MODIS_20130706-1040_RAW.csv"
 
 
 ################################################################################

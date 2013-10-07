@@ -154,11 +154,10 @@ stopCluster(clstr)
 ################################################################################
 ### Check for NA values ########################################################
 
-# source("scripts/preprocessing/modis_mod_checkNA.R")
-# greyvalues <- checkNA (...)
 greyvalues.raw <- greyvalues
 greyvalues.raw.na <- greyvalues.raw
 greyvalues.raw.na[, 7:ncol(greyvalues.raw.na)][greyvalues.raw.na[, 7:ncol(greyvalues.raw.na)] > 32767] <- NA
+
 
 ################################################################################
 ### Extraction of radiance_scale and reflectance_scale from *.hdf ##############

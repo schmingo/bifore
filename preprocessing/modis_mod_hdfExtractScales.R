@@ -20,9 +20,6 @@ hdfExtractMODScale <- function(path.raw.modis,
                                )
 {
 
-  print ("Extract Radiance Scale values from MODIS hdf files...")
-  
-  
   ## Required packages
   stopifnot(require(rgdal))
 

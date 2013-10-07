@@ -21,7 +21,10 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set filepaths and filenames
 path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/"
 
-path.abundance.out <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/all_abundance.csv"
+path.abundance.out <- "csv/all_abundance.csv"
+path.abundance.out.alb <- "csv/alb/alb_abundance.csv"
+path.abundance.out.hai <- "csv/hai/hai_abundance.csv"
+path.abundance.out.sch <- "csv/sch/sch_abundance.csv"
 
 
 ################################################################################
@@ -53,7 +56,7 @@ data.abundance <- cbind(data.sub,
 
 
 ################################################################################
-### Write abundance table ######################################################
+### Write abundance tables #####################################################
 
 write.table(data.abundance, file = path.abundance.out, 
             dec = ".", 
@@ -62,3 +65,32 @@ write.table(data.abundance, file = path.abundance.out,
             row.names = FALSE, 
             sep =";")
 
+## Write alb table
+data.alb.abundance <- data.abundance[1:100,]
+write.table(data.alb.abundance,
+            file = path.abundance.out.alb, 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE, 
+            sep =";")
+
+## Write hai table
+data.hai.abundance <- data.abundance[101:200,]
+write.table(data.hai.abundance,
+            file = path.abundance.out.hai, 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE, 
+            sep =";")
+
+## Write sch table
+data.sch.abundance <- data.abundance[201:300,]
+write.table(data.sch.abundance,
+            file = path.abundance.out.sch, 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE, 
+            sep =";")

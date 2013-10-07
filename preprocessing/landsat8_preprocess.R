@@ -174,6 +174,7 @@ names(deriv.values.all) <- names(values.all) # write colnames to new df
 
 ################################################################################
 ### Write data to new csv ######################################################
+
 write.table(values.all, file = paste(path.csv, filename.csv.out, sep=""), 
             dec = ".", 
             quote = FALSE, 
@@ -182,40 +183,6 @@ write.table(values.all, file = paste(path.csv, filename.csv.out, sep=""),
             sep =";")
 
 write.table(deriv.values.all, file = paste(path.csv, filename.csv.out.deriv, sep=""), 
-            dec = ".", 
-            quote = FALSE, 
-            col.names = TRUE, 
-            row.names = FALSE, 
-            sep =";")
-
-
-################################################################################
-### Add random abundance values ################################################
-
-values.all.abundance <- cbind(values.all, 
-                              abundance=sample(1:20, 
-                                               nrow(values.all), 
-                                               replace = TRUE))
-
-deriv.values.all.abundance <- cbind(deriv.values.all,
-                                    abundance=sample(1:20,
-                                                     nrow(deriv.values.all),
-                                                     replace = TRUE))
-
-write.table(values.all.abundance, 
-            file = paste(path.csv, 
-                         filename.csv.out.abundance, 
-                         sep=""), 
-            dec = ".", 
-            quote = FALSE, 
-            col.names = TRUE, 
-            row.names = FALSE, 
-            sep =";")
-
-write.table(deriv.values.all.abundance, 
-            file = paste(path.csv, 
-                         filename.csv.out.deriv.ab, 
-                         sep=""), 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 

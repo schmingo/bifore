@@ -25,23 +25,33 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 data.deriv <- read.csv2("csv/hai/hai_greyvalues_landsat8_deriv.csv",
                         dec = ".",
-                        header = TRUE, stringsAsFactors = FALSE)
+                        header = TRUE,
+                        stringsAsFactors = FALSE)
 
 data <- read.csv2("csv/hai/hai_greyvalues_landsat8.csv",
                   dec = ".", 
-                  header = TRUE, stringsAsFactors = FALSE)
+                  header = TRUE,
+                  stringsAsFactors = FALSE)
 
 
 ################################################################################
 ### Subsetting #################################################################
 
-sub.data <- melt(data[, c(1, 7:ncol(data))], id.vars = "Plotname", variable.name = "Band")
+sub.data <- melt(data[, c(1, 7:ncol(data))],
+                 id.vars = "Plotname",
+                 variable.name = "Band")
+
 sub.data <- sub.data[order(sub.data$Plotname), ]
 
-sub.data.deriv <- melt(data.deriv[, c(1, 7:ncol(data.deriv))], id.vars = "Plotname", variable.name = "Band")
+sub.data.deriv <- melt(data.deriv[, c(1, 7:ncol(data.deriv))],
+                       id.vars = "Plotname",
+                       variable.name = "Band")
+
 sub.data.deriv <- sub.data.deriv[order(sub.data.deriv$Plotname), ]
 
-sub.select.data <- subset(sub.data, Plotname %in% c("HEG01"))
+sub.select.data <- subset(sub.data,
+                          Plotname %in% c("HEG01"))
+
 sub.select.data.deriv <- subset(sub.data.deriv, Plotname %in% c("HEG01"))
 
 

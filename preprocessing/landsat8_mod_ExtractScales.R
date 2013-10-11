@@ -13,11 +13,14 @@
 rm(list = ls(all = TRUE))
 
 
-path.metadata <- "D:/Dropbox/Diplomarbeit/code/bifore/src/satellite/Landsat8/hai/LC81940242013197LGN00_MTL.txt"
+path.img <- "D:/Dropbox/Diplomarbeit/code/bifore/src/satellite/Landsat8/hai/"
 
+name.metadata <- list.files(path.img,
+                            pattern = ".txt",
+                            full.names = TRUE)
 
 ## Import metadata
-metadata <- scan(file = path.metadata,
+metadata <- scan(file = name.metadata,
                  what = character(),
                  sep = "")
 

@@ -34,6 +34,9 @@ refscale.b7 <- as.numeric(metadata[grep("REFLECTANCE_MULT_BAND_7", metadata)+2])
 refscale.b8 <- as.numeric(metadata[grep("REFLECTANCE_MULT_BAND_8", metadata)+2])
 refscale.b9 <- as.numeric(metadata[grep("REFLECTANCE_MULT_BAND_9", metadata)+2])
 
+radscale.b10 <- as.numeric(metadata[grep("RADIANCE_MULT_BAND_10", metadata)+2])
+radscale.b11 <- as.numeric(metadata[grep("RADIANCE_MULT_BAND_11", metadata)+2])
+
 
 ################################################################################
 ## Extract Reflectance Offset ##################################################
@@ -47,3 +50,6 @@ refoffset.b6 <- as.numeric(metadata[grep("REFLECTANCE_ADD_BAND_6", metadata)+2])
 refoffset.b7 <- as.numeric(metadata[grep("REFLECTANCE_ADD_BAND_7", metadata)+2])
 refoffset.b8 <- as.numeric(metadata[grep("REFLECTANCE_ADD_BAND_8", metadata)+2])
 refoffset.b9 <- as.numeric(metadata[grep("REFLECTANCE_ADD_BAND_9", metadata)+2])
+
+radoffset.b10 <- as.numeric(metadata[grep("RADIANCE_ADD_BAND_10", metadata)+2])
+radoffset.b11 <- as.numeric(metadata[grep("RADIANCE_ADD_BAND_11", metadata)+2])

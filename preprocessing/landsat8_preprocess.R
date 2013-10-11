@@ -30,6 +30,9 @@ path.img <- "src/satellite/Landsat8/hai/"
 ## Filepath to csv files
 path.csv <- "src/csv/hai/"
 
+path.modules <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/"
+filename.mod.ExtractScales <- "landsat8_mod_ExtractScales.R"
+
 ## Filepath and filename of output csv
 filename.csv.out <- "hai_greyvalues_landsat8.csv"
 filename.csv.out.abundance <- "hai_greyvalues_landsat8_abundance.csv"
@@ -157,6 +160,16 @@ names(values.all)[7:(ncol(values.all)-1)] <- paste("B",
 ## Reorder Colnames
 values.all <- data.frame(values.all)
 values.all <- values.all[, c(1:6,9:17,7,8,18)]
+
+
+################################################################################
+### Extract scalefactors and offsets from Landsat8 metadata ####################
+
+print("Extracting scalefactors and offsets from metadata...")
+
+source(paste0(path.modules,filename.mod.ExtractScales))
+
+scales <- ExtractLS8Scale(path.img)
 
 
 ################################################################################

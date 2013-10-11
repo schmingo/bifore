@@ -27,7 +27,7 @@ path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
 path.img <- "src/satellite/Landsat8/hai/"
 #path.out <- "src/satellite/Landsat8/hai/out/" (only necessary for reprojection)
 
-## Filepath to csv files
+## Filepath to input csv files
 path.csv <- "src/csv/hai/"
 
 path.modules <- "/home/schmingo/Diplomarbeit/bifore/"
@@ -136,70 +136,81 @@ values <- parLapply(clstr, raster.layers, function(h) {
 })
 
 ## Merge single data frames
-values.all <- Reduce(function(...) merge(..., by = 1:6), values)
+greyvalues <- Reduce(function(...) merge(..., by = 1:6), values)
 
-names(values.all)[7:18] <- sapply(strsplit(substr(basename(files.list.sat), 
+names(greyvalues)[7:18] <- sapply(strsplit(substr(basename(files.list.sat), 
                                                       1, 
                                                       nchar(basename(files.list.sat)) - 4), 
                                                "_"), "[[", 2)
 
-# coordinates(values.all) <- c("Longitude", "Latitude")
+# coordinates(greyvalues) <- c("Longitude", "Latitude")
 
 ## Deregister parallel backend
 stopCluster(clstr)
 
 ## Reformat Colnames
-tmp.names <- names(values.all)[7:(ncol(values.all)-1)]
+tmp.names <- names(greyvalues)[7:(ncol(greyvalues)-1)]
 tmp.bands <- as.numeric(sapply(strsplit(tmp.names, "B"), "[[", 2))
 tmp.bands <- formatC(tmp.bands, width = 2, format = "d", flag = "0")
 
-names(values.all)[7:(ncol(values.all)-1)] <- paste("B", 
+names(greyvalues)[7:(ncol(greyvalues)-1)] <- paste("B", 
                                                            tmp.bands, 
                                                            sep = "")
 
 ## Reorder Colnames
-values.all <- data.frame(values.all)
-values.all <- values.all[, c(1:6,9:17,7,8,18)]
+greyvalues <- data.frame(greyvalues)
+greyvalues <- greyvalues[, c(1:6,9:17,7,8,18)]
+
+################################################################################
+### Remove BQA band ############################################################
+
+greyvalues <- greyvalues[, 1:ncol(greyvalues)-1]
+
+
+################################################################################
+### Remove NA Values ###########################################################
+
+greyvalues.raw <- greyvalues
+greyvalues.raw.na <- greyvalues.raw
+greyvalues.raw.na[, 7:ncol(greyvalues.raw.na)][greyvalues.raw.na[, 7:ncol(greyvalues.raw.na)] > 65535] <- NA
 
 
 ################################################################################
 ### Extract scalefactors and offsets from Landsat8 metadata ####################
-### Remove BQA band ############################################################
 
 print("Extracting scalefactors and offsets from metadata...")
-greyvalues <- greyvalues[, 1:ncol(greyvalues)-1]
 
 source(paste0(path.modules,filename.mod.ExtractScales))
 
 scales <- ExtractLS8Scale(path.img)
 
 
-################################################################################
-### Calculate first derivate of greyvalue ######################################
-
-sub.values.all <- values.all[7:ncol(values.all)]
-diffs <- rowDiffs(as.matrix(sub.values.all)) # calculate first derivate (diff)
-
-# paste dataframes. 
-# add "0-column" because there is no slope for the first greyvalue
-deriv.values.all <- cbind(values.all[1:6],0,diffs)
-names(deriv.values.all) <- names(values.all) # write colnames to new df
-
-
-
-################################################################################
-### Write data to new csv ######################################################
-
-write.table(values.all, file = paste(path.csv, filename.csv.out, sep=""), 
-            dec = ".", 
-            quote = FALSE, 
-            col.names = TRUE, 
-            row.names = FALSE, 
-            sep =";")
-
-write.table(deriv.values.all, file = paste(path.csv, filename.csv.out.deriv, sep=""), 
-            dec = ".", 
-            quote = FALSE, 
-            col.names = TRUE, 
-            row.names = FALSE, 
-            sep =";")
+# ################################################################################
+# ### Calculate first derivate of greyvalue ######################################
+# 
+# sub.greyvalues <- greyvalues[7:ncol(greyvalues)]
+# diffs <- rowDiffs(as.matrix(sub.greyvalues)) # calculate first derivate (diff)
+# 
+# # paste dataframes. 
+# # add "0-column" because there is no slope for the first greyvalue
+# deriv.greyvalues <- cbind(greyvalues[1:6],0,diffs)
+# names(deriv.greyvalues) <- names(greyvalues) # write colnames to new df
+# 
+# 
+# 
+# ################################################################################
+# ### Write data to new csv ######################################################
+# 
+# write.table(greyvalues, file = paste(path.csv, filename.csv.out, sep=""), 
+#             dec = ".", 
+#             quote = FALSE, 
+#             col.names = TRUE, 
+#             row.names = FALSE, 
+#             sep =";")
+# 
+# write.table(deriv.greyvalues, file = paste(path.csv, filename.csv.out.deriv, sep=""), 
+#             dec = ".", 
+#             quote = FALSE, 
+#             col.names = TRUE, 
+#             row.names = FALSE, 
+#             sep =";")

@@ -164,8 +164,10 @@ values.all <- values.all[, c(1:6,9:17,7,8,18)]
 
 ################################################################################
 ### Extract scalefactors and offsets from Landsat8 metadata ####################
+### Remove BQA band ############################################################
 
 print("Extracting scalefactors and offsets from metadata...")
+greyvalues <- greyvalues[, 1:ncol(greyvalues)-1]
 
 source(paste0(path.modules,filename.mod.ExtractScales))
 

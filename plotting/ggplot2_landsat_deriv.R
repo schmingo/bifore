@@ -21,14 +21,14 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################
-### Import ls8.greyval ################################################################
+### Import Landsat8 data #######################################################
 
-ls8.greyval.deriv <- read.csv2("csv/hai/hai_greyvalues_NA_derivate.csv",
+data.deriv <- read.csv2("csv/hai/hai_greyvalues_NA_derivate.csv",
                                dec = ".",
                                header = TRUE,
                                stringsAsFactors = FALSE)
 
-ls8.greyval <- read.csv2("csv/hai/hai_greyvalues_NA.csv",
+data <- read.csv2("csv/hai/hai_greyvalues_NA.csv",
                          dec = ".", 
                          header = TRUE,
                          stringsAsFactors = FALSE)
@@ -37,26 +37,26 @@ ls8.greyval <- read.csv2("csv/hai/hai_greyvalues_NA.csv",
 ################################################################################
 ### Subsetting #################################################################
 
-sub.ls8.greyval <- melt(ls8.greyval[, c(1, 7:ncol(ls8.greyval))],
+sub.data <- melt(data[, c(1, 7:ncol(data))],
                  id.vars = "Plotname",
                  variable.name = "Band")
 
-sub.ls8.greyval <- sub.ls8.greyval[order(sub.ls8.greyval$Plotname), ]
+sub.data <- sub.data[order(sub.data$Plotname), ]
 
-sub.ls8.greyval.deriv <- melt(ls8.greyval.deriv[, c(1, 7:ncol(ls8.greyval.deriv))],
+sub.data.deriv <- melt(data.deriv[, c(1, 7:ncol(data.deriv))],
                        id.vars = "Plotname",
                        variable.name = "Band")
 
-sub.ls8.greyval.deriv <- sub.ls8.greyval.deriv[order(sub.ls8.greyval.deriv$Plotname), ]
+sub.data.deriv <- sub.data.deriv[order(sub.data.deriv$Plotname), ]
 
-sub.select.ls8.greyval <- subset(sub.ls8.greyval,
+sub.select.data <- subset(sub.data,
                           Plotname %in% c("HEG01"))
 
-sub.select.ls8.greyval.deriv <- subset(sub.ls8.greyval.deriv, Plotname %in% c("HEG01"))
+sub.select.data.deriv <- subset(sub.data.deriv, Plotname %in% c("HEG01"))
 
 
 ################################################################################
-### Lineplot ###################################################################
+### Landsat8 Lineplot ##########################################################
 
 ## Define output image | open image port
 png("images/landsat8_compare_DerivToRAW.png", 
@@ -70,13 +70,13 @@ f0 <- geom_line(aes(x = Band,
                     y = value,
                     group = Plotname,
                     colour = "f(x)"),
-                data = sub.select.ls8.greyval)
+                data = sub.select.data)
 
 f1 <- geom_line(aes(x = Band, 
                     y = value, 
                     group = Plotname, 
                     colour = "f'(x)"),
-                data = sub.select.ls8.greyval.deriv)
+                data = sub.select.data.deriv)
 
 zero <- geom_hline(yintercept=0, 
                    linetype = "dashed",
@@ -84,15 +84,15 @@ zero <- geom_hline(yintercept=0,
                    cex = 0.5)
 
 
-lineplot <- ggplot() + f0 + f1 + zero +
-            xlab("Landsat8 Bands") +
-            ylab("greyvalue") +
-            ggtitle("Vergleich Grauwert zu 1. Ableitung") +
-            scale_colour_manual(values = c("red", "black"),
-                                name = "HEG01 Landsat8",
-                                breaks = c("f(x)", "f'(x)"))
+ls8.lineplot <- ggplot() + f0 + f1 + zero +
+                xlab("Landsat8 Bands") +
+                ylab("greyvalue") +
+                ggtitle("Vergleich Grauwert zu 1. Ableitung") +
+                scale_colour_manual(values = c("red", "black"),
+                                    name = "HEG01 Landsat8",
+                                    breaks = c("f(x)", "f'(x)"))
 
-lineplot
+ls8.lineplot
 
 ## Close image port
 graphics.off()

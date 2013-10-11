@@ -23,12 +23,12 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 ### Import data ################################################################
 
-data.deriv <- read.csv2("csv/hai/hai_greyvalues_landsat8_deriv.csv",
+data.deriv <- read.csv2("csv/hai/hai_greyvalues_NA_derivate.csv",
                         dec = ".",
                         header = TRUE,
                         stringsAsFactors = FALSE)
 
-data <- read.csv2("csv/hai/hai_greyvalues_landsat8.csv",
+data <- read.csv2("csv/hai/hai_greyvalues_NA.csv",
                   dec = ".", 
                   header = TRUE,
                   stringsAsFactors = FALSE)

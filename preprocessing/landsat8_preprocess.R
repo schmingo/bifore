@@ -4,7 +4,7 @@
 ## EXTRACT GREYVALUES FROM LANDSAT 8 SATELLITE DATA USING CORNER COORDINATES  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-09-28                                                        ##
+## Version: 2013-10-11                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -30,8 +30,8 @@ path.img <- "src/satellite/Landsat8/hai/"
 ## Filepath to csv files
 path.csv <- "src/csv/hai/"
 
-path.modules <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/"
-filename.mod.ExtractScales <- "landsat8_mod_ExtractScales.R"
+path.modules <- "/home/schmingo/Diplomarbeit/bifore/"
+filename.mod.ExtractScales <- "preprocessing/landsat8_mod_ExtractScales.R"
 
 ## Filepath and filename of output csv
 filename.csv.out <- "hai_greyvalues_landsat8.csv"

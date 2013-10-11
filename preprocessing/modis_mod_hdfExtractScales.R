@@ -98,7 +98,7 @@ hdfExtractMODScale <- function(path.raw.modis,
   
   
   ##############################################################################
-  ## Write Modis bandnames and radiance scales to new csv ######################
+  ## Write Modis bandnames and radiance scales to a single dataframe ###########
   
   ## paste bandnames and radiance scale
   bandnames <- paste(bands.refsb.250, 

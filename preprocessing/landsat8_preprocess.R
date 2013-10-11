@@ -34,12 +34,11 @@ path.modules <- "/home/schmingo/Diplomarbeit/bifore/"
 filename.mod.ExtractScales <- "preprocessing/landsat8_mod_ExtractScales.R"
 
 ## Filepath and filename of output csv
-filename.csv.out <- "hai_greyvalues_landsat8.csv"
-filename.csv.out.abundance <- "hai_greyvalues_landsat8_abundance.csv"
-filename.csv.out.deriv <- "hai_greyvalues_landsat8_deriv.csv"
-filename.csv.out.deriv.ab <- "hai_greyvalues_landsat8_deriv_abundance.csv"
+csv.out.NA <- "hai_greyvalues_NA.csv"
+csv.out <- "hai_greyvalues.csv"
+csv.out.raw <- "hai_RAW.csv"
 
-
+csv.out.NA.deriv <- "hai_greyvalues_NA_derivate.csv"
 
 ################################################################################
 ### Set working directory ######################################################
@@ -205,19 +204,25 @@ greyvalues.na.calc <- cbind(greyvalues.raw.sub.front, greyvalues.na.sub.calc)
 greyvalues.calc <- cbind(greyvalues.raw.sub.front, greyvalues.sub.calc)
 
 
-# ################################################################################
-# ### Calculate first derivate of greyvalue ######################################
-# 
+################################################################################
+### Calculate first derivate of greyvalue ######################################
+
 # sub.greyvalues <- greyvalues[7:ncol(greyvalues)]
 # diffs <- rowDiffs(as.matrix(sub.greyvalues)) # calculate first derivate (diff)
-# 
-# # paste dataframes. 
-# # add "0-column" because there is no slope for the first greyvalue
+
+# paste dataframes. 
+# add "0-column" because there is no slope for the first greyvalue
 # deriv.greyvalues <- cbind(greyvalues[1:6],0,diffs)
 # names(deriv.greyvalues) <- names(greyvalues) # write colnames to new df
-# 
-# 
-# 
+
+sub.greyvalues.na.calc <- greyvalues.na.calc[7:ncol(greyvalues.na.calc)]
+diffs <- rowDiffs(as.matrix(sub.greyvalues.na.calc)) # calculate first derivate (diff)
+
+## paste dataframes
+## add "0-column" because there is no slope for the first greyvalue
+deriv.greyvalues.na.calc <- cbind(greyvalues.na.calc[1:6],0,diffs)
+names(deriv.greyvalues.na.calc) <- names(greyvalues.na.calc) # write colnames to new df
+
 # ################################################################################
 # ### Write data to new csv ######################################################
 # 
@@ -234,3 +239,34 @@ greyvalues.calc <- cbind(greyvalues.raw.sub.front, greyvalues.sub.calc)
 #             col.names = TRUE, 
 #             row.names = FALSE, 
 #             sep =";")
+write.table(greyvalues.na.calc, 
+            file = paste0(path.csv, csv.out.NA), 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE,
+            sep = ";")
+
+write.table(greyvalues.calc, 
+            file = paste0(path.csv, csv.out), 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE,
+            sep = ";")
+
+write.table(greyvalues.raw, 
+            file = paste0(path.csv, csv.out.raw),
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE,
+            sep = ";")
+
+write.table(deriv.greyvalues.na.calc, 
+            file = paste0(path.csv, csv.out.NA.deriv),
+            dec = ".",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")

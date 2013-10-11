@@ -184,6 +184,9 @@ source(paste0(path.modules,filename.mod.ExtractScales))
 
 scales <- ExtractLS8Scale(path.img)
 
+################################################################################
+## calculate new greyvalues using scalefactors and offsets #####################
+
 
 # ################################################################################
 # ### Calculate first derivate of greyvalue ######################################

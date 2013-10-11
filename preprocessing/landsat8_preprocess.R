@@ -182,10 +182,27 @@ print("Extracting scalefactors and offsets from metadata...")
 
 source(paste0(path.modules,filename.mod.ExtractScales))
 
-scales <- ExtractLS8Scale(path.img)
+ls8scales <- ExtractLS8Scale(path.img)
 
 ################################################################################
 ## calculate new greyvalues using scalefactors and offsets #####################
+
+## Subset data frames
+greyvalues.raw.sub.front <- greyvalues.raw[1:6]
+ls8scales.sub.scales <- as.numeric(ls8scales[["multiply scales"]])
+ls8scales.sub.offset <- as.numeric(ls8scales[["add offset"]])
+
+## Calculate new greyvalues (greyvalue * scalefactor)
+greyvalues.na.sub.calc <- data.frame(t(t(greyvalues.raw.na[7:ncol(greyvalues.raw.na)]) * ls8scales.sub.scales))
+greyvalues.sub.calc <- data.frame(t(t(greyvalues.raw[7:ncol(greyvalues.raw)]) * ls8scales.sub.scales))
+
+## Calculate new greyvalues (newgreyvalue + offset)
+greyvalues.na.sub.calc <- data.frame(greyvalues.na.sub.calc + t(ls8scales.sub.offset))
+greyvalues.sub.calc <- data.frame(greyvalues.sub.calc + t(ls8scales.sub.offset))
+
+## Recombine data frames
+greyvalues.na.calc <- cbind(greyvalues.raw.sub.front, greyvalues.na.sub.calc)
+greyvalues.calc <- cbind(greyvalues.raw.sub.front, greyvalues.sub.calc)
 
 
 # ################################################################################

@@ -1,7 +1,7 @@
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
-## EXTRACT RADIANCE-/ REFLECTANCE SCALES AND OFFSET FROM LANDSAT8 METADATA    ##                                                                        ##
+## EXTRACT RADIANCE-/ REFLECTANCE SCALES AND OFFSET FROM LANDSAT8 METADATA    ##
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
@@ -102,6 +102,3 @@ ExtractLS8Scale <- function(path.img)
   return(scales.ls8)
 
 }
-
-path.img <- "D:/Dropbox/Diplomarbeit/code/bifore/src/satellite/Landsat8/hai/"
-data <- ExtractLS8Scale(path.img)

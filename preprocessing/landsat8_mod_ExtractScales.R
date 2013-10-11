@@ -9,13 +9,6 @@
 ##                                                                            ##
 ################################################################################
 
-## Clear workspace
-rm(list = ls(all = TRUE))
-
-
-
-
-
 ExtractLS8Scale <- function(path.img)
 {
   

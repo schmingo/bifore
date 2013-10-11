@@ -77,10 +77,12 @@ f1 <- geom_line(aes(x = Band,
                     group = Plotname, 
                     colour = "f'(x)"),
                 data = sub.select.data.deriv)
-## BUG: abline should be at zero
-zero <- geom_abline(linetype = "dashed",
-                    colour = "#424242",
-                    cex = 0.5)
+
+zero <- geom_hline(yintercept=0, 
+                   linetype = "dashed",
+                   colour = "#424242",
+                   cex = 0.5)
+
 
 lineplot <- ggplot() + f0 + f1 + zero +
             xlab("Landsat8 Bands") +

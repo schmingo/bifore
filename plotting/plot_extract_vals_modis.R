@@ -4,7 +4,7 @@
 ## PLOTTING EXTRACTED VALUES FROM LANDSAT8 SATELLITE DATA
 ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-08-12
+## Version: 2013-10-11
 ##
 ################################################################################
 
@@ -17,11 +17,11 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
 #setwd("/home/schmingo/Diplomarbeit/") # Linux
-setwd("D:/Diplomarbeit/") # Windows
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/") # Windows
 #setwd("Florian")
 
 ## Import data 
-data <- read.csv2("src/csv/all_greyvalues_modis_NA.csv", dec = ".",
+data <- read.csv2("src/csv/MODIS_20130706-1040_greyvalues_NA.csv", dec = ".",
                        header = TRUE, stringsAsFactors = FALSE)
 
 
@@ -80,7 +80,7 @@ ggplot(data = tmp.line, aes(x = Band, y = value, group = Plotname)) +
 
 
 ### subset lineplot with facets
-tmp2.line <- subset(tmp.line, Plotname %in% c("HEG01", "HEG02", "HEG03", "HEG04", "HEG05"))
+tmp2.line <- subset(tmp.line, Plotname %in% c("HEG01", "HEG02", "HEG03", "HEW01", "HEW02", "HEW03"))
 ggplot(data = tmp2.line, aes(x = Band, y = value, group = Plotname)) + 
   geom_point() + 
   geom_line(aes(colour = Plotname)) + 

@@ -20,10 +20,14 @@ lib <- c("rgdal", "parallel", "raster", "matrixStats")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 
-## Set filepaths and filenames
+################################################################################
+## Set filepaths and filenames #################################################
+
 path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
 
 ## Module scripts
+
+path.modules <- "/home/schmingo/Diplomarbeit/bifore/"
 path.hdfExtractScales <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_hdfExtractScales.R"
 path.renameTIF <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_renameTIF.R"
 
@@ -35,10 +39,11 @@ path.500.hdf <- "MOD02HKM.A2013188.1120.005.2013188200351.hdf"
 path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
 
 ## Filepath and filename of output csv
-csv.out.raw <- "src/csv/MODIS_20130707-1120_RAW.csv"
-csv.out <- "src/csv/MODIS_20130707-1120_greyvalues.csv"
-csv.out.NA <- "src/csv/MODIS_20130707-1120_greyvalues_NA.csv"
-csv.out.NA.deriv <- "src/csv/MODIS_20130707-1120_greyvalues_NA_derivate.csv"
+path.csv <- "src/csv/"
+csv.out.raw <- "MODIS_20130707-1120_RAW.csv"
+csv.out <- "MODIS_20130707-1120_greyvalues.csv"
+csv.out.NA <- "MODIS_20130707-1120_greyvalues_NA.csv"
+csv.out.NA.deriv <- "MODIS_20130707-1120_greyvalues_NA_derivate.csv"
 
 
 ################################################################################
@@ -52,7 +57,7 @@ setwd(path.wd)
 
 # Rename MODIS *.tif to bandname-corresponding filenames (e.g.: B01, B13.1)
 
-# source(path.renameTIF)
+# source(paste0(path.modules, path.renameTIF))
 # rename_modis_files (path.modis)
 
 
@@ -168,7 +173,7 @@ greyvalues.raw.na[, 7:ncol(greyvalues.raw.na)][greyvalues.raw.na[, 7:ncol(greyva
 
 print("Extract radiance_scale and reflectance_scale from original *.hdf")
 
-source(path.hdfExtractScales)
+source(paste0(path.modules, path.hdfExtractScales))
 modscales <- hdfExtractMODScale (path.modis.raw,
                                  path.250.hdf,
                                  path.500.hdf,
@@ -209,7 +214,7 @@ names(deriv.greyvalues.na.calc) <- names(greyvalues.na.calc) # write colnames to
 ### Write data to new csv ######################################################
 
 write.table(greyvalues, 
-            file = csv.out.raw,
+            file = paste0(path.csv, csv.out.raw),
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 
@@ -217,7 +222,7 @@ write.table(greyvalues,
             sep = ";")
 
 write.table(greyvalues.na.calc, 
-            file = csv.out.NA, 
+            file = paste0(path.csv, csv.out.NA), 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 
@@ -225,7 +230,7 @@ write.table(greyvalues.na.calc,
             sep = ";")
 
 write.table(greyvalues.calc, 
-            file = csv.out, 
+            file = paste0(path.csv, csv.out), 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 
@@ -233,7 +238,7 @@ write.table(greyvalues.calc,
             sep = ";")
 
 write.table(deriv.greyvalues.na.calc, 
-            file = csv.out.NA.deriv,
+            file = paste0(path.csv, csv.out.NA.deriv),
             dec = ".",
             quote = FALSE,
             col.names = TRUE,

@@ -23,19 +23,21 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set filepaths and filenames
 path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
 
+## Module scripts
 path.hdfExtractScales <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_hdfExtractScales.R"
 path.renameTIF <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_renameTIF.R"
 
+## Satellite imagery
 path.modis <- "src/satellite/MOD02_2013-07-07_1120/"
-path.raw.modis <- "src/satellite/RAW_MODIS_2013-07-07_1120/"
+path.modis.raw <- "src/satellite/RAW_MODIS_2013-07-07_1120/"
 path.250.hdf <- "MOD02QKM.A2013188.1120.005.2013188200351.hdf"
 path.500.hdf <- "MOD02HKM.A2013188.1120.005.2013188200351.hdf"
 path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
 
-csv.out.NA <- "src/csv/MODIS_20130707-1120_greyvalues_NA.csv"
-csv.out <- "src/csv/MODIS_20130707-1120_greyvalues.csv"
+## Filepath and filename of output csv
 csv.out.raw <- "src/csv/MODIS_20130707-1120_RAW.csv"
-
+csv.out <- "src/csv/MODIS_20130707-1120_greyvalues.csv"
+csv.out.NA <- "src/csv/MODIS_20130707-1120_greyvalues_NA.csv"
 csv.out.NA.deriv <- "src/csv/MODIS_20130707-1120_greyvalues_NA_derivate.csv"
 
 
@@ -167,7 +169,7 @@ greyvalues.raw.na[, 7:ncol(greyvalues.raw.na)][greyvalues.raw.na[, 7:ncol(greyva
 print("Extract radiance_scale and reflectance_scale from original *.hdf")
 
 source(path.hdfExtractScales)
-modscales <- hdfExtractMODScale (path.raw.modis,
+modscales <- hdfExtractMODScale (path.modis.raw,
                                  path.250.hdf,
                                  path.500.hdf,
                                  path.1km.hdf)
@@ -192,7 +194,7 @@ greyvalues.calc <- cbind(greyvalues.raw.sub.front, greyvalues.sub.calc)
 
 
 ################################################################################
-### Calculate first derivate of greyvalues ######################################
+### Calculate first derivate of greyvalues #####################################
 
 sub.greyvalues.na.calc <- greyvalues.na.calc[7:ncol(greyvalues.na.calc)]
 diffs <- rowDiffs(as.matrix(sub.greyvalues.na.calc)) # calculate first derivate (diff)
@@ -206,28 +208,32 @@ names(deriv.greyvalues.na.calc) <- names(greyvalues.na.calc) # write colnames to
 ################################################################################
 ### Write data to new csv ######################################################
 
-write.table(greyvalues.na.calc, file = csv.out.NA, 
+write.table(greyvalues, 
+            file = csv.out.raw,
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 
             row.names = FALSE,
             sep = ";")
 
-write.table(greyvalues.calc, file = csv.out, 
+write.table(greyvalues.na.calc, 
+            file = csv.out.NA, 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 
             row.names = FALSE,
             sep = ";")
 
-write.table(greyvalues, file = csv.out.raw,
+write.table(greyvalues.calc, 
+            file = csv.out, 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 
             row.names = FALSE,
             sep = ";")
 
-write.table(deriv.greyvalues.na.calc, file = csv.out.NA.deriv,
+write.table(deriv.greyvalues.na.calc, 
+            file = csv.out.NA.deriv,
             dec = ".",
             quote = FALSE,
             col.names = TRUE,

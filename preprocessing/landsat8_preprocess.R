@@ -23,7 +23,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Filepath to wd
 path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
 
-## Filepath to Landsat8 images
+## Satellite imagery
 path.img <- "src/satellite/Landsat8/hai/"
 #path.out <- "src/satellite/Landsat8/hai/out/" (only necessary for reprojection)
 

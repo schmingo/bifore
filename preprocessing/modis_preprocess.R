@@ -40,7 +40,7 @@ path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
 
 ## Filepath and filename of output csv
 path.csv <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/"
-csv.out.raw <- "MODIS_20130707-1120_RAW.csv"
+csv.out.raw <- "MODIS_20130707-1120_greyvalues_RAW.csv"
 csv.out <- "MODIS_20130707-1120_greyvalues.csv"
 csv.out.NA <- "MODIS_20130707-1120_greyvalues_NA.csv"
 csv.out.NA.deriv <- "MODIS_20130707-1120_greyvalues_NA_derivate.csv"

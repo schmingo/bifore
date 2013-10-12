@@ -4,7 +4,7 @@
 ## EXTRACT GREYVALUES FROM LANDSAT 8 SATELLITE DATA USING CORNER COORDINATES  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-10-11                                                        ##
+## Version: 2013-10-15                                                        ##
 ##                                                                            ##
 ################################################################################
 

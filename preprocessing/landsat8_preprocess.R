@@ -28,7 +28,7 @@ path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
 path.img <- "src/satellite/Landsat8/hai/"
 #path.out <- "src/satellite/Landsat8/hai/out/" (only necessary for reprojection)
 
-path.modules <- "/home/schmingo/Diplomarbeit/bifore/prprocessing/"
+path.modules <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/"
 filename.mod.ExtractScales <- "landsat8_mod_ExtractScales.R"
 
 ## Filepath and filename of output csv

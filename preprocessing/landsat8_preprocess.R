@@ -17,8 +17,9 @@ rm(list = ls(all = TRUE))
 lib <- c("rgdal", "parallel", "raster", "matrixStats")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
+
 ################################################################################
-## Set filepaths and filenames
+## Set filepaths and filenames #################################################
 
 ## Filepath to wd
 path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
@@ -178,7 +179,7 @@ greyvalues.raw.na[, 7:ncol(greyvalues.raw.na)][greyvalues.raw.na[, 7:ncol(greyva
 
 print("Extracting scalefactors and offsets from metadata...")
 
-source(paste0(path.modules,filename.mod.ExtractScales))
+source(paste0(path.modules, filename.mod.ExtractScales))
 
 ls8scales <- ExtractLS8Scale(path.img)
 

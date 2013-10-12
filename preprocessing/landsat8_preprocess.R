@@ -28,13 +28,11 @@ path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
 path.img <- "src/satellite/Landsat8/hai/"
 #path.out <- "src/satellite/Landsat8/hai/out/" (only necessary for reprojection)
 
-## Filepath to input csv files
-path.csv <- "src/csv/hai/"
-
 path.modules <- "/home/schmingo/Diplomarbeit/bifore/"
 filename.mod.ExtractScales <- "preprocessing/landsat8_mod_ExtractScales.R"
 
 ## Filepath and filename of output csv
+path.csv <- "src/csv/hai/"
 csv.out.raw <- "hai_greyvalues_RAW.csv"
 csv.out <- "hai_greyvalues.csv"
 csv.out.NA <- "hai_greyvalues_NA.csv"

@@ -17,11 +17,11 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
 #setwd("/home/schmingo/Diplomarbeit/") # Linux
-setwd("D:/Diplomarbeit/") # Windows
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/") # Windows
 #setwd("Florian")
 
 ## Import data 
-data <- read.csv2("src/csv/hai_greyvalues_landsat8.csv", dec = ".",
+data <- read.csv2("csv/hai/hai_greyvalues.csv", dec = ".",
                        header = TRUE, stringsAsFactors = FALSE)
 
 
@@ -57,6 +57,8 @@ data.melt <- melt(data,
                  measured = c(data[,7:nrow(data)]))
 
 
+
+
 ## plot using ggplot2 package
 ggplot(data = grass.melt, aes(x = variable, y = value))+ geom_boxplot()
 
@@ -67,9 +69,19 @@ ggplot(data = forest.melt, aes(x = variable, y = value, group=1))+ geom_smooth()
 ggplot(data = grass.select.melt, aes(x = variable, y = value, colour=Plotname)) + 
   geom_point()
 
+png("images/landsat8_compare_boxplot_HEG_grass-forest.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
+
+
 ggplot(data = data.melt, aes(x = variable, y = value, colour=Location)) + 
   geom_boxplot()
 
+
+## Close image port
+graphics.off()
 
 ### lineplot
 tmp.line <- melt(data[, c(1, 7:ncol(data))], id.vars = "Plotname", variable.name = "Band")
@@ -79,14 +91,23 @@ ggplot(data = tmp.line, aes(x = Band, y = value, group = Plotname)) +
   geom_line(aes(colour = Plotname))
 
 
+################################################################################
+
+png("images/landsat8_compare_facet_HEG-HEW.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
+
 ### subset lineplot with facets
-tmp2.line <- subset(tmp.line, Plotname %in% c("HEG01", "HEG02", "HEG03", "HEG04", "HEG05"))
+tmp2.line <- subset(tmp.line, Plotname %in% c("HEG01", "HEG02", "HEG03", "HEW01", "HEW02","HEW03"))
 ggplot(data = tmp2.line, aes(x = Band, y = value, group = Plotname)) + 
   geom_point() + 
   geom_line(aes(colour = Plotname)) + 
   facet_wrap(~ Plotname, nrow = 2, ncol = 3)
 
-
+## Close image port
+graphics.off()
 ################################################################################
 # ## Plot by Florian
 # grass.heg01 <- subset(grass[1], Plotname == "HEG01")

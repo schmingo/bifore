@@ -4,7 +4,7 @@
 ## EXTRACT GREYVALUES FROM LANDSAT 8 SATELLITE DATA USING CORNER COORDINATES  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-10-11                                                        ##
+## Version: 2013-10-15                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -17,27 +17,25 @@ rm(list = ls(all = TRUE))
 lib <- c("rgdal", "parallel", "raster", "matrixStats")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
+
 ################################################################################
-## Set filepaths and filenames
+## Set filepaths and filenames #################################################
 
 ## Filepath to wd
 path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
 
-## Filepath to Landsat8 images
+## Satellite imagery
 path.img <- "src/satellite/Landsat8/hai/"
 #path.out <- "src/satellite/Landsat8/hai/out/" (only necessary for reprojection)
 
-## Filepath to input csv files
-path.csv <- "src/csv/hai/"
-
-path.modules <- "/home/schmingo/Diplomarbeit/bifore/"
-filename.mod.ExtractScales <- "preprocessing/landsat8_mod_ExtractScales.R"
+path.modules <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/"
+filename.mod.ExtractScales <- "landsat8_mod_ExtractScales.R"
 
 ## Filepath and filename of output csv
-csv.out.NA <- "hai_greyvalues_NA.csv"
+path.csv <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/hai/"
+csv.out.raw <- "hai_greyvalues_RAW.csv"
 csv.out <- "hai_greyvalues.csv"
-csv.out.raw <- "hai_RAW.csv"
-
+csv.out.NA <- "hai_greyvalues_NA.csv"
 csv.out.NA.deriv <- "hai_greyvalues_NA_derivate.csv"
 
 ################################################################################
@@ -179,7 +177,7 @@ greyvalues.raw.na[, 7:ncol(greyvalues.raw.na)][greyvalues.raw.na[, 7:ncol(greyva
 
 print("Extracting scalefactors and offsets from metadata...")
 
-source(paste0(path.modules,filename.mod.ExtractScales))
+source(paste0(path.modules, filename.mod.ExtractScales))
 
 ls8scales <- ExtractLS8Scale(path.img)
 
@@ -207,14 +205,6 @@ greyvalues.calc <- cbind(greyvalues.raw.sub.front, greyvalues.sub.calc)
 ################################################################################
 ### Calculate first derivate of greyvalue ######################################
 
-# sub.greyvalues <- greyvalues[7:ncol(greyvalues)]
-# diffs <- rowDiffs(as.matrix(sub.greyvalues)) # calculate first derivate (diff)
-
-# paste dataframes. 
-# add "0-column" because there is no slope for the first greyvalue
-# deriv.greyvalues <- cbind(greyvalues[1:6],0,diffs)
-# names(deriv.greyvalues) <- names(greyvalues) # write colnames to new df
-
 sub.greyvalues.na.calc <- greyvalues.na.calc[7:ncol(greyvalues.na.calc)]
 diffs <- rowDiffs(as.matrix(sub.greyvalues.na.calc)) # calculate first derivate (diff)
 
@@ -223,24 +213,12 @@ diffs <- rowDiffs(as.matrix(sub.greyvalues.na.calc)) # calculate first derivate 
 deriv.greyvalues.na.calc <- cbind(greyvalues.na.calc[1:6],0,diffs)
 names(deriv.greyvalues.na.calc) <- names(greyvalues.na.calc) # write colnames to new df
 
-# ################################################################################
-# ### Write data to new csv ######################################################
-# 
-# write.table(greyvalues, file = paste(path.csv, filename.csv.out, sep=""), 
-#             dec = ".", 
-#             quote = FALSE, 
-#             col.names = TRUE, 
-#             row.names = FALSE, 
-#             sep =";")
-# 
-# write.table(deriv.greyvalues, file = paste(path.csv, filename.csv.out.deriv, sep=""), 
-#             dec = ".", 
-#             quote = FALSE, 
-#             col.names = TRUE, 
-#             row.names = FALSE, 
-#             sep =";")
-write.table(greyvalues.na.calc, 
-            file = paste0(path.csv, csv.out.NA), 
+
+################################################################################
+### Write data to new csv ######################################################
+
+write.table(greyvalues.raw, 
+            file = paste0(path.csv, csv.out.raw),
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 
@@ -255,8 +233,8 @@ write.table(greyvalues.calc,
             row.names = FALSE,
             sep = ";")
 
-write.table(greyvalues.raw, 
-            file = paste0(path.csv, csv.out.raw),
+write.table(greyvalues.na.calc, 
+            file = paste0(path.csv, csv.out.NA), 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 

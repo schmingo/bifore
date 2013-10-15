@@ -4,7 +4,7 @@
 ## PLOTTING EXTRACTED RAW VALUES FROM LANDSAT8 SATELLITE DATA                 ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-10-02                                                        ##
+## Version: 2013-10-12                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -27,20 +27,21 @@ plot.center <- read.csv2("csv/hai/hai_plot_center.csv",
                         dec = ".",
                         header = TRUE, stringsAsFactors = FALSE)
 
-data.ab <- read.csv2("csv/hai/hai_greyvalues_landsat8_abundance.csv",
+data.ab <- read.csv2("csv/all_abundance.csv",
                      dec = ".",
                      header = TRUE, 
                      stringsAsFactors = TRUE,
                      )
 
-# data.ab$abundance <- as.factor(data.ab$abundance)
-
 
 ################################################################################
 ### Get geocoordinates from plot center ########################################
 
-data <- cbind(data.ab[,1:4], plot.center[,1:2], data.ab[7:ncol(data.ab)])
+data <- cbind(data.ab[101:200,1:4], 
+              plot.center[,1:2], 
+              data.ab[101:200,7:ncol(data.ab)])
 
+names(data)[7] <- "abundance"
 
 ################################################################################
 ### Plot Hainich - Abundance map ###############################################
@@ -56,7 +57,7 @@ png("images/map_hainich_abundance.png",
 hainich.map <- qmap(location = "Muelverstedt",
                     color = "color",
                     legend = "bottomright",
-                    extent = "device",
+                    extent = "panel",
                     maptype = "terrain")
 
 points <- geom_point(
@@ -82,8 +83,8 @@ points <- geom_point(
 # geom_subplot2d(aes(long, lat, subplot = geom_bar(aes(Age, ..count.., fill = Age))), bins = c(15,12), ref = NULL, width = rel(0.8), data = simdat2))
 
 
-b <- hainich.map + points
+map <- hainich.map + points
 
-b
+map
 ## Close image port
 graphics.off()

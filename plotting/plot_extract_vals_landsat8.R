@@ -1,11 +1,11 @@
 ################################################################################
-## BiFoRe Scripts
-##
-## PLOTTING EXTRACTED VALUES FROM LANDSAT8 SATELLITE DATA
-##
-## Author: Simon Schlauss (sschlauss@gmail.com)
-## Version: 2013-07-31
-##
+## BiFoRe Scripts                                                             ##
+##                                                                            ##  
+## PLOTTING EXTRACTED VALUES FROM LANDSAT8 SATELLITE DATA                     ##  
+##                                                                            ##
+## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
+## Version: 2013-07-31                                                        ##
+##                                                                            ##
 ################################################################################
 
 ## Clear workspace
@@ -16,7 +16,7 @@ lib <- c("ggplot2", "latticeExtra", "reshape2", "RColorBrewer", "colorspace")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-#setwd("/home/schmingo/Diplomarbeit/") # Linux
+setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/") # Linux
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/") # Windows
 #setwd("Florian")
 

@@ -1,5 +1,5 @@
 # BiFoRe scripts
-##### Forecasting biodiversity using remote sensing
+##### Diplomarbeit
 ***
 <br/>
 #### Get a copy of [csv files](http://bit.ly/15AX7q0 "download csv files") ~200kB
@@ -10,11 +10,7 @@
 Download Landsat8 Data [here](http://bit.ly/1djjCar "GloVis")<br/>
 Download MODIS Data [here](http://1.usa.gov/19Jwfrk "Reverb")
 
-<br/>
-***
-<br/>
-To make sure all scripts work properly I recommend to execute them in a Linux environment.<br/>
-<br/>
+
 Recommended Linux packages:
 + gdal-bin
 + libgdal1-dev
@@ -27,5 +23,8 @@ Recommended R packages:
 + parallel 
 + randomForest
 + doSNOW
-+ foreach <br/>
++ foreach 
++ ggplot2
++ ggmap
+<br/>
 

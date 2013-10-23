@@ -98,7 +98,7 @@ table.center <- spTransform(table.center, CRS = projection.layers)
 #   })
 ## Retrieve extent from CENTER coordinates
 
-extent <- lapply(seq(1, nrow(table.center)), function(i) {
+extent <- lapply(seq(1, nrow(table.center)), function(i) {                                  ## ToFix!                      
   extent(coordinates(table.center[i,]))
 })
 

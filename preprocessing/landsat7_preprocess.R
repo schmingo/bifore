@@ -38,29 +38,29 @@ csv.out <- "ls7_kili_20060129T0727Z_greyvalues.csv"
 csv.out.NA <- "ls7_kili_20060129T0727Z_greyvalues_NA.csv"
 csv.out.NA.deriv <- "ls7_kili_20060129T0727Z_NA_derivate.csv"
 
-# ################################################################################
-# ### Set working directory ######################################################
-# 
+################################################################################
+### Set working directory ######################################################
+
 setwd(path.wd)
-# 
-# ################################################################################
-# ### Reproject Landsat 8 Data ###################################################
-#                                                                                 
-# #  source("scripts/preprocessing/landsat8_mod_reprojection.R") #BUG!
-# #  reproject_landsat8 (lib, path.img, path.out)
-# 
-# ################################################################################
-# ### Import Landsat data ########################################################
-# 
-# ## List files
-# files.list.sat <- list.files(path.img, 
-#                      pattern = ".TIF$", full.names = TRUE)
-# 
-# ## Import files as RasterLayer objects
-# raster.layers <- lapply(files.list.sat, raster)
-# projection.layers <- CRS(projection(raster.layers[[1]]))
-# 
-# 
+
+################################################################################
+### Reproject Landsat Data #####################################################
+                                                                                
+#  source("scripts/preprocessing/landsat8_mod_reprojection.R") #BUG!
+#  reproject_landsat8 (lib, path.img, path.out)
+
+################################################################################
+### Import Landsat data ########################################################
+
+## List files
+files.list.sat <- list.files(path.img, 
+                     pattern = ".TIF$", full.names = TRUE)
+
+## Import files as RasterLayer objects
+raster.layers <- lapply(files.list.sat, raster)
+projection.layers <- CRS(projection(raster.layers[[1]]))
+
+
 # ################################################################################
 # ### Create extends from CSV-files ##############################################
 # 

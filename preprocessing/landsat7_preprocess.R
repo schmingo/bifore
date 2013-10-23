@@ -102,38 +102,39 @@ extent <- lapply(seq(1, nrow(table.center)), function(i) {                      
   extent(coordinates(table.center[i,]))
 })
 
-# ################################################################################
-# ### Extraction of cell values ##################################################
-# 
-# ## Parallelization
-# clstr <- makePSOCKcluster(n.cores <- detectCores()-1
-#                           )
-# clusterExport(clstr, c("lib", 
-#                        "raster.layers", 
-#                        "extent", 
-#                        "table.center", 
-#                        "table.corner"))
-# 
-# clusterEvalQ(clstr, lapply(lib, function(i) require(i, 
-#                                                     character.only = TRUE, 
-#                                                     quietly = TRUE)))
-# 
-# ## Extract and AVERAGE cell values
-# values <- parLapply(clstr, raster.layers, function(h) {
-#   temp.values <- sapply(extent, function(i) {
-#     temp.extract <- extract(h, i)
-#     
-#     if (length(temp.extract) > 1)
-#       temp.extract <- mean(temp.extract, na.rm = TRUE)
-#     
-#     return(temp.extract)
-#   })
-#   
-#   temp.df <- data.frame(table.center, ls_grey_value = temp.values)
-#   
-#   return(temp.df)
-# })
-# 
+################################################################################
+### Extraction of cell values ##################################################
+
+## Parallelization
+clstr <- makePSOCKcluster(n.cores <- detectCores()-1
+                          )
+clusterExport(clstr, c("lib", 
+                       "raster.layers", 
+                       "extent", 
+                       "table.center", 
+#                        "table.corner"
+                       ))
+
+clusterEvalQ(clstr, lapply(lib, function(i) require(i, 
+                                                    character.only = TRUE, 
+                                                    quietly = TRUE)))
+
+## Extract and AVERAGE cell values
+values <- parLapply(clstr, raster.layers, function(h) {
+  temp.values <- sapply(extent, function(i) {
+    temp.extract <- extract(h, i)
+    
+    if (length(temp.extract) > 1)
+      temp.extract <- mean(temp.extract, na.rm = TRUE)
+    
+    return(temp.extract)
+  })
+  
+  temp.df <- data.frame(table.center, ls_grey_value = temp.values)
+  
+  return(temp.df)
+})
+
 # ## Merge single data frames
 # greyvalues <- Reduce(function(...) merge(..., by = 1:6), values)
 # 

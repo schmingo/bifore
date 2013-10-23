@@ -18,30 +18,30 @@ lib <- c("rgdal", "parallel", "raster", "matrixStats")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 
-# ################################################################################
-# ## Set filepaths and filenames #################################################
+################################################################################
+## Set filepaths and filenames #################################################
+
+## Filepath to wd
+path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
 # 
-# ## Filepath to wd
-# path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
-# 
-# ## Satellite imagery
-# path.img <- "src/satellite/Landsat8/hai/"
-# #path.out <- "src/satellite/Landsat8/hai/out/" (only necessary for reprojection)
-# 
-# path.modules <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/"
-# filename.mod.ExtractScales <- "landsat8_mod_ExtractScales.R"
-# 
-# ## Filepath and filename of output csv
-# path.csv <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/hai/"
-# csv.out.raw <- "hai_greyvalues_RAW.csv"
-# csv.out <- "hai_greyvalues.csv"
-# csv.out.NA <- "hai_greyvalues_NA.csv"
-# csv.out.NA.deriv <- "hai_greyvalues_NA_derivate.csv"
-# 
+## Satellite imagery
+path.img <- "src/satellite/LS7_kili_20060129T0727Z_east_great/images/"
+#path.out <- "src/satellite/Landsat8/hai/out/" (only necessary for reprojection)
+
+path.modules <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/"
+filename.mod.ExtractScales <- "landsat7_mod_ExtractScales.R"
+
+## Filepath and filename of output csv
+path.csv <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/"
+csv.out.raw <- "ls7_kili_20060129T0727Z_greyvalues_RAW.csv"
+csv.out <- "ls7_kili_20060129T0727Z_greyvalues.csv"
+csv.out.NA <- "ls7_kili_20060129T0727Z_greyvalues_NA.csv"
+csv.out.NA.deriv <- "ls7_kili_20060129T0727Z_NA_derivate.csv"
+
 # ################################################################################
 # ### Set working directory ######################################################
 # 
-# setwd(path.wd)
+setwd(path.wd)
 # 
 # ################################################################################
 # ### Reproject Landsat 8 Data ###################################################

@@ -28,6 +28,9 @@ path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
 path.img <- "src/satellite/LS7_kili_20060129T0727Z_east_great/images/"
 #path.out <- "src/satellite/Landsat8/hai/out/" (only necessary for reprojection)
 
+path.coords <- "src/csv/kili/"
+filename.coords <- "kili_plot_center_coordinates.csv"
+
 path.modules <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/"
 filename.mod.ExtractScales <- "landsat7_mod_ExtractScales.R"
 
@@ -61,24 +64,19 @@ raster.layers <- lapply(files.list.sat, raster)
 projection.layers <- CRS(projection(raster.layers[[1]]))
 
 
-# ################################################################################
-# ### Create extends from CSV-files ##############################################
-# 
-# ## List CENTER files
-# files.center <- list.files(path.csv,
-#                            pattern = "plot_center.csv$",
-#                            full.names = TRUE)
-# 
-# ## Import CENTER files as SpatialPointsDataframe objects
-# table.center <- read.csv2(files.center,
-#                           dec = ".",
-#                           stringsAsFactors = FALSE)
-# 
-# coordinates(table.center) <- c("Longitude", "Latitude")
-# projection(table.center) <- "+init=epsg:4326"
-#  
-# table.center <- spTransform(table.center, CRS = projection.layers)
-# 
+################################################################################
+### Create extends from CSV-files ##############################################
+
+## Import CENTER files as SpatialPointsDataframe objects
+table.center <- read.csv2(paste0(path.coords, filename.coords),
+                          dec = ".",
+                          stringsAsFactors = FALSE)
+
+coordinates(table.center) <- c("Longitude", "Latitude")
+projection(table.center) <- "+init=epsg:4326"
+ 
+table.center <- spTransform(table.center, CRS = projection.layers)
+
 # ## List CORNER files
 # files.corner <- list.files(path.csv,
 #                            pattern = "_corner.csv$",
@@ -98,8 +96,12 @@ projection.layers <- CRS(projection(raster.layers[[1]]))
 # extent <- lapply(seq(1, nrow(table.corner), 4), function(i) {
 #   extent(coordinates(table.corner[i:(i+3), ]))
 #   })
-# 
-# 
+## Retrieve extent from CENTER coordinates
+
+extent <- lapply(seq(1, nrow(table.center)), function(i) {
+  extent(coordinates(table.center[i,]))
+})
+
 # ################################################################################
 # ### Extraction of cell values ##################################################
 # 

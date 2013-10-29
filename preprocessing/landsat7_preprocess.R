@@ -14,7 +14,7 @@ rm(list = ls(all = TRUE))
 
 
 ## Required libraries
-lib <- c("rgdal", "parallel", "raster", "matrixStats")
+lib <- c("rgdal", "doParallel", "raster", "matrixStats")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 
@@ -97,27 +97,41 @@ table.center <- spTransform(table.center, CRS = projection.layers)
 #   extent(coordinates(table.corner[i:(i+3), ]))
 #   })
 ## Retrieve extent from CENTER coordinates
+# 
+# extent <- lapply(seq(1, nrow(table.center)), function(i) {                                  ## ToFix!                      
+#   extent(coordinates(table.center[i,]))
+# })
 
-extent <- lapply(seq(1, nrow(table.center)), function(i) {                                  ## ToFix!                      
-  extent(coordinates(table.center[i,]))
+
+## Set zero values to NA -> remove border
+raster.layers <- lapply(raster.layers, function(i) {
+  i[i[] == 0] <- NA
+  return(i)
 })
 
 ################################################################################
 ### Extraction of cell values ##################################################
 
 ## Parallelization
-clstr <- makePSOCKcluster(n.cores <- detectCores()-1
-                          )
-clusterExport(clstr, c("lib", 
-                       "raster.layers", 
-                       "extent", 
-                       "table.center", 
-#                        "table.corner"
-                       ))
+# clstr <- makePSOCKcluster(n.cores <- detectCores()-1
+#                           )
+# clusterExport(clstr, c("lib", 
+#                        "raster.layers", 
+#                        "extent", 
+#                        "table.center", 
+# #                        "table.corner"
+#                        ))
+# 
+# clusterEvalQ(clstr, lapply(lib, function(i) require(i, 
+#                                                     character.only = TRUE, 
+#                                                     quietly = TRUE)))
 
-clusterEvalQ(clstr, lapply(lib, function(i) require(i, 
-                                                    character.only = TRUE, 
-                                                    quietly = TRUE)))
+registerDoParallel(cl <- makeCluster(detectCores() - 1))
+
+tst <- foreach(i = seq(raster.layers), .packages = lib, 
+               .combine = "cbind") %dopar% {
+  raster.layers[[i]][cellFromXY(raster.layers[[i]], table.center)]
+}
 
 ## Extract and AVERAGE cell values
 values <- parLapply(clstr, raster.layers, function(h) {

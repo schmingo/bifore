@@ -22,7 +22,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set filepaths and filenames #################################################
 
 ## Filepath to wd
-path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
+path.wd <- "D:/Dropbox/Diplomarbeit/code/bifore/"
 
 ## Satellite imagery
 path.img <- "src/satellite/LS7_kili_20060129T0727Z_east_great/images/"
@@ -31,11 +31,11 @@ path.img <- "src/satellite/LS7_kili_20060129T0727Z_east_great/images/"
 path.coords <- "src/csv/kili/"
 filename.coords <- "kili_plot_center_coordinates.csv"
 
-path.modules <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/"
+path.modules <- "D:/Diplomarbeit/bifore/preprocessing/"
 filename.mod.ExtractScales <- "landsat7_mod_ExtractScales.R"
 
 ## Filepath and filename of output csv
-path.csv <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/"
+path.csv <- "D:/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/"
 csv.out.raw <- "ls7_kili_20060129T0727Z_greyvalues_RAW.csv"
 csv.out <- "ls7_kili_20060129T0727Z_greyvalues.csv"
 csv.out.NA <- "ls7_kili_20060129T0727Z_greyvalues_NA.csv"

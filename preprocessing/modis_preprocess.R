@@ -32,8 +32,8 @@ path.hdfExtractScales <- "modis_mod_hdfExtractScales.R"
 path.renameTIF <- "modis_mod_renameTIF.R"
 
 ## Satellite imagery
-path.modis <- "src/satellite/MOD02_20060129/"
-path.modis.raw <- "src/satellite/MOD02_kili_20060129_RAW/"
+path.modis <- "src/satellite/MOD02_kili_20060129/"
+path.modis.raw <- "src/satellite//MOD02_kili_20060129_RAW"
 path.250.hdf <- "MOD02QKM.A2006029.0750.005.2010203164844.hdf"
 path.500.hdf <- "MOD02HKM.A2006029.0750.005.2010203164844.hdf"
 path.1km.hdf <- "MOD021KM.A2006029.0750.005.2010203164844.hdf"
@@ -50,11 +50,6 @@ path.coords <- "src/csv/kili/"
 filename.coords <- "kili_plot_center_coordinates.csv"
 
 
-################################################################################
-### Set working directory ######################################################
-
-setwd(path.wd)
-
 
 ################################################################################
 ### Rename MODIS files #########################################################
@@ -62,7 +57,13 @@ setwd(path.wd)
 # Rename MODIS *.tif to bandname-corresponding filenames (e.g.: B01, B13.1)
 
 # source(paste0(path.modules, path.renameTIF))
-# rename_modis_files (path.modis)
+# rename_modis_files(path.wd, path.modis)
+
+
+################################################################################
+### Set working directory ######################################################
+
+setwd(path.wd)
 
 
 ################################################################################

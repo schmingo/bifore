@@ -9,9 +9,9 @@
 ##                                                                            ##
 ################################################################################
 
-rename_modis_files <- function(path.modis)
+rename_modis_files <- function(path.wd, path.modis)
 {
-  setwd(path.modis)
+  setwd(paste0(path.wd, path.modis))
   file.rename("band__EV_1KM_Emissive_b0.tif", "B20.tif")
   file.rename("band__EV_1KM_Emissive_b1.tif", "B21.tif")
   file.rename("band__EV_1KM_Emissive_b2.tif", "B22.tif")

@@ -20,10 +20,11 @@ Recommended Linux packages:
 Recommended R packages:
 + rgdal
 + raster
-+ parallel 
++ parallel
++ doParallel
++ matrixStats
 + randomForest
 + doSNOW
-+ foreach 
 + ggplot2
 + ggmap
 <br/>

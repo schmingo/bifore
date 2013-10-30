@@ -23,7 +23,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Filepath to wd
 path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
-# 
+
 ## Satellite imagery
 path.img <- "src/satellite/LS7_kili_20060129T0727Z_east_great/images/"
 #path.out <- "src/satellite/Landsat8/hai/out/" (only necessary for reprojection)
@@ -46,11 +46,6 @@ csv.out.NA.deriv <- "ls7_kili_20060129T0727Z_NA_derivate.csv"
 
 setwd(path.wd)
 
-################################################################################
-### Reproject Landsat Data #####################################################
-                                                                                
-#  source("scripts/preprocessing/landsat8_mod_reprojection.R") #BUG!
-#  reproject_landsat8 (lib, path.img, path.out)
 
 ################################################################################
 ### Import Landsat data ########################################################
@@ -65,7 +60,7 @@ projection.layers <- CRS(projection(raster.layers[[1]]))
 
 
 ################################################################################
-### Create extends from CSV-files ##############################################
+### Create extends from CSV-file ###############################################
 
 ## Import CENTER files as SpatialPointsDataframe objects
 table.center <- read.csv2(paste0(path.coords, filename.coords),
@@ -77,77 +72,29 @@ projection(table.center) <- "+init=epsg:4326"
  
 table.center <- spTransform(table.center, CRS = projection.layers)
 
-# ## List CORNER files
-# files.corner <- list.files(path.csv,
-#                            pattern = "_corner.csv$",
-#                            full.names = TRUE)
-# 
-# ## Import CORNER files as SpatialPointsDataframe objects
-# table.corner <- read.csv2(files.corner,
-#                           dec = ".",
-#                           stringsAsFactors = FALSE)
-# 
-# coordinates(table.corner) <- c("Longitude", "Latitude")
-# projection(table.corner) <- "+init=epsg:4326"
-#   
-# table.corner <- spTransform(table.corner, CRS = projection.layers)
-# 
-# ## Retrieve extent from CORNER coordinates
-# extent <- lapply(seq(1, nrow(table.corner), 4), function(i) {
-#   extent(coordinates(table.corner[i:(i+3), ]))
-#   })
-## Retrieve extent from CENTER coordinates
-# 
-# extent <- lapply(seq(1, nrow(table.center)), function(i) {                                  ## ToFix!                      
-#   extent(coordinates(table.center[i,]))
-# })
+## Set zero values to NA to remove border of imagery (parallelized)
+registerDoParallel(cl <- makeCluster(detectCores() - 1))
 
-
-## Set zero values to NA -> remove border
-raster.layers <- lapply(raster.layers, function(i) {
+raster.layers <- foreach(i = raster.layers, .packages = lib) %dopar% {
   i[i[] == 0] <- NA
   return(i)
-})
+}
+stopCluster(clstr)
+
 
 ################################################################################
 ### Extraction of cell values ##################################################
 
-## Parallelization
-# clstr <- makePSOCKcluster(n.cores <- detectCores()-1
-#                           )
-# clusterExport(clstr, c("lib", 
-#                        "raster.layers", 
-#                        "extent", 
-#                        "table.center", 
-# #                        "table.corner"
-#                        ))
-# 
-# clusterEvalQ(clstr, lapply(lib, function(i) require(i, 
-#                                                     character.only = TRUE, 
-#                                                     quietly = TRUE)))
-
 registerDoParallel(cl <- makeCluster(detectCores() - 1))
 
-tst <- foreach(i = seq(raster.layers), .packages = lib, 
-               .combine = "cbind") %dopar% {
+greyvalues <- foreach(i = seq(raster.layers), .packages = lib,
+                      .combine = "cbind") %dopar% {
   raster.layers[[i]][cellFromXY(raster.layers[[i]], table.center)]
 }
 
-## Extract and AVERAGE cell values
-values <- parLapply(clstr, raster.layers, function(h) {
-  temp.values <- sapply(extent, function(i) {
-    temp.extract <- extract(h, i)
-    
-    if (length(temp.extract) > 1)
-      temp.extract <- mean(temp.extract, na.rm = TRUE)
-    
-    return(temp.extract)
-  })
-  
-  temp.df <- data.frame(table.center, ls_grey_value = temp.values)
-  
-  return(temp.df)
-})
+stopCluster(cl)
+
+print(greyvalues) # Matrix with extracted greyvalues
 
 # ## Merge single data frames
 # greyvalues <- Reduce(function(...) merge(..., by = 1:6), values)

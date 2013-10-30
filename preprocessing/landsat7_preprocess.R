@@ -3,6 +3,10 @@
 ##                                                                            ##
 ## EXTRACT GREYVALUES FROM LANDSAT 7 SATELLITE DATA USING CORNER COORDINATES  ##
 ##                                                                            ##
+##                                                                            ##
+## IMPORTANT NOTE: LANDSAT 7 SENSOR IS BROKEN!                                ##
+##                                                                            ##
+##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
 ## Version: 2013-10-23                                                        ##
 ##                                                                            ##
@@ -87,57 +91,51 @@ stopCluster(clstr)
 
 registerDoParallel(cl <- makeCluster(detectCores() - 1))
 
-greyvalues <- foreach(i = seq(raster.layers), .packages = lib,
+greyvalues.raw <- foreach(i = seq(raster.layers), .packages = lib,
                       .combine = "cbind") %dopar% {
   raster.layers[[i]][cellFromXY(raster.layers[[i]], table.center)]
 }
 
 stopCluster(cl)
 
-print(greyvalues) # Matrix with extracted greyvalues
+################################################################################
+### Combine dataframes #########################################################
 
-# ## Merge single data frames
-# greyvalues <- Reduce(function(...) merge(..., by = 1:6), values)
-# 
-# names(greyvalues)[7:18] <- sapply(strsplit(substr(basename(files.list.sat), 
-#                                                       1, 
-#                                                       nchar(basename(files.list.sat)) - 4), 
-#                                                "_"), "[[", 2)
-# 
-# # coordinates(greyvalues) <- c("Longitude", "Latitude")
-# 
-# ## Deregister parallel backend
-# stopCluster(clstr)
-# 
-# ## Reformat Colnames
-# tmp.names <- names(greyvalues)[7:(ncol(greyvalues)-1)]
-# tmp.bands <- as.numeric(sapply(strsplit(tmp.names, "B"), "[[", 2))
-# tmp.bands <- formatC(tmp.bands, width = 2, format = "d", flag = "0")
-# 
-# names(greyvalues)[7:(ncol(greyvalues)-1)] <- paste("B", 
-#                                                            tmp.bands, 
-#                                                            sep = "")
-# 
-# ## Reorder Colnames
-# greyvalues <- data.frame(greyvalues)
-# greyvalues <- greyvalues[, c(1:6,9:17,7,8,18)]
-# 
-# ################################################################################
-# ### Remove BQA band ############################################################
-# 
-# greyvalues <- greyvalues[, 1:ncol(greyvalues)-1]
-# 
-# 
-# ################################################################################
-# ### Remove NA Values ###########################################################
+
+## create dataframe
+greyvalues.raw <- as.data.frame(greyvalues.raw)
+
+## set colnames
+names(greyvalues.raw) <- sapply(strsplit(substr(basename(files.list.sat),
+                                                1,
+                                                nchar(basename(files.list.sat)) - 4),
+                                         "_"), "[[", 2)
+
+
+## Combine multiple dataframes to a single dataframe
+greyvalues <- cbind(table.center, greyvalues.raw)
+
+
+## Reformat colnames
+tmp.names <- names(greyvalues)[6:(ncol(greyvalues))]
+tmp.bands <- as.numeric(sapply(strsplit(tmp.names, "B"), "[[", 2))
+tmp.bands <- formatC(tmp.bands, width = 2, format = "d", flag = "0")
+
+names(greyvalues)[6:(ncol(greyvalues))] <- paste("B",
+                                                 tmp.bands,
+                                                 sep = "")
+
+
+# ###############################################################################
+# ## Remove NA Values ###########################################################
 # 
 # greyvalues.raw <- greyvalues
 # greyvalues.raw.na <- greyvalues.raw
 # greyvalues.raw.na[, 7:ncol(greyvalues.raw.na)][greyvalues.raw.na[, 7:ncol(greyvalues.raw.na)] > 65535] <- NA
 # 
 # 
-# ################################################################################
-# ### Extract scalefactors and offsets from Landsat8 metadata ####################
+################################################################################
+### Extract scalefactors and offsets from Landsat8 metadata ####################
 # 
 # print("Extracting scalefactors and offsets from metadata...")
 # 

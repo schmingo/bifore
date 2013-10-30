@@ -7,7 +7,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-10-15                                                        ##
+## Version: 2013-10-30                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -32,18 +32,18 @@ path.hdfExtractScales <- "modis_mod_hdfExtractScales.R"
 path.renameTIF <- "modis_mod_renameTIF.R"
 
 ## Satellite imagery
-path.modis <- "src/satellite/MOD02_2013-07-07_1120/"
-path.modis.raw <- "src/satellite/RAW_MODIS_2013-07-07_1120/"
-path.250.hdf <- "MOD02QKM.A2013188.1120.005.2013188200351.hdf"
-path.500.hdf <- "MOD02HKM.A2013188.1120.005.2013188200351.hdf"
-path.1km.hdf <- "MOD021KM.A2013188.1120.005.2013188200351.hdf"
+path.modis <- "src/satellite/MOD02_20060129/"
+path.modis.raw <- "src/satellite/MOD02_kili_20060129_RAW/"
+path.250.hdf <- "MOD02QKM.A2006029.0750.005.2010203164844.hdf"
+path.500.hdf <- "MOD02HKM.A2006029.0750.005.2010203164844.hdf"
+path.1km.hdf <- "MOD021KM.A2006029.0750.005.2010203164844.hdf"
 
 ## Filepath and filename of output csv
 path.csv <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/"
-csv.out.raw <- "MODIS_20130707-1120_greyvalues_RAW.csv"
-csv.out <- "MODIS_20130707-1120_greyvalues.csv"
-csv.out.NA <- "MODIS_20130707-1120_greyvalues_NA.csv"
-csv.out.NA.deriv <- "MODIS_20130707-1120_greyvalues_NA_derivate.csv"
+csv.out.raw <- "MODIS_20060129_greyvalues_RAW.csv"
+csv.out <- "MODIS_20060129_greyvalues.csv"
+csv.out.NA <- "MODIS_20060129_greyvalues_NA.csv"
+csv.out.NA.deriv <- "MODIS_20060129_greyvalues_NA_derivate.csv"
 
 
 ################################################################################

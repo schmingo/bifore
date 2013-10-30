@@ -39,7 +39,7 @@ path.500.hdf <- "MOD02HKM.A2006029.0750.005.2010203164844.hdf"
 path.1km.hdf <- "MOD021KM.A2006029.0750.005.2010203164844.hdf"
 
 ## Filepath and filename of output csv
-path.csv <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/"
+path.csv <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/"
 csv.out.raw <- "MODIS_20060129_greyvalues_RAW.csv"
 csv.out <- "MODIS_20060129_greyvalues.csv"
 csv.out.NA <- "MODIS_20060129_greyvalues_NA.csv"

@@ -16,7 +16,7 @@ rm(list = ls(all = TRUE))
 
 
 ## Required libraries
-lib <- c("rgdal", "parallel", "raster", "matrixStats")
+lib <- c("rgdal", "doParallel", "raster", "matrixStats")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 
@@ -33,7 +33,7 @@ path.renameTIF <- "modis_mod_renameTIF.R"
 
 ## Satellite imagery
 path.modis <- "src/satellite/MOD02_kili_20060129/"
-path.modis.raw <- "src/satellite//MOD02_kili_20060129_RAW"
+path.modis.raw <- "src/satellite/MOD02_kili_20060129_RAW/"
 path.250.hdf <- "MOD02QKM.A2006029.0750.005.2010203164844.hdf"
 path.500.hdf <- "MOD02HKM.A2006029.0750.005.2010203164844.hdf"
 path.1km.hdf <- "MOD021KM.A2006029.0750.005.2010203164844.hdf"
@@ -90,82 +90,45 @@ table.center <- read.csv2(paste0(path.coords, filename.coords),
 
 coordinates(table.center) <- c("Longitude", "Latitude")
 projection(table.center) <- "+init=epsg:4326"
- 
+
 table.center <- spTransform(table.center, CRS = projection.layers)
-
-## List CORNER files
-files.corner <- list.files("src/csv/",
-                           pattern = "all_plot_corner.csv$",
-                           full.names = TRUE)
-
-## Import CORNER files as SpatialPointsDataframe objects
-table.corner <- read.csv2(files.corner,
-                          dec = ".",
-                          stringsAsFactors = FALSE)
-
-coordinates(table.corner) <- c("Longitude", "Latitude")
-projection(table.corner) <- "+init=epsg:4326"
-  
-table.corner <- spTransform(table.corner, CRS = projection.layers)
-
-## Retrieve extent from CORNER coordinates
-extent.all <- lapply(seq(1, nrow(table.corner), 4), function(i) {
-  extent(coordinates(table.corner[i:(i+3), ]))
-  })
 
 
 ################################################################################
-### Extraction of cell values from extends #####################################
+### Extraction of cell values ##################################################
 
-## Parallelization
-clstr <- makePSOCKcluster(n.cores <- detectCores()-1)
+registerDoParallel(cl <- makeCluster(detectCores() - 1))
 
-clusterExport(clstr, c("lib", 
-                       "raster.layers", 
-                       "extent.all", 
-                       "table.center", 
-                       "table.corner"))
+greyvalues.raw <- foreach(i = seq(raster.layers), .packages = lib,
+                          .combine = "cbind") %dopar% {
+                            raster.layers[[i]][cellFromXY(raster.layers[[i]], table.center)]
+                          }
 
-clusterEvalQ(clstr, lapply(lib, function(i) require(i, 
-                                                    character.only = TRUE, 
-                                                    quietly = TRUE)))
+stopCluster(cl)
 
-## Extract and AVERAGE cell values
-print("Extracting cell values...(this may take up to 15 minutes)")
-values.all <- parLapply(clstr, raster.layers, function(h) {
-  temp.values <- sapply(extent.all, function(i) {
-    temp.extract <- extract(h, i)
-    
-    if (length(temp.extract) > 1)
-      temp.extract <- mean(temp.extract, na.rm = TRUE)
-    
-    return(temp.extract)
-  })
-  
-  temp.df <- data.frame(table.center, greyvalue = temp.values)
-  
-  return(temp.df)
-})
 
-## Merge single data frames
-greyvalues <- Reduce(function(...) merge(..., by = 1:6), values.all)
+################################################################################
+### Combine dataframes #########################################################
 
-names(greyvalues)[7:44] <- substr(basename(files.list.mod),
-                                  1,
-                                  nchar(basename(files.list.mod))-4)
+## convert matrix to dataframe
+greyvalues.raw <- as.data.frame(greyvalues.raw)
 
-# coordinates(values.all.new) <- c("Longitude", "Latitude")
+## set colnames
+names(greyvalues.raw) <- substr(basename(files.list.mod),
+                                1,
+                                nchar(basename(files.list.mod))-4)
 
-## Deregister parallel backend
-stopCluster(clstr)
+
+## Combine multiple dataframes to a single dataframe
+greyvalues.raw <- cbind(table.center, greyvalues.raw)
 
 
 ################################################################################
 ### Check for NA values ########################################################
 
-greyvalues.raw <- greyvalues
+greyvalues <- greyvalues.raw
 greyvalues.raw.na <- greyvalues.raw
-greyvalues.raw.na[, 7:ncol(greyvalues.raw.na)][greyvalues.raw.na[, 7:ncol(greyvalues.raw.na)] > 32767] <- NA
+greyvalues.raw.na[, 6:ncol(greyvalues.raw.na)][greyvalues.raw.na[, 6:ncol(greyvalues.raw.na)] > 32767] <- NA
 
 
 ################################################################################
@@ -186,12 +149,12 @@ greyvalues.raw.na <- data.frame(greyvalues.raw.na, stringsAsFactors = F)
 modscales <- data.frame(modscales, stringsAsFactors = F)
 
 ## Subset data frames
-greyvalues.raw.sub.front <- greyvalues.raw[1:6]
+greyvalues.raw.sub.front <- greyvalues.raw[1:5]
 modscales.sub.scales <- as.numeric(modscales[["scales"]])
 
 ## Calculate new greyvalues (greyvalue * scalefactor)
-greyvalues.na.sub.calc <- data.frame(t(t(greyvalues.raw.na[7:44]) * modscales.sub.scales))
-greyvalues.sub.calc <- data.frame(t(t(greyvalues.raw[7:44]) * modscales.sub.scales))
+greyvalues.na.sub.calc <- data.frame(t(t(greyvalues.raw.na[6:ncol(greyvalues.raw.na)]) * modscales.sub.scales))
+greyvalues.sub.calc <- data.frame(t(t(greyvalues.raw[6:ncol(greyvalues.raw.na)]) * modscales.sub.scales))
 
 ## Recombine data frames
 greyvalues.na.calc <- cbind(greyvalues.raw.sub.front, greyvalues.na.sub.calc)
@@ -201,12 +164,12 @@ greyvalues.calc <- cbind(greyvalues.raw.sub.front, greyvalues.sub.calc)
 ################################################################################
 ### Calculate first derivate of greyvalues #####################################
 
-sub.greyvalues.na.calc <- greyvalues.na.calc[7:ncol(greyvalues.na.calc)]
+sub.greyvalues.na.calc <- greyvalues.na.calc[6:ncol(greyvalues.na.calc)]
 diffs <- rowDiffs(as.matrix(sub.greyvalues.na.calc)) # calculate first derivate (diff)
 
 # paste dataframes
 # add "0-column" because there is no slope for the first greyvalue
-deriv.greyvalues.na.calc <- cbind(greyvalues.na.calc[1:6],0,diffs)
+deriv.greyvalues.na.calc <- cbind(greyvalues.na.calc[1:5],0,diffs)
 names(deriv.greyvalues.na.calc) <- names(greyvalues.na.calc) # write colnames to new df
 
 

@@ -45,6 +45,10 @@ csv.out <- "MODIS_20060129_greyvalues.csv"
 csv.out.NA <- "MODIS_20060129_greyvalues_NA.csv"
 csv.out.NA.deriv <- "MODIS_20060129_greyvalues_NA_derivate.csv"
 
+## Filepath to plot coordinates
+path.coords <- "src/csv/kili/"
+filename.coords <- "kili_plot_center_coordinates.csv"
+
 
 ################################################################################
 ### Set working directory ######################################################
@@ -78,13 +82,8 @@ projection.layers <- CRS(projection(raster.layers[[1]]))
 ################################################################################
 ### Create extends from CSV-files ##############################################
 
-## List CENTER files
-files.center <- list.files("src/csv/",
-                           pattern = "all_plot_center.csv$",
-                           full.names = TRUE)
-
 ## Import CENTER files as SpatialPointsDataframe objects
-table.center <- read.csv2(files.center,
+table.center <- read.csv2(paste0(path.coords, filename.coords),
                           dec = ".",
                           stringsAsFactors = FALSE)
 

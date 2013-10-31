@@ -55,10 +55,10 @@ names(tmp.abundance) <- "abundance"
 ## Select data for randomForest
 attach(data) 
 tmp.data <- data.frame(Plotid,
-                       Easting,
-                       Northing,
-                       Longitude,
-                       Latitude, 
+#                        Easting,
+#                        Northing,
+#                        Longitude,
+#                        Latitude, 
                        B01, 
                        B02, 
                        B03, 

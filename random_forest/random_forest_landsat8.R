@@ -91,10 +91,10 @@ m.try <- 7 # Number of variables randomly sampled as candidates at each split
 
 
 ## Check colnames to get the right predictor values
-names(train.data[,4:ncol(train.data)-1])
+names(train.data[,3:ncol(train.data)-1])
 
 ## Function 
-train.rf <- randomForest(train.data[,4:ncol(train.data)-1],
+train.rf <- randomForest(train.data[,3:ncol(train.data)-1],
                          train.data[,names(train.data) %in% c("abundance")],
                          importance = TRUE,
                          #                          na.action = na.omit(train.data),

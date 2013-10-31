@@ -4,7 +4,7 @@
 ## EXTRACT GREYVALUES FROM LANDSAT 8 SATELLITE DATA USING CORNER COORDINATES  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-10-15                                                        ##
+## Version: 2013-10-31                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -14,7 +14,7 @@ rm(list = ls(all = TRUE))
 
 
 ## Required libraries
-lib <- c("rgdal", "parallel", "raster", "matrixStats")
+lib <- c("rgdal", "doParallel", "raster", "matrixStats")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 
@@ -25,18 +25,18 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
 
 ## Satellite imagery
-path.img <- "src/satellite/Landsat8/hai/"
+path.img <- "src/satellite/LS8_kili_20130827T1311Z_west/images/"
 #path.out <- "src/satellite/Landsat8/hai/out/" (only necessary for reprojection)
 
 path.modules <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/"
 filename.mod.ExtractScales <- "landsat8_mod_ExtractScales.R"
 
 ## Filepath and filename of output csv
-path.csv <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/hai/"
-csv.out.raw <- "hai_greyvalues_RAW.csv"
-csv.out <- "hai_greyvalues.csv"
-csv.out.NA <- "hai_greyvalues_NA.csv"
-csv.out.NA.deriv <- "hai_greyvalues_NA_derivate.csv"
+path.csv <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/"
+csv.out.raw <- "ls8_20130827T1311Z_west_greyvalues_RAW.csv"
+csv.out <- "ls8_20130827T1311Z_west_greyvalues.csv"
+csv.out.NA <- "ls8_20130827T1311Z_west_greyvalues_NA.csv"
+csv.out.NA.deriv <- "ls8_20130827T1311Z_west_greyvalues_NA_derivate.csv"
 
 ################################################################################
 ### Set working directory ######################################################

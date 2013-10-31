@@ -4,7 +4,7 @@
 ## RANDOM FOREST FOR MODIS DATA                                               ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-10-02                                                        ##
+## Version: 2013-10-31                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -17,68 +17,78 @@ lib <- c("randomForest")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Import dataset
-data.raw <- read.csv2("csv/all_MODIS_20130706-1040_greyvalues_NA_abundance.csv", 
-                  dec = ".", header = TRUE, stringsAsFactors = FALSE)
+data.modis <- read.csv2("csv/kili/MODIS_20060129_greyvalues_NA_derivate.csv",
+                        dec = ".",
+                        header = TRUE,
+                        stringsAsFactors = FALSE
+                        )
+
+abundance <- read.csv2("csv/kili/kili_abundance.csv",
+                       dec = ".",
+                       header = TRUE,
+                       stringsAsFactors = FALSE
+                       )
 
 
 ################################################################################
-### Subsetting #################################################################
+### Combining and subsetting data ##############################################
 
-data <- data.raw[101:200,]
+tmp.abundance <- abundance[6]
 
 ## Select data for randomForest
-attach(data) 
-train.data <- data.frame(Plotname, 
-#                         Plotid, 
-#                         Status, 
-#                         Location, 
-#                         Longitude, 
-#                         Latitude, 
-                        B01, 
-                        B02, 
-                        B03, 
-                        B04, 
-                        B05, 
-                        B06, 
-                        B07, 
-                        B08, 
-#                         B09, 
-#                         B10, 
-#                         B11, 
-#                         B12, 
-#                         B13.1, 
-#                         B13.2, 
-#                         B14.1, 
-#                         B14.2, 
-#                         B15, 
-#                         B16, 
-#                         B17, 
-#                         B18, 
-#                         B19, 
-                        B20, 
-                        B21, 
-                        B22, 
-                        B23, 
-                        B24, 
-                        B25, 
-                        B26, 
-                        B27, 
-                        B28, 
-                        B29, 
-                        B30, 
-                        B31, 
-                        B32, 
-                        B33, 
-                        B34, 
-                        B35, 
-                        B36, 
-                        abundance
-)
-detach(data)
+attach(data.modis) 
+tmp.data.modis <- data.frame(Plotid,
+#                              Easting,
+#                              Northing,
+#                              Longitude,
+#                              Latitude, 
+                             B01, 
+                             B02, 
+                             B03, 
+                             B04, 
+                             B05, 
+                             B06, 
+                             B07, 
+                             B08, 
+                             B09, 
+                             B10, 
+                             B11, 
+#                              B12, 
+#                              B13.1, 
+#                              B13.2, 
+#                              B14.1, 
+#                              B14.2, 
+#                              B15, 
+#                              B16, 
+#                              B17, 
+                             B18, 
+                             B19, 
+                             B20, 
+                             B21, 
+                             B22, 
+                             B23, 
+                             B24, 
+                             B25, 
+                             B26, 
+                             B27, 
+                             B28, 
+                             B29, 
+                             B30, 
+                             B31, 
+                             B32, 
+                             B33, 
+                             B34, 
+                             B35, 
+                             B36 
+                             )
+detach(data.modis)
+names(tmp.data.modis)
+
+train.data <- cbind(tmp.data.modis, tmp.abundance)
 names(train.data)
 
 ################################################################################
@@ -89,11 +99,10 @@ names(train.data)
 # regression instead of a classification.
 
 abundance.char <- paste(train.data$abundance, "a", sep = "") 
-train.data <- cbind(train.data,abundance.char)
+train.data <- as.data.frame(cbind(train.data,abundance.char))
 
 ## Remove rows with NA values
 train.data <- na.omit(train.data)
-
 
 ################################################################################
 ### Random Forest ##############################################################

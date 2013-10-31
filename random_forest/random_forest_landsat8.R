@@ -4,7 +4,7 @@
 ## RANDOM FOREST USING LANDSAT8 DATA                                          ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-10-02                                                        ##
+## Version: 2013-10-31                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -16,46 +16,67 @@ lib <- c("randomForest")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-# setwd("/home/schmingo/Google Drive/bifore/src/") # Linux
-setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/") # Windows
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Import dataset
-data <- read.csv2("csv/hai/hai_greyvalues_landsat8_abundance.csv", 
-                  dec = ".", header = TRUE, stringsAsFactors = FALSE)
+data <- read.csv2("csv/kili/ls8_20130827T1311Z_west_greyvalues_NA_derivate.csv",
+                  dec = ".",
+                  header = TRUE,
+                  stringsAsFactors = FALSE
+)
+
+abundance <- read.csv2("csv/kili/kili_abundance.csv",
+                       dec = ".",
+                       header = TRUE,
+                       stringsAsFactors = FALSE
+)
+
+
+################################################################################
+### Combining and subsetting data ##############################################
+
+tmp.abundance <- abundance[6]
+
+## Modify abundance values - 2 digit numeric value
+tmp.abundance.list <- as.list(as.numeric(t(tmp.abundance)))
+tmp.abundance.list <- formatC(tmp.abundance.list, 
+                              width = 2, 
+                              format = "d", 
+                              flag = "0")
+
+## Modify abundance values - paste "A" in front to create a character
+tmp.abundance <- as.data.frame(paste0("A", tmp.abundance.list))
+
+names(tmp.abundance) <- "abundance"
+
 
 ## Select data for randomForest
 attach(data) 
-train.data <- data.frame(Plotname,
-#                          Plotid,
-#                          Status,
-#                          Location,
-#                          Longitude,
-#                          Latitude,
-                         B01,
-                         B02,
-                         B03,
-                         B04,
-                         B05,
-                         B06,
-                         B07,
-                         B08,
-                         B09,
-                         B10,
-                         B11,
-                         BQA,
-                         abundance
-                         )
+tmp.data <- data.frame(Plotid,
+#                        Easting,
+#                        Northing,
+#                        Longitude,
+#                        Latitude, 
+                       B01, 
+                       B02, 
+                       B03, 
+                       B04, 
+                       B05, 
+                       B06, 
+                       B07, 
+                       B08, 
+                       B09, 
+                       B10, 
+                       B11
+                       )
 detach(data)
+names(tmp.data)
+
+## Combine MODIS and abundance data 
+train.data <- cbind(tmp.data, tmp.abundance)
 names(train.data)
-################################################################################
-### modify ?predictor variable #################################################
 
-# Add character to numerical data and write it into a new column. 
-# If Abundance would be a numerical value, rF would automatically perform a
-# regression instead of a classification.
-
-abundance.char <- paste(train.data$abundance, "a", sep = "") 
-train.data <- cbind(train.data,abundance.char)
 
 ## Remove rows with NA values
 train.data <- na.omit(train.data)
@@ -68,12 +89,17 @@ train.data <- na.omit(train.data)
 n.tree <- 500 # Number of trees to grow
 m.try <- 7 # Number of variables randomly sampled as candidates at each split
 
+
+## Check colnames to get the right predictor values
+names(train.data[,4:ncol(train.data)-1])
+
 ## Function 
-train.rf <- randomForest(train.data[,3:ncol(train.data)-1],
-                         train.data[ ,names(train.data) %in% c("abundance.char")],
-                         importance=TRUE,
-                         #type="classification",
-                         do.trace=100)
+train.rf <- randomForest(train.data[,4:ncol(train.data)-1],
+                         train.data[,names(train.data) %in% c("abundance")],
+                         importance = TRUE,
+                         #                          na.action = na.omit(train.data),
+                         #                          type="classification",
+                         do.trace = 100)
 
 print(train.rf)
 

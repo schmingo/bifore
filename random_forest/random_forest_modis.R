@@ -39,13 +39,14 @@ abundance <- read.csv2("csv/kili/kili_abundance.csv",
 
 tmp.abundance <- abundance[6]
 
+## Modify abundance values - 2 digit numeric value
 tmp.abundance.list <- as.list(as.numeric(t(tmp.abundance)))
 tmp.abundance.list <- formatC(tmp.abundance.list, 
                               width = 2, 
                               format = "d", 
                               flag = "0")
 
-# tmp.abundance <- as.data.frame(tmp.abundance.list)
+## Modify abundance values - paste "A" in front to create a character
 tmp.abundance <- as.data.frame(paste0("A", tmp.abundance.list))
 
 names(tmp.abundance) <- "abundance"
@@ -100,6 +101,7 @@ tmp.data.modis <- data.frame(Plotid,
 detach(data.modis)
 names(tmp.data.modis)
 
+## Combine MODIS and abundance data 
 train.data <- cbind(tmp.data.modis, tmp.abundance)
 names(train.data)
 

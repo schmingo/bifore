@@ -28,6 +28,9 @@ path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/"
 path.img <- "src/satellite/LS8_kili_20130827T1311Z_west/images/"
 #path.out <- "src/satellite/Landsat8/hai/out/" (only necessary for reprojection)
 
+path.coords <- "src/csv/kili/"
+filename.coords <- "kili_plot_center_coordinates.csv"
+
 path.modules <- "/home/schmingo/Diplomarbeit/bifore/preprocessing/"
 filename.mod.ExtractScales <- "landsat8_mod_ExtractScales.R"
 
@@ -64,104 +67,71 @@ projection.layers <- CRS(projection(raster.layers[[1]]))
 ################################################################################
 ### Create extends from CSV-files ##############################################
 
-## List CENTER files
-files.center <- list.files(path.csv,
-                           pattern = "plot_center.csv$",
-                           full.names = TRUE)
-
 ## Import CENTER files as SpatialPointsDataframe objects
-table.center <- read.csv2(files.center,
+table.center <- read.csv2(paste0(path.coords, filename.coords),
                           dec = ".",
                           stringsAsFactors = FALSE)
 
 coordinates(table.center) <- c("Longitude", "Latitude")
 projection(table.center) <- "+init=epsg:4326"
- 
+
 table.center <- spTransform(table.center, CRS = projection.layers)
 
-## List CORNER files
-files.corner <- list.files(path.csv,
-                           pattern = "_corner.csv$",
-                           full.names = TRUE)
+## Set zero values to NA to remove border of imagery (parallelized)
+registerDoParallel(cl <- makeCluster(detectCores() - 1))
 
-## Import CORNER files as SpatialPointsDataframe objects
-table.corner <- read.csv2(files.corner,
-                          dec = ".",
-                          stringsAsFactors = FALSE)
-
-coordinates(table.corner) <- c("Longitude", "Latitude")
-projection(table.corner) <- "+init=epsg:4326"
-  
-table.corner <- spTransform(table.corner, CRS = projection.layers)
-
-## Retrieve extent from CORNER coordinates
-extent <- lapply(seq(1, nrow(table.corner), 4), function(i) {
-  extent(coordinates(table.corner[i:(i+3), ]))
-  })
+raster.layers <- foreach(i = raster.layers, .packages = lib) %dopar% {
+  i[i[] == 0] <- NA
+  return(i)
+}
+stopCluster(cl)
 
 
 ################################################################################
 ### Extraction of cell values ##################################################
 
-## Parallelization
-clstr <- makePSOCKcluster(n.cores <- detectCores()-1
-                          )
-clusterExport(clstr, c("lib", 
-                       "raster.layers", 
-                       "extent", 
-                       "table.center", 
-                       "table.corner"))
+registerDoParallel(cl <- makeCluster(detectCores() - 1))
 
-clusterEvalQ(clstr, lapply(lib, function(i) require(i, 
-                                                    character.only = TRUE, 
-                                                    quietly = TRUE)))
+greyvalues.raw <- foreach(i = seq(raster.layers), .packages = lib,
+                          .combine = "cbind") %dopar% {
+                            raster.layers[[i]][cellFromXY(raster.layers[[i]], table.center)]
+                          }
 
-## Extract and AVERAGE cell values
-values <- parLapply(clstr, raster.layers, function(h) {
-  temp.values <- sapply(extent, function(i) {
-    temp.extract <- extract(h, i)
-    
-    if (length(temp.extract) > 1)
-      temp.extract <- mean(temp.extract, na.rm = TRUE)
-    
-    return(temp.extract)
-  })
-  
-  temp.df <- data.frame(table.center, ls_grey_value = temp.values)
-  
-  return(temp.df)
-})
+stopCluster(cl)
 
-## Merge single data frames
-greyvalues <- Reduce(function(...) merge(..., by = 1:6), values)
 
-names(greyvalues)[7:18] <- sapply(strsplit(substr(basename(files.list.sat), 
-                                                      1, 
-                                                      nchar(basename(files.list.sat)) - 4), 
-                                               "_"), "[[", 2)
+################################################################################
+### Combine dataframes #########################################################
 
-# coordinates(greyvalues) <- c("Longitude", "Latitude")
 
-## Deregister parallel backend
-stopCluster(clstr)
+## create dataframe
+greyvalues.raw <- as.data.frame(greyvalues.raw)
 
-## Reformat Colnames
-tmp.names <- names(greyvalues)[7:(ncol(greyvalues)-1)]
+## set colnames
+names(greyvalues.raw) <- sapply(strsplit(substr(basename(files.list.sat),
+                                                1,
+                                                nchar(basename(files.list.sat)) - 4),
+                                         "_"), "[[", 2)
+
+
+## Combine multiple dataframes to a single dataframe
+greyvalues <- cbind(table.center, greyvalues.raw)
+
+## Remove BQA band
+greyvalues <- greyvalues[, 1:ncol(greyvalues)-1]
+
+
+## Reformat colnames
+tmp.names <- names(greyvalues)[6:(ncol(greyvalues))]
 tmp.bands <- as.numeric(sapply(strsplit(tmp.names, "B"), "[[", 2))
 tmp.bands <- formatC(tmp.bands, width = 2, format = "d", flag = "0")
 
-names(greyvalues)[7:(ncol(greyvalues)-1)] <- paste("B", 
-                                                           tmp.bands, 
-                                                           sep = "")
+names(greyvalues)[6:(ncol(greyvalues))] <- paste("B",
+                                                 tmp.bands,
+                                                 sep = "")
 
-## Reorder Colnames
-greyvalues <- data.frame(greyvalues)
-greyvalues <- greyvalues[, c(1:6,9:17,7,8,18)]
-
-################################################################################
-### Remove BQA band ############################################################
-
-greyvalues <- greyvalues[, 1:ncol(greyvalues)-1]
+## Sort bands in dataframe
+greyvalues <- greyvalues[, c(1:5, 8:16, 6, 7)]
 
 
 ################################################################################
@@ -190,8 +160,8 @@ ls8scales.sub.scales <- as.numeric(ls8scales[["multiply scales"]])
 ls8scales.sub.offset <- as.numeric(ls8scales[["add offset"]])
 
 ## Calculate new greyvalues (greyvalue * scalefactor)
-greyvalues.na.sub.calc <- data.frame(t(t(greyvalues.raw.na[7:ncol(greyvalues.raw.na)]) * ls8scales.sub.scales))
-greyvalues.sub.calc <- data.frame(t(t(greyvalues.raw[7:ncol(greyvalues.raw)]) * ls8scales.sub.scales))
+greyvalues.na.sub.calc <- data.frame(t(t(greyvalues.raw.na[6:ncol(greyvalues.raw.na)]) * ls8scales.sub.scales))
+greyvalues.sub.calc <- data.frame(t(t(greyvalues.raw[6:ncol(greyvalues.raw)]) * ls8scales.sub.scales))
 
 ## Calculate new greyvalues (newgreyvalue + offset)
 greyvalues.na.sub.calc <- data.frame(greyvalues.na.sub.calc + t(ls8scales.sub.offset))
@@ -205,12 +175,12 @@ greyvalues.calc <- cbind(greyvalues.raw.sub.front, greyvalues.sub.calc)
 ################################################################################
 ### Calculate first derivate of greyvalue ######################################
 
-sub.greyvalues.na.calc <- greyvalues.na.calc[7:ncol(greyvalues.na.calc)]
+sub.greyvalues.na.calc <- greyvalues.na.calc[6:ncol(greyvalues.na.calc)]
 diffs <- rowDiffs(as.matrix(sub.greyvalues.na.calc)) # calculate first derivate (diff)
 
 ## paste dataframes
 ## add "0-column" because there is no slope for the first greyvalue
-deriv.greyvalues.na.calc <- cbind(greyvalues.na.calc[1:6],0,diffs)
+deriv.greyvalues.na.calc <- cbind(greyvalues.na.calc[1:5],0,diffs)
 names(deriv.greyvalues.na.calc) <- names(greyvalues.na.calc) # write colnames to new df
 
 

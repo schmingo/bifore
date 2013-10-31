@@ -155,7 +155,7 @@ ls8scales <- ExtractLS8Scale(path.img)
 ## calculate new greyvalues using scalefactors and offsets #####################
 
 ## Subset data frames
-greyvalues.raw.sub.front <- greyvalues.raw[1:6]
+greyvalues.raw.sub.front <- greyvalues.raw[1:5]
 ls8scales.sub.scales <- as.numeric(ls8scales[["multiply scales"]])
 ls8scales.sub.offset <- as.numeric(ls8scales[["add offset"]])
 

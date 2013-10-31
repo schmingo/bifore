@@ -39,6 +39,18 @@ abundance <- read.csv2("csv/kili/kili_abundance.csv",
 
 tmp.abundance <- abundance[6]
 
+tmp.abundance.list <- as.list(as.numeric(t(tmp.abundance)))
+tmp.abundance.list <- formatC(tmp.abundance.list, 
+                              width = 2, 
+                              format = "d", 
+                              flag = "0")
+
+# tmp.abundance <- as.data.frame(tmp.abundance.list)
+tmp.abundance <- as.data.frame(paste0("A", tmp.abundance.list))
+
+names(tmp.abundance) <- "abundance"
+
+
 ## Select data for randomForest
 attach(data.modis) 
 tmp.data.modis <- data.frame(Plotid,
@@ -91,15 +103,6 @@ names(tmp.data.modis)
 train.data <- cbind(tmp.data.modis, tmp.abundance)
 names(train.data)
 
-################################################################################
-### Modify response variable for rF function ###################################
-
-# Add character to numerical data and write it into a new column. 
-# If Abundance would be a numerical value, rF would automatically perform a
-# regression instead of a classification.
-
-abundance.char <- paste(train.data$abundance, "a", sep = "") 
-train.data <- as.data.frame(cbind(train.data,abundance.char))
 
 ## Remove rows with NA values
 train.data <- na.omit(train.data)
@@ -116,7 +119,7 @@ m.try <- 7 # Number of variables randomly sampled as candidates at each split
 names(train.data[,4:ncol(train.data)-2])
 ## Function 
 train.rf <- randomForest(train.data[,4:ncol(train.data)-2],
-                         train.data[,names(train.data) %in% c("abundance.char")],
+                         train.data[,names(train.data) %in% c("abundance")],
                          importance = TRUE,
 #                          na.action = na.omit(train.data),
 #                          type="classification",

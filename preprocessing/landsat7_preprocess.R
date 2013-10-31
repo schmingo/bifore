@@ -83,7 +83,7 @@ raster.layers <- foreach(i = raster.layers, .packages = lib) %dopar% {
   i[i[] == 0] <- NA
   return(i)
 }
-stopCluster(clstr)
+stopCluster(cl)
 
 
 ################################################################################

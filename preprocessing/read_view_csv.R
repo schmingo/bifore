@@ -15,30 +15,21 @@ rm(list = ls(all = TRUE))
 
 
 ## set working directory
-setwd("/home/schmingo/Google Drive/bifore/")
+setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
 
 ## set filepaths
-file.coords.alb <- "src/csv/alb_corner.csv"
-file.coords.hai <- "src/csv/hai_corner.csv"
-file.coords.sch <- "src/csv/sch_corner.csv"
+file.abundance <- "src/csv/kili/data matrix hemp.csv"
+
 
 ## set working directory
 #setwd(D:/Dropbox/Diplomarbeit/Daten&read_view/)
 
 ## read data
-coords.alb <- read.csv(file.coords.alb, header = TRUE, sep = ";",dec = ".",
-                       fill = FALSE, stringsAsFactors = FALSE)
-coords.hai <- read.csv(file.coords.hai, header = TRUE, sep = ";",dec = ".",
-                       fill = FALSE, stringsAsFactors = FALSE)
-coords.sch <- read.csv(file.coords.sch, header = TRUE, sep = ";",dec = ".",
+data <- read.csv(file.abundance, header = TRUE, sep = ";",dec = ".",
                        fill = FALSE, stringsAsFactors = FALSE)
 
 
 ## show data
-str(coords.alb)
-str(coords.hai)
-str(coords.sch)
+str(data)
 
-summary(coords.alb)
-summary(coords.hai)
-summary(coords.sch)
+summary(data)

@@ -4,7 +4,7 @@
 ## Import and view csv files                                                  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-07-28                                                        ##
+## Version: 2013-11-18                                                        ##
 ##                                                                            ##
 ################################################################################
 

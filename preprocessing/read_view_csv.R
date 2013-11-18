@@ -12,25 +12,26 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
+lib <- c("foreign", "Hmisc")
+lapply(lib, function(...) require(..., character.only = TRUE))
 
 
 ## set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/")
 
 ## set filepaths
-file.abundance <- "src/csv/kili/data matrix hemp.csv"
-
-
-## set working directory
-#setwd(D:/Dropbox/Diplomarbeit/Daten&read_view/)
+file.abundance.csv <- "src/csv/kili/data_matrix_hemp.csv"
+file.abundance.sav <- "src/csv/kili/data_matrix_hemp.sav"
 
 ## read data
-data <- read.csv(file.abundance, header = TRUE, sep = ";",dec = ".",
-                       fill = FALSE, stringsAsFactors = FALSE)
+data.csv <- read.csv2(file.abundance.csv, 
+                     header = TRUE, 
+                     sep = ";",
+                     dec = ".",
+                     fill = FALSE, 
+                     stringsAsFactors = FALSE)
 
 
-## show data
-str(data)
-
-summary(data)
+# data.sav <- read.spss(file.abundance.sav)
+# data.sav <- spss.get(file.abundance.sav)

@@ -21,7 +21,7 @@ rm(list = ls(all = TRUE))
 ## Set filepaths and filenames
 path.wd <- "/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/"
 
-path.abundance.out <- "csv/kili/kili_abundance.csv"
+path.abundance.out <- "csv/kili/kili_abundance_dummy.csv"
 
 
 ################################################################################

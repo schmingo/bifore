@@ -21,8 +21,8 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/")
 
 ## set filepaths
-file.abundance.csv <- "src/csv/kili/data_matrix_hemp.csv"
-file.abundance.sav <- "src/csv/kili/data_matrix_hemp.sav"
+file.abundance.csv <- "src/csv/kili/abundance_matrix_hemp.csv"
+file.abundance.sav <- "src/csv/kili/abundance_matrix_hemp.sav"
 
 ## read data
 data.csv <- read.csv2(file.abundance.csv, 

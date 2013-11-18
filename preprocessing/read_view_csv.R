@@ -16,6 +16,7 @@ rm(list = ls(all = TRUE))
 
 ## set working directory
 setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/")
 
 ## set filepaths
 file.abundance <- "src/csv/kili/data matrix hemp.csv"

@@ -74,6 +74,8 @@ table.center <- read.csv2(paste0(path.coords, filename.coords),
 
 coordinates(table.center) <- c("Longitude", "Latitude")
 projection(table.center) <- "+init=epsg:4326"
+## UTM Zone Kilimanjaro: 37M = 37south = EPSG: 32737
+## Link: http://georepository.com/crs_32737/WGS-84-UTM-zone-37S.html
 
 table.center <- spTransform(table.center, CRS = projection.layers)
 

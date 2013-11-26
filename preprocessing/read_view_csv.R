@@ -49,26 +49,15 @@ data.species[data.species==0] <- NA
 # recombine data
 data[,9:ncol(data)] <- data.species
 
-
 ################################################################################
-## plot single species
-plot(data[,10],data$date, type="p")
-
 ## remove observations before MODIS satellite launch
 ##      Note: MODIS TERRA launch: 1999-12-18
 ##            MODIS AQUA launch: 2002-05-04
 
-## ggplot2 single species
-species <- geom_point(aes(x = data[,9],
-                          y = data[,2],
-                          colour = "black"),
-                      data = data)
 modis.date <- as.Date("2000-01-01")
 data <- subset(data, date > modis.date)
 
-speciesplot <- ggplot() + species +
-  xlab("Species") +
-  ylab("Abundance") +
-  ggtitle("Species - Abundance")
 
-speciesplot
+################################################################################
+## plot single species
+plot(data[,10],data$date, type="p")

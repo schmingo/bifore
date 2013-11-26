@@ -12,7 +12,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c()
+lib <- c("ggplot2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 
@@ -53,3 +53,17 @@ data[,9:ncol(data)] <- data.species
 ################################################################################
 ## plot single species
 plot(data[,10],data$date, type="p")
+
+
+## ggplot2 single species
+species <- geom_point(aes(x = data[,9],
+                          y = data[,2],
+                          colour = "black"),
+                      data = data)
+
+speciesplot <- ggplot() + species +
+  xlab("Species") +
+  ylab("Abundance") +
+  ggtitle("Species - Abundance")
+
+speciesplot

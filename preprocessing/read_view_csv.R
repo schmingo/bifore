@@ -46,4 +46,5 @@ data.species <- data[,9:ncol(data)]
 # set 0-values to NA
 data.species[data.species==0] <- NA
 
+# recombine data
 data[,9:ncol(data)] <- data.species

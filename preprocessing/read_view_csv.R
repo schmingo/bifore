@@ -38,3 +38,12 @@ data <- read.csv2(file.abundance.csv,
 data$date <- as.Date(data$date, format="%m/%d/%Y")
 
 ################################################################################
+## replace 0-values with NA
+
+# subset data
+data.species <- data[,9:ncol(data)]
+
+# set 0-values to NA
+data.species[data.species==0] <- NA
+
+data[,9:ncol(data)] <- data.species

@@ -23,6 +23,8 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/")
 ## set filepaths
 file.abundance.csv <- "src/csv/kili/abundance_matrix_hemp.csv"
 
+
+################################################################################
 ## read data
 data <- read.csv2(file.abundance.csv, 
                      header = TRUE, 
@@ -32,4 +34,7 @@ data <- read.csv2(file.abundance.csv,
                      stringsAsFactors = FALSE)
 
 
+# data$date <- as.POSIXct(data$date, format="%m/%d/%Y")
 data$date <- as.Date(data$date, format="%m/%d/%Y")
+
+################################################################################

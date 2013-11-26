@@ -70,3 +70,11 @@ data <- data[!is.na(data$coordN | data$coordW),]
 ## plot single species
 
 plot(data[,10],data$date, type="p")
+
+qplot(x=data[,10], 
+      y=date, 
+      data=data,
+      geom="point",
+      main=colnames(data[10]),
+      xlab="Abundance",
+      ylab="Date")

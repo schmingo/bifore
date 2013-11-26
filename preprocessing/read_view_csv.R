@@ -48,3 +48,8 @@ data.species[data.species==0] <- NA
 
 # recombine data
 data[,9:ncol(data)] <- data.species
+
+
+################################################################################
+## plot single species
+plot(data[,10],data$date, type="p")

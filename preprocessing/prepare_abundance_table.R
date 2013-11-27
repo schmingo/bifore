@@ -22,6 +22,7 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/")
 
 ## set filepaths
 file.abundance.csv <- "src/csv/kili/abundance_matrix_hemp.csv"
+file.data.out <- "src/csv/kili/abundance_data_subset.csv"
 
 
 ################################################################################
@@ -88,3 +89,13 @@ qplot(x=data[,10],
       main=colnames(data[10]),
       xlab="Prävalenz",
       ylab="Zeit")
+
+################################################################################
+## write new csv
+
+write.table(data, file = file.data.out, 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE, 
+            sep =";")

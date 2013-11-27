@@ -72,11 +72,23 @@ data <- data[!is.na(data$coordN | data$coordW),]
 
 x=0
 
-for (i in data[1:nrow(data),9]) {
-  ifelse(i != "NA" , x <- x+1, x == x)
-  print(x)
+# for loop to count not-na-values
+for (i in data[,10]) {
+  ifelse(i != "NA", 
+         x <- x+1, 
+         x == x)
+  print(paste("plot",data$plot[i]," count:",x))
 }
 
+
+# for loop to print plot id's
+for (i in data[,1]) {
+  y <- data$plot[i]
+  print(i)
+}
+
+# count na-vaules for one species
+sum( !is.na(data[,9]))
 ################################################################################
 ## plot single species
 

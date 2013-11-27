@@ -76,5 +76,5 @@ qplot(x=data[,10],
       data=data,
       geom="point",
       main=colnames(data[10]),
-      xlab="Abundance",
-      ylab="Date")
+      xlab="Prävalenz",
+      ylab="Zeit")

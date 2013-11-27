@@ -67,6 +67,16 @@ data <- data[!is.na(data$coordN | data$coordW),]
 
 
 ################################################################################
+## remove species with less than 10 observations
+
+x=0
+
+for (i in data[1:nrow(data),9]) {
+  ifelse(i != "NA" , x <- x+1, x == x)
+  print(x)
+}
+
+################################################################################
 ## plot single species
 
 plot(data[,10],data$date, type="p")

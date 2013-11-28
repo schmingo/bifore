@@ -4,7 +4,6 @@
 ## Import and view csv files                                                  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-11-26                                                        ##
 ## Version: 2013-11-28                                                        ##
 ##                                                                            ##
 ################################################################################
@@ -13,7 +12,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("ggplot2")
+lib <- c("ggplot2", "raster", "sp")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 
@@ -108,3 +107,20 @@ write.table(data10, file = file.data.out,
             col.names = TRUE, 
             row.names = FALSE, 
             sep =";")
+
+
+################################################################################
+## spatial stuff
+
+data10.sp <- data10
+
+coordinates(data10.sp) <- ~coordW + coordN
+
+spplot(data10.sp, zcol = "asl")
+
+files <- list.files("D:/modiscloud", pattern = ".tif", recursive = TRUE,
+                    full.names = TRUE)
+
+stck <- stack(files)
+
+cloud.vals <- extract(stck, data10.sp) # matrix mit spalten = einzelne Bilder, Zeilen = die einzelnen Plots.

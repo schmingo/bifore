@@ -29,11 +29,11 @@ file.data.out <- "src/csv/kili/abundance_data_subset.csv"
 ################################################################################
 ## read data
 data <- read.csv2(file.abundance.csv, 
-                     header = TRUE, 
-                     sep = ";",
-                     dec = ".",
-                     fill = FALSE, 
-                     stringsAsFactors = FALSE)
+                  header = TRUE, 
+                  sep = ";",
+                  dec = ".",
+                  fill = FALSE, 
+                  stringsAsFactors = FALSE)
 
 
 # data$date <- as.POSIXct(data$date, format="%m/%d/%Y")
@@ -102,7 +102,7 @@ qplot(x=data[,9],
 ################################################################################
 ## write new csv
 
-write.table(data, file = file.data.out, 
+write.table(data10, file = file.data.out, 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 

@@ -5,6 +5,7 @@
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
 ## Version: 2013-11-26                                                        ##
+## Version: 2013-11-28                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -70,25 +71,21 @@ data <- data[!is.na(data$coordN | data$coordW),]
 ################################################################################
 ## remove species with less than 10 observations
 
-x=0
+data.list <- split(data, data$plot)
 
-# for loop to count not-na-values
-for (i in data[,10]) {
-  ifelse(i != "NA", 
-         x <- x+1, 
-         x == x)
-  print(paste("plot",data$plot[i]," count:",x))
-}
+test.list <- do.call("rbind", lapply(seq(data.list), function(i) {
+  tmp.mat <- as.matrix(data.list[[i]][, 9:ncol(data.list[[i]])])
+  t <- apply(tmp.mat, 2, sum, na.rm = TRUE)
+  t[t == 0] <- NA
+  t[t > 0] <- 1
+  return(t)
+}))
+
+index.species10 <- which(apply(test.list, 2, sum, na.rm = TRUE) >= 10) + 8
+
+data10 <- data[, c(1:8, index.species10)]
 
 
-# for loop to print plot id's
-for (i in data[,1]) {
-  y <- data$plot[i]
-  print(i)
-}
-
-# count na-vaules for one species
-sum( !is.na(data[,9]))
 ################################################################################
 ## plot single species
 

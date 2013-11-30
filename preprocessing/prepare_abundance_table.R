@@ -57,7 +57,7 @@ data[,9:ncol(data)] <- data.species
 ##      Note: MODIS TERRA launch: 1999-12-18
 ##            MODIS AQUA launch: 2002-05-04
 
-modis.date <- as.Date("2000-01-01")
+modis.date <- as.Date("2002-01-01")
 data <- subset(data, date > modis.date)
 
 

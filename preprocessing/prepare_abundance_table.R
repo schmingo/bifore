@@ -84,6 +84,14 @@ index.species10 <- which(apply(test.list, 2, sum, na.rm = TRUE) >= 10) + 8
 
 data10 <- data[, c(1:8, index.species10)]
 
+################################################################################
+## calculate number of species
+
+data10$nr.of.species <- apply(data10, 
+                              1, 
+                              function(x) sum(!is.na(x[9:ncol(data10)])))
+
+
 
 ################################################################################
 ## plot single species

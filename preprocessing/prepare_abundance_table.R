@@ -87,11 +87,15 @@ data10 <- data[, c(1:8, index.species10)]
 ################################################################################
 ## calculate number of species
 
-data10$nr.of.species <- apply(data10, 
-                              1, 
+data10$nr.of.species <- apply(data10,
+                              1,
                               function(x) sum(!is.na(x[9:ncol(data10)])))
 
+data10 <- cbind(data10[1:8],
+                data10$nr.of.species,
+                data10[10:ncol(data10)-1])
 
+colnames(data10)[9] <- "nr.of.species"
 
 ################################################################################
 ## plot single species

@@ -88,13 +88,13 @@ data10 <- data[, c(1:8, index.species10)]
 ################################################################################
 ## plot single species
 
-plot(data[,9],data$date, type="p")
+plot(data10[,9],data10$date, type="p")
 
-qplot(x=data[,9], 
+qplot(x=data10[,9], 
       y=date, 
-      data=data,
+      data=data10,
       geom="jitter",
-      main=colnames(data[9]),
+      main=colnames(data10[9]),
       xlab="Prävalenz",
       ylab="Zeit")
 

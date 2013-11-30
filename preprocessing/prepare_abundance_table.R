@@ -112,15 +112,15 @@ write.table(data10, file = file.data.out,
 ################################################################################
 ## spatial stuff
 
-data10.sp <- data10
-
-coordinates(data10.sp) <- ~coordW + coordN
-
-spplot(data10.sp, zcol = "asl")
-
-files <- list.files("D:/modiscloud", pattern = ".tif", recursive = TRUE,
-                    full.names = TRUE)
-
-stck <- stack(files)
-
-cloud.vals <- extract(stck, data10.sp) # matrix mit spalten = einzelne Bilder, Zeilen = die einzelnen Plots.
+# data10.sp <- data10
+# 
+# coordinates(data10.sp) <- ~coordW + coordN
+# 
+# spplot(data10.sp, zcol = "asl")
+# 
+# files <- list.files("D:/modiscloud", pattern = ".tif", recursive = TRUE,
+#                     full.names = TRUE)
+# 
+# stck <- stack(files)
+# 
+# cloud.vals <- extract(stck, data10.sp) # matrix mit spalten = einzelne Bilder, Zeilen = die einzelnen Plots.

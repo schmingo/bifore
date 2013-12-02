@@ -54,6 +54,15 @@ data.species <- data[,1:9]
 ################################################################################
 ### Plots ######################################################################
 
+
+## Define output image | open image port
+png("images/map_kili_orthoptera_observations.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
+
+
 kili.extent <- get_map(location = c(36.93865,
                                     -3.454621,
                                     37.76235,
@@ -69,10 +78,10 @@ kilimap <- ggmap(kili.extent,
                  maprange = TRUE)
 
 
-orthoptera.obs1 <- geom_jitter(aes(x = lon,
+orthoptera.obs1 <- geom_point(aes(x = lon,
                                   y = lat,
-                                  colour = nr.of.species,
-                                  size = 10),
+                                  size = 1,
+                                  colour = nr.of.species),
                               show_guide = FALSE,
                               data = data.species)
 
@@ -83,3 +92,6 @@ colourscale <- scale_colour_gradient(low = "white",
 
 
 kilimap + orthoptera.obs1 + colourscale
+
+## Close image port
+graphics.off()

@@ -26,8 +26,8 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ## MOD35_L2 and MOD03 files; both must be in the same directory.
 
 #tifsdir = ("/home/schmingo/Diplomarbeit/modiscloud_out")
-path.tif.out = ("/home/schmingo/Dropbox/Diplomarbeit/code/biore/src/satellite/sample_modiscloud_out")
-path.hdf.in = ("/home/schmingo/Dropbox/Diplomarbeit/code/biore/src/satellite/sample_modiscloud_in")
+path.tif.out = ("satellite/sample_modiscloud_out")
+path.hdf.in = ("satellite/sample_modiscloud_in")
 # path.35tif.in = ("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/satellite/sample_mod35L2_kilimanjaro_2002")
 # path.03tif.in = ("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/satellite/sample_mod03_kilimanjaro_mrz2002")
 

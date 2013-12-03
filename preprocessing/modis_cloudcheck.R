@@ -58,7 +58,7 @@ fns_df = check_for_matching_geolocation_files(moddir = path.hdf.in,
                                               modtxt = "MOD35_L2",
                                               geoloctxt = "MOD03", 
                                               return_geoloc = FALSE, 
-                                              return_product = TRUE)
+                                              return_product = FALSE)
 fns_df
 
 #check_for_matching_geolocation_files(modtxt = "MYD35_L2",geoloctxt = "MYD03", 

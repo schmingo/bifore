@@ -36,31 +36,9 @@ data.sp <- data
 
 
 ################################################################################
-### Transform UTM to LatLong Coordinates #######################################
-
-coordinates(data.sp) <- c("coordW", "coordN")
-projection(data.sp) <- "+proj=utm +zone=37 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
-data.sp <- spTransform(data.sp, CRS("+proj=longlat"))
-
-data.sp <- as.data.frame(data.sp)
-
-## Recombine dataframes
-data.sp <- cbind(data[1:3], 
-                 data.sp$coordW, 
-                 data.sp$coordN,
-                 data[6:ncol(data)])
-
-## Set colnames
-names(data.sp)[4] <- "lon"
-names(data.sp)[5] <- "lat"
-
-data <- data.sp
-
-
-################################################################################
 ### Subsetting #################################################################
 
-data.species <- data[,1:9]
+data.species <- data[,1:11]
 
 ## Create additional year column
 data.species$year <- as.numeric(format(data.species$date, "%Y"))

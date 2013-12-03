@@ -72,11 +72,11 @@ data.species$year <- as.numeric(format(data.species$date, "%Y"))
 ### Plot all orthoptera observations ###########################################
 
 ## Define output image | open image port
-png("images/map_kili_orthoptera_observations.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/map_kili_orthoptera_observations.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
 kili.extent <- get_map(location = c(36.93865,
                                     -3.454621,
@@ -107,17 +107,17 @@ colourscale <- scale_colour_gradient(low = "white",
 kilimap + orthoptera.obs1 + colourscale
 
 
-## Close image port
-graphics.off()
+# ## Close image port
+# graphics.off()
 
 ### Plot Orthoptera Observations per year ######################################
 
 ## Define output image | open image port
-png("images/map_kili_orthoptera_observations_year.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/map_kili_orthoptera_observations_year.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
 
 kili.extent <- get_map(location = c(36.93865,
@@ -147,5 +147,5 @@ colourscale <- scale_colour_gradient(low = "white",
 kilimap + orthoptera.obs1 + colourscale + facet_wrap(~ year)
 
 
-## Close image port
-graphics.off()
+# ## Close image port
+# graphics.off()

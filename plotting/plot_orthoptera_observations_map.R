@@ -12,7 +12,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("ggplot2", "ggmap", "raster", "sp", "rgdal")
+lib <- c("ggplot2", "ggmap")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory

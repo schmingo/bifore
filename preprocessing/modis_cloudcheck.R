@@ -24,13 +24,17 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Set filepaths ##############################################################
 
 # Resulting TIF files go in this directory
-tifsdir = ("...")
-#swath2grid <- get_path()
-#mrtpath = ("C:/MRTSwath_Win/bin")
-mrtpath = ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
+#tifsdir = ("/home/schmingo/Diplomarbeit/modiscloud_out")
+path.tif.out = ("/home/schmingo/Diplomarbeit/modiscloud_out")
+path.35tif.in = ("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/satellite/sample_mod35L2_kilimanjaro_2002")
+path.03tif.in = ("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/satellite/sample_mod03_kilimanjaro_mrz2002")
 
-# source("writeMRTSwathParamFile.R")
-# source("runSwath2Grid.R")
+mrtpath = ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
+#mrtpath = ("C:/MRTSwath_Win/bin")
+#swath2grid <- get_path()
+
+# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/writeMRTSwathParamFile.R")
+# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/runSwath2Grid.R")
 
 
 
@@ -38,7 +42,7 @@ mrtpath = ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 ################################################################################
 ### Run MRTSwath tool "swath2grid" #############################################
 
-#list.files(pattern = "MOD")
+# list.files(pattern = "MOD")
 list.files(pattern = "MYD")
 
 check_for_matching_geolocation_files(moddir = getwd(),

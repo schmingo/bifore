@@ -23,18 +23,20 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 ### Set filepaths ##############################################################
 
-# Resulting TIF files go in this directory
+## MOD35_L2 and MOD03 files; both must be in the same directory.
+
 #tifsdir = ("/home/schmingo/Diplomarbeit/modiscloud_out")
-path.tif.out = ("/home/schmingo/Diplomarbeit/modiscloud_out")
-path.35tif.in = ("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/satellite/sample_mod35L2_kilimanjaro_2002")
-path.03tif.in = ("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/satellite/sample_mod03_kilimanjaro_mrz2002")
+path.tif.out = ("/home/schmingo/Dropbox/Diplomarbeit/code/biore/src/satellite/sample_modiscloud_out")
+path.hdf.in = ("/home/schmingo/Dropbox/Diplomarbeit/code/biore/src/satellite/sample_modiscloud_in")
+# path.35tif.in = ("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/satellite/sample_mod35L2_kilimanjaro_2002")
+# path.03tif.in = ("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/satellite/sample_mod03_kilimanjaro_mrz2002")
 
 mrtpath = ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 #mrtpath = ("C:/MRTSwath_Win/bin")
 #swath2grid <- get_path()
 
-# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/writeMRTSwathParamFile.R")
-# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/runSwath2Grid.R")
+# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_writeMRTSwathParamFile.R")
+# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_runSwath2Grid.R")
 
 
 

@@ -1,10 +1,17 @@
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
-## Import and view csv files                                                  ##
+## PREPARE BIODIVERSITY TABLE                                                 ##
+##                                                                            ##
+## - Replace 0-values with NA                                                 ##
+## - Remove observations before MODIS launch date                             ##
+## - Remove observations without coordinates                                  ##
+## - Remove species with less than 10 observations in different plots         ##
+## - Calculate number of species                                              ##
+## - Add LatLong Coordinates                                                  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-12-02                                                        ##
+## Version: 2013-12-03                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -62,7 +69,7 @@ data <- subset(data, date > modis.date)
 
 
 ################################################################################
-### remove observations without coordinates ####################################
+### Remove observations without coordinates ####################################
 
 data <- data[!is.na(data$coordN | data$coordW),]
 
@@ -112,7 +119,7 @@ colnames(data10)[9] <- "nr.of.species"
 #       ylab="Zeit")
 
 ################################################################################
-### Transform UTM to LatLong Coordinates #######################################
+### Transform UTM to LatLong coordinates #######################################
 
 data.sp <- data10
 
@@ -127,12 +134,12 @@ names(data.sp)[ncol(data.sp)] <- "lat"
 
 ## Recombine dataframes
 data10.sp <- cbind(data10[1:3],
-                 data10[6:9],
-                 data.sp$lon, 
-                 data.sp$lat,
-                 data10$coordW,
-                 data10$coordN,
-                 data10[10:ncol(data10)])
+                   data10[6:9],
+                   data.sp$lon,
+                   data.sp$lat,
+                   data10$coordW,
+                   data10$coordN,
+                   data10[10:ncol(data10)])
 
 names(data10.sp)[8] <- "lon"
 names(data10.sp)[9] <- "lat"

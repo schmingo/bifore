@@ -12,7 +12,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("modiscloud", "devtools", "rstudio", "doParallel")
+lib <- c("modiscloud", "devtools", "doParallel")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory

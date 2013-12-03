@@ -4,7 +4,7 @@
 ## Import and view csv files                                                  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-11-28                                                        ##
+## Version: 2013-12-02                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -16,17 +16,17 @@ lib <- c("ggplot2", "raster", "sp")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 
-## set working directory
+## Set working directory
 # setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/")
 
-## set filepaths
+## Set filepaths
 file.abundance.csv <- "src/csv/kili/abundance_matrix_hemp.csv"
 file.data.out <- "src/csv/kili/abundance_data_subset.csv"
 
 
 ################################################################################
-## read data
+### Read data ##################################################################
 data <- read.csv2(file.abundance.csv, 
                   header = TRUE, 
                   sep = ";",
@@ -40,20 +40,20 @@ data$date <- as.Date(data$date, format="%m/%d/%Y")
 
 
 ################################################################################
-## replace 0-values with NA
+### Replace 0-values with NA ###################################################
 
-# subset data
+## Subset data
 data.species <- data[,9:ncol(data)]
 
-# set 0-values to NA
+## Set 0-values to NA
 data.species[data.species==0] <- NA
 
-# recombine data
+## Recombine data
 data[,9:ncol(data)] <- data.species
 
 
 ################################################################################
-## remove observations before MODIS satellite launch
+### Remove observations before MODIS satellite launch ##########################
 ##      Note: MODIS TERRA launch: 1999-12-18
 ##            MODIS AQUA launch: 2002-05-04
 
@@ -62,13 +62,13 @@ data <- subset(data, date > modis.date)
 
 
 ################################################################################
-## remove observations without coordinates
+### remove observations without coordinates ####################################
 
 data <- data[!is.na(data$coordN | data$coordW),]
 
 
 ################################################################################
-## remove species with less than 10 observations
+### Remove species with less than 10 observations ##############################
 
 data.list <- split(data, data$plot)
 
@@ -84,8 +84,9 @@ index.species10 <- which(apply(test.list, 2, sum, na.rm = TRUE) >= 10) + 8
 
 data10 <- data[, c(1:8, index.species10)]
 
+
 ################################################################################
-## calculate number of species
+### Calculate number of species ################################################
 
 data10$nr.of.species <- apply(data10,
                               1,
@@ -98,7 +99,7 @@ data10 <- cbind(data10[1:8],
 colnames(data10)[9] <- "nr.of.species"
 
 ################################################################################
-## plot single species
+### Plot single species ########################################################
 
 plot(data10[,9],data10$date, type="p")
 
@@ -110,8 +111,9 @@ qplot(x=data10[,9],
       xlab="Prävalenz",
       ylab="Zeit")
 
+
 ################################################################################
-## write new csv
+### Write new csv ##############################################################
 
 write.table(data10, file = file.data.out, 
             dec = ".", 
@@ -122,7 +124,7 @@ write.table(data10, file = file.data.out,
 
 
 ################################################################################
-## spatial stuff
+### Spatial stuff ##############################################################
 
 # data10.sp <- data10
 # 

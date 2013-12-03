@@ -48,11 +48,17 @@ mrtpath = ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 list.files(path = path.hdf.in, pattern = "MOD")
 
 check_for_matching_geolocation_files(moddir = path.hdf.in,
-                                     modtxt = "MOD35_L2", geoloctxt = "MOD03",
-                                     return_geoloc = FALSE, return_product = FALSE)
+                                     modtxt = "MOD35_L2", 
+                                     geoloctxt = "MOD03",
+                                     return_geoloc = FALSE, 
+                                     return_product = FALSE)
+
 # Get the matching data/geolocation file pairs
-fns_df = check_for_matching_geolocation_files(modtxt = "MOD35_L2",geoloctxt = "MOD03", 
-                                              return_geoloc = FALSE, return_product = TRUE)
+fns_df = check_for_matching_geolocation_files(moddir = path.hdf.in,
+                                              modtxt = "MOD35_L2",
+                                              geoloctxt = "MOD03", 
+                                              return_geoloc = FALSE, 
+                                              return_product = TRUE)
 fns_df
 
 #check_for_matching_geolocation_files(modtxt = "MYD35_L2",geoloctxt = "MYD03", 

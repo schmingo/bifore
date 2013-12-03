@@ -101,21 +101,48 @@ colnames(data10)[9] <- "nr.of.species"
 ################################################################################
 ### Plot single species ########################################################
 
-plot(data10[,9],data10$date, type="p")
+# plot(data10[,9],data10$date, type="p")
+# 
+# qplot(x=data10[,9], 
+#       y=date, 
+#       data=data10,
+#       geom="jitter",
+#       main=colnames(data10[9]),
+#       xlab="Prävalenz",
+#       ylab="Zeit")
 
-qplot(x=data10[,9], 
-      y=date, 
-      data=data10,
-      geom="jitter",
-      main=colnames(data10[9]),
-      xlab="Prävalenz",
-      ylab="Zeit")
+################################################################################
+### Transform UTM to LatLong Coordinates #######################################
 
+data.sp <- data10
+
+coordinates(data.sp) <- c("coordW", "coordN")
+projection(data.sp) <- "+proj=utm +zone=37 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
+data.sp <- spTransform(data.sp, CRS("+proj=longlat"))
+
+data.sp <- as.data.frame(data.sp)
+
+names(data.sp)[ncol(data.sp)-1] <- "lon"
+names(data.sp)[ncol(data.sp)] <- "lat"
+
+## Recombine dataframes
+data10.sp <- cbind(data10[1:3],
+                 data10[6:9],
+                 data.sp$lon, 
+                 data.sp$lat,
+                 data10$coordW,
+                 data10$coordN,
+                 data10[10:ncol(data10)])
+
+names(data10.sp)[8] <- "lon"
+names(data10.sp)[9] <- "lat"
+names(data10.sp)[10] <- "coordW"
+names(data10.sp)[11] <- "coordN"
 
 ################################################################################
 ### Write new csv ##############################################################
 
-write.table(data10, file = file.data.out, 
+write.table(data10.sp, file = file.data.out, 
             dec = ".", 
             quote = FALSE, 
             col.names = TRUE, 

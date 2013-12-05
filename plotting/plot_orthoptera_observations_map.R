@@ -4,7 +4,7 @@
 ## PLOTTING ORTHOPTERA OBSERVATIONS AT MT. KILIMANJARO                        ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-12-02                                                        ##
+## Version: 2013-12-05                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -178,5 +178,5 @@ colourscale <- scale_colour_brewer(type = "qual", palette = 2, name = "Prävalen
 kilimap + species1.1 + colourscale + facet_wrap(~ year) + labeling + style
   
 
-# ## Close image port
+## Close image port
 # graphics.off()

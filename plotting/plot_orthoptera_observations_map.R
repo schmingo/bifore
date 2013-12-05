@@ -16,8 +16,8 @@ lib <- c("ggplot2", "ggmap")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################
@@ -167,9 +167,16 @@ species1.1 <- geom_point(aes(x = lon,
                          show_guide = TRUE,
                          data = data.species1.1)
 
-colourscale <- scale_colour_brewer(type = "qual", palette = 2, name = "Prävalenz Phaneroptera.sparsa")
+style <- theme(legend.background = element_rect(colour = "black"),
+               plot.title = element_text(size = 20))
 
-kilimap + species1.1 + colourscale + facet_wrap(~ year)
+labeling <- labs(title = "Phaneroptera sparsa")
+
+colourscale <- scale_colour_brewer(type = "qual", palette = 2, name = "Prävalenz Index")
+
+
+kilimap + species1.1 + colourscale + facet_wrap(~ year) + labeling + style
+  
 
 # ## Close image port
 # graphics.off()

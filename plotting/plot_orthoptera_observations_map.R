@@ -78,11 +78,16 @@ orthoptera.obs1 <- geom_point(aes(x = lon,
 
 colourscale <- scale_colour_gradient(low = "white", 
                                      high = "darkgreen", 
-                                     name = "Number of species"
+                                     name = "Artenzahl"
                                      )
 
+style.plot1 <- theme(legend.background = element_rect(colour = "black"),
+               plot.title = element_text(size = 20))
 
-kilimap + orthoptera.obs1 + colourscale
+labeling.plot1 <- labs(title = "Artenzahl Mt. Kilimanjaro 2002 - 2012")
+
+
+kilimap + orthoptera.obs1 + colourscale + labeling.plot1 + style.plot1
 
 
 # ## Close image port
@@ -119,10 +124,15 @@ orthoptera.obs1 <- geom_point(aes(x = lon,
 
 colourscale <- scale_colour_gradient(low = "white", 
                                      high = "darkgreen", 
-                                     name = "Number of species"
+                                     name = "Artenzahl"
                                      )
 
-kilimap + orthoptera.obs1 + colourscale + facet_wrap(~ year)
+style.plot2 <- theme(legend.background = element_rect(colour = "black"),
+                     plot.title = element_text(size = 20))
+
+labeling.plot2 <- labs(title = "Artenzahl Mt. Kilimanjaro 2002 - 2012")
+
+kilimap + orthoptera.obs1 + colourscale + facet_wrap(~ year) + style.plot2 + labeling.plot2
 
 
 # ## Close image port
@@ -167,15 +177,15 @@ species1.1 <- geom_point(aes(x = lon,
                          show_guide = TRUE,
                          data = data.species1.1)
 
-style <- theme(legend.background = element_rect(colour = "black"),
+style.plot3 <- theme(legend.background = element_rect(colour = "black"),
                plot.title = element_text(size = 20))
 
-labeling <- labs(title = "Phaneroptera sparsa")
+labeling.plot3 <- labs(title = "Phaneroptera sparsa")
 
 colourscale <- scale_colour_brewer(type = "qual", palette = 2, name = "Prävalenz Index")
 
 
-kilimap + species1.1 + colourscale + facet_wrap(~ year) + labeling + style
+kilimap + species1.1 + colourscale + facet_wrap(~ year) + labeling.plot3 + style.plot3
   
 
 ## Close image port

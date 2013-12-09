@@ -74,7 +74,7 @@ lr_lat = -3.45
 lr_lon = 37.76
 
 # Parallelization
-registerDoParallel(cl <- makeCluster(4))
+# registerDoParallel(cl <- makeCluster(4))
 
 for (i in 1:nrow(fns_df)) {
   
@@ -98,7 +98,7 @@ for (i in 1:nrow(fns_df)) {
                           geoloc_fn = fns_df$mod03_fns[i], 
                           ul_lon = ul_lon, ul_lat = ul_lat, lr_lon = lr_lon, lr_lat = lr_lat)
           }
-}
+# }
 
 tiffns = list.files(tifsdir, pattern = ".tif", full.names = TRUE)
 tiffns

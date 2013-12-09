@@ -68,10 +68,10 @@ fns_df
 
 
 # Box to subset
-ul_lat = -2.84
-ul_lon = 37
-lr_lat = -3.4
-lr_lon = 37.7
+ul_lat = -2.77
+ul_lon = 36.93
+lr_lat = -3.45
+lr_lon = 37.76
 
 # Parallelization
 registerDoParallel(cl <- makeCluster(4))

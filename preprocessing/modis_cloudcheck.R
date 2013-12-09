@@ -37,8 +37,8 @@ mrtpath = ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 #mrtpath = ("C:/MRTSwath_Win/bin")
 #swath2grid <- get_path()
 
-# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_writeMRTSwathParamFile.R")
-# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_runSwath2Grid.R")
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_writeMRTSwathParamFile.R")
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_runSwath2Grid.R")
 
 
 

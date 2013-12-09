@@ -37,8 +37,8 @@ mrtpath = ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 #mrtpath = ("C:/MRTSwath_Win/bin")
 #swath2grid <- get_path()
 
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_writeMRTSwathParamFile.R")
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_runSwath2Grid.R")
+# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_writeMRTSwathParamFile.R")
+# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_runSwath2Grid.R")
 
 
 
@@ -49,11 +49,11 @@ source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_runSwath2Grid
 # list.files(pattern = "MOD")
 list.files(path = path.hdf.in, pattern = "MOD")
 
-check_for_matching_geolocation_files(moddir = path.hdf.in,
-                                     modtxt = "MOD35_L2", 
-                                     geoloctxt = "MOD03",
-                                     return_geoloc = FALSE, 
-                                     return_product = FALSE)
+# check_for_matching_geolocation_files(moddir = path.hdf.in,
+#                                      modtxt = "MOD35_L2", 
+#                                      geoloctxt = "MOD03",
+#                                      return_geoloc = FALSE, 
+#                                      return_product = FALSE)
 
 # Get the matching data/geolocation file pairs
 fns_df = check_for_matching_geolocation_files(moddir = path.hdf.in,
@@ -82,7 +82,7 @@ for (i in 1:nrow(fns_df)) {
 #                   "Cloud_Water_Path", 
 #                   "Cirrus_Reflectance", "Cirrus_Reflectance_Flag"), 
 #           .packages = "modiscloud") %do% {
-  prmfn = write_MRTSwath_param_file(prmfn="tmpMRTparams.prm", 
+  prmfn = write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm", 
                                     tifsdir=tifsdir, 
                                     modfn=fns_df$mod35_L2_fns[i], 
                                     geoloc_fn=fns_df$mod03_fns[i], 
@@ -92,10 +92,9 @@ for (i in 1:nrow(fns_df)) {
                                     lr_lat=lr_lat)
   
   print(scan(file=prmfn, what="character", sep="\n"))           
-}
-
-run_swath2grid(mrtpath="swath2grid", 
-               prmfn="tmpMRTparams.prm", 
+  
+  run_swath2grid(mrtpath="swath2grid", 
+               prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm", 
                tifsdir=tifsdir, 
                modfn=fns_df$mod35_L2_fns[i], 
                geoloc_fn=fns_df$mod03_fns[i], 
@@ -103,7 +102,7 @@ run_swath2grid(mrtpath="swath2grid",
                ul_lat=ul_lat, 
                lr_lon=lr_lon, 
                lr_lat=lr_lat)
-
+}
 #             prmfn = writeMRTSwathParamFile(prmfn = "tmpMRTparams.prm", 
 #                                            tifsdir = tifsdir, 
 #                                            modfn = fns_df$mod35_L2_fns[i], 

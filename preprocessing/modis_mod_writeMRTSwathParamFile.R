@@ -1,7 +1,7 @@
 writeMRTSwathParamFile <- function(prmfn = "tmpMRTparams.prm", 
                                    tifsdir, 
                                    modfn, geoloc_fn, 
-                                   sds, 
+#                                    sds, 
                                    ul_lon, ul_lat, lr_lon, lr_lat) {
   
   # Initialize the list of lines in the parameter file

@@ -3,8 +3,10 @@
 ##                                                                            ##
 ## CHECK COORDINATES FOR CLOUDS USING MODIS CLOUDMASK                         ##
 ##                                                                            ##
+## Ref.: http://modis-atmos.gsfc.nasa.gov/_docs/CMUSERSGUIDE.pdf              ##
+##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-12-02                                                        ##
+## Version: 2013-12-09                                                        ##
 ##                                                                            ##
 ################################################################################
 

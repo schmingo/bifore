@@ -78,16 +78,16 @@ registerDoParallel(cl <- makeCluster(4))
 
 for (i in 1:nrow(fns_df)) {
   
-  foreach(sds = c("Cloud_Effective_Radius", "Cloud_Optical_Thickness", 
-                  "Cloud_Water_Path", 
-                  "Cirrus_Reflectance", "Cirrus_Reflectance_Flag"), 
-          .packages = "modiscloud") %do% {
+#   foreach(sds = c("Cloud_Effective_Radius", "Cloud_Optical_Thickness", 
+#                   "Cloud_Water_Path", 
+#                   "Cirrus_Reflectance", "Cirrus_Reflectance_Flag"), 
+#           .packages = "modiscloud") %do% {
             
             prmfn = writeMRTSwathParamFile(prmfn = "tmpMRTparams.prm", 
                                            tifsdir = tifsdir, 
                                            modfn = fns_df$mod35_L2_fns[i], 
                                            geoloc_fn = fns_df$mod03_fns[i], 
-                                           sds = sds, 
+#                                            sds = sds, 
                                            ul_lon = ul_lon, ul_lat = ul_lat, 
                                            lr_lon = lr_lon, lr_lat = lr_lat)
             

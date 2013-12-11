@@ -33,6 +33,15 @@ path.hdf.in <- ("satellite/sample_modiscloud_in")
 mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 
 
+################################################################################
+### Import dataset #############################################################
+data <- read.csv2("csv/kili/abundance_data_subset.csv",
+                  dec = ".",
+                  header = TRUE, 
+                  stringsAsFactors = TRUE)
+
+## Read date column as a date
+data$date <- as.Date(data$date, format="%Y-%m-%d")
 
 
 ################################################################################
@@ -103,22 +112,23 @@ grdbbox
 ################################################################################
 ### Extract values from a particular pixel #####################################
 
-# Greg's field site
-greglat = 10.2971
-greglon = -84.79282
+# Get coordinates from a single observation
+data.lat <- data$lat[1]
+data.lon <- data$lon[1]
 
-grdr = raster(grd)
+
+grdr <- raster(grd)
 
 # Input the points x (longitude), then y (latitude)
-point_to_sample = c(greglon, greglat)
-xycoords = adf(matrix(data=point_to_sample, nrow=1, ncol=2))
-names(xycoords) = c("x", "y")
+point_to_sample <- c(data.lon, data.lat)
+xycoords <- adf(matrix(data=point_to_sample, nrow=1, ncol=2))
+names(xycoords) <- c("x", "y")
 
-xy = SpatialPoints(coords=xycoords, proj4string=grdproj)
+xy <- SpatialPoints(coords=xycoords, proj4string=grdproj)
 #xy = spsample(x=grd, n=10, type="random")
-pixelval = extract(grdr, xy)
+pixelval <- extract(grdr, xy)
 
 # Have to convert to 8-bit binary string, and reverse to get the count correct
 # (also reverse the 2-bit strings in the MODIS Cloud Mask table)
-pixelval = rev(t(digitsBase(pixelval, base= 2, 8)))
+pixelval <- rev(t(digitsBase(pixelval, base= 2, 8)))
 print(pixelval)

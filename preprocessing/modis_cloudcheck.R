@@ -1,7 +1,7 @@
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
-## CHECK COORDINATES FOR CLOUDS USING MODIS CLOUDMASK                         ##
+## CHECK COORDINATES FOR CLOUDS USING MODIS CLOUDMASK AND MODISCLOUD-PACKAGE  ##
 ##                                                                            ##
 ## Ref.: http://modis-atmos.gsfc.nasa.gov/_docs/CMUSERSGUIDE.pdf              ##
 ##                                                                            ##

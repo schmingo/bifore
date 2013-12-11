@@ -19,7 +19,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
 setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################
@@ -31,7 +31,7 @@ path.tif.out <- ("satellite/sample_modiscloud_out/")
 path.hdf.in <- ("satellite/sample_modiscloud_in")
 
 mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
-
+mrtpath <- ("C:/MRTSwath/bin/swath2grid")
 
 ################################################################################
 ### Import dataset #############################################################
@@ -131,7 +131,9 @@ pixelval <- extract(grdr, xy)
 # Have to convert to 8-bit binary string, and reverse to get the count correct
 # (also reverse the 2-bit strings in the MODIS Cloud Mask table)
 pixelval <- rev(t(digitsBase(pixelval, base= 2, 8)))
+
 print(pixelval)
+print(pixelval[1])
 
 ################################################################################
 ### Extract a particular bit from a particular pixel ###########################

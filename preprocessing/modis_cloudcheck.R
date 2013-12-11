@@ -83,6 +83,7 @@ for (i in 1:nrow(fns_df)) {
                lr_lat=lr_lat)
 }
 
+
 ################################################################################
 ### Load a TIF #################################################################
 
@@ -98,3 +99,26 @@ grdproj
 grdbbox <- attr(grd, "bbox")
 grdbbox
 
+
+################################################################################
+### Extract values from a particular pixel #####################################
+
+# Greg's field site
+greglat = 10.2971
+greglon = -84.79282
+
+grdr = raster(grd)
+
+# Input the points x (longitude), then y (latitude)
+point_to_sample = c(greglon, greglat)
+xycoords = adf(matrix(data=point_to_sample, nrow=1, ncol=2))
+names(xycoords) = c("x", "y")
+
+xy = SpatialPoints(coords=xycoords, proj4string=grdproj)
+#xy = spsample(x=grd, n=10, type="random")
+pixelval = extract(grdr, xy)
+
+# Have to convert to 8-bit binary string, and reverse to get the count correct
+# (also reverse the 2-bit strings in the MODIS Cloud Mask table)
+pixelval = rev(t(digitsBase(pixelval, base= 2, 8)))
+print(pixelval)

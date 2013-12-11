@@ -83,3 +83,26 @@ for (i in 1:nrow(fns_df)) {
                lr_lat=lr_lat)
 }
 
+################################################################################
+### Load a TIF #################################################################
+
+library(rgdal)  # for readGDAL
+
+# numpixels in subset
+xdim = 538
+ydim = 538
+
+
+# Read the grid and the grid metadata
+coarsen_amount = 1
+xdim_new = xdim / floor(coarsen_amount)
+ydim_new = ydim / floor(coarsen_amount)
+
+fn = tiffns[1]
+grd = readGDAL(fn, output.dim=c(ydim_new, xdim_new))
+
+grdproj = CRS(proj4string(grd))
+grdproj
+grdbbox = attr(grd, "bbox")
+grdbbox
+

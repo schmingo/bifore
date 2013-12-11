@@ -132,3 +132,13 @@ pixelval <- extract(grdr, xy)
 # (also reverse the 2-bit strings in the MODIS Cloud Mask table)
 pixelval <- rev(t(digitsBase(pixelval, base= 2, 8)))
 print(pixelval)
+
+################################################################################
+### Extract a particular bit from a particular pixel ###########################
+
+# Extract a particular bit for all the pixels in the grid
+#######################################################
+bitnum = 2
+grdr_vals_bits = get_bitgrid(grd, bitnum)
+length(grdr_vals_bits)
+grdr_vals_bits[1:50]

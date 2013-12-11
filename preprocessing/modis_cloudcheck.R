@@ -14,7 +14,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("modiscloud", "devtools", "doParallel")
+lib <- c("modiscloud", "devtools", "doParallel", "rgdal")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
@@ -27,10 +27,10 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## MOD35_L2 and MOD03 files; both must be in the same directory.
 
-path.tif.out = ("satellite/sample_modiscloud_out/")
-path.hdf.in = ("satellite/sample_modiscloud_in")
+path.tif.out <- ("satellite/sample_modiscloud_out/")
+path.hdf.in <- ("satellite/sample_modiscloud_in")
 
-mrtpath = ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
+mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 
 
 
@@ -42,25 +42,25 @@ mrtpath = ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 list.files(path = path.hdf.in, pattern = "MOD")
 
 # Get the matching data/geolocation file pairs
-fns_df = check_for_matching_geolocation_files(moddir = path.hdf.in,
-                                              modtxt = "MOD35_L2",
-                                              geoloctxt = "MOD03", 
-                                              return_geoloc = FALSE, 
-                                              return_product = FALSE)
+fns_df <- check_for_matching_geolocation_files(moddir = path.hdf.in,
+                                               modtxt = "MOD35_L2",
+                                               geoloctxt = "MOD03",
+                                               return_geoloc = FALSE,
+                                               return_product = FALSE)
 fns_df
 
 
 # Box to subset
-ul_lat = -2.77
-ul_lon = 36.93
-lr_lat = -3.45
-lr_lon = 37.76
+ul_lat <- -2.77
+ul_lon <- 36.93
+lr_lat <- -3.45
+lr_lon <- 37.76
 
 
 for (i in 1:nrow(fns_df)) {
 
   # Write parameter file for each .hdf
-  prmfn = write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm", 
+  prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm", 
                                     tifsdir=path.tif.out, 
                                     modfn=fns_df$mod35_L2_fns[i], 
                                     geoloc_fn=fns_df$mod03_fns[i], 
@@ -86,23 +86,15 @@ for (i in 1:nrow(fns_df)) {
 ################################################################################
 ### Load a TIF #################################################################
 
-library(rgdal)  # for readGDAL
+## get .tif list from swath2grid output
+tiffns <- list.files(path.tif.out, pattern=".tif", full.names=TRUE)
+tiffns
 
-# numpixels in subset
-xdim = 538
-ydim = 538
+fn <- tiffns[1]
+grd <- readGDAL(fn)
 
-
-# Read the grid and the grid metadata
-coarsen_amount = 1
-xdim_new = xdim / floor(coarsen_amount)
-ydim_new = ydim / floor(coarsen_amount)
-
-fn = tiffns[1]
-grd = readGDAL(fn, output.dim=c(ydim_new, xdim_new))
-
-grdproj = CRS(proj4string(grd))
+grdproj <- CRS(proj4string(grd))
 grdproj
-grdbbox = attr(grd, "bbox")
+grdbbox <- attr(grd, "bbox")
 grdbbox
 

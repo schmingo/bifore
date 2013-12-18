@@ -144,3 +144,17 @@ bitnum = 2
 grdr_vals_bits = get_bitgrid(grd, bitnum)
 length(grdr_vals_bits)
 grdr_vals_bits[1:50]
+
+################################################################################
+### Download MODIS MOD02 files #################################################
+
+# install MODIS R-package
+install.packages("MODIS", repos="http://R-Forge.R-project.org")
+
+# Load library
+library(MODIS)
+
+?getHdf
+getProduct() 
+# Download MOD021KM / MOD02HKM / MOD02QKM / MOD03
+#          MYD021KM / MYD02HKM / MYD02QKM

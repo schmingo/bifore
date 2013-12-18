@@ -100,7 +100,7 @@ for (i in 1:nrow(fns_df)) {
 tiffns <- list.files(path.tif.out, pattern=".tif", full.names=TRUE)
 tiffns
 
-fn <- tiffns[1]
+fn <- tiffns[7]
 grd <- readGDAL(fn)
 
 grdproj <- CRS(proj4string(grd))
@@ -113,8 +113,8 @@ grdbbox
 ### Extract values from a particular pixel #####################################
 
 # Get coordinates from a single observation
-data.lat <- data$lat[1]
-data.lon <- data$lon[1]
+data.lat <- data$lat[35]
+data.lon <- data$lon[35]
 
 
 grdr <- raster(grd)
@@ -133,7 +133,7 @@ pixelval <- extract(grdr, xy)
 pixelval <- rev(t(digitsBase(pixelval, base= 2, 8)))
 
 print(pixelval)
-print(pixelval[1])
+print(pixelval[2:3])
 
 ################################################################################
 ### Extract a particular bit from a particular pixel ###########################

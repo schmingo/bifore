@@ -69,7 +69,7 @@ lr_lon <- 37.76
 
 registerDoParallel(cl <- makeCluster(detectCores() - 1))
 
-foreach(i = 1:nrow(fns_df), .packages = lib) %dopar% {
+foreach(i = 1:nrow(fns_df), .packages = lib) %do% {
   # Write parameter file for each .hdf
   prmfn <- write_MRTSwath_param_file(prmfn="tmpMRTparams.prm",
                                      tifsdir=path.tif.out,

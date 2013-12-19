@@ -28,7 +28,7 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## MOD35_L2 and MOD03 files; both must be in the same directory.
 
-path.tif.out <- ("satellite/sample_modiscloud_out_dopar")
+path.tif.out <- ("satellite/sample_modiscloud_out_for")
 path.hdf.in <- ("satellite/sample_modiscloud_in")
 
 mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")

@@ -68,38 +68,9 @@ lr_lon <- 37.76
 
 
 ### For loop .hdf to .tif ######################################################
-# for(i in 1:nrow(fns_df)) {
-#   # Write parameter file for each .hdf
-#   prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
-#                                      tifsdir=path.tif.out,
-#                                      modfn=fns_df$mod35_L2_fns[i],
-#                                      geoloc_fn=fns_df$mod03_fns[i],
-#                                      ul_lon=ul_lon,
-#                                      ul_lat=ul_lat,
-#                                      lr_lon=lr_lon,
-#                                      lr_lat=lr_lat)
-#   
-#   print(scan(file=prmfn, what="character", sep="\n"))
-#   
-#   # hdf to raster using parameter file and subset box
-#   run_swath2grid(mrtpath="swath2grid",
-#                  prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
-#                  tifsdir=path.tif.out,
-#                  modfn=fns_df$mod35_L2_fns[i],
-#                  geoloc_fn=fns_df$mod03_fns[i],
-#                  ul_lon=ul_lon,
-#                  ul_lat=ul_lat,
-#                  lr_lon=lr_lon,
-#                  lr_lat=lr_lat)
-# }
-
-
-### foreach .hdf to .tif #######################################################
-registerDoParallel(cl <- makeCluster(detectCores() - 1))
-
-foreach(i = 1:nrow(fns_df), .packages = lib) %dopar% {
+for(i in 1:nrow(fns_df)) {
   # Write parameter file for each .hdf
-  prmfn <- write_MRTSwath_param_file(prmfn="tmpMRTparams.prm",
+  prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
                                      tifsdir=path.tif.out,
                                      modfn=fns_df$mod35_L2_fns[i],
                                      geoloc_fn=fns_df$mod03_fns[i],
@@ -112,7 +83,7 @@ foreach(i = 1:nrow(fns_df), .packages = lib) %dopar% {
   
   # hdf to raster using parameter file and subset box
   run_swath2grid(mrtpath="swath2grid",
-                 prmfn="tmpMRTparams.prm",
+                 prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
                  tifsdir=path.tif.out,
                  modfn=fns_df$mod35_L2_fns[i],
                  geoloc_fn=fns_df$mod03_fns[i],
@@ -122,7 +93,36 @@ foreach(i = 1:nrow(fns_df), .packages = lib) %dopar% {
                  lr_lat=lr_lat)
 }
 
-stopCluster(cl)
+
+### foreach .hdf to .tif #######################################################
+# registerDoParallel(cl <- makeCluster(detectCores() - 1))
+# 
+# foreach(i = 1:nrow(fns_df), .packages = lib) %dopar% {
+#   # Write parameter file for each .hdf
+#   prmfn <- write_MRTSwath_param_file(prmfn="tmpMRTparams.prm",
+#                                      tifsdir=path.tif.out,
+#                                      modfn=fns_df$mod35_L2_fns[i],
+#                                      geoloc_fn=fns_df$mod03_fns[i],
+#                                      ul_lon=ul_lon,
+#                                      ul_lat=ul_lat,
+#                                      lr_lon=lr_lon,
+#                                      lr_lat=lr_lat)
+#   
+#   print(scan(file=prmfn, what="character", sep="\n"))
+#   
+#   # hdf to raster using parameter file and subset box
+#   run_swath2grid(mrtpath="swath2grid",
+#                  prmfn="tmpMRTparams.prm",
+#                  tifsdir=path.tif.out,
+#                  modfn=fns_df$mod35_L2_fns[i],
+#                  geoloc_fn=fns_df$mod03_fns[i],
+#                  ul_lon=ul_lon,
+#                  ul_lat=ul_lat,
+#                  lr_lon=lr_lon,
+#                  lr_lat=lr_lat)
+# }
+# 
+# stopCluster(cl)
 
 ################################################################################
 ### Load a TIF #################################################################

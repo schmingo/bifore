@@ -28,7 +28,7 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## MOD35_L2 and MOD03 files; both must be in the same directory.
 
-path.tif.out <- ("satellite/sample_modiscloud_out/")
+path.tif.out <- ("satellite/sample_modiscloud_out_dopar")
 path.hdf.in <- ("satellite/sample_modiscloud_in")
 
 mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
@@ -67,9 +67,37 @@ lr_lat <- -3.45
 lr_lon <- 37.76
 
 
+### For loop .hdf to .tif ######################################################
+# for(i in 1:nrow(fns_df)) {
+#   # Write parameter file for each .hdf
+#   prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
+#                                      tifsdir=path.tif.out,
+#                                      modfn=fns_df$mod35_L2_fns[i],
+#                                      geoloc_fn=fns_df$mod03_fns[i],
+#                                      ul_lon=ul_lon,
+#                                      ul_lat=ul_lat,
+#                                      lr_lon=lr_lon,
+#                                      lr_lat=lr_lat)
+#   
+#   print(scan(file=prmfn, what="character", sep="\n"))
+#   
+#   # hdf to raster using parameter file and subset box
+#   run_swath2grid(mrtpath="swath2grid",
+#                  prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
+#                  tifsdir=path.tif.out,
+#                  modfn=fns_df$mod35_L2_fns[i],
+#                  geoloc_fn=fns_df$mod03_fns[i],
+#                  ul_lon=ul_lon,
+#                  ul_lat=ul_lat,
+#                  lr_lon=lr_lon,
+#                  lr_lat=lr_lat)
+# }
+
+
+### foreach .hdf to .tif #######################################################
 registerDoParallel(cl <- makeCluster(detectCores() - 1))
 
-foreach(i = 1:nrow(fns_df), .packages = lib) %do% {
+foreach(i = 1:nrow(fns_df), .packages = lib) %dopar% {
   # Write parameter file for each .hdf
   prmfn <- write_MRTSwath_param_file(prmfn="tmpMRTparams.prm",
                                      tifsdir=path.tif.out,

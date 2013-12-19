@@ -15,12 +15,12 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("modiscloud", "devtools", "doParallel", "rgdal")
+lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
 setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################
@@ -32,7 +32,7 @@ path.tif.out <- ("satellite/sample_modiscloud_out/")
 path.hdf.in <- ("satellite/sample_modiscloud_in")
 
 mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
-mrtpath <- ("C:/MRTSwath/bin/swath2grid")
+# mrtpath <- ("C:/MRTSwath/bin/swath2grid")
 
 ################################################################################
 ### Import dataset #############################################################
@@ -67,32 +67,34 @@ lr_lat <- -3.45
 lr_lon <- 37.76
 
 
-for (i in 1:nrow(fns_df)) {
+registerDoParallel(cl <- makeCluster(detectCores() - 1))
 
+foreach(i = 1:nrow(fns_df), .packages = lib) %dopar% {
   # Write parameter file for each .hdf
-  prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm", 
-                                    tifsdir=path.tif.out, 
-                                    modfn=fns_df$mod35_L2_fns[i], 
-                                    geoloc_fn=fns_df$mod03_fns[i], 
-                                    ul_lon=ul_lon, 
-                                    ul_lat=ul_lat, 
-                                    lr_lon=lr_lon, 
-                                    lr_lat=lr_lat)
+  prmfn <- write_MRTSwath_param_file(prmfn="tmpMRTparams.prm",
+                                     tifsdir=path.tif.out,
+                                     modfn=fns_df$mod35_L2_fns[i],
+                                     geoloc_fn=fns_df$mod03_fns[i],
+                                     ul_lon=ul_lon,
+                                     ul_lat=ul_lat,
+                                     lr_lon=lr_lon,
+                                     lr_lat=lr_lat)
   
-  print(scan(file=prmfn, what="character", sep="\n"))           
+  print(scan(file=prmfn, what="character", sep="\n"))
   
   # hdf to raster using parameter file and subset box
-  run_swath2grid(mrtpath="swath2grid", 
-               prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm", 
-               tifsdir=path.tif.out, 
-               modfn=fns_df$mod35_L2_fns[i], 
-               geoloc_fn=fns_df$mod03_fns[i], 
-               ul_lon=ul_lon, 
-               ul_lat=ul_lat, 
-               lr_lon=lr_lon, 
-               lr_lat=lr_lat)
+  run_swath2grid(mrtpath="swath2grid",
+                 prmfn="tmpMRTparams.prm",
+                 tifsdir=path.tif.out,
+                 modfn=fns_df$mod35_L2_fns[i],
+                 geoloc_fn=fns_df$mod03_fns[i],
+                 ul_lon=ul_lon,
+                 ul_lat=ul_lat,
+                 lr_lon=lr_lon,
+                 lr_lat=lr_lat)
 }
 
+stopCluster(cl)
 
 ################################################################################
 ### Load a TIF #################################################################

@@ -19,8 +19,8 @@ lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################
@@ -68,30 +68,30 @@ lr_lon <- 37.76
 
 
 ### For loop .hdf to .tif ######################################################
-for(i in 1:nrow(fns_df)) {
-  # Write parameter file for each .hdf
-  prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
-                                     tifsdir=path.tif.out,
-                                     modfn=fns_df$mod35_L2_fns[i],
-                                     geoloc_fn=fns_df$mod03_fns[i],
-                                     ul_lon=ul_lon,
-                                     ul_lat=ul_lat,
-                                     lr_lon=lr_lon,
-                                     lr_lat=lr_lat)
-  
-  print(scan(file=prmfn, what="character", sep="\n"))
-  
-  # hdf to raster using parameter file and subset box
-  run_swath2grid(mrtpath="swath2grid",
-                 prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
-                 tifsdir=path.tif.out,
-                 modfn=fns_df$mod35_L2_fns[i],
-                 geoloc_fn=fns_df$mod03_fns[i],
-                 ul_lon=ul_lon,
-                 ul_lat=ul_lat,
-                 lr_lon=lr_lon,
-                 lr_lat=lr_lat)
-}
+# for(i in 1:nrow(fns_df)) {
+#   # Write parameter file for each .hdf
+#   prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
+#                                      tifsdir=path.tif.out,
+#                                      modfn=fns_df$mod35_L2_fns[i],
+#                                      geoloc_fn=fns_df$mod03_fns[i],
+#                                      ul_lon=ul_lon,
+#                                      ul_lat=ul_lat,
+#                                      lr_lon=lr_lon,
+#                                      lr_lat=lr_lat)
+#   
+#   print(scan(file=prmfn, what="character", sep="\n"))
+#   
+#   # hdf to raster using parameter file and subset box
+#   run_swath2grid(mrtpath="swath2grid",
+#                  prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
+#                  tifsdir=path.tif.out,
+#                  modfn=fns_df$mod35_L2_fns[i],
+#                  geoloc_fn=fns_df$mod03_fns[i],
+#                  ul_lon=ul_lon,
+#                  ul_lat=ul_lat,
+#                  lr_lon=lr_lon,
+#                  lr_lat=lr_lat)
+# }
 
 
 ### foreach .hdf to .tif #######################################################
@@ -125,67 +125,61 @@ for(i in 1:nrow(fns_df)) {
 # stopCluster(cl)
 
 ################################################################################
-### Load a TIF #################################################################
+### Extract values from a particular pixel #####################################
 
 ## get .tif list from swath2grid output
 tiffns <- list.files(path.tif.out, pattern=".tif", full.names=TRUE)
 tiffns
 
+## Define image for pixel extraction and cloud identification 
 fn <- tiffns[7]
+
+## Define image as SpatialGridDataFrame
 grd <- readGDAL(fn)
 
+## Get CRS
 grdproj <- CRS(proj4string(grd))
-grdproj
-grdbbox <- attr(grd, "bbox")
-grdbbox
-
-
-################################################################################
-### Extract values from a particular pixel #####################################
+# grdproj
+# grdbbox <- attr(grd, "bbox")
+# grdbbox
 
 # Get coordinates from a single observation
 data.lat <- data$lat[35]
 data.lon <- data$lon[35]
 
-
+## Define image as raster
 grdr <- raster(grd)
 
-# Input the points x (longitude), then y (latitude)
+## Input the points x (longitude), then y (latitude)
 point_to_sample <- c(data.lon, data.lat)
-xycoords <- adf(matrix(data=point_to_sample, nrow=1, ncol=2))
+xycoords <- adf(matrix(data = point_to_sample, nrow = 1, ncol = 2))
 names(xycoords) <- c("x", "y")
 
 xy <- SpatialPoints(coords=xycoords, proj4string=grdproj)
-#xy = spsample(x=grd, n=10, type="random")
-pixelval <- extract(grdr, xy)
+
+## Extract single pixel from raster image
+pixelval <- extract(grdr, xy, buffer = NULL)
 
 # Have to convert to 8-bit binary string, and reverse to get the count correct
 # (also reverse the 2-bit strings in the MODIS Cloud Mask table)
 pixelval <- rev(t(digitsBase(pixelval, base= 2, 8)))
 
 print(pixelval)
-print(pixelval[2:3])
 
-################################################################################
-### Extract a particular bit from a particular pixel ###########################
+## Extract cloud indicator
+cloud_indicator <- pixelval[2:3]
+print(cloud_indicator)
 
-# Extract a particular bit for all the pixels in the grid
-#######################################################
-bitnum = 2
-grdr_vals_bits = get_bitgrid(grd, bitnum)
-length(grdr_vals_bits)
-grdr_vals_bits[1:50]
 
 ################################################################################
 ### Download MODIS MOD02 files #################################################
 
-# install MODIS R-package
-install.packages("MODIS", repos="http://R-Forge.R-project.org")
+# # install MODIS R-package
+# install.packages("MODIS", repos="http://R-Forge.R-project.org")
+# 
+# # Load library
+# library(MODIS)
+# 
+# ?getHdf
+# getProduct() 
 
-# Load library
-library(MODIS)
-
-?getHdf
-getProduct() 
-# Download MOD021KM / MOD02HKM / MOD02QKM / MOD03
-#          MYD021KM / MYD02HKM / MYD02QKM

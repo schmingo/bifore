@@ -3,10 +3,11 @@
 ##                                                                            ##
 ## CHECK COORDINATES FOR CLOUDS USING MODIS CLOUDMASK AND MODISCLOUD-PACKAGE  ##
 ##                                                                            ##
-## Ref.: http://modis-atmos.gsfc.nasa.gov/_docs/CMUSERSGUIDE.pdf              ##
+## Ref.: - http://modis-atmos.gsfc.nasa.gov/_docs/CMUSERSGUIDE.pdf            ##
+##       - MOD35 .hdf metadata                                                ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-12-11                                                        ##
+## Version: 2013-12-19                                                        ##
 ##                                                                            ##
 ################################################################################
 

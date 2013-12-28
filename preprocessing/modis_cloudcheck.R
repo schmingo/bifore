@@ -19,7 +19,7 @@ lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("/home/schmingo/Diplomarbeit/")
 # setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
@@ -28,8 +28,8 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## MOD35_L2 and MOD03 files; both must be in the same directory.
 
-path.tif.out <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_out")
-path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_mod35-03/2002-2003")
+path.tif.out <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_out/2004-2005/")
+path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_mod35_mod03/2004-2005/")
 
 mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 # mrtpath <- ("C:/MRTSwath/bin/swath2grid")

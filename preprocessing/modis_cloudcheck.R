@@ -20,7 +20,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
 setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################
@@ -50,7 +50,7 @@ data <- read.csv2("csv/kili/abundance_data_subset.csv",
 
 ## Read date column as a date
 #data$date <- as.Date(data$date, format="%Y-%m-%d")
-data$date <- as.POSIXct(data$date, format="%Y-%m-%d", tz="EAT")
+data$date <- as.POSIXct(data$date, format="%Y-%m-%d")
 
 ################################################################################
 ### Preprocessing MOD35_L2 and MOD03 | Run MRTSwath tool "swath2grid" ##########
@@ -178,6 +178,15 @@ print(pixelval)
 cloud_indicator <- pixelval[2:3]
 print(cloud_indicator)
 
+
+################################################################################
+### Get Date from MODIS files ##############################################
+
+tiffns <- list.files(path.b0.cloudmask, pattern=".tif", full.names=TRUE)
+tiffns
+
+mod.dates.df <- dates_from_fileslist(tiffns)
+mod.dates.df
 
 ################################################################################
 ### Download MODIS MOD02 files #################################################

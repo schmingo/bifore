@@ -49,8 +49,8 @@ data <- read.csv2("csv/kili/abundance_data_subset.csv",
                   stringsAsFactors = TRUE)
 
 ## Read date column as a date
-data$date <- as.Date(data$date, format="%Y-%m-%d")
-
+#data$date <- as.Date(data$date, format="%Y-%m-%d")
+data$date <- as.POSIXct(data$date, format="%Y-%m-%d", tz="EAT")
 
 ################################################################################
 ### Preprocessing MOD35_L2 and MOD03 | Run MRTSwath tool "swath2grid" ##########

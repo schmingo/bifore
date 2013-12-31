@@ -26,7 +26,7 @@ setwd("/home/schmingo/Diplomarbeit/")
 ################################################################################
 ### Set filepaths ##############################################################
 
-## MOD35_L2 and MOD03 files; both must be in the same directory.
+## To preprocess MOD35_L2 and MOD03 files; both must be in the same directory.
 
 path.tif.out <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_out/2012/")
 path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_mod35_mod03/2012/")
@@ -42,6 +42,7 @@ mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 
 ################################################################################
 ### Import dataset #############################################################
+
 data <- read.csv2("csv/kili/abundance_data_subset.csv",
                   dec = ".",
                   header = TRUE, 
@@ -52,7 +53,7 @@ data$date <- as.Date(data$date, format="%Y-%m-%d")
 
 
 ################################################################################
-### Run MRTSwath tool "swath2grid" #############################################
+### Preprocessing MOD35_L2 and MOD03 | Run MRTSwath tool "swath2grid" ##########
 
 # list.files(pattern = "MOD")
 list.files(path = path.hdf.in, pattern = "MOD")
@@ -74,6 +75,7 @@ lr_lon <- 37.76
 
 
 ### For loop .hdf to .tif ######################################################
+
 for(i in 1:nrow(fns_df)) {
   # Write parameter file for each .hdf
   prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",

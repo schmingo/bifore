@@ -19,7 +19,7 @@ lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Diplomarbeit/")
+setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 # setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
@@ -136,7 +136,7 @@ for(i in 1:nrow(fns_df)) {
 ### Extract values from a particular pixel #####################################
 
 ## get .tif list from swath2grid output
-tiffns <- list.files(path.tif.out, pattern=".tif", full.names=TRUE)
+tiffns <- list.files(path.tif.cloudmask, pattern=".tif", full.names=TRUE)
 tiffns
 
 ## Define image for pixel extraction and cloud identification 

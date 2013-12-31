@@ -29,9 +29,13 @@ setwd("/home/schmingo/Diplomarbeit/")
 ## MOD35_L2 and MOD03 files; both must be in the same directory.
 
 path.tif.out <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_out/2012/")
-path.tif.out.rst <- ("D:/Dropbox/Diplomarbeit/code/bifore/src/satellite/modiscloud_out/2004-2005/")
-path.tif.out.rst <- ("/home/schmingo/Dropbox/bifore/src/satellite/modiscloud_out/2004-2005/")
 path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_mod35_mod03/2012/")
+
+path.tif.cloudmask <- ("D:/Dropbox/Diplomarbeit/code/bifore/src/satellite/modiscloud_out/2004-2005/")
+path.tif.cloudmask <- ("/home/schmingo/Dropbox/bifore/src/satellite/modiscloud_out/2004-2005/")
+
+path.b0.cloudmask <- ("D:/Dropbox/Diplomarbeit/code/bifore/src/satellite/modiscloud_b0/")
+path.b0.cloudmask <- ("/home/schmingo/Dropbox/bifore/src/satellite/modiscloud_b0/")
 
 mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 # mrtpath <- ("C:/MRTSwath/bin/swath2grid")

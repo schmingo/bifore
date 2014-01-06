@@ -27,11 +27,11 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## To preprocess MOD35_L2 and MOD03 files; both must be in the same directory.
 
-path.csv <- ("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/abundance_data_subset.csv") # update this path
+path.csv <- ("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/abundance_data_subset.csv")
 
 path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_mod35_mod03/2012/")
 
-path.tif.cloudmask <- ("/home/schmingo/Dropbox/bifore/src/satellite/modiscloud_out/2004-2005/") # update this path
+path.tif.cloudmask <- ("/home/schmingo/Dropbox/bifore/src/satellite/modiscloud_out/2004-2005/")
 
 path.b0.cloudmask <- ("/home/schmingo/Dropbox/bifore/src/satellite/modiscloud_b0/")
 

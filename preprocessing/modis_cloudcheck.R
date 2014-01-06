@@ -7,7 +7,7 @@
 ##       - MOD35 .hdf metadata                                                ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-12-19                                                        ##
+## Version: 2014-01-06                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -28,22 +28,23 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## To preprocess MOD35_L2 and MOD03 files; both must be in the same directory.
 
-path.tif.out <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_out/2012/")
-path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_mod35_mod03/2012/")
+path.csv <- ("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/abundance_data_subset.csv") # update this path
 
-path.tif.cloudmask <- ("D:/Dropbox/Diplomarbeit/code/bifore/src/satellite/modiscloud_out/2004-2005/")
-path.tif.cloudmask <- ("/home/schmingo/Dropbox/bifore/src/satellite/modiscloud_out/2004-2005/")
+# path.tif.out <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_out/2012/")
+# path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_mod35_mod03/2012/")
 
-path.b0.cloudmask <- ("D:/Dropbox/Diplomarbeit/code/bifore/src/satellite/modiscloud_b0/")
+# path.tif.cloudmask <- ("D:/Dropbox/Diplomarbeit/code/bifore/src/satellite/modiscloud_out/2004-2005/")
+path.tif.cloudmask <- ("/home/schmingo/Dropbox/bifore/src/satellite/modiscloud_out/2004-2005/") # update this path
+
+# path.b0.cloudmask <- ("D:/Dropbox/Diplomarbeit/code/bifore/src/satellite/modiscloud_b0/")
 path.b0.cloudmask <- ("/home/schmingo/Dropbox/bifore/src/satellite/modiscloud_b0/")
 
 mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
-# mrtpath <- ("C:/MRTSwath/bin/swath2grid")
 
 ################################################################################
 ### Import dataset #############################################################
 
-data <- read.csv2("csv/kili/abundance_data_subset.csv",
+data <- read.csv2(path.csv,
                   dec = ".",
                   header = TRUE, 
                   stringsAsFactors = TRUE)
@@ -55,54 +56,54 @@ data$date <- as.POSIXct(data$date, format="%Y-%m-%d")
 ################################################################################
 ### Preprocessing MOD35_L2 and MOD03 | Run MRTSwath tool "swath2grid" ##########
 
-# list.files(pattern = "MOD")
-list.files(path = path.hdf.in, pattern = "MOD")
-
-# Get the matching data/geolocation file pairs
-fns_df <- check_for_matching_geolocation_files(moddir = path.hdf.in,
-                                               modtxt = "MOD35_L2",
-                                               geoloctxt = "MOD03",
-                                               return_geoloc = FALSE,
-                                               return_product = FALSE)
-fns_df
-
-
-# Box to subset
-ul_lat <- -2.77
-ul_lon <- 36.93
-lr_lat <- -3.45
-lr_lon <- 37.76
-
-
-### For loop .hdf to .tif ######################################################
-
-for(i in 1:nrow(fns_df)) {
-  # Write parameter file for each .hdf
-  prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
-                                     tifsdir=path.tif.out,
-                                     modfn=fns_df$mod35_L2_fns[i],
-                                     geoloc_fn=fns_df$mod03_fns[i],
-                                     ul_lon=ul_lon,
-                                     ul_lat=ul_lat,
-                                     lr_lon=lr_lon,
-                                     lr_lat=lr_lat)
-  
-  print(scan(file=prmfn, what="character", sep="\n"))
-  
-  # hdf to raster using parameter file and subset box
-  run_swath2grid(mrtpath="swath2grid",
-                 prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
-                 tifsdir=path.tif.out,
-                 modfn=fns_df$mod35_L2_fns[i],
-                 geoloc_fn=fns_df$mod03_fns[i],
-                 ul_lon=ul_lon,
-                 ul_lat=ul_lat,
-                 lr_lon=lr_lon,
-                 lr_lat=lr_lat)
-}
+# # List MOD-files
+# list.files(path = path.hdf.in, pattern = "MOD")
+# 
+# # Get the matching data/geolocation file pairs
+# fns_df <- check_for_matching_geolocation_files(moddir = path.hdf.in,
+#                                                modtxt = "MOD35_L2",
+#                                                geoloctxt = "MOD03",
+#                                                return_geoloc = FALSE,
+#                                                return_product = FALSE)
+# fns_df
+# 
+# 
+# # Box to subset
+# ul_lat <- -2.77
+# ul_lon <- 36.93
+# lr_lat <- -3.45
+# lr_lon <- 37.76
 
 
-### foreach .hdf to .tif #######################################################
+### For-loop .hdf to .tif ######################################################
+
+# for(i in 1:nrow(fns_df)) {
+#   # Write parameter file for each .hdf
+#   prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
+#                                      tifsdir=path.tif.out,
+#                                      modfn=fns_df$mod35_L2_fns[i],
+#                                      geoloc_fn=fns_df$mod03_fns[i],
+#                                      ul_lon=ul_lon,
+#                                      ul_lat=ul_lat,
+#                                      lr_lon=lr_lon,
+#                                      lr_lat=lr_lat)
+#   
+#   print(scan(file=prmfn, what="character", sep="\n"))
+#   
+#   # hdf to raster using parameter file and subset box
+#   run_swath2grid(mrtpath="swath2grid",
+#                  prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
+#                  tifsdir=path.tif.out,
+#                  modfn=fns_df$mod35_L2_fns[i],
+#                  geoloc_fn=fns_df$mod03_fns[i],
+#                  ul_lon=ul_lon,
+#                  ul_lat=ul_lat,
+#                  lr_lon=lr_lon,
+#                  lr_lat=lr_lat)
+# }
+
+
+### Foreach-loop .hdf to .tif | does not seem to work properly #################
 # registerDoParallel(cl <- makeCluster(detectCores() - 1))
 # 
 # foreach(i = 1:nrow(fns_df), .packages = lib) %dopar% {
@@ -140,7 +141,7 @@ tiffns <- list.files(path.tif.cloudmask, pattern=".tif", full.names=TRUE)
 tiffns
 
 ## Define image for pixel extraction and cloud identification 
-fn <- tiffns[7]
+fn <- tiffns[1]
 
 ## Define image as SpatialGridDataFrame
 grd <- readGDAL(fn)

@@ -20,14 +20,16 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
 setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-
+# setwd("/media/permanent/programming/r/bifore")
 
 ################################################################################
 ### Set filepaths ##############################################################
 
 path.csv <- ("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/abundance_data_subset.csv") # update this path
+# path.csv <- ("abundance_data_subset.csv")
 
 path.tif.cloudmask <- ("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/satellite/sample_modiscloud_out/2002-2003/") # update this path
+# path.tif.cloudmask <- ("sample_modiscloud_out/2002-2003")
 
 
 ################################################################################

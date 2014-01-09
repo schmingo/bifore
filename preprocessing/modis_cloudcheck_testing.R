@@ -118,51 +118,51 @@ stopCluster(cl)
 ###
 
 
-## Define image for pixel extraction and cloud identification 
-fn <- tiffns[1]
-
-## Define image as SpatialGridDataFrame
-grd <- readGDAL(fn)
-
-## Get CRS
-grdproj <- CRS(proj4string(grd))
-# grdproj
-# grdbbox <- attr(grd, "bbox")
-# grdbbox
-
-# Get coordinates from a single observation
-data.lat <- data$lat[27]
-data.lon <- data$lon[27]
-
-## Define image as raster
-grdr <- raster(grd)
-
-## Input the points x (longitude), then y (latitude)
-point_to_sample <- c(data.lon, data.lat)
-xycoords <- adf(matrix(data = point_to_sample, nrow = 1, ncol = 2))
-names(xycoords) <- c("x", "y")
-
-xy <- SpatialPoints(coords=xycoords, proj4string=grdproj)
-
-## Extract single pixel from raster image
-pixelval <- extract(grdr, xy, buffer = NULL)
-
-# Have to convert to 8-bit binary string, and reverse to get the count correct
-# (also reverse the 2-bit strings in the MODIS Cloud Mask table)
-pixelval <- rev(t(digitsBase(pixelval, base= 2, 8)))
-
-print(pixelval)
-
-## Extract cloud indicator
-cloud_indicator <- pixelval[2:3]
-print(cloud_indicator)
-
-## Cloud Indicator from MOD35 metadata
-# Unobstructed FOV Quality Flag
-# 00 = Cloudy                   
-# 01 = Uncertain                
-# 10 = Probably  Clear          
-# 11 = Confident  Clear 
+# ## Define image for pixel extraction and cloud identification 
+# fn <- tiffns[1]
+# 
+# ## Define image as SpatialGridDataFrame
+# grd <- readGDAL(fn)
+# 
+# ## Get CRS
+# grdproj <- CRS(proj4string(grd))
+# # grdproj
+# # grdbbox <- attr(grd, "bbox")
+# # grdbbox
+# 
+# # Get coordinates from a single observation
+# data.lat <- data$lat[27]
+# data.lon <- data$lon[27]
+# 
+# ## Define image as raster
+# grdr <- raster(grd)
+# 
+# ## Input the points x (longitude), then y (latitude)
+# point_to_sample <- c(data.lon, data.lat)
+# xycoords <- adf(matrix(data = point_to_sample, nrow = 1, ncol = 2))
+# names(xycoords) <- c("x", "y")
+# 
+# xy <- SpatialPoints(coords=xycoords, proj4string=grdproj)
+# 
+# ## Extract single pixel from raster image
+# pixelval <- extract(grdr, xy, buffer = NULL)
+# 
+# # Have to convert to 8-bit binary string, and reverse to get the count correct
+# # (also reverse the 2-bit strings in the MODIS Cloud Mask table)
+# pixelval <- rev(t(digitsBase(pixelval, base= 2, 8)))
+# 
+# print(pixelval)
+# 
+# ## Extract cloud indicator
+# cloud_indicator <- pixelval[2:3]
+# print(cloud_indicator)
+# 
+# ## Cloud Indicator from MOD35 metadata
+# # Unobstructed FOV Quality Flag
+# # 00 = Cloudy                   
+# # 01 = Uncertain                
+# # 10 = Probably  Clear          
+# # 11 = Confident  Clear 
 ################################################################################
 ### Get Date from MODIS files ##############################################
 
@@ -181,6 +181,6 @@ mod.dates.df
 # # Load library
 # library(MODIS)
 # 
-# ?getHdf
+?getHdf
 # getProduct() 
 

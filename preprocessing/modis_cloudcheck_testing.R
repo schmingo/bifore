@@ -95,7 +95,7 @@ foreach(g = 1:nrow(data), .packages = lib) %dopar% {
       # 11 = Confident  Clear 
       
       # Break out of for-loop in case of cloud absence
-      if (!all(bit.avl.b0[2:3] == c(1, 1))) {
+      if (!all(bit.avl.b0[2:3] == c(0, 0))) {
         cloudy <- FALSE
         break
       }  

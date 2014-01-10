@@ -15,7 +15,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "foreach")
+lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "foreach", "raster")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
@@ -27,13 +27,13 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## To preprocess MOD35_L2 and MOD03 files; both must be in the same directory.
 
-path.csv <- ("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/abundance_data_subset.csv")
+path.csv <- ("csv/kili/abundance_data_subset.csv")
 
-path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_mod35_mod03/2012/")
+path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_mod35_mod03/2002-2003/")
 
-path.tif.cloudmask <- ("/home/schmingo/Dropbox/bifore/src/satellite/modiscloud_out/2004-2005/")
+path.tif.cloudmask <- ("satellite/modiscloud_out/2002-2003/")
 
-path.b0.cloudmask <- ("/home/schmingo/Dropbox/bifore/src/satellite/modiscloud_b0/")
+path.b0.cloudmask <- ("satellite/modiscloud_out/2002-2003/")
 
 mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 
@@ -114,7 +114,7 @@ tiffns
 ###
 
 # Parallelization
-registerDoParallel(cl <- makeCluster(4)
+registerDoParallel(cl <- makeCluster(4))
                    
 # Convert data to spatial object
 coordinates(data) <- ~ lon + lat

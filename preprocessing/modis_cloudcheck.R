@@ -28,13 +28,13 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## To preprocess MOD35_L2 and MOD03 files; both must be in the same directory.
 
-path.csv <- ("csv/kili/abundance_data_subset.csv")
+path.abundance.csv <- ("csv/kili/abundance_data_subset.csv")
+
+path.cloudfree.csv <- ("csv/kili/cloudfree.csv")
 
 path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_mod35_mod03/2002-2003/")
 
-path.tif.cloudmask <- ("satellite/modiscloud_out/2002-2003/")
-
-path.b0.cloudmask <- ("satellite/modiscloud_out/2002-2003/")
+path.b0.cloudmask <- ("satellite/modiscloud_b0/")
 
 mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 
@@ -42,7 +42,7 @@ mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 ################################################################################
 ### Import dataset #############################################################
 
-data <- read.csv2(path.csv,
+data <- read.csv2(path.abundance.csv,
                   dec = ".",
                   header = TRUE, 
                   stringsAsFactors = TRUE)
@@ -109,7 +109,7 @@ for(i in 1:nrow(fns_df)) {
 ### Check observations from csv file for cloudiness using tiffs ################
 
 ## get .tif list from swath2grid output
-tiffns <- list.files(path.tif.cloudmask, pattern=".tif", full.names=TRUE)
+tiffns <- list.files(path.b0.cloudmask, pattern=".tif", full.names=TRUE)
 tiffns
 
 ## Parallelization
@@ -121,7 +121,7 @@ proj4string(data) <- CRS("+init=epsg:4326")
                    
 ## Loop through all available dates
 # mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib, .combine = "c") %dopar% {
-mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib, 
+mod02.ddl <- foreach(g = 1:10, .packages = lib, 
                      .combine = function(...) as.data.frame(rbind(...), 
                                                             stringsAsFactors = FALSE)) %dopar% {
   
@@ -179,6 +179,16 @@ mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib,
 # Deregister parallel backend
 stopCluster(cl)
 
+# Write cloud-free dates to .csv
+mod02.ddl
+
+write.table(mod02.ddl, 
+            file = path.cloudfree.csv,
+            dec = ".",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")
 ################################################################################
 ### Download MODIS MOD02 files #################################################
 

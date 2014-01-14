@@ -122,7 +122,7 @@ proj4string(data) <- CRS("+init=epsg:4326")
                    
 ## Loop through all available dates
 # mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib, .combine = "c") %dopar% {
-mod02.ddl <- foreach(g = 1:10, .packages = lib, 
+mod02.ddl <- foreach(g = 1:ncol(data), .packages = lib, 
                      .combine = function(...) as.data.frame(rbind(...), 
                                                             stringsAsFactors = FALSE)) %dopar% {
   

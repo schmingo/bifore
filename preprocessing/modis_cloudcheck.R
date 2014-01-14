@@ -178,13 +178,23 @@ mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib,
 }
 
 
-# Deregister parallel backend
+## Deregister parallel backend
 stopCluster(cl)
 
-# Write cloud-free dates to .csv
+## Write cloud-free dates and observation dates to .csv
 mod02.ddl
+names(mod02.ddl) <- "cloudfree_date"
 
-write.table(mod02.ddl, 
+## Add observation dates to table
+mod02.ddl["obervation_date"] <- data$date
+mod02.ddl.diff <- mod02.ddl
+
+mod02.ddl.diff[,1] <- as.Date(mod02.ddl.diff[,1], format = "%Y%j.%H%M")
+mod02.ddl.diff[,2] <- as.Date(mod02.ddl.diff[,2], format = "%Y%j")
+
+mod02.ddl.diff["diff_date"] <- mod02.ddl.diff[,1] - mod02.ddl.diff[,2]
+
+write.table(mod02.ddl.diff, 
             file = path.cloudfree.csv,
             dec = ".",
             quote = FALSE,
@@ -192,7 +202,7 @@ write.table(mod02.ddl,
             row.names = FALSE,
             sep = ";")
 ################################################################################
-### Download MODIS MOD02 files #################################################
+### Download MODIS MOD02 files ### not supported by MODIS Package yet ! ########
 
 # ?getHdf
 # getProduct() 

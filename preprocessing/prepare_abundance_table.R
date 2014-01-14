@@ -11,7 +11,7 @@
 ## - Add LatLong Coordinates                                                  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-12-03                                                        ##
+## Version: 2014-01-14                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -24,8 +24,8 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 
 ## Set working directory
-# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
-setwd("D:/Dropbox/Diplomarbeit/code/bifore/")
+setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
+# setwd("D:/Dropbox/Diplomarbeit/code/bifore/")
 
 ## Set filepaths
 file.abundance.csv <- "src/csv/kili/abundance_matrix_hemp.csv"
@@ -43,7 +43,7 @@ data <- read.csv2(file.abundance.csv,
 
 
 # data$date <- as.POSIXct(data$date, format="%m/%d/%Y")
-data$date <- as.Date(data$date, format="%m/%d/%Y")
+data$date <- as.Date(data$date, format="%d.%m.%Y")
 
 
 ################################################################################
@@ -129,8 +129,8 @@ data.sp <- spTransform(data.sp, CRS("+proj=longlat"))
 
 data.sp <- as.data.frame(data.sp)
 
-names(data.sp)[ncol(data.sp)-1] <- "lon"
-names(data.sp)[ncol(data.sp)] <- "lat"
+names(data.sp)[1] <- "lon"
+names(data.sp)[2] <- "lat"
 
 ## Recombine dataframes
 data10.sp <- cbind(data10[1:3],

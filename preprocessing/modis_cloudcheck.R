@@ -7,7 +7,7 @@
 ##       - MOD35 .hdf metadata                                                ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-01-06                                                        ##
+## Version: 2014-01-14                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -16,7 +16,7 @@ rm(list = ls(all = TRUE))
 
 ## Required libraries
 # install.packages("MODIS", repos="http://R-Forge.R-project.org")
-lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "raster", "MODIS")
+lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "raster")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
@@ -58,53 +58,53 @@ str(data[1:15])
 ################################################################################
 ### Preprocessing MOD35_L2 and MOD03 | Run MRTSwath tool "swath2grid" ##########
 
-# List MOD-files
-list.files(path = path.hdf.in, pattern = "MOD")
-
-# Get the matching data/geolocation file pairs
-fns_df <- check_for_matching_geolocation_files(moddir = path.hdf.in,
-                                               modtxt = "MOD35_L2",
-                                               geoloctxt = "MOD03",
-                                               return_geoloc = FALSE,
-                                               return_product = FALSE)
-fns_df
-
-
-# Box to subset
-ul_lat <- -2.77
-ul_lon <- 36.93
-lr_lat <- -3.45
-lr_lon <- 37.76
+# # List MOD-files
+# list.files(path = path.hdf.in, pattern = "MOD")
+# 
+# # Get the matching data/geolocation file pairs
+# fns_df <- check_for_matching_geolocation_files(moddir = path.hdf.in,
+#                                                modtxt = "MOD35_L2",
+#                                                geoloctxt = "MOD03",
+#                                                return_geoloc = FALSE,
+#                                                return_product = FALSE)
+# fns_df
+# 
+# 
+# # Box to subset
+# ul_lat <- -2.77
+# ul_lon <- 36.93
+# lr_lat <- -3.45
+# lr_lon <- 37.76
 
 
 ################################################################################
 ### For-loop .hdf to .tif ######################################################
-
-for(i in 1:nrow(fns_df)) {
-  # Write parameter file for each .hdf
-  prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
-                                     tifsdir=path.tif.out,
-                                     modfn=fns_df$mod35_L2_fns[i],
-                                     geoloc_fn=fns_df$mod03_fns[i],
-                                     ul_lon=ul_lon,
-                                     ul_lat=ul_lat,
-                                     lr_lon=lr_lon,
-                                     lr_lat=lr_lat)
-  
-  print(scan(file=prmfn, what="character", sep="\n"))
-  
-  # hdf to raster using parameter file and subset box
-  run_swath2grid(mrtpath="swath2grid",
-                 prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
-                 tifsdir=path.tif.out,
-                 modfn=fns_df$mod35_L2_fns[i],
-                 geoloc_fn=fns_df$mod03_fns[i],
-                 ul_lon=ul_lon,
-                 ul_lat=ul_lat,
-                 lr_lon=lr_lon,
-                 lr_lat=lr_lat)
-}
-
+# 
+# for(i in 1:nrow(fns_df)) {
+#   # Write parameter file for each .hdf
+#   prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
+#                                      tifsdir=path.tif.out,
+#                                      modfn=fns_df$mod35_L2_fns[i],
+#                                      geoloc_fn=fns_df$mod03_fns[i],
+#                                      ul_lon=ul_lon,
+#                                      ul_lat=ul_lat,
+#                                      lr_lon=lr_lon,
+#                                      lr_lat=lr_lat)
+#   
+#   print(scan(file=prmfn, what="character", sep="\n"))
+#   
+#   # hdf to raster using parameter file and subset box
+#   run_swath2grid(mrtpath="swath2grid",
+#                  prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
+#                  tifsdir=path.tif.out,
+#                  modfn=fns_df$mod35_L2_fns[i],
+#                  geoloc_fn=fns_df$mod03_fns[i],
+#                  ul_lon=ul_lon,
+#                  ul_lat=ul_lat,
+#                  lr_lon=lr_lon,
+#                  lr_lat=lr_lat)
+# }
+# 
 
 ################################################################################
 ### Check observations from csv file for cloudiness using tiffs ################
@@ -118,11 +118,12 @@ registerDoParallel(cl <- makeCluster(4))
                    
 ## Convert data to spatial object
 coordinates(data) <- ~ lon + lat
+# coordinates(data) <- c("lon","lat")
 proj4string(data) <- CRS("+init=epsg:4326")
                    
 ## Loop through all available dates
 # mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib, .combine = "c") %dopar% {
-mod02.ddl <- foreach(g = 1:ncol(data), .packages = lib, 
+mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib, 
                      .combine = function(...) as.data.frame(rbind(...), 
                                                             stringsAsFactors = FALSE)) %dopar% {
   

@@ -77,9 +77,6 @@ lr_lat <- -3.45
 lr_lon <- 37.76
 
 
-list.latlong <- list(xmax=lr_lon, xmin=ul_lon, ymin=lr_lat, ymax=ul_lat)
-
-
 ### For-loop .hdf to .tif ######################################################
 
 for(i in 1:nrow(fns_df)) {
@@ -115,41 +112,39 @@ for(i in 1:nrow(fns_df)) {
 tiffns <- list.files(path.tif.cloudmask, pattern=".tif", full.names=TRUE)
 tiffns
 
-###
-
-# Parallelization
+## Parallelization
 registerDoParallel(cl <- makeCluster(4))
                    
-# Convert data to spatial object
+## Convert data to spatial object
 coordinates(data) <- ~ lon + lat
 proj4string(data) <- CRS("+init=epsg:4326")
                    
-# Loop through all available dates
+## Loop through all available dates
 # mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib, .combine = "c") %dopar% {
 mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib, 
                      .combine = function(...) as.data.frame(rbind(...), 
                                                             stringsAsFactors = FALSE)) %dopar% {
   
-  # Initialize while-loop
+  ## Initialize while-loop
   current.date <- data$date[g]
   cloudy <- TRUE
   
   
   while (cloudy) {
     
-    # List available *_b0.tif files of current date
+    ## List available *_b0.tif files of current date
     fls.avl <- tiffns[grep(current.date, tiffns)]
     fls.avl.b0 <- fls.avl[grep("b0", fls.avl)]
     
-    # Import raster images
+    ## Import raster images
     rst.avl.b0 <- lapply(fls.avl.b0, raster)
     
     for (h in rst.avl.b0) {
       
-      # Extract corresponding cell values from raster images
+      ## Extract corresponding cell values from raster images
       val.avl.b0 <- extract(h, data[g, ])
       
-      # Convert extracted values to binary format
+      ## Convert extracted values to binary format
       bit.avl.b0 <- rev(t(digitsBase(val.avl.b0, base = 2, 8)))
       
       ## Cloud Indicator from MOD35 metadata
@@ -159,14 +154,14 @@ mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib,
       # 10 = Probably  Clear
       # 11 = Confident  Clear
       
-      # Break out of for-loop in case of cloud absence
+      ## Break out of for-loop in case of cloud absence
       if (!all(bit.avl.b0[2:3] == c(0, 0))) {
         cloudy <- FALSE
         break
       }
     }
     
-    # Increment date by 1 day in case of no cloud absence
+    ## Increment date by 1 day in case of no cloud absence
     if (cloudy) {
       
       current.date <- as.Date(current.date, format = "%Y%j") + 1
@@ -174,7 +169,7 @@ mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib,
     }
   }
   
-  # Retrieve information about first cloud-free day
+  ## Retrieve information about first cloud-free day
   return(substr(names(h), 11, 22))
 #   return(paste0(dirname(fls.avl)[1], "/", names(h), ".tif"))
 #   return(current.date)

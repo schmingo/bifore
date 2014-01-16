@@ -30,7 +30,7 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 path.abundance.csv <- ("csv/kili/abundance_data_subset.csv")
 
-path.cloudfree.csv <- ("csv/kili/cloudfree.csv")
+path.cloudfree.csv <- ("csv/kili/cloudcheck_diff_dates.csv")
 
 path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_mod35_mod03/2002-2003/")
 

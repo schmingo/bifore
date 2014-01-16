@@ -7,7 +7,7 @@
 ##       - MOD35 .hdf metadata                                                ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-01-14                                                        ##
+## Version: 2014-01-16                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -48,8 +48,6 @@ data <- read.csv2(path.abundance.csv,
                   stringsAsFactors = TRUE)
 
 ## Read date column as a date
-#data$date <- as.Date(data$date, format="%Y-%m-%d")
-#data$date <- as.POSIXct(data$date, format="%Y-%m-%d")
 data$date <- strftime(as.POSIXct(data$date, format="%Y-%m-%d"), format = "%Y%j")
 
 str(data[1:15])
@@ -122,8 +120,7 @@ coordinates(data) <- ~ lon + lat
 proj4string(data) <- CRS("+init=epsg:4326")
                    
 ## Loop through all available dates
-# mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib, .combine = "c") %dopar% {
-mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib, 
+mod02.lst <- foreach(g = 1:nrow(data), .packages = lib, 
                      .combine = function(...) as.data.frame(rbind(...), 
                                                             stringsAsFactors = FALSE)) %dopar% {
   
@@ -158,6 +155,7 @@ mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib,
       
       ## Break out of for-loop in case of cloud absence
       cloudindicator <- as.numeric(paste0(bit.avl.b0[2],bit.avl.b0[3]))
+      
       if (cloudindicator == 10 | cloudindicator == 11) {
         cloudy <- FALSE
         break
@@ -183,32 +181,33 @@ mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib,
 stopCluster(cl)
 
 ## Write cloud-free dates and observation dates to .csv
-mod02.ddl
-names(mod02.ddl) <- "date_no_cloud"
+mod02.lst
+names(mod02.lst) <- "date_no_cloud"
 
 ## Add observation dates to table
-mod02.ddl["date_observation"] <- data$date
-mod02.ddl.diff <- mod02.ddl
+mod02.lst["date_observation"] <- data$date
+mod02.lst.diff <- mod02.lst
 
-mod02.ddl.diff[,1] <- as.Date(mod02.ddl.diff[,1], format = "%Y%j.%H%M")
-mod02.ddl.diff[,2] <- as.Date(mod02.ddl.diff[,2], format = "%Y%j")
+mod02.lst.diff[,1] <- as.Date(mod02.lst.diff[,1], format = "%Y%j.%H%M")
+mod02.lst.diff[,2] <- as.Date(mod02.lst.diff[,2], format = "%Y%j")
 
-mod02.ddl.diff["diff_days"] <- mod02.ddl.diff[,1] - mod02.ddl.diff[,2]
+mod02.lst.diff["diff_days"] <- mod02.lst.diff[,1] - mod02.lst.diff[,2]
 
+mod02.lst.diff <- data.frame(mod02.lst.diff$date_observation, 
+                             mod02.lst.diff$date_no_cloud, 
+                             mod02.lst.diff$diff_days)
 
-mod02.ddl.diff <- data.frame(mod02.ddl.diff$date_observation, 
-                             mod02.ddl.diff$date_no_cloud, 
-                             mod02.ddl.diff$diff_days)
+names(mod02.lst.diff) <- c("date_observation", "date_no_cloud", "diff_days")
 
-names(mod02.ddl.diff) <- c("date_observation", "date_no_cloud", "diff_days")
-
-write.table(mod02.ddl.diff, 
+write.table(mod02.lst.diff, 
             file = path.cloudfree.csv,
             dec = ".",
             quote = FALSE,
             col.names = TRUE,
             row.names = FALSE,
             sep = ";")
+
+
 ################################################################################
 ### Download MODIS MOD02 files ### not supported by MODIS Package yet ! ########
 
@@ -230,14 +229,14 @@ write.table(mod02.ddl.diff,
 # list.latlong <- list(xmax=lr_lon, xmin=ul_lon, ymin=lr_lat, ymax=ul_lat)
 # 
 # 
-# mod02.ddl.end <- as.Date(mod02.ddl, format = "%Y%j") + 1
-# mod02.ddl.end <- strftime(mod02.ddl.end, format = "%Y%j")
+# mod02.lst.end <- as.Date(mod02.lst, format = "%Y%j") + 1
+# mod02.lst.end <- strftime(mod02.lst.end, format = "%Y%j")
 # 
 # 
 # 
 # registerDoParallel(cl <- makeCluster(4))
 # 
-# foreach(g = mod02.ddl, h = mod02.ddl.end, .packages = lib) %dopar% {
+# foreach(g = mod02.lst, h = mod02.lst.end, .packages = lib) %dopar% {
 # 
 #   lapply(modis.products, function(i) {
 # #     getHdf(product = i, begin = g, end = g, extent = list.latlong)

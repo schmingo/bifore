@@ -135,7 +135,7 @@ mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib,
   while (cloudy) {
     
     ## List available *_b0.tif files of current date
-    fls.avl <- tiffns[grep(current.date, tiffns)]
+    fls.avl <- tiffns[grep(current.date, substr(basename(tiffns), 1, 21))]
     fls.avl.b0 <- fls.avl[grep("b0", fls.avl)]
     
     ## Import raster images
@@ -157,10 +157,20 @@ mod02.ddl <- foreach(g = 1:nrow(data), .packages = lib,
       # 11 = Confident  Clear
       
       ## Break out of for-loop in case of cloud absence
-      if (!all(bit.avl.b0[2:3] == c(0, 0))) {
+#       if (!all(bit.avl.b0[2:3] == c(0, 0))) {
+#         cloudy <- FALSE
+#         break
+#       }
+      
+      ###
+      cloudindicator <- as.numeric(paste0(bit.avl.b0[2],bit.avl.b0[3]))
+      if (cloudindicator == 10 | cloudindicator == 11) {
         cloudy <- FALSE
         break
       }
+      
+      ###
+      
     }
     
     ## Increment date by 1 day in case of no cloud absence

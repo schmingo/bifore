@@ -16,7 +16,7 @@ rm(list = ls(all = TRUE))
 
 ## Required libraries
 # install.packages("MODIS", repos="http://R-Forge.R-project.org")
-lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "raster")
+lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "raster", "ggplot2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
@@ -206,7 +206,6 @@ write.table(mod02.lst.diff,
             col.names = TRUE,
             row.names = FALSE,
             sep = ";")
-
 
 ################################################################################
 ### Download MODIS MOD02 files ### not supported by MODIS Package yet ! ########

@@ -184,16 +184,23 @@ stopCluster(cl)
 
 ## Write cloud-free dates and observation dates to .csv
 mod02.ddl
-names(mod02.ddl) <- "cloudfree_date"
+names(mod02.ddl) <- "date_no_cloud"
 
 ## Add observation dates to table
-mod02.ddl["obervation_date"] <- data$date
+mod02.ddl["date_observation"] <- data$date
 mod02.ddl.diff <- mod02.ddl
 
 mod02.ddl.diff[,1] <- as.Date(mod02.ddl.diff[,1], format = "%Y%j.%H%M")
 mod02.ddl.diff[,2] <- as.Date(mod02.ddl.diff[,2], format = "%Y%j")
 
-mod02.ddl.diff["diff_date"] <- mod02.ddl.diff[,1] - mod02.ddl.diff[,2]
+mod02.ddl.diff["diff_days"] <- mod02.ddl.diff[,1] - mod02.ddl.diff[,2]
+
+
+mod02.ddl.diff <- data.frame(mod02.ddl.diff$date_observation, 
+                             mod02.ddl.diff$date_no_cloud, 
+                             mod02.ddl.diff$diff_days)
+
+names(mod02.ddl.diff) <- c("date_observation", "date_no_cloud", "diff_days")
 
 write.table(mod02.ddl.diff, 
             file = path.cloudfree.csv,

@@ -7,7 +7,7 @@
 ##       - MOD35 .hdf metadata                                                ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-01-16                                                        ##
+## Version: 2014-01-17                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -26,9 +26,9 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 ### Set filepaths ##############################################################
 
-## To preprocess MOD35_L2 and MOD03 files; both must be in the same directory.
+## To preprocess MYD35_L2 and MYD03 files; both must be in the same directory.
 
-path.biodiversity.csv <- ("csv/kili/abundance_data_subset.csv")
+path.biodiversity.csv <- ("csv/kili/biodiversity_data_subset.csv")
 
 path.nocloud.csv <- ("csv/kili/cloudcheck_diff_dates.csv")
 
@@ -42,7 +42,7 @@ mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 
 
 ################################################################################
-### Import dataset #############################################################
+### Import biodiversity dataset ################################################
 
 data <- read.csv2(path.biodiversity.csv,
                   dec = ".",
@@ -52,7 +52,38 @@ data <- read.csv2(path.biodiversity.csv,
 ## Read date column as a date
 data$date <- strftime(as.POSIXct(data$date, format="%Y-%m-%d"), format = "%Y%j")
 
-str(data[1:15])
+
+################################################################################
+### Separate day and night hdf files ###########################################
+
+fls.myd03 <- list.files(path.hdf.in,
+                        pattern="MYD03",
+                        full.names=TRUE)
+
+fls.myd35 <- list.files(path.hdf.in,
+                        pattern="MYD35",
+                        full.names=TRUE)
+
+registerDoParallel(cl <- makeCluster(4))
+
+## MYD03
+foreach(a in fls.myd03), .packages = lib) %dopar% {
+  
+  if (as.numeric(substr(basename(fls.myd03[a]),16,19)) > 1700)
+    file.rename(from = fls.myd03[a],
+                to = paste0(path.hdf.sub, basename(fls.myd03[a])))
+}
+
+
+## MYD35
+foreach(b in fls.myd35), .packages = lib) %dopar% {
+  
+  if (as.numeric(substr(basename(fls.myd35[b]),19,22)) > 1700)
+    file.rename(from = fls.myd35[b],
+                to = paste0(path.hdf.sub, basename(fls.myd35[b])))
+}
+
+stopCluster(cl)
 
 
 ################################################################################

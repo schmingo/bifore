@@ -56,55 +56,55 @@ str(data[1:15])
 
 
 ################################################################################
-### Preprocessing MOD35_L2 and MOD03 | Run MRTSwath tool "swath2grid" ##########
+### Preprocessing MYD35_L2 and MYD03 | Run MRTSwath tool "swath2grid" ##########
 
-# # List MOD-files
-# list.files(path = path.hdf.in, pattern = "MOD")
-# 
-# # Get the matching data/geolocation file pairs
-# fns_df <- check_for_matching_geolocation_files(moddir = path.hdf.in,
-#                                                modtxt = "MOD35_L2",
-#                                                geoloctxt = "MOD03",
-#                                                return_geoloc = FALSE,
-#                                                return_product = FALSE)
-# fns_df
-# 
-# 
-# # Box to subset
-# ul_lat <- -2.77
-# ul_lon <- 36.93
-# lr_lat <- -3.45
-# lr_lon <- 37.76
+## List MYD-files
+list.files(path = path.hdf.in, pattern = "MYD")
+
+## Get the matching data/geolocation file pairs
+fls.matching <- check_for_matching_geolocation_files(moddir = path.hdf.in,
+                                                     modtxt = "MYD35_L2",
+                                                     geoloctxt = "MYD03",
+                                                     return_geoloc = FALSE,
+                                                     return_product = FALSE)
+fls.matching
+
+
+## Box to subset
+ul_lat <- -2.77
+ul_lon <- 36.93
+lr_lat <- -3.45
+lr_lon <- 37.76
 
 
 ################################################################################
 ### For-loop .hdf to .tif ######################################################
-# 
-# for(i in 1:nrow(fns_df)) {
-#   # Write parameter file for each .hdf
-#   prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
-#                                      tifsdir=path.tif.out,
-#                                      modfn=fns_df$mod35_L2_fns[i],
-#                                      geoloc_fn=fns_df$mod03_fns[i],
-#                                      ul_lon=ul_lon,
-#                                      ul_lat=ul_lat,
-#                                      lr_lon=lr_lon,
-#                                      lr_lat=lr_lat)
-#   
-#   print(scan(file=prmfn, what="character", sep="\n"))
-#   
-#   # hdf to raster using parameter file and subset box
-#   run_swath2grid(mrtpath="swath2grid",
-#                  prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
-#                  tifsdir=path.tif.out,
-#                  modfn=fns_df$mod35_L2_fns[i],
-#                  geoloc_fn=fns_df$mod03_fns[i],
-#                  ul_lon=ul_lon,
-#                  ul_lat=ul_lat,
-#                  lr_lon=lr_lon,
-#                  lr_lat=lr_lat)
-# }
-# 
+
+for(i in 1:nrow(fls.matching)) {
+  ## Write parameter file for each .hdf
+  prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
+                                     tifsdir=path.tif.cloudmask,
+                                     modfn=fls.matching$myd35_L2_fns[i],
+                                     geoloc_fn=fls.matching$myd03_fns[i],
+                                     ul_lon=ul_lon,
+                                     ul_lat=ul_lat,
+                                     lr_lon=lr_lon,
+                                     lr_lat=lr_lat)
+  
+  print(scan(file=prmfn, what="character", sep="\n"))
+  
+  ## hdf to raster using parameter file and subset box
+  run_swath2grid(mrtpath="swath2grid",
+                 prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
+                 tifsdir=path.tif.cloudmask,
+                 modfn=fls.matching$myd35_L2_fns[i],
+                 geoloc_fn=fls.matching$myd03_fns[i],
+                 ul_lon=ul_lon,
+                 ul_lat=ul_lat,
+                 lr_lon=lr_lon,
+                 lr_lat=lr_lat)
+}
+
 
 ################################################################################
 ### Check observations from csv file for cloudiness using tiffs ################

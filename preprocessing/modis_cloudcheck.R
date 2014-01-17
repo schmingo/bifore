@@ -4,7 +4,7 @@
 ## CHECK COORDINATES FOR CLOUDS USING MODIS CLOUDMASK AND MODISCLOUD-PACKAGE  ##
 ##                                                                            ##
 ## Ref.: - http://modis-atmos.gsfc.nasa.gov/_docs/CMUSERSGUIDE.pdf            ##
-##       - MOD35 .hdf metadata                                                ##
+##       - MYD35 .hdf metadata                                                ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
 ## Version: 2014-01-17                                                        ##
@@ -153,7 +153,7 @@ coordinates(data) <- ~ lon + lat
 proj4string(data) <- CRS("+init=epsg:4326")
                    
 ## Loop through all available dates
-mod02.lst <- foreach(g = 1:nrow(data), .packages = lib, 
+myd02.lst <- foreach(g = 1:nrow(data), .packages = lib, 
                      .combine = function(...) as.data.frame(rbind(...), 
                                                             stringsAsFactors = FALSE)) %dopar% {
   
@@ -179,7 +179,7 @@ mod02.lst <- foreach(g = 1:nrow(data), .packages = lib,
       ## Convert extracted values to binary format
       bit.avl.b0 <- rev(t(digitsBase(val.avl.b0, base = 2, 8)))
       
-      ## Cloud Indicator from MOD35 metadata
+      ## Cloud Indicator from myd35 metadata
       # Unobstructed FOV Quality Flag
       # 00 = Cloudy
       # 01 = Uncertain
@@ -214,25 +214,25 @@ mod02.lst <- foreach(g = 1:nrow(data), .packages = lib,
 stopCluster(cl)
 
 ## Write cloud-free dates and observation dates to .csv
-mod02.lst
-names(mod02.lst) <- "date_no_cloud"
+myd02.lst
+names(myd02.lst) <- "date_no_cloud"
 
 ## Add observation dates to table
-mod02.lst["date_observation"] <- data$date
-mod02.lst.diff <- mod02.lst
+myd02.lst["date_observation"] <- data$date
+myd02.lst.diff <- myd02.lst
 
-mod02.lst.diff[,1] <- as.Date(mod02.lst.diff[,1], format = "%Y%j.%H%M")
-mod02.lst.diff[,2] <- as.Date(mod02.lst.diff[,2], format = "%Y%j")
+myd02.lst.diff[,1] <- as.Date(myd02.lst.diff[,1], format = "%Y%j.%H%M")
+myd02.lst.diff[,2] <- as.Date(myd02.lst.diff[,2], format = "%Y%j")
 
-mod02.lst.diff["diff_days"] <- mod02.lst.diff[,1] - mod02.lst.diff[,2]
+myd02.lst.diff["diff_days"] <- myd02.lst.diff[,1] - myd02.lst.diff[,2]
 
-mod02.lst.diff <- data.frame(mod02.lst.diff$date_observation, 
-                             mod02.lst.diff$date_no_cloud, 
-                             mod02.lst.diff$diff_days)
+myd02.lst.diff <- data.frame(myd02.lst.diff$date_observation, 
+                             myd02.lst.diff$date_no_cloud, 
+                             myd02.lst.diff$diff_days)
 
-names(mod02.lst.diff) <- c("date_observation", "date_no_cloud", "diff_days")
+names(myd02.lst.diff) <- c("date_observation", "date_no_cloud", "diff_days")
 
-write.table(mod02.lst.diff, 
+write.table(myd02.lst.diff, 
             file = path.nocloud.csv,
             dec = ".",
             quote = FALSE,
@@ -241,7 +241,7 @@ write.table(mod02.lst.diff,
             sep = ";")
 
 ################################################################################
-### Download MODIS MOD02 files ### not supported by MODIS Package yet ! ########
+### Download MODIS myd02 files ### not supported by MODIS Package yet ! ########
 
 # ?getHdf
 # getProduct() 

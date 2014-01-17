@@ -18,6 +18,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
 setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 path.nocloud.csv <- ("csv/kili/cloudcheck_diff_dates.csv")
 
@@ -37,3 +38,4 @@ qplot(x=diff_days,
       data=data,
       geom="histogram",
       binwidth=0.5)
+

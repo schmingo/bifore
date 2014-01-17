@@ -57,10 +57,10 @@ stopCluster(cl)
 ## MYD35
 registerDoParallel(cl <- makeCluster(4))
 
-foreach(i in fls.myd35), .packages = lib) %dopar% {
+foreach(j in fls.myd35), .packages = lib) %dopar% {
   
-  if (as.numeric(substr(basename(fls.myd35[i]),19,22)) > 1700)
-    file.rename(from = fls.myd35[i],
-                to = paste0(path.hdf.sub, basename(fls.myd35[i])))
+  if (as.numeric(substr(basename(fls.myd35[j]),19,22)) > 1700)
+    file.rename(from = fls.myd35[j],
+                to = paste0(path.hdf.sub, basename(fls.myd35[j])))
   
   stopCluster(cl)

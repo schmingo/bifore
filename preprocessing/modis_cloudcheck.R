@@ -28,13 +28,15 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## To preprocess MOD35_L2 and MOD03 files; both must be in the same directory.
 
-path.abundance.csv <- ("csv/kili/abundance_data_subset.csv")
+path.biodiversity.csv <- ("csv/kili/abundance_data_subset.csv")
 
-path.cloudfree.csv <- ("csv/kili/cloudcheck_diff_dates.csv")
+path.nocloud.csv <- ("csv/kili/cloudcheck_diff_dates.csv")
 
-path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/modiscloud_mod35_mod03/2002-2003/")
+path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/myd03_myd35/")
 
-path.b0.cloudmask <- ("satellite/modiscloud_b0/")
+path.hdf.sub <- ("/home/schmingo/SAVE/Diplomarbeit/sub_myd03_myd35/")
+
+path.tif.cloudmask <- ("satellite/cloudmask_tif/")
 
 mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 
@@ -42,7 +44,7 @@ mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 ################################################################################
 ### Import dataset #############################################################
 
-data <- read.csv2(path.abundance.csv,
+data <- read.csv2(path.biodiversity.csv,
                   dec = ".",
                   header = TRUE, 
                   stringsAsFactors = TRUE)
@@ -108,7 +110,7 @@ str(data[1:15])
 ### Check observations from csv file for cloudiness using tiffs ################
 
 ## get .tif list from swath2grid output
-tiffns <- list.files(path.b0.cloudmask, pattern=".tif", full.names=TRUE)
+tiffns <- list.files(path.tif.cloudmask, pattern=".tif", full.names=TRUE)
 tiffns
 
 ## Parallelization
@@ -200,7 +202,7 @@ mod02.lst.diff <- data.frame(mod02.lst.diff$date_observation,
 names(mod02.lst.diff) <- c("date_observation", "date_no_cloud", "diff_days")
 
 write.table(mod02.lst.diff, 
-            file = path.cloudfree.csv,
+            file = path.nocloud.csv,
             dec = ".",
             quote = FALSE,
             col.names = TRUE,

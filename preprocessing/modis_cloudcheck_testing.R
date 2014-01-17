@@ -50,6 +50,7 @@ foreach(i in fls.myd03), .packages = lib) %dopar% {
   if (as.numeric(substr(basename(fls.myd03[i]),16,19)) > 1700)
     file.rename(from = fls.myd03[i],
                 to = paste0(path.hdf.sub, basename(fls.myd03[i])))
+}
 
 stopCluster(cl)
 
@@ -62,5 +63,6 @@ foreach(j in fls.myd35), .packages = lib) %dopar% {
   if (as.numeric(substr(basename(fls.myd35[j]),19,22)) > 1700)
     file.rename(from = fls.myd35[j],
                 to = paste0(path.hdf.sub, basename(fls.myd35[j])))
-  
+}
+
   stopCluster(cl)

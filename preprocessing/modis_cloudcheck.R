@@ -189,7 +189,7 @@ myd02.lst <- foreach(g = 1:nrow(data), .packages = lib,
       ## Break out of for-loop in case of cloud absence
       cloudindicator <- as.numeric(paste0(bit.avl.b0[2],bit.avl.b0[3]))
       
-      if (cloudindicator == 10 | cloudindicator == 11) {
+      if (cloudindicator == 11) {
         cloudy <- FALSE
         break
       }

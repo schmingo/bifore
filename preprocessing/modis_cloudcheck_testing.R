@@ -42,9 +42,9 @@ fls.myd35 <- list.files(path.hdf.in,
                         full.names=TRUE)
 
 
-## MYD03
 registerDoParallel(cl <- makeCluster(4))
 
+## MYD03
 foreach(i in fls.myd03), .packages = lib) %dopar% {
   
   if (as.numeric(substr(basename(fls.myd03[i]),16,19)) > 1700)
@@ -52,12 +52,8 @@ foreach(i in fls.myd03), .packages = lib) %dopar% {
                 to = paste0(path.hdf.sub, basename(fls.myd03[i])))
 }
 
-stopCluster(cl)
-
 
 ## MYD35
-registerDoParallel(cl <- makeCluster(4))
-
 foreach(j in fls.myd35), .packages = lib) %dopar% {
   
   if (as.numeric(substr(basename(fls.myd35[j]),19,22)) > 1700)
@@ -65,4 +61,4 @@ foreach(j in fls.myd35), .packages = lib) %dopar% {
                 to = paste0(path.hdf.sub, basename(fls.myd35[j])))
 }
 
-  stopCluster(cl)
+stopCluster(cl)

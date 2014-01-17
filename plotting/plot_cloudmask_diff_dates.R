@@ -12,7 +12,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c(ggplot2)
+lib <- c("ggplot2")
 
 lapply(lib, function(...) require(..., character.only = TRUE))
 

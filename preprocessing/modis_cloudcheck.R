@@ -34,9 +34,9 @@ path.nocloud.csv <- ("csv/kili/cloudcheck_diff_dates.csv")
 
 path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/myd03_myd35/")
 
-path.hdf.sub <- ("/home/schmingo/SAVE/Diplomarbeit/sub_myd03_myd35/")
+path.hdf.sub <- ("/home/schmingo/SAVE/Diplomarbeit/myd03-35_daytime/")
 
-path.tif.cloudmask <- ("satellite/cloudmask_tif/")
+path.tif.cloudmask <- ("satellite/myd_cloudmask_tif_daytime/")
 
 mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 

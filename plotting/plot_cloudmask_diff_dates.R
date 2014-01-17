@@ -28,3 +28,12 @@ data <- read.csv2(path.nocloud.csv,
                   dec = ".",
                   header = TRUE, 
                   stringsAsFactors = TRUE)
+
+
+
+# qplot(x, y, data=, color=, shape=, size=, alpha=, geom=, method=, formula=, facets=, xlim=, ylim= xlab=, ylab=, main=, sub=) 
+
+qplot(x=diff_days,
+      data=data,
+      geom="histogram",
+      binwidth=0.5)

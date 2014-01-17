@@ -240,6 +240,12 @@ write.table(myd02.lst.diff,
             row.names = FALSE,
             sep = ";")
 
+## Plot diff dates histogram
+qplot(x=diff_days,
+      data=myd02.lst.diff,
+      geom="histogram",
+      binwidth=0.5)
+
 ################################################################################
 ### Download MODIS myd02 files ### not supported by MODIS Package yet ! ########
 

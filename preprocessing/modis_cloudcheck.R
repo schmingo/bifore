@@ -67,7 +67,7 @@ fls.myd35 <- list.files(path.hdf.in,
 registerDoParallel(cl <- makeCluster(4))
 
 ## MYD03
-foreach(a in fls.myd03), .packages = lib) %dopar% {
+foreach(a in fls.myd03, .packages = lib) %dopar% {
   
   if (as.numeric(substr(basename(fls.myd03[a]),16,19)) > 1700)
     file.rename(from = fls.myd03[a],
@@ -76,7 +76,7 @@ foreach(a in fls.myd03), .packages = lib) %dopar% {
 
 
 ## MYD35
-foreach(b in fls.myd35), .packages = lib) %dopar% {
+foreach(b in fls.myd35, .packages = lib) %dopar% {
   
   if (as.numeric(substr(basename(fls.myd35[b]),19,22)) > 1700)
     file.rename(from = fls.myd35[b],

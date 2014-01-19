@@ -32,7 +32,7 @@ path.biodiversity.csv <- ("csv/kili/biodiversity_data_subset.csv")
 
 path.nocloud.csv <- ("csv/kili/cloudcheck_diff_dates.csv")
 
-path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/myd03_myd35/")
+path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/myd03-35_hdf/")
 
 path.hdf.sub <- ("/home/schmingo/SAVE/Diplomarbeit/myd03-35_hdf_daytime/")
 
@@ -67,20 +67,20 @@ fls.myd35 <- list.files(path.hdf.in,
 registerDoParallel(cl <- makeCluster(4))
 
 ## MYD03
-foreach(a in fls.myd03, .packages = lib) %dopar% {
+foreach(a = fls.myd03, .packages = lib) %dopar% {
   
-  if (as.numeric(substr(basename(fls.myd03[a]),16,19)) > 1700)
-    file.rename(from = fls.myd03[a],
-                to = paste0(path.hdf.sub, basename(fls.myd03[a])))
+  if (as.numeric(substr(basename(a),16,19)) < 1700)
+    file.rename(from = a,
+                to = paste0(path.hdf.sub, basename(a)))
 }
 
 
 ## MYD35
-foreach(b in fls.myd35, .packages = lib) %dopar% {
+foreach(b = fls.myd35, .packages = lib) %dopar% {
   
-  if (as.numeric(substr(basename(fls.myd35[b]),19,22)) > 1700)
-    file.rename(from = fls.myd35[b],
-                to = paste0(path.hdf.sub, basename(fls.myd35[b])))
+  if (as.numeric(substr(basename(b),19,22)) < 1700)
+    file.rename(from = b,
+                to = paste0(path.hdf.sub, basename(b)))
 }
 
 stopCluster(cl)

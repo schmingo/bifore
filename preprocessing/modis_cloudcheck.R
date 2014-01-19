@@ -241,11 +241,22 @@ write.table(myd02.lst.diff,
             sep = ";")
 
 ## Plot diff dates histogram
+myd02.lst.diff$diff_days <- as.numeric(myd02.lst.diff$diff_days)
+
+
+# ## Define output image | open image port
+# png("images/MYD_nocloud_observation.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
+
 qplot(x=diff_days,
       data=myd02.lst.diff,
       geom="histogram",
       binwidth=0.5)
 
+# graphics.off()
 ################################################################################
 ### Download MODIS myd02 files ### not supported by MODIS Package yet ! ########
 

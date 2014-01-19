@@ -90,10 +90,10 @@ stopCluster(cl)
 ### Preprocessing MYD35_L2 and MYD03 | Run MRTSwath tool "swath2grid" ##########
 
 ## List MYD-files
-list.files(path = path.hdf.in, pattern = "MYD")
+list.files(path = path.hdf.sub, pattern = "MYD")
 
 ## Get the matching data/geolocation file pairs
-fls.matching <- check_for_matching_geolocation_files(moddir = path.hdf.in,
+fls.matching <- check_for_matching_geolocation_files(moddir = path.hdf.sub,
                                                      modtxt = "MYD35_L2",
                                                      geoloctxt = "MYD03",
                                                      return_geoloc = FALSE,

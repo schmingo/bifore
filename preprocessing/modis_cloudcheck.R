@@ -219,13 +219,14 @@ stopCluster(cl)
 ### Create new .csv with no-cloud date and diff-days ###########################
 
 myd02.lst
-names(myd02.lst) <- "date_no_cloud"
+names(myd02.lst) <- "date_nocloud"
+names(data.orig)[2] <- "date_observation"
 
 ## Create no-cloud date
-data.orig["date_no-cloud"] <- as.Date(myd02.lst$date_no_cloud, format = "%Y%j.%H%M")
+data.orig["date_nocloud"] <- myd02.lst$date_nocloud
 
 ## Create diff-days
-data.orig["diff_days_no_cloud"] <- as.numeric(as.Date(myd02.lst$date_no_cloud, format = "%Y%j.%H%M") - as.Date(data.orig$date, format = "%Y%j"))
+data.orig["diff_days_nocloud"] <- as.numeric(as.Date(data.orig$date_nocloud, format = "%Y%j.%H%M") - as.Date(data.orig$date_observation, format = "%Y%j"))
 
 ## Reorder df
 data.orig <- data.orig[c(1,2,67,68,3:66)]
@@ -240,7 +241,6 @@ write.table(data.orig,
             sep = ";")
 
 ## Plot diff dates histogram
-
 ## Define output image | open image port
 # png("images/MYD_nocloud_observation.png", 
 #     width = 1024 * 6, 
@@ -248,46 +248,9 @@ write.table(data.orig,
 #     units = "px", 
 #     res = 600)
 
-qplot(x=diff_days_no_cloud,
+qplot(x=diff_days_nocloud,
       data=data.orig,
       geom="histogram",
       binwidth=0.5)
 
 # graphics.off()
-################################################################################
-### Download MODIS myd02 files ### not supported by MODIS Package yet ! ########
-
-# ?getHdf
-# getProduct() 
-# 
-# MODISoptions(localArcPath = "/home/schmingo/Diplomarbeit/MODIS_ARC", 
-#              outDirPath = "/home/schmingo/Diplomarbeit/MODIS_ARC/PROCESSED")
-# 
-# modis.products <- c("MOD021KM", "MOD02HKM", "MOD02QKM", "MOD03")
-# 
-# # Box to subset
-# ul_lat <- -2.77
-# ul_lon <- 36.93
-# lr_lat <- -3.45
-# lr_lon <- 37.76
-# 
-# 
-# list.latlong <- list(xmax=lr_lon, xmin=ul_lon, ymin=lr_lat, ymax=ul_lat)
-# 
-# 
-# mod02.lst.end <- as.Date(mod02.lst, format = "%Y%j") + 1
-# mod02.lst.end <- strftime(mod02.lst.end, format = "%Y%j")
-# 
-# 
-# 
-# registerDoParallel(cl <- makeCluster(4))
-# 
-# foreach(g = mod02.lst, h = mod02.lst.end, .packages = lib) %dopar% {
-# 
-#   lapply(modis.products, function(i) {
-# #     getHdf(product = i, begin = g, end = g, extent = list.latlong)
-#     getHdf(product = "MOD021KM", begin = g, end = h, tileH = "21", tileV = "09")
-#   })
-# }
-# 
-# stopCluster(cl)

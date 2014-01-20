@@ -7,7 +7,7 @@
 ##       - MYD35 .hdf metadata                                                ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-01-17                                                        ##
+## Version: 2014-01-20                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -30,7 +30,7 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 path.biodiversity.csv <- ("csv/kili/biodiversity_data_subset.csv")
 
-path.nocloud.csv <- ("csv/kili/cloudcheck_diff_dates.csv")
+path.nocloud.csv <- ("csv/kili/biodiversity_data_cloudchecked.csv")
 
 path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/myd03-35_hdf/")
 
@@ -51,6 +51,8 @@ data <- read.csv2(path.biodiversity.csv,
 
 ## Read date column as a date
 data$date <- strftime(as.POSIXct(data$date, format="%Y-%m-%d"), format = "%Y%j")
+
+data.orig <- data
 
 
 ################################################################################
@@ -213,26 +215,23 @@ myd02.lst <- foreach(g = 1:nrow(data), .packages = lib,
 ## Deregister parallel backend
 stopCluster(cl)
 
-## Write cloud-free dates and observation dates to .csv
+################################################################################
+### Create new .csv with no-cloud date and diff-days ###########################
+
 myd02.lst
 names(myd02.lst) <- "date_no_cloud"
 
-## Add observation dates to table
-myd02.lst["date_observation"] <- data$date
-myd02.lst.diff <- myd02.lst
+## Create no-cloud date
+data.orig["date_no-cloud"] <- as.Date(myd02.lst$date_no_cloud, format = "%Y%j.%H%M")
 
-myd02.lst.diff[,1] <- as.Date(myd02.lst.diff[,1], format = "%Y%j.%H%M")
-myd02.lst.diff[,2] <- as.Date(myd02.lst.diff[,2], format = "%Y%j")
+## Create diff-days
+data.orig["diff_days_no_cloud"] <- as.numeric(as.Date(myd02.lst$date_no_cloud, format = "%Y%j.%H%M") - as.Date(data.orig$date, format = "%Y%j"))
 
-myd02.lst.diff["diff_days"] <- myd02.lst.diff[,1] - myd02.lst.diff[,2]
+## Reorder df
+data.orig <- data.orig[c(1,2,67,68,3:66)]
 
-myd02.lst.diff <- data.frame(myd02.lst.diff$date_observation, 
-                             myd02.lst.diff$date_no_cloud, 
-                             myd02.lst.diff$diff_days)
-
-names(myd02.lst.diff) <- c("date_observation", "date_no_cloud", "diff_days")
-
-write.table(myd02.lst.diff, 
+## write new .csv
+write.table(data.orig, 
             file = path.nocloud.csv,
             dec = ".",
             quote = FALSE,
@@ -241,18 +240,16 @@ write.table(myd02.lst.diff,
             sep = ";")
 
 ## Plot diff dates histogram
-myd02.lst.diff$diff_days <- as.numeric(myd02.lst.diff$diff_days)
 
-
-# ## Define output image | open image port
+## Define output image | open image port
 # png("images/MYD_nocloud_observation.png", 
 #     width = 1024 * 6, 
 #     height = 748 * 6, 
 #     units = "px", 
 #     res = 600)
 
-qplot(x=diff_days,
-      data=myd02.lst.diff,
+qplot(x=diff_days_no_cloud,
+      data=data.orig,
       geom="histogram",
       binwidth=0.5)
 

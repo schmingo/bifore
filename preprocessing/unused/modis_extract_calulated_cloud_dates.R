@@ -13,7 +13,7 @@ rm(list = ls(all = TRUE))
 
 ## Required libraries
 # install.packages("MODIS", repos="http://R-Forge.R-project.org")
-lib <- c()
+lib <- c("ggplot2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
@@ -48,10 +48,16 @@ data.cloud <- transform(data.cloud, date_observation = paste0(substr(data.cloud$
                                                               "-", 
                                                               substr(data.cloud$date_observation, 5, 7)))
 
-write.table(data.cloud, 
-            file = path.nocloud.out.csv,
-            dec = ".",
-            quote = FALSE,
-            col.names = TRUE,
-            row.names = FALSE,
-            sep = ";")
+# write.table(data.cloud, 
+#             file = path.nocloud.out.csv,
+#             dec = ".",
+#             quote = FALSE,
+#             col.names = TRUE,
+#             row.names = FALSE,
+#             sep = ";")
+
+
+qplot(x=diff_days_nocloud,
+      data=data,
+      geom="histogram",
+      binwidth=0.5)

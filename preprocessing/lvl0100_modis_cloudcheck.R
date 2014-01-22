@@ -15,7 +15,6 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-# install.packages("MODIS", repos="http://R-Forge.R-project.org")
 lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "raster", "ggplot2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 

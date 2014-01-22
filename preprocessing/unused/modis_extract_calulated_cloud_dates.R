@@ -17,7 +17,8 @@ lib <- c("ggplot2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("d:/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("d:/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################

@@ -72,13 +72,19 @@ for (i in 1:nrow(fls.matching)) {
                                  modfn = fls.matching$mod35_L2_fns[i], 
                                  geoloc_fn = fls.matching$mod03_fns[i], 
                                  # sds = sds, 
-                                 ul_lon = ul_lon, ul_lat = ul_lat, 
-                                 lr_lon = lr_lon, lr_lat = lr_lat)
+                                 ul_lon = ul_lon, 
+                                 ul_lat = ul_lat, 
+                                 lr_lon = lr_lon, 
+                                 lr_lat = lr_lat)
+  
   
   runSwath2Grid(mrtpath = mrtpath, 
                 prmfn = "tmpMRTparams.prm", 
                 tifsdir = tifsdir, 
                 modfn = fls.matching$mod35_L2_fns[i], 
                 geoloc_fn = fls.matching$mod03_fns[i], 
-                ul_lon = ul_lon, ul_lat = ul_lat, lr_lon = lr_lon, lr_lat = lr_lat)
+                ul_lon = ul_lon, 
+                ul_lat = ul_lat, 
+                lr_lon = lr_lon, 
+                lr_lat = lr_lat)
 }

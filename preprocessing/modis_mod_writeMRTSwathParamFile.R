@@ -1,3 +1,15 @@
+################################################################################
+## BiFoRe Scripts                                                             ##
+##                                                                            ##
+## Write Parameterfile for MRTSwath Tool                                      ##
+##                                                                            ##
+##                                                                            ##
+## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
+## Version: 2014-01-22                                                        ##
+##                                                                            ##
+################################################################################
+
+
 writeMRTSwathParamFile <- function(prmfn = "tmpMRTparams.prm", 
                                    tifsdir, 
                                    modfn, geoloc_fn, 

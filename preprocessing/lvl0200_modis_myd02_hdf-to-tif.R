@@ -21,12 +21,12 @@ setwd("/home/schmingo/Diplomarbeit/subsample_myd02_hdf/")
 
 path.hdf.in <- "/home/schmingo/Diplomarbeit/subsample_myd02_hdf/"
 tifsdir <- "/home/schmingo/Diplomarbeit/subsample_myd02_geotiff/"
-mrtpath = ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
+mrtpath = "/home/schmingo/apps/MRTSwath/bin/swath2grid"
 
 
 ## Load required modules
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_writeMRTSwathParamFile.R")
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modis_mod_runSwath2Grid.R")
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_modis_mod_writeMRTSwathParamFile.R")
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0220_modis_mod_runSwath2Grid.R")
 
 
 ################################################################################

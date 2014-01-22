@@ -40,12 +40,6 @@ fls.myd <- list.files(path.hdf.in,
 fls.myd
 
 
-check_for_matching_geolocation_files(moddir = path.hdf.in,
-                                     modtxt = "MYD02",
-                                     geoloctxt = "MYD03",
-                                     return_geoloc = FALSE, 
-                                     return_product = FALSE)
-
 # Get the matching data/geolocation file pairs
 fls.matching = check_for_matching_geolocation_files(moddir = path.hdf.in,
                                                     modtxt = "MYD02",

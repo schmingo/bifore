@@ -1,7 +1,7 @@
 writeMRTSwathParamFile <- function(prmfn = "tmpMRTparams.prm", 
                                    tifsdir, 
                                    modfn, geoloc_fn, 
-                                   sds, 
+                                   sds = NULL, 
                                    ul_lon, ul_lat, lr_lon, lr_lat) {
   
   # Initialize the list of lines in the parameter file
@@ -13,8 +13,8 @@ writeMRTSwathParamFile <- function(prmfn = "tmpMRTparams.prm",
   prmfile[[(pnum=pnum+1)]] =   paste("INPUT_FILENAME = ", modfn, sep="")
   prmfile[[(pnum=pnum+1)]] = 	" "
   prmfile[[(pnum=pnum+1)]] = 	paste("GEOLOCATION_FILENAME = ", geoloc_fn, sep="")
-  prmfile[[(pnum=pnum+1)]] = 	" "
-  prmfile[[(pnum=pnum+1)]] =   paste("INPUT_SDS_NAME = ", sds, ", 1", sep = "")  
+#   prmfile[[(pnum=pnum+1)]] = 	" "
+#   prmfile[[(pnum=pnum+1)]] =   paste("INPUT_SDS_NAME = ", sds, ", 1", sep = "")  
   
   # Subset parameters
   prmfile[[(pnum=pnum+1)]] = 	" "

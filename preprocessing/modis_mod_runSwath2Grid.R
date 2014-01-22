@@ -1,3 +1,15 @@
+################################################################################
+## BiFoRe Scripts                                                             ##
+##                                                                            ##
+## Run MRTSwath Tool                                                          ##
+##                                                                            ##
+##                                                                            ##
+## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
+## Version: 2014-01-22                                                        ##
+##                                                                            ##
+################################################################################
+
+
 runSwath2Grid <- function(mrtpath = "swath2grid", 
                           prmfn = "tmpMRTparams.prm", 
                           tifsdir = ".", 

@@ -17,8 +17,8 @@ lib <- c()
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("d:/Dropbox/Diplomarbeit/code/bifore/src/")
-# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("d:/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################
@@ -27,8 +27,8 @@ setwd("d:/Dropbox/Diplomarbeit/code/bifore/src/")
 path.nocloud.csv <- ("csv/kili/biodiversity_data_cloudchecked.csv")
 path.nocloud.out.csv <- ("csv/kili/biodiversity_data_cloudchecked_sub.csv")
 
-path.hdf.in <- ("E:/Diplomarbeit/myd02_hdf/")
-# path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/myd02_hdf/")
+# path.hdf.in <- ("E:/Diplomarbeit/myd02_hdf/")
+path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/myd02_hdf/")
 
 ################################################################################
 ### Import biodiversity dataset ################################################

@@ -230,6 +230,25 @@ data.orig["diff_days_nocloud"] <- as.numeric(as.Date(data.orig$date_nocloud, for
 ## Reorder df
 data.orig <- data.orig[c(1,2,67,68,3:66)]
 
+## Reformat dates
+for (i in 1:nrow(data.orig)) {
+  data.orig$date_nocloud[i] <- paste0(substr(data.orig$date_nocloud[i], 1, 4), 
+                                      "-", 
+                                      substr(data.orig$date_nocloud[i], 5, 7), 
+                                      "_", 
+                                      substr(data.orig$date_nocloud[i], 9, 13))
+  
+}
+
+for (i in 1:nrow(data.orig)) {
+  data.orig$date_observation[i] <- paste0(substr(data.orig$date_observation[i], 1, 4), 
+                                          "-", 
+                                          substr(data.orig$date_observation[i], 5, 7))                                         
+}
+
+
+
+
 ## write new .csv
 write.table(data.orig, 
             file = path.nocloud.csv,

@@ -33,13 +33,9 @@ path.biodiversity.csv <- "csv/kili/biodiversity_data_cloudchecked.csv"
 ### Import biodiversity dataset ################################################
 
 data.bio.raw <- read.csv2(path.biodiversity.csv,
-#                           dec = ".",
+                          dec = ".",
                           header = TRUE, 
-                          stringsAsFactors = TRUE)
-
-data.bio.raw$lat <- as.numeric(data.bio.raw$lat, dec = ".")
-data.bio.raw$lon <- as.numeric(data.bio.raw$lon, dec = ".")
-
+                          stringsAsFactors = FALSE)
 
 data.bio.sp <- data.bio.raw
 

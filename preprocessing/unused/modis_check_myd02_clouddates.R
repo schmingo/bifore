@@ -1,10 +1,10 @@
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
-## EXTRACT CALCULATED CLOUD DATES                                             ##
+## Compare downloaded MYD02 with nocloud dates                                ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-01-20                                                        ##
+## Version: 2014-01-24                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -28,6 +28,7 @@ path.nocloud.csv <- ("csv/kili/biodiversity_data_cloudchecked.csv")
 path.nocloud.out.csv <- ("csv/kili/biodiversity_data_cloudchecked_sub.csv")
 
 path.hdf.in <- ("E:/Diplomarbeit/myd02_hdf/")
+# path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/myd02_hdf/")
 
 ################################################################################
 ### Import biodiversity dataset ################################################
@@ -37,13 +38,11 @@ data <- read.csv2(path.nocloud.out.csv,
                   header = TRUE, 
                   stringsAsFactors = FALSE)
 
-# data$date_nocloud <- as.Date(data$date_nocloud, format("%Y-%j_%H%M"))
-
 
 ################################################################################
-### List check downloaded MYD02 files ##########################################
+### Extract MYD02 date string ##################################################
 
-### List hdf files
+## List hdf files
 lst.1km <- list.files(path.hdf.in,
                       pattern="MYD021KM",
                       full.names=TRUE)
@@ -57,7 +56,7 @@ lst.hkm <- list.files(path.hdf.in,
                       full.names=TRUE)
 
 
-
+## Extract date string from filename
 dates.1km <- substr(basename(lst.1km), 11, 22)
 dates.1km <- paste0(substr(dates.1km, 0, 4),
                     "-",
@@ -83,7 +82,10 @@ dates.hkm <- paste0(substr(dates.hkm, 0, 4),
 dates.1km
 dates.qkm
 dates.hkm
-##########################
+
+
+################################################################################
+### Check if downloaded MYD02 files are complete ###############################
 
 data$date_nocloud %in% dates.1km
 data$date_nocloud %in% dates.qkm

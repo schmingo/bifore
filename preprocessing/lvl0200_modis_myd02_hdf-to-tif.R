@@ -161,8 +161,17 @@ for (i in 1:nrow(fls.qkm.matching)) {
                 lr_lat = lr_lat)
 }
 
+
+################################################################################
+### Remove unnecessary tifs ####################################################
+
+do.call(file.remove,list(list.files(tifsdir, pattern="Aggr", full.names=TRUE)))
+do.call(file.remove,list(list.files(tifsdir, pattern="Uncert", full.names=TRUE)))
+
+
 ################################################################################
 ### Check actual time again ####################################################
+
 endtime <- Sys.time()
 
 time <- endtime - starttime

@@ -19,7 +19,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set working directory
 setwd("/home/schmingo/Diplomarbeit/")
 
-path.hdf.in <- "/home/schmingo/SAVE/Diplomarbeit/myd02_hdf/part1/"
+path.hdf.in <- "/home/schmingo/SAVE/Diplomarbeit/myd02_hdf/"
 tifsdir <- "/home/schmingo/SAVE/Diplomarbeit/myd02_tif/"
 mrtpath = "/home/schmingo/apps/MRTSwath/bin/swath2grid"
 

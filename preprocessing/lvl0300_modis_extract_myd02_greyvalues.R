@@ -26,16 +26,25 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 path.hdf <- "/home/schmingo/SAVE/Diplomarbeit/myd02_hdf/"
 path.tif <- "/home/schmingo/SAVE/Diplomarbeit/myd02_tif/"
 
-path.biodiversity.csv <- "csv/kili/biodiversity_data_subset.csv"
+path.biodiversity.csv <- "csv/kili/biodiversity_data_cloudchecked.csv"
 
 
 ################################################################################
 ### Import biodiversity dataset ################################################
 
-data.bio <- read.csv2(path.biodiversity.csv,
-                      dec = ".",
-                      header = TRUE, 
-                      stringsAsFactors = TRUE)
+data.bio.raw <- read.csv2(path.biodiversity.csv,
+#                           dec = ".",
+                          header = TRUE, 
+                          stringsAsFactors = TRUE)
+
+data.bio.raw$lat <- as.numeric(data.bio.raw$lat, dec = ".")
+data.bio.raw$lon <- as.numeric(data.bio.raw$lon, dec = ".")
+
+
+data.bio.sp <- data.bio.raw
+
+
+coordinates(data.bio.sp) <- c("lon", "lat")
 
 ################################################################################
 ### 

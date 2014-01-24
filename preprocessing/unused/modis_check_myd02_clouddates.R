@@ -90,3 +90,8 @@ dates.hkm
 data$date_nocloud %in% dates.1km
 data$date_nocloud %in% dates.qkm
 data$date_nocloud %in% dates.hkm
+
+dates.1km %in% data$date_nocloud
+dates.qkm %in% data$date_nocloud
+dates.hkm %in% data$date_nocloud
+

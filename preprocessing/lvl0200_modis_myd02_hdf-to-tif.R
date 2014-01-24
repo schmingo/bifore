@@ -19,8 +19,8 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set working directory
 setwd("/home/schmingo/Diplomarbeit/subsample_myd02_hdf/")
 
-path.hdf.in <- "/home/schmingo/Diplomarbeit/subsample_myd02_hdf/"
-tifsdir <- "/home/schmingo/Diplomarbeit/subsample_myd02_geotiff/"
+path.hdf.in <- "/home/schmingo/SAVE/Diplomarbeit/myd02_hdf/tst"
+tifsdir <- "/home/schmingo/SAVE/Diplomarbeit/myd02_hdf/tst/tif/"
 mrtpath = "/home/schmingo/apps/MRTSwath/bin/swath2grid"
 
 
@@ -39,6 +39,8 @@ fls.myd <- list.files(path.hdf.in,
 
 fls.myd
 
+## Check actual time
+starttime <- Sys.time()
 
 # Get the matching data/geolocation file pairs
 fls.matching = check_for_matching_geolocation_files(moddir = path.hdf.in,
@@ -82,3 +84,10 @@ for (i in 1:nrow(fls.matching)) {
                 lr_lon = lr_lon, 
                 lr_lat = lr_lat)
 }
+
+
+## Check actual time again
+endtime <- Sys.time()
+
+time <- endtime - starttime
+time

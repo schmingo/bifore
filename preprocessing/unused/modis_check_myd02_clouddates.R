@@ -13,7 +13,7 @@ rm(list = ls(all = TRUE))
 
 ## Required libraries
 # install.packages("MODIS", repos="http://R-Forge.R-project.org")
-lib <- c("MODIS")
+lib <- c()
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
@@ -58,18 +58,33 @@ lst.hkm <- list.files(path.hdf.in,
 
 
 
-tmp.dates <- substr(basename(lst.1km), 11, 22)
-myd02.dates <- paste0(substr(tmp.dates, 0, 4),
-                      "-",
-                      substr(tmp.dates, 5, 7),
-                      "_",
-                      substr(tmp.dates, 9, 13))
+dates.1km <- substr(basename(lst.1km), 11, 22)
+dates.1km <- paste0(substr(dates.1km, 0, 4),
+                    "-",
+                    substr(dates.1km, 5, 7),
+                    "_",
+                    substr(dates.1km, 9, 13))
+
+dates.qkm <- substr(basename(lst.qkm), 11, 22)
+dates.qkm <- paste0(substr(dates.qkm, 0, 4),
+                    "-",
+                    substr(dates.qkm, 5, 7),
+                    "_",
+                    substr(dates.qkm, 9, 13))
+
+dates.hkm <- substr(basename(lst.hkm), 11, 22)
+dates.hkm <- paste0(substr(dates.hkm, 0, 4),
+                    "-",
+                    substr(dates.hkm, 5, 7),
+                    "_",
+                    substr(dates.hkm, 9, 13))
 
 
-myd02.dates
+dates.1km
+dates.qkm
+dates.hkm
 ##########################
 
-data$date_nocloud %in% myd02.dates
-data$date_nocloud[10] %in% myd02.dates
-
-data$date_nocloud[10]
+data$date_nocloud %in% dates.1km
+data$date_nocloud %in% dates.qkm
+data$date_nocloud %in% dates.hkm

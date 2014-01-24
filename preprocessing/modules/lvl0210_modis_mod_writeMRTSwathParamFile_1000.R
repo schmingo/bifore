@@ -48,16 +48,16 @@ writeMRTSwathParamFile_1000 <- function(prmfn = "tmpMRTparams.prm",
   prmfile[[(pnum=pnum+1)]] = 	" "
   prmfile[[(pnum=pnum+1)]] = 	"KERNEL_TYPE (CC/BI/NN) = NN"
   prmfile[[(pnum=pnum+1)]] = 	" "
-  prmfile[[(pnum=pnum+1)]] = 	"OUTPUT_PROJECTION_NUMBER = UTM"
+  prmfile[[(pnum=pnum+1)]] = 	"OUTPUT_PROJECTION_NUMBER = GEO"
   prmfile[[(pnum=pnum+1)]] = 	" "
   prmfile[[(pnum=pnum+1)]] = 	"OUTPUT_PROJECTION_PARAMETER = 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0"
   prmfile[[(pnum=pnum+1)]] = 	" "
   prmfile[[(pnum=pnum+1)]] = 	"OUTPUT_PROJECTION_SPHERE = 8"
   prmfile[[(pnum=pnum+1)]] = 	" "
-  prmfile[[(pnum=pnum+1)]] =  "OUTPUT_PROJECTION_ZONE = 37"
-  prmfile[[(pnum=pnum+1)]] =  " "
-  prmfile[[(pnum=pnum+1)]] =  "OUTPUT_PIXEL_SIZE = 1000"
-  prmfile[[(pnum=pnum+1)]] = 	" "
+#   prmfile[[(pnum=pnum+1)]] =  "OUTPUT_PROJECTION_ZONE = 37"
+#   prmfile[[(pnum=pnum+1)]] =  " "
+#   prmfile[[(pnum=pnum+1)]] =  "OUTPUT_PIXEL_SIZE = 1000"
+#   prmfile[[(pnum=pnum+1)]] = 	" "
   
   # Write the MRTSwath tool parameter file
   write.table(x=prmfile, file=prmfn, append=FALSE, quote=FALSE, sep="\n", row.names=FALSE, col.names=FALSE)

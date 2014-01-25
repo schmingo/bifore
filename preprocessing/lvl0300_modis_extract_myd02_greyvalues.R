@@ -45,15 +45,21 @@ coordinates(data.bio.sp) <- c("lon", "lat")
 ################################################################################
 ### List .hdf and .tif for specific date #######################################
 
+### Extract date from biodiversity data
 tmp.date <- data.bio.raw$date_nocloud[1]
 
+### Reformat date
 tmp.date <- paste0(substr(tmp.date, 1, 4),
                    substr(tmp.date, 6, 8),
                    ".",
                    substr(tmp.date, 10, 13))
 
+### List .tif files
 list.tif <- list.files(path.tif,
                        pattern = tmp.date,
                        full.names = TRUE)
-
 list.tif
+
+### List .hdf files
+list.hdf.1km <- list.files(path.hdf,pattern = tmp.date, full.names = TRUE)
+list.hdf.1km

@@ -55,11 +55,14 @@ tmp.date <- paste0(substr(tmp.date, 1, 4),
                    substr(tmp.date, 10, 13))
 
 ### List .tif files
-list.tif <- list.files(path.tif,
-                       pattern = tmp.date,
-                       full.names = TRUE)
-list.tif
+lst.tif <- list.files(path.tif, pattern = tmp.date, full.names = TRUE)
 
 ### List .hdf files
-list.hdf.1km <- list.files(path.hdf,pattern = tmp.date, full.names = TRUE)
-list.hdf.1km
+lst.hdf.1km <- list.files(path.hdf, pattern = paste("1KM", tmp.date, sep = ".*"), full.names = TRUE)
+lst.hdf.hkm <- list.files(path.hdf, pattern = paste("HKM", tmp.date, sep = ".*"), full.names = TRUE)
+lst.hdf.qkm <- list.files(path.hdf, pattern = paste("QKM", tmp.date, sep = ".*"), full.names = TRUE)
+
+lst.tif
+lst.hdf.1km
+lst.hdf.hkm
+lst.hdf.qkm

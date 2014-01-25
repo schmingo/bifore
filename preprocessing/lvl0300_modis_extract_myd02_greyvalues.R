@@ -23,10 +23,10 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 ### Set filepaths ##############################################################
 
-path.hdf <- "/home/schmingo/SAVE/Diplomarbeit/myd02_hdf/"
-path.tif <- "/home/schmingo/SAVE/Diplomarbeit/myd02_tif/"
+path.hdf <- "/home/schmingo/SAVE/Diplomarbeit/sample_myd02_hdf/"
+path.tif <- "/home/schmingo/SAVE/Diplomarbeit/sample_myd02_tif/"
 
-path.biodiversity.csv <- "csv/kili/biodiversity_data_cloudchecked.csv"
+path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
 
 ################################################################################
@@ -43,4 +43,17 @@ data.bio.sp <- data.bio.raw
 coordinates(data.bio.sp) <- c("lon", "lat")
 
 ################################################################################
-### 
+### List .hdf and .tif for specific date #######################################
+
+tmp.date <- data.bio.raw$date_nocloud[1]
+
+tmp.date <- paste0(substr(tmp.date, 1, 4),
+                   substr(tmp.date, 6, 8),
+                   ".",
+                   substr(tmp.date, 10, 13))
+
+list.tif <- list.files(path.tif,
+                       pattern = tmp.date,
+                       full.names = TRUE)
+
+list.tif

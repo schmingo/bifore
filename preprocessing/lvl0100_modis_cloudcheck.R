@@ -7,7 +7,7 @@
 ##       - MYD35 .hdf metadata                                                ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-01-20                                                        ##
+## Version: 2014-01-25                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -27,9 +27,9 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## To preprocess MYD35_L2 and MYD03 files; both must be in the same directory.
 
-path.biodiversity.csv <- ("csv/kili/biodiversity_data_subset.csv")
+path.biodiversity.csv <- ("csv/kili/lvl0050_biodiversity_data.csv")
 
-path.nocloud.csv <- ("csv/kili/biodiversity_data_cloudchecked.csv")
+path.nocloud.csv <- ("csv/kili/lvl0100_biodiversity_data.csv")
 
 path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/myd03-35_hdf/")
 

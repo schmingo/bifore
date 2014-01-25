@@ -29,7 +29,7 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
 
 ## Set filepaths
 file.abundance.csv <- "src/csv/kili/abundance_matrix_hemp.csv"
-file.data.out <- "src/csv/kili/biodiversity_data_lvl0050.csv"
+file.data.out <- "src/csv/kili/lvl0050_biodiversity_data.csv"
 
 
 ################################################################################

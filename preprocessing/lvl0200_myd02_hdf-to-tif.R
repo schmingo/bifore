@@ -25,10 +25,10 @@ mrtpath = "/home/schmingo/apps/MRTSwath/bin/swath2grid"
 
 
 ## Load required modules
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_modis_mod_writeMRTSwathParamFile_1000.R")
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_modis_mod_writeMRTSwathParamFile_500.R")
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_modis_mod_writeMRTSwathParamFile_250.R")
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0220_modis_mod_runSwath2Grid.R")
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_1000.R")
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_500.R")
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_250.R")
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0220_runSwath2Grid.R")
 
 
 ################################################################################

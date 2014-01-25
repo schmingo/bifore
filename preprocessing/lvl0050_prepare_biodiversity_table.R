@@ -11,7 +11,7 @@
 ## - Add LatLong Coordinates                                                  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-01-17                                                        ##
+## Version: 2014-01-25                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -29,7 +29,7 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
 
 ## Set filepaths
 file.abundance.csv <- "src/csv/kili/abundance_matrix_hemp.csv"
-file.data.out <- "src/csv/kili/biodiversity_data_subset.csv"
+file.data.out <- "src/csv/kili/biodiversity_data_lvl0050.csv"
 
 
 ################################################################################
@@ -42,7 +42,6 @@ data <- read.csv2(file.abundance.csv,
                   stringsAsFactors = FALSE)
 
 
-# data$date <- as.POSIXct(data$date, format="%m/%d/%Y")
 data$date <- as.Date(data$date, format="%d.%m.%Y")
 
 
@@ -156,19 +155,3 @@ write.table(data10.sp, file = file.data.out,
             row.names = FALSE, 
             sep =";")
 
-
-################################################################################
-### Spatial stuff ##############################################################
-
-# data10.sp <- data10
-# 
-# coordinates(data10.sp) <- ~coordW + coordN
-# 
-# spplot(data10.sp, zcol = "asl")
-# 
-# files <- list.files("D:/modiscloud", pattern = ".tif", recursive = TRUE,
-#                     full.names = TRUE)
-# 
-# stck <- stack(files)
-# 
-# cloud.vals <- extract(stck, data10.sp) # matrix mit spalten = einzelne Bilder, Zeilen = die einzelnen Plots.

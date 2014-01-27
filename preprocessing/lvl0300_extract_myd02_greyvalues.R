@@ -37,13 +37,15 @@ data.bio.raw <- read.csv2(path.biodiversity.csv,
                           header = TRUE, 
                           stringsAsFactors = FALSE)
 
+
+## Import biodiversity dataset as SpatialPointsDataframe objects
 data.bio.sp <- data.bio.raw
 
-
 coordinates(data.bio.sp) <- c("lon", "lat")
+projection(data.bio.sp) <- "+init=epsg:4326"
 
 ################################################################################
-### List .hdf and .tif for specific date #######################################
+### List .hdf and .tif for specific date and import .tif as RasterLayer Object##
 
 ### Extract date from biodiversity data
 tmp.date <- data.bio.raw$date_nocloud[1]
@@ -67,6 +69,6 @@ lst.hdf.1km
 lst.hdf.hkm
 lst.hdf.qkm
 
-## Import files as RasterLayer objects
+## Import .tif files as RasterLayer objects
 lst.tif.raster <- lapply(lst.tif, raster)
 projection.tif.raster <- CRS(projection(lst.tif.raster[[1]]))

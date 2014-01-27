@@ -77,7 +77,7 @@ projection.tif.raster <- CRS(projection(lst.tif.raster[[1]]))
 ################################################################################
 ### Extraction of cell values ##################################################
 
-registerDoParallel(cl <- makeCluster(detectCores() - 1))
+registerDoParallel(cl <- makeCluster(detectCores()))
 
 greyvalues.raw <- foreach(i = seq(lst.tif.raster), .packages = lib,
                           .combine = "cbind") %dopar% {

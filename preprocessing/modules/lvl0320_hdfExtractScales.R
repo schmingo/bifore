@@ -24,12 +24,9 @@ hdfExtractMODScale <- function(lst.hdf.qkm,
 
   
   ## GDALinfo from HDF
-  info.250.hdf <- GDALinfo(lst.hdf.qkm, sep = ""), 
-                           returnScaleOffset = F)
-  info.500.hdf <- GDALinfo(lst.hdf.hkm, sep = ""), 
-                           returnScaleOffset = F)
-  info.1km.hdf <- GDALinfo(lst.hdf.1km, sep = ""), 
-                           returnScaleOffset = F)
+  info.250.hdf <- GDALinfo(lst.hdf.qkm, returnScaleOffset = F)
+  info.500.hdf <- GDALinfo(lst.hdf.hkm, returnScaleOffset = F)
+  info.1km.hdf <- GDALinfo(lst.hdf.1km, returnScaleOffset = F)
   
   
   ## HDF attributes

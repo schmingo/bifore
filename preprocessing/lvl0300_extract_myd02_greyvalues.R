@@ -95,6 +95,10 @@ stopCluster(cl)
 greyvalues.na <- greyvalues.raw
 greyvalues.na[, 1:ncol(greyvalues.na)][greyvalues.na[, 1:ncol(greyvalues.na)] > 32767] <- NA
 
+## Convert greyvalue matrices to data.frame
+greyvalues.raw <- data.frame(greyvalues.raw, stringsAsFactors = F)
+greyvalues.na <- data.frame(greyvalues.na, stringsAsFactors = F)
+
 
 ################################################################################
 ### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
@@ -104,4 +108,13 @@ print("Extract radiance_scale and reflectance_scale from original *.hdf")
 modscales <- hdfExtractMODScale (lst.hdf.qkm,
                                  lst.hdf.hkm,
                                  lst.hdf.1km)
+
+## Calculate new greyvalues (greyvalue * scalefactor)
+greyvalues.calc <- greyvalues.na * as.numeric(modscales[["scales"]])
+
+## Set rownames
+names(greyvalues.calc) <- modscales[["bands"]]
+
+greyvalues.calc
+
 

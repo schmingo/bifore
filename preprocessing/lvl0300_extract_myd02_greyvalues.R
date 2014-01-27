@@ -28,6 +28,8 @@ path.tif <- "/home/schmingo/SAVE/Diplomarbeit/sample_myd02_tif/"
 
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
+## Source modules
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
 
 ################################################################################
 ### Import biodiversity dataset ################################################
@@ -92,4 +94,14 @@ stopCluster(cl)
 
 greyvalues.na <- greyvalues.raw
 greyvalues.na[, 1:ncol(greyvalues.na)][greyvalues.na[, 1:ncol(greyvalues.na)] > 32767] <- NA
+
+
+################################################################################
+### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
+
+print("Extract radiance_scale and reflectance_scale from original *.hdf")
+
+modscales <- hdfExtractMODScale (path.hdf.qkm,
+                                 lst.hdf.hkm,
+                                 lst.hdf.1km)
 

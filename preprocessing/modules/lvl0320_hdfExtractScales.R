@@ -13,10 +13,9 @@
 ################################################################################
 
 
-hdfExtractMODScale <- function(path.modis.raw,
-                               path.250.hdf,
-                               path.500.hdf,
-                               path.1km.hdf
+hdfExtractMODScale <- function(lst.hdf.qkm,
+                               lst.hdf.hkm,
+                               lst.hdf.1km
                                )
 {
 
@@ -25,11 +24,11 @@ hdfExtractMODScale <- function(path.modis.raw,
 
   
   ## GDALinfo from HDF
-  info.250.hdf <- GDALinfo(paste(path.modis.raw,path.250.hdf, sep = ""), 
+  info.250.hdf <- GDALinfo(lst.hdf.qkm, sep = ""), 
                            returnScaleOffset = F)
-  info.500.hdf <- GDALinfo(paste(path.modis.raw,path.500.hdf, sep = ""), 
+  info.500.hdf <- GDALinfo(lst.hdf.hkm, sep = ""), 
                            returnScaleOffset = F)
-  info.1km.hdf <- GDALinfo(paste(path.modis.raw,path.1km.hdf, sep = ""), 
+  info.1km.hdf <- GDALinfo(lst.hdf.1km, sep = ""), 
                            returnScaleOffset = F)
   
   

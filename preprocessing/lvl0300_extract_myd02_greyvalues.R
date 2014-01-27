@@ -130,11 +130,13 @@ diff <- cbind(0,diff) # add "0-column" because there is no slope for the first g
 # row.names(greyvalues.calc.diff) <- c("greyvalues", "first_derivate")
 
 tmp.bio.df <- cbind(data.bio.raw[1], greyvalues.calc, diff)
+colnames(tmp.bio.df)[80:116] <- paste0("greyval_band_", as.character(modscales[["bands"]]))
+colnames(tmp.bio.df)[117:152] <- paste0("deriv_band_", as.character(modscales[["bands"]]))
 
 
 ## End foreach loop
 
 bio.df.greyvalues <- tmp.bio.df
 
-colnames(bio.df.greyvalues)[80:116] <- paste0("greyval_band_", as.character(modscales[["bands"]]))
-colnames(bio.df.greyvalues)[117:152] <- paste0("deriv_band_", as.character(modscales[["bands"]]))
+# colnames(bio.df.greyvalues)[80:116] <- paste0("greyval_band_", as.character(modscales[["bands"]]))
+# colnames(bio.df.greyvalues)[117:152] <- paste0("deriv_band_", as.character(modscales[["bands"]]))

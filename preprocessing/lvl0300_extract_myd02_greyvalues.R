@@ -120,14 +120,6 @@ diff <- cbind(0,diff) # add "0-column" because there is no slope for the first g
 greyvalues.calc.diff <- data.frame(t(cbind(t(greyvalues.calc), t(diff))))
 
 ## Set colnames and rownames for new df
-names(greyvalues.calc.diff) <- modscales[["bands"]]
+colnames(greyvalues.calc.diff) <- paste0("band_", as.character(modscales[["bands"]]))
 row.names(greyvalues.calc.diff) <- c("greyvalues", "first_derivate")
 
-## Testing rename colnames !!!BUG!!!
-bands <- names(greyvalues.calc.diff)
-
-for (i in bands) {
-  bands[i] <- paste0("band_", i)
-}
-
-bands

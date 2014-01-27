@@ -113,8 +113,18 @@ modscales <- hdfExtractMODScale (lst.hdf.qkm,
 greyvalues.calc <- greyvalues.na * as.numeric(modscales[["scales"]])
 
 ## Set rownames
-names(greyvalues.calc) <- modscales[["bands"]]
+# names(greyvalues.calc) <- modscales[["bands"]]
 
-greyvalues.calc
+## Calculate first derivate (diff)
+diff <- as.data.frame(rowDiffs(as.matrix(greyvalues.calc)))
 
+## combine dataframes
 
+diff <- cbind(0,diff) # add "0-column" because there is no slope for the first greyvalue
+# names(diff) <- modscales[["bands"]]
+
+greyvalues.calc.diff <- data.frame(t(cbind(t(greyvalues.calc), t(diff))))
+
+## Set colnames and rownames for new df
+names(greyvalues.calc.diff) <- modscales[["bands"]]
+row.names(greyvalues.calc.diff) <- c("greyvalues", "first_derivate")

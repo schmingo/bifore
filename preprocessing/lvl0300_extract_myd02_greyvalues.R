@@ -72,3 +72,16 @@ lst.hdf.qkm
 ## Import .tif files as RasterLayer objects
 lst.tif.raster <- lapply(lst.tif, raster)
 projection.tif.raster <- CRS(projection(lst.tif.raster[[1]]))
+
+
+################################################################################
+### Extraction of cell values ##################################################
+
+registerDoParallel(cl <- makeCluster(detectCores() - 1))
+
+greyvalues.raw <- foreach(i = seq(lst.tif.raster), .packages = lib,
+                          .combine = "cbind") %dopar% {
+                            lst.tif.raster[[i]][cellFromXY(lst.tif.raster[[i]], data.bio.sp[1,])]
+                          }
+
+stopCluster(cl)

@@ -101,7 +101,7 @@ greyvalues.na[, 1:ncol(greyvalues.na)][greyvalues.na[, 1:ncol(greyvalues.na)] > 
 
 print("Extract radiance_scale and reflectance_scale from original *.hdf")
 
-modscales <- hdfExtractMODScale (path.hdf.qkm,
+modscales <- hdfExtractMODScale (lst.hdf.qkm,
                                  lst.hdf.hkm,
                                  lst.hdf.1km)
 

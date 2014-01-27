@@ -49,6 +49,12 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 ################################################################################
 ### List .hdf and .tif for specific date and import .tif as RasterLayer Object##
 
+
+
+## Begin foreach loop
+
+
+
 ### Extract date from biodiversity data
 tmp.date <- data.bio.raw$date_nocloud[1]
 
@@ -116,10 +122,19 @@ greyvalues.calc <- greyvalues.na * as.numeric(modscales[["scales"]])
 diff <- as.data.frame(rowDiffs(as.matrix(greyvalues.calc)))
 diff <- cbind(0,diff) # add "0-column" because there is no slope for the first greyvalue
 
-## combine dataframes
-greyvalues.calc.diff <- data.frame(t(cbind(t(greyvalues.calc), t(diff))))
+# ## combine dataframes
+# greyvalues.calc.diff <- data.frame(t(cbind(t(greyvalues.calc), t(diff))))
+# 
+# ## Set colnames and rownames for new df
+# colnames(greyvalues.calc.diff) <- paste0("band_", as.character(modscales[["bands"]]))
+# row.names(greyvalues.calc.diff) <- c("greyvalues", "first_derivate")
 
-## Set colnames and rownames for new df
-colnames(greyvalues.calc.diff) <- paste0("band_", as.character(modscales[["bands"]]))
-row.names(greyvalues.calc.diff) <- c("greyvalues", "first_derivate")
+tmp.bio.df <- cbind(data.bio.raw[1], greyvalues.calc, diff)
 
+
+## End foreach loop
+
+bio.df.greyvalues <- tmp.bio.df
+
+colnames(bio.df.greyvalues)[80:116] <- paste0("greyval_band_", as.character(modscales[["bands"]]))
+colnames(bio.df.greyvalues)[117:152] <- paste0("deriv_band_", as.character(modscales[["bands"]]))

@@ -167,6 +167,7 @@ for (i in 1:nrow(fls.qkm.matching)) {
 
 do.call(file.remove,list(list.files(tifsdir, pattern="Aggr", full.names=TRUE)))
 do.call(file.remove,list(list.files(tifsdir, pattern="Uncert", full.names=TRUE)))
+do.call(file.remove,list(list.files(tifsdir, pattern="Band26", full.names=TRUE)))
 
 
 ################################################################################

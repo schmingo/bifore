@@ -85,3 +85,11 @@ greyvalues.raw <- foreach(i = seq(lst.tif.raster), .packages = lib,
                           }
 
 stopCluster(cl)
+
+
+################################################################################
+### Check extracted cell values for NA #########################################
+
+greyvalues.na <- greyvalues.raw
+greyvalues.na[, 1:ncol(greyvalues.na)][greyvalues.na[, 1:ncol(greyvalues.na)] > 32767] <- NA
+

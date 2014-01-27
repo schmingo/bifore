@@ -66,3 +66,7 @@ lst.tif
 lst.hdf.1km
 lst.hdf.hkm
 lst.hdf.qkm
+
+## Import files as RasterLayer objects
+lst.tif.raster <- lapply(lst.tif, raster)
+projection.tif.raster <- CRS(projection(lst.tif.raster[[1]]))

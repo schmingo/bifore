@@ -23,8 +23,8 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 ### Set filepaths ##############################################################
 
-path.hdf <- "/home/schmingo/Diplomarbeit/sample_myd02_hdf/"
-path.tif <- "/home/schmingo/Diplomarbeit/sample_myd02_tif/"
+path.hdf <- "/home/schmingo/SAVE/Diplomarbeit/sample_myd02_hdf/"
+path.tif <- "/home/schmingo/SAVE/Diplomarbeit/sample_myd02_tif/"
 
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
@@ -66,11 +66,17 @@ tmp.date <- paste0(substr(tmp.date, 1, 4),
 
 ### List .tif files
 lst.tif <- list.files(path.tif, pattern = tmp.date, full.names = TRUE)
+lst.tif.1km <- list.files(path.tif, pattern = paste("1KM", tmp.date, sep = ".*"), full.names = TRUE)
+lst.tif.hkm <- list.files(path.tif, pattern = paste("HKM", tmp.date, sep = ".*"), full.names = TRUE)
+lst.tif.qkm <- list.files(path.tif, pattern = paste("QKM", tmp.date, sep = ".*"), full.names = TRUE)
+
 
 ### List .hdf files
 lst.hdf.1km <- list.files(path.hdf, pattern = paste("1KM", tmp.date, sep = ".*"), full.names = TRUE)
 lst.hdf.hkm <- list.files(path.hdf, pattern = paste("HKM", tmp.date, sep = ".*"), full.names = TRUE)
 lst.hdf.qkm <- list.files(path.hdf, pattern = paste("QKM", tmp.date, sep = ".*"), full.names = TRUE)
+
+
 
 lst.tif
 lst.hdf.1km
@@ -132,8 +138,11 @@ diff <- cbind(0,diff) # add "0-column" because there is no slope for the first g
 tmp.bio.df <- cbind(data.bio.raw[1,], greyvalues.calc, diff)
 colnames(tmp.bio.df)[69:106] <- paste0("greyval_band_", as.character(modscales[["bands"]]))
 colnames(tmp.bio.df)[107:144] <- paste0("deriv_band_", as.character(modscales[["bands"]]))
+rownames(tmp.bio.df) <- tmp.date
 # 
 # 
 # ## End foreach loop
 # 
-# bio.df.greyvalues <- tmp.bio.df
+bio.df.greyvalues <- data.frame(t(tmp.bio.df), 
+                                stringsAsFactors = FALSE)
+

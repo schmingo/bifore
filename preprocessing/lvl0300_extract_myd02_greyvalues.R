@@ -23,8 +23,8 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 ### Set filepaths ##############################################################
 
-path.hdf <- "/home/schmingo/SAVE/Diplomarbeit/sample_myd02_hdf/"
-path.tif <- "/home/schmingo/SAVE/Diplomarbeit/sample_myd02_tif/"
+path.hdf <- "/home/schmingo/Diplomarbeit/sample_myd02_hdf/"
+path.tif <- "/home/schmingo/Diplomarbeit/sample_myd02_tif/"
 
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 

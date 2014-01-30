@@ -1,9 +1,18 @@
+################################################################################
+## BiFoRe Scripts                                                             ##
+##                                                                            ##
+## RENAME MODIS FILES                                                         ##
+##                                                                            ##
+##                                                                            ##
+## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
+## Version: 2014-01-30                                                        ##
+##                                                                            ##
+################################################################################
+
 renameSuffix <- function(files, 
                          suffix.in, 
                          suffix.out, 
-                         dir.out = ".",
-                         ...) {
-  
+                         tifsdir.rename) {
   index <- grep(suffix.in, files)
   
   file.in <- files[index]
@@ -12,7 +21,11 @@ renameSuffix <- function(files,
     sapply(strsplit(basename(file.in), "_"), "[[", i)
   }), collapse = "_")
   
-  file.out <- paste(dir.out, paste(file.out, suffix.out, sep = "_"), sep = "/")
+  file.out <- paste(tifsdir.rename, 
+                    paste(file.out, 
+                          suffix.out, 
+                          sep = "_"), 
+                    sep = "/")
   
   file.rename(file.in, file.out)
 }

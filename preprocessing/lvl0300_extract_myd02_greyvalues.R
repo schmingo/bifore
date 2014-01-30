@@ -67,6 +67,10 @@ tmp.date <- paste0(substr(tmp.date, 1, 4),
 
 ### List .tif files
 lst.tif <- list.files(path.tif, pattern = tmp.date, full.names = TRUE)
+
+## rename bands to get the right order from band01 to band36
+## create ordered list with all tifs in the right order
+
 lst.tif.1km <- list.files(path.tif, pattern = paste("1KM", tmp.date, sep = ".*"), full.names = TRUE)
 lst.tif.hkm <- list.files(path.tif, pattern = paste("HKM", tmp.date, sep = ".*"), full.names = TRUE)
 lst.tif.qkm <- list.files(path.tif, pattern = paste("QKM", tmp.date, sep = ".*"), full.names = TRUE)
@@ -83,6 +87,8 @@ lst.tif.raster <- lapply(lst.tif, raster)
 lst.tif.raster.1km <- lapply(lst.tif.1km, raster)
 lst.tif.raster.hkm <- lapply(lst.tif.hkm, raster)
 lst.tif.raster.qkm <- lapply(lst.tif.qkm, raster)
+
+
 # projection.tif.raster <- CRS(projection(lst.tif.raster[[1]]))
 
 

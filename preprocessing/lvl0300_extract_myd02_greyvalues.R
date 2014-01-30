@@ -53,162 +53,162 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 
 
 ## Begin foreach loop
-
-
-
-### Extract date from biodiversity data
-tmp.date <- data.bio.raw$date_nocloud[1]
-
-### Reformat date
-tmp.date <- paste0(substr(tmp.date, 1, 4),
-                   substr(tmp.date, 6, 8),
-                   ".",
-                   substr(tmp.date, 10, 13))
-
-### List .tif files
-lst.tif <- list.files(path.tif, pattern = tmp.date, full.names = TRUE)
-
-## rename bands to get the right order from band01 to band36
-## create ordered list with all tifs in the right order
-
-lst.tif.1km <- list.files(path.tif, pattern = paste("1KM", tmp.date, sep = ".*"), full.names = TRUE)
-lst.tif.hkm <- list.files(path.tif, pattern = paste("HKM", tmp.date, sep = ".*"), full.names = TRUE)
-lst.tif.qkm <- list.files(path.tif, pattern = paste("QKM", tmp.date, sep = ".*"), full.names = TRUE)
-
-
-### List .hdf files
-lst.hdf.1km <- list.files(path.hdf, pattern = paste("1KM", tmp.date, sep = ".*"), full.names = TRUE)
-lst.hdf.hkm <- list.files(path.hdf, pattern = paste("HKM", tmp.date, sep = ".*"), full.names = TRUE)
-lst.hdf.qkm <- list.files(path.hdf, pattern = paste("QKM", tmp.date, sep = ".*"), full.names = TRUE)
-
-
-## Import .tif files as RasterLayer objects
-lst.tif.raster <- lapply(lst.tif, raster)
-lst.tif.raster.1km <- lapply(lst.tif.1km, raster)
-lst.tif.raster.hkm <- lapply(lst.tif.hkm, raster)
-lst.tif.raster.qkm <- lapply(lst.tif.qkm, raster)
-
-
-# projection.tif.raster <- CRS(projection(lst.tif.raster[[1]]))
-
-
-################################################################################
-### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
-
-print("Extract radiance_scale and reflectance_scale from original *.hdf")
-
-modscales <- hdfExtractMODScale (lst.hdf.qkm,
-                                 lst.hdf.hkm,
-                                 lst.hdf.1km)
-
-## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster
-
-# alle listen müssen die gleiche länge haben
-registerDoParallel(cl <- makeCluster(detectCores()))
-foreach(i = lst.tif.raster.1km, 
-        j = as.list(as.numeric(modscales[["scales"]])),
-        k = as.list(lst.tif.1km),
-        path.tif.calc, 
-        .packages = lib) %dopar% {
-          calc(i, fun = function(x) x * j, 
-               filename = paste0(path.tif.calc, basename(k)), 
-               format = "GTiff", 
-               overwrite = TRUE)        
-        }
-stopCluster(cl)
-
-
-################################################################################
-### Extraction of cell values ##################################################
-
-registerDoParallel(cl <- makeCluster(detectCores()))
-
-greyvalues.raw <- foreach(i = seq(lst.tif.raster), .packages = lib,
-                          .combine = "cbind") %dopar% {
-                            lst.tif.raster[[i]][cellFromXY(lst.tif.raster[[i]], data.bio.sp[1,])]
-                          }
-
-stopCluster(cl)
-
-
-################################################################################
-### Check extracted cell values for NA #########################################
-
-greyvalues.na <- greyvalues.raw
-greyvalues.na[, 1:ncol(greyvalues.na)][greyvalues.na[, 1:ncol(greyvalues.na)] > 32767] <- NA
-
-## Convert greyvalue matrices to data.frame
-greyvalues.raw <- data.frame(greyvalues.raw, stringsAsFactors = F)
-greyvalues.na <- data.frame(greyvalues.na, stringsAsFactors = F)
-
-
-
-################################################################################
-
-greyvalues.calc <- greyvalues.na * as.numeric(modscales[["scales"]])
-
-## Calculate first derivate (diff)
-diff <- as.data.frame(rowDiffs(as.matrix(greyvalues.calc)))
-diff <- cbind(0,diff) # add "0-column" because there is no slope for the first greyvalue
-
-################################################################################
-### Pixelraster ################################################################
-
-cells.1km <- cellFromXY(lst.tif.raster.1km[[1]], data.bio.sp[1,])
-cells.hkm <- cellFromXY(lst.tif.raster.hkm[[1]], data.bio.sp[1,])
-cells.qkm <- cellFromXY(lst.tif.raster.qkm[[1]], data.bio.sp[1,])
-
-cells.adj.1km <- adjacent(lst.tif.raster.1km[[1]], cells.1km, 
-                          directions = 8, 
-                          pairs = FALSE, 
-                          sorted = TRUE)
-
-cells.adj.hkm <- adjacent(lst.tif.raster.hkm[[1]], cells.hkm, 
-                          directions = matrix(c(1,1,1,1,1,
-                                                1,1,1,1,1,
-                                                1,1,0,1,1,
-                                                1,1,1,1,1,
-                                                1,1,1,1,1), ncol = 5), 
-                          pairs = FALSE, 
-                          sorted = TRUE)
-
-cells.adj.qkm <- adjacent(lst.tif.raster.qkm[[1]], cells.qkm, 
-                          directions = matrix(c(1,1,1,1,1,1,1,1,1,
-                                                1,1,1,1,1,1,1,1,1,
-                                                1,1,1,1,1,1,1,1,1,
-                                                1,1,1,1,1,1,1,1,1,
-                                                1,1,1,1,0,1,1,1,1,
-                                                1,1,1,1,1,1,1,1,1,
-                                                1,1,1,1,1,1,1,1,1,
-                                                1,1,1,1,1,1,1,1,1,
-                                                1,1,1,1,1,1,1,1,1), ncol = 9), 
-                          pairs = FALSE, 
-                          sorted = TRUE)
-
-
-
-
-cells.1km.mtrx.sd <- sd(lst.tif.raster.1km[[1]][cells.adj.1km])
-cells.hkm.mtrx.sd <- sd(cells.adj.hkm)
-cells.qkm.mtrx.sd <- sd(cells.adj.qkm)
-################################################################################
-
-
-# ## combine dataframes
-# greyvalues.calc.diff <- data.frame(t(cbind(t(greyvalues.calc), t(diff))))
-# 
-# ## Set colnames and rownames for new df
-# colnames(greyvalues.calc.diff) <- paste0("band_", as.character(modscales[["bands"]]))
-# row.names(greyvalues.calc.diff) <- c("greyvalues", "first_derivate")
-
-tmp.bio.df <- cbind(data.bio.raw[1,], greyvalues.calc, diff)
-colnames(tmp.bio.df)[69:106] <- paste0("greyval_band_", as.character(modscales[["bands"]]))
-colnames(tmp.bio.df)[107:144] <- paste0("deriv_band_", as.character(modscales[["bands"]]))
-rownames(tmp.bio.df) <- tmp.date
-# 
-# 
-# ## End foreach loop
-# 
-bio.df.greyvalues <- data.frame(t(tmp.bio.df), 
-                                stringsAsFactors = FALSE)
-
+foreach(h = data.bio.raw$date_nocloud) %do% {
+  
+  ### Extract date from biodiversity data
+  tmp.date <- h
+  
+  ### Reformat date
+  tmp.date <- paste0(substr(tmp.date, 1, 4),
+                     substr(tmp.date, 6, 8),
+                     ".",
+                     substr(tmp.date, 10, 13))
+  
+  ### List .tif files
+  lst.tif <- list.files(path.tif, pattern = tmp.date, full.names = TRUE)
+  
+  ## rename bands to get the right order from band01 to band36
+  ## create ordered list with all tifs in the right order
+  
+  lst.tif.1km <- list.files(path.tif, pattern = paste("1KM", tmp.date, sep = ".*"), full.names = TRUE)
+  lst.tif.hkm <- list.files(path.tif, pattern = paste("HKM", tmp.date, sep = ".*"), full.names = TRUE)
+  lst.tif.qkm <- list.files(path.tif, pattern = paste("QKM", tmp.date, sep = ".*"), full.names = TRUE)
+  
+  
+  ### List .hdf files
+  lst.hdf.1km <- list.files(path.hdf, pattern = paste("1KM", tmp.date, sep = ".*"), full.names = TRUE)
+  lst.hdf.hkm <- list.files(path.hdf, pattern = paste("HKM", tmp.date, sep = ".*"), full.names = TRUE)
+  lst.hdf.qkm <- list.files(path.hdf, pattern = paste("QKM", tmp.date, sep = ".*"), full.names = TRUE)
+  
+  
+  ## Import .tif files as RasterLayer objects
+  lst.tif.raster <- lapply(lst.tif, raster)
+  lst.tif.raster.1km <- lapply(lst.tif.1km, raster)
+  lst.tif.raster.hkm <- lapply(lst.tif.hkm, raster)
+  lst.tif.raster.qkm <- lapply(lst.tif.qkm, raster)
+  
+  
+  # projection.tif.raster <- CRS(projection(lst.tif.raster[[1]]))
+  
+  
+  ################################################################################
+  ### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
+  
+  print("Extract radiance_scale and reflectance_scale from original *.hdf")
+  
+  modscales <- hdfExtractMODScale (lst.hdf.qkm,
+                                   lst.hdf.hkm,
+                                   lst.hdf.1km)
+  
+  ## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster
+  
+  # alle listen müssen die gleiche länge haben
+  registerDoParallel(cl <- makeCluster(detectCores()))
+  foreach(i = lst.tif.raster.1km, 
+          j = as.list(as.numeric(modscales[["scales"]])),
+          k = as.list(lst.tif.1km),
+          path.tif.calc, 
+          .packages = lib) %dopar% {
+            calc(i, fun = function(x) x * j, 
+                 filename = paste0(path.tif.calc, basename(k)), 
+                 format = "GTiff", 
+                 overwrite = TRUE)        
+          }
+  stopCluster(cl)
+  
+  
+  ################################################################################
+  ### Extraction of cell values ##################################################
+  
+  registerDoParallel(cl <- makeCluster(detectCores()))
+  
+  greyvalues.raw <- foreach(i = seq(lst.tif.raster), .packages = lib,
+                            .combine = "cbind") %dopar% {
+                              lst.tif.raster[[i]][cellFromXY(lst.tif.raster[[i]], data.bio.sp[1,])]
+                            }
+  
+  stopCluster(cl)
+  
+  
+  ################################################################################
+  ### Check extracted cell values for NA #########################################
+  
+  greyvalues.na <- greyvalues.raw
+  greyvalues.na[, 1:ncol(greyvalues.na)][greyvalues.na[, 1:ncol(greyvalues.na)] > 32767] <- NA
+  
+  ## Convert greyvalue matrices to data.frame
+  greyvalues.raw <- data.frame(greyvalues.raw, stringsAsFactors = F)
+  greyvalues.na <- data.frame(greyvalues.na, stringsAsFactors = F)
+  
+  
+  
+  ################################################################################
+  
+  greyvalues.calc <- greyvalues.na * as.numeric(modscales[["scales"]])
+  
+  ## Calculate first derivate (diff)
+  diff <- as.data.frame(rowDiffs(as.matrix(greyvalues.calc)))
+  diff <- cbind(0,diff) # add "0-column" because there is no slope for the first greyvalue
+  
+  ################################################################################
+  ### Pixelraster ################################################################
+  
+  cells.1km <- cellFromXY(lst.tif.raster.1km[[1]], data.bio.sp[1,])
+  cells.hkm <- cellFromXY(lst.tif.raster.hkm[[1]], data.bio.sp[1,])
+  cells.qkm <- cellFromXY(lst.tif.raster.qkm[[1]], data.bio.sp[1,])
+  
+  cells.adj.1km <- adjacent(lst.tif.raster.1km[[1]], cells.1km, 
+                            directions = 8, 
+                            pairs = FALSE, 
+                            sorted = TRUE)
+  
+  cells.adj.hkm <- adjacent(lst.tif.raster.hkm[[1]], cells.hkm, 
+                            directions = matrix(c(1,1,1,1,1,
+                                                  1,1,1,1,1,
+                                                  1,1,0,1,1,
+                                                  1,1,1,1,1,
+                                                  1,1,1,1,1), ncol = 5), 
+                            pairs = FALSE, 
+                            sorted = TRUE)
+  
+  cells.adj.qkm <- adjacent(lst.tif.raster.qkm[[1]], cells.qkm, 
+                            directions = matrix(c(1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,0,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1), ncol = 9), 
+                            pairs = FALSE, 
+                            sorted = TRUE)
+  
+  
+  
+  
+  cells.1km.mtrx.sd <- sd(lst.tif.raster.1km[[1]][cells.adj.1km])
+  cells.hkm.mtrx.sd <- sd(cells.adj.hkm)
+  cells.qkm.mtrx.sd <- sd(cells.adj.qkm)
+  ################################################################################
+  
+  
+  # ## combine dataframes
+  # greyvalues.calc.diff <- data.frame(t(cbind(t(greyvalues.calc), t(diff))))
+  # 
+  # ## Set colnames and rownames for new df
+  # colnames(greyvalues.calc.diff) <- paste0("band_", as.character(modscales[["bands"]]))
+  # row.names(greyvalues.calc.diff) <- c("greyvalues", "first_derivate")
+  
+  tmp.bio.df <- cbind(data.bio.raw[1,], greyvalues.calc, diff)
+  colnames(tmp.bio.df)[69:106] <- paste0("greyval_band_", as.character(modscales[["bands"]]))
+  colnames(tmp.bio.df)[107:144] <- paste0("deriv_band_", as.character(modscales[["bands"]]))
+  rownames(tmp.bio.df) <- tmp.date
+  # 
+  # 
+  # ## End foreach loop
+  # 
+  bio.df.greyvalues <- data.frame(t(tmp.bio.df), 
+                                  stringsAsFactors = FALSE)
+  
+}

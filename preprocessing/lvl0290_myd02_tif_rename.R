@@ -23,9 +23,9 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 ### Set filepaths ##############################################################
 
-path.hdf <- "/media/schmingo/SIMON_1TB/Diplomarbeit/sample_myd02_hdf/"
-path.tif <- "/media/schmingo/SIMON_1TB/Diplomarbeit/sample_myd02_tif/"
-path.tif.calc <- "/media/schmingo/SIMON_1TB/Diplomarbeit/sample_myd02_tif_calc/"
+path.hdf <- "/home/schmingo/Diplomarbeit/sample_myd02_hdf/"
+path.tif <- "/home/schmingo/Diplomarbeit/sample_myd02_tif/"
+path.tif.calc <- "/home/schmingo/Diplomarbeit/sample_myd02_tif_calc/"
 
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
@@ -67,3 +67,19 @@ tmp.date <- paste0(substr(tmp.date, 1, 4),
 
 ### List .tif files
 lst.tif <- list.files(path.tif, pattern = tmp.date, full.names = TRUE)
+lst.tif
+
+switch(lst.tif,
+       "EV_1KM_Emissive_b0.tif" = "_b20")
+
+# switch(level,
+#        "qh" = agglevel <- ki.data@AggregationLevels$AggQh,
+#        "1h" = agglevel <- ki.data@AggregationLevels$Agg1h,
+#        "3h" = agglevel <- ki.data@AggregationLevels$Agg3h,
+#        "6h" = agglevel <- ki.data@AggregationLevels$Agg6h,
+#        "day" = agglevel <- ki.data@AggregationLevels$AggDay,
+#        "month" = agglevel <- ki.data@AggregationLevels$AggMonth,
+#        "year" = agglevel <- ki.data@AggregationLevels$AggYear,
+#        "diurnal" = agglevel <- ki.data@Time$Hour,
+#        "seasonal" = agglevel <- ki.data@Season
+# )

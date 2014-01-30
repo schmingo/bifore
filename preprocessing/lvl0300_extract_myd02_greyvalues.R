@@ -25,6 +25,7 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 path.hdf <- "/media/schmingo/SIMON_1TB/Diplomarbeit/sample_myd02_hdf/"
 path.tif <- "/media/schmingo/SIMON_1TB/Diplomarbeit/sample_myd02_tif/"
+path.tif.calc <- "/media/schmingo/SIMON_1TB/Diplomarbeit/sample_myd02_tif_calc/"
 
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
@@ -85,6 +86,9 @@ lst.hdf.qkm
 
 ## Import .tif files as RasterLayer objects
 lst.tif.raster <- lapply(lst.tif, raster)
+lst.tif.raster.1km <- lapply(lst.tif.1km, raster)
+lst.tif.raster.hkm <- lapply(lst.tif.hkm, raster)
+lst.tif.raster.qkm <- lapply(lst.tif.qkm, raster)
 projection.tif.raster <- CRS(projection(lst.tif.raster[[1]]))
 
 
@@ -121,7 +125,21 @@ modscales <- hdfExtractMODScale (lst.hdf.qkm,
                                  lst.hdf.hkm,
                                  lst.hdf.1km)
 
-## Calculate new greyvalues (greyvalue * scalefactor)
+## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster
+registerDoParallel(cl <- makeCluster(detectCores()))
+foreach(i = lst.tif.raster.1km, 
+        j = as.numeric(modscales[["scales"]]),
+        k = lst.tif.1km,
+        path.tif.calc, 
+        .packages = lib) %dopar% {
+  calc(i, fun = function(x) x * j, 
+       filename = paste0(path.tif.calc, basename(k)), 
+       format = "GTiff", 
+       overwirte = TRUE)        
+}
+stopCluster(cl)
+################################################################################
+
 greyvalues.calc <- greyvalues.na * as.numeric(modscales[["scales"]])
 
 ## Calculate first derivate (diff)

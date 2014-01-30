@@ -128,6 +128,49 @@ greyvalues.calc <- greyvalues.na * as.numeric(modscales[["scales"]])
 diff <- as.data.frame(rowDiffs(as.matrix(greyvalues.calc)))
 diff <- cbind(0,diff) # add "0-column" because there is no slope for the first greyvalue
 
+################################################################################
+### Pixelraster ################################################################
+
+cells.1km <- cellFromXY(lst.tif.raster.1km[[1]], data.bio.sp[1,])
+cells.hkm <- cellFromXY(lst.tif.raster.hkm[[1]], data.bio.sp[1,])
+cells.qkm <- cellFromXY(lst.tif.raster.qkm[[1]], data.bio.sp[1,])
+
+cells.adj.1km <- adjacent(lst.tif.raster.1km[[1]], cells.1km, 
+                          directions = 8, 
+                          pairs = FALSE, 
+                          sorted = TRUE)
+
+cells.adj.hkm <- adjacent(lst.tif.raster.hkm[[1]], cells.hkm, 
+                          directions = matrix(c(1,1,1,1,1,
+                                                1,1,1,1,1,
+                                                1,1,0,1,1,
+                                                1,1,1,1,1,
+                                                1,1,1,1,1), ncol = 5), 
+                          pairs = FALSE, 
+                          sorted = TRUE)
+
+cells.adj.qkm <- adjacent(lst.tif.raster.qkm[[1]], cells.qkm, 
+                          directions = matrix(c(1,1,1,1,1,1,1,1,1,
+                                                1,1,1,1,1,1,1,1,1,
+                                                1,1,1,1,1,1,1,1,1,
+                                                1,1,1,1,1,1,1,1,1,
+                                                1,1,1,1,0,1,1,1,1,
+                                                1,1,1,1,1,1,1,1,1,
+                                                1,1,1,1,1,1,1,1,1,
+                                                1,1,1,1,1,1,1,1,1,
+                                                1,1,1,1,1,1,1,1,1), ncol = 9), 
+                          pairs = FALSE, 
+                          sorted = TRUE)
+
+
+
+
+cells.1km.mtrx.sd <- sd(lst.tif.raster.1km[[1]][cells.adj.1km])
+cells.hkm.mtrx.sd <- sd(cells.adj.hkm)
+cells.qkm.mtrx.sd <- sd(cells.adj.qkm)
+################################################################################
+
+
 # ## combine dataframes
 # greyvalues.calc.diff <- data.frame(t(cbind(t(greyvalues.calc), t(diff))))
 # 

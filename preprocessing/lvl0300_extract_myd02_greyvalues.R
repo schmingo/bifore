@@ -78,18 +78,38 @@ lst.hdf.hkm <- list.files(path.hdf, pattern = paste("HKM", tmp.date, sep = ".*")
 lst.hdf.qkm <- list.files(path.hdf, pattern = paste("QKM", tmp.date, sep = ".*"), full.names = TRUE)
 
 
-
-lst.tif
-lst.hdf.1km
-lst.hdf.hkm
-lst.hdf.qkm
-
 ## Import .tif files as RasterLayer objects
 lst.tif.raster <- lapply(lst.tif, raster)
 lst.tif.raster.1km <- lapply(lst.tif.1km, raster)
 lst.tif.raster.hkm <- lapply(lst.tif.hkm, raster)
 lst.tif.raster.qkm <- lapply(lst.tif.qkm, raster)
-projection.tif.raster <- CRS(projection(lst.tif.raster[[1]]))
+# projection.tif.raster <- CRS(projection(lst.tif.raster[[1]]))
+
+
+################################################################################
+### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
+
+print("Extract radiance_scale and reflectance_scale from original *.hdf")
+
+modscales <- hdfExtractMODScale (lst.hdf.qkm,
+                                 lst.hdf.hkm,
+                                 lst.hdf.1km)
+
+## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster
+
+# alle listen müssen die gleiche länge haben
+registerDoParallel(cl <- makeCluster(detectCores()))
+foreach(i = lst.tif.raster.1km, 
+        j = as.list(as.numeric(modscales[["scales"]])),
+        k = as.list(lst.tif.1km),
+        path.tif.calc, 
+        .packages = lib) %dopar% {
+          calc(i, fun = function(x) x * j, 
+               filename = paste0(path.tif.calc, basename(k)), 
+               format = "GTiff", 
+               overwrite = TRUE)        
+        }
+stopCluster(cl)
 
 
 ################################################################################
@@ -116,28 +136,7 @@ greyvalues.raw <- data.frame(greyvalues.raw, stringsAsFactors = F)
 greyvalues.na <- data.frame(greyvalues.na, stringsAsFactors = F)
 
 
-################################################################################
-### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
 
-print("Extract radiance_scale and reflectance_scale from original *.hdf")
-
-modscales <- hdfExtractMODScale (lst.hdf.qkm,
-                                 lst.hdf.hkm,
-                                 lst.hdf.1km)
-
-## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster
-registerDoParallel(cl <- makeCluster(detectCores()))
-foreach(i = lst.tif.raster.1km, 
-        j = as.numeric(modscales[["scales"]]),
-        k = lst.tif.1km,
-        path.tif.calc, 
-        .packages = lib) %dopar% {
-  calc(i, fun = function(x) x * j, 
-       filename = paste0(path.tif.calc, basename(k)), 
-       format = "GTiff", 
-       overwirte = TRUE)        
-}
-stopCluster(cl)
 ################################################################################
 
 greyvalues.calc <- greyvalues.na * as.numeric(modscales[["scales"]])

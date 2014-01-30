@@ -16,7 +16,22 @@ rename_modis_files <- function(path.wd, path.modis)
   setwd(paste0(path.wd, path.modis))
   source("/home/schmingo/Diplomarbeit/bifore/preprocessing/renameSuffix.R")
   
-  suffixes.in <- c("1KM_Emissive_b0.tif", "1KM_Emissive_b1.tif", ...)
+  suffixes.in <- c("1KM_Emissive_b0.tif", 
+                   "1KM_Emissive_b1.tif",
+                   "1KM_Emissive_b2.tif",
+                   "1KM_Emissive_b3.tif",
+                   ...
+                   "1KM_Emissive_b15.tif",
+                   "1KM_RefSB_b0.tif",
+                   ...
+                   "1KM_RefSB_b14.tif",
+                   "250_RefSB_b0.tif",
+                   ...,
+                  "500_RefSB_b0.tif",
+                   
+                   
+                   )
+  
   suffixes.out <- c("B20.tif", "B21.tif", ...)
   
   foreach(i = suffixes.in, j = suffixes.out) %do% {

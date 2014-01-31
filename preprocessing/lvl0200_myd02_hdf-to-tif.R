@@ -28,7 +28,7 @@ source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMR
 source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_500.R")
 source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_250.R")
 source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0220_runSwath2Grid.R")
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/renameSuffix.R")
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0230_renameSuffix.R")
 
 
 ################################################################################

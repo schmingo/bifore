@@ -25,6 +25,7 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 path.hdf <- "/home/schmingo/Diplomarbeit/sample_myd02_hdf/"
 path.tif <- "/home/schmingo/Diplomarbeit/sample_myd02_tif/"
+path.tif.na <- "/home/schmingo/Diplomarbeit/sample_myd02_tif_na/"
 path.tif.calc <- "/home/schmingo/Diplomarbeit/sample_myd02_tif_calc/"
 
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
@@ -53,11 +54,11 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 
 
 ## Begin foreach loop
-# foreach(a = data.bio.raw$date_nocloud) %do% {
+foreach(a = data.bio.raw$date_nocloud) %do% {
   
   ### Extract date from biodiversity data
-#   tmp.date <- a
-    tmp.date <- data.bio.raw$date_nocloud[1]
+  tmp.date <- a
+#     tmp.date <- data.bio.raw$date_nocloud[1]
   
   ### Reformat date
   tmp.date <- paste0(substr(tmp.date, 1, 4),
@@ -91,10 +92,23 @@ projection(data.bio.sp) <- "+init=epsg:4326"
   
   
   # projection.tif.raster <- CRS(projection(lst.tif.raster[[1]]))
-  
-  
-  ################################################################################
-  ### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
+
+################################################################################
+### Check raster for NA values #################################################
+
+function.na <- function(x) {ifelse(x > 32767, x <- NA, x); return(x)}
+
+
+foreach (r = lst.tif.raster, n = lst.tif) %do% {
+  calc(r, 
+       fun = function.na, 
+       filename = paste0(path.tif.na, basename(n)),
+       overwrite = TRUE)
+}
+
+
+################################################################################
+### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
   
   print(paste("Extract radiance_scale and reflectance_scale from original *.hdf for ", tmp.date))
   
@@ -102,16 +116,21 @@ projection(data.bio.sp) <- "+init=epsg:4326"
                                    lst.hdf.hkm,
                                    lst.hdf.1km)
   
-  ## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster
-  foreach(c = as.list(lst.tif.raster), 
+################################################################################  
+## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster ##
+lst.tif.na <- list.files(path.tif.na, pattern = tmp.date, full.names = TRUE)
+lst.tif.na.raster <- lapply(lst.tif.na, raster)
+
+
+foreach(c = as.list(lst.tif.na.raster), 
           d = as.list(as.numeric(modscales[["scales"]])),
-          g = as.list(lst.tif)) %do% {
+          g = as.list(lst.tif.na)) %do% {
             calc(c, fun = function(x) x * d, 
                  filename = paste0(path.tif.calc, basename(g)), 
                  format = "GTiff", 
                  overwrite = TRUE)        
           }
-  
+}  
   
   ################################################################################
   ### Extraction of cell values ##################################################

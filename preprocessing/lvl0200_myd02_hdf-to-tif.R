@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-01-30                                                        ##
+## Version: 2014-01-31                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -20,8 +20,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("/home/schmingo/Diplomarbeit/")
 
 path.hdf.in <- "/home/schmingo/Diplomarbeit/myd02_hdf/"
-tifsdir <- "/home/schmingo/Diplomarbeit/sample_myd02_tif//"
-tifsdir.rename <- "/home/schmingo/Diplomarbeit/sample_myd02_tif_rename/"
+tifsdir <- "/home/schmingo/Diplomarbeit/sample_myd02_tif/"
 mrtpath <- "/home/schmingo/apps/MRTSwath/bin/swath2grid"
 
 ## Load required modules
@@ -266,5 +265,5 @@ foreach(i = suffixes.in, j = suffixes.out) %do% {
   renameSuffix(files = lst.tif, 
                suffix.in = i, 
                suffix.out = j, 
-               tifsdir.rename)
+               tifsdir)
 }

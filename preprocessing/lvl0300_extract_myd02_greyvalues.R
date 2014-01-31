@@ -51,64 +51,58 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 ################################################################################
 ### List .hdf and .tif for specific date and import .tif as RasterLayer Object##
 
+lst.date <- unique(data.bio.raw$date_nocloud)
+lst.date
 
-
-## Begin foreach loop
-foreach(a = data.bio.raw$date_nocloud) %do% {
+foreach(a = lst.date) %do% {
   
-  ### Extract date from biodiversity data
+  ## Extract date from biodiversity data
   tmp.date <- a
-#     tmp.date <- data.bio.raw$date_nocloud[1]
+  #     tmp.date <- data.bio.raw$date_nocloud[1]
   
-  ### Reformat date
+  ## Reformat date
   tmp.date <- paste0(substr(tmp.date, 1, 4),
                      substr(tmp.date, 6, 8),
                      ".",
                      substr(tmp.date, 10, 13))
   
-  ### List .tif files
+  ## List .tif files
   lst.tif <- list.files(path.tif, pattern = tmp.date, full.names = TRUE)
-  
-  ## rename bands to get the right order from band01 to band36
-  ## create ordered list with all tifs in the right order
-  
-  
-  lst.tif.1km <- list.files(path.tif, pattern = paste("1KM", tmp.date, sep = ".*"), full.names = TRUE)
-  lst.tif.hkm <- list.files(path.tif, pattern = paste("HKM", tmp.date, sep = ".*"), full.names = TRUE)
-  lst.tif.qkm <- list.files(path.tif, pattern = paste("QKM", tmp.date, sep = ".*"), full.names = TRUE)
-  
-  
-  ### List .hdf files
-  lst.hdf.1km <- list.files(path.hdf, pattern = paste("1KM", tmp.date, sep = ".*"), full.names = TRUE)
-  lst.hdf.hkm <- list.files(path.hdf, pattern = paste("HKM", tmp.date, sep = ".*"), full.names = TRUE)
-  lst.hdf.qkm <- list.files(path.hdf, pattern = paste("QKM", tmp.date, sep = ".*"), full.names = TRUE)
-  
   
   ## Import .tif files as RasterLayer objects
   lst.tif.raster <- lapply(lst.tif, raster)
-  lst.tif.raster.1km <- lapply(lst.tif.1km, raster)
-  lst.tif.raster.hkm <- lapply(lst.tif.hkm, raster)
-  lst.tif.raster.qkm <- lapply(lst.tif.qkm, raster)
+  
+  ### List .hdf files
+  lst.hdf.1km <- list.files(path.hdf, 
+                            pattern = paste("1KM", tmp.date, sep = ".*"), 
+                            full.names = TRUE)
+  lst.hdf.hkm <- list.files(path.hdf, 
+                            pattern = paste("HKM", tmp.date, sep = ".*"), 
+                            full.names = TRUE)
+  lst.hdf.qkm <- list.files(path.hdf, 
+                            pattern = paste("QKM", tmp.date, sep = ".*"), 
+                            full.names = TRUE)
   
   
-  # projection.tif.raster <- CRS(projection(lst.tif.raster[[1]]))
-
-################################################################################
-### Check raster for NA values #################################################
-
-function.na <- function(x) {ifelse(x > 32767, x <- NA, x); return(x)}
-
-
-foreach (r = lst.tif.raster, n = lst.tif) %do% {
-  calc(r, 
-       fun = function.na, 
-       filename = paste0(path.tif.na, basename(n)),
-       overwrite = TRUE)
-}
-
-
-################################################################################
-### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
+  
+  
+  
+  ################################################################################
+  ### Check raster for NA values #################################################
+  
+  function.na <- function(x) {ifelse(x > 32767, x <- NA, x); return(x)}
+  
+  
+  foreach (r = lst.tif.raster, n = lst.tif) %do% {
+    calc(r, 
+         fun = function.na, 
+         filename = paste0(path.tif.na, basename(n)),
+         overwrite = TRUE)
+  }
+  
+  
+  ################################################################################
+  ### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
   
   print(paste("Extract radiance_scale and reflectance_scale from original *.hdf for ", tmp.date))
   
@@ -116,13 +110,13 @@ foreach (r = lst.tif.raster, n = lst.tif) %do% {
                                    lst.hdf.hkm,
                                    lst.hdf.1km)
   
-################################################################################  
-## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster ##
-lst.tif.na <- list.files(path.tif.na, pattern = tmp.date, full.names = TRUE)
-lst.tif.na.raster <- lapply(lst.tif.na, raster)
-
-
-foreach(c = as.list(lst.tif.na.raster), 
+  ################################################################################  
+  ## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster ##
+  lst.tif.na <- list.files(path.tif.na, pattern = tmp.date, full.names = TRUE)
+  lst.tif.na.raster <- lapply(lst.tif.na, raster)
+  
+  
+  foreach(c = as.list(lst.tif.na.raster), 
           d = as.list(as.numeric(modscales[["scales"]])),
           g = as.list(lst.tif.na)) %do% {
             calc(c, fun = function(x) x * d, 

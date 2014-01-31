@@ -10,7 +10,7 @@
 ################################################################################
 rm(list = ls(all = TRUE))
 
-tifsdir <- "/home/schmingo/Diplomarbeit/sample_myd02_tif//"
+tifsdir <- "/home/schmingo/Diplomarbeit/sample_myd02_tif/"
 tifsdir.rename <- "/home/schmingo/Diplomarbeit/sample_myd02_tif_rename/"
 
 lst.tif <- list.files(tifsdir, pattern=".tif", full.names=TRUE)
@@ -106,18 +106,21 @@ suffix.out <- "B36.tif"
   
   file.in <- files[index]
   
-  for ()
+  foreach (k = file.in) %do% {
+    file.out <- paste(sapply(c(1, 2), function(i) {
+      sapply(strsplit(basename(k), "_"), "[[", i)
+    }), collapse = "_")
+    
+    file.out <- paste0(tifsdir.rename, file.out)
+    file.out <- paste(tifsdir.rename, 
+                      paste(file.out, 
+                            suffix.out, 
+                            sep = "_"), 
+                      sep = "/")
+    
+    file.rename(file.in, file.out)
+  }
   
   
-  file.out <- paste(sapply(c(1, 2), function(i) {
-    sapply(strsplit(basename(file.in), "_"), "[[", i)
-  }), collapse = "_")
   
-  file.out <- paste(tifsdir.rename, 
-                    paste(file.out, 
-                          suffix.out, 
-                          sep = "_"), 
-                    sep = "/")
-  
-  file.rename(file.in, file.out)
 # }

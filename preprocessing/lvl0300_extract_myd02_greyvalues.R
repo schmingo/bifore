@@ -136,11 +136,10 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 
 # Extract date from biodiversity data
 # tmp.date <- data.bio.raw$date_nocloud[1]
-
 greyvalues <- foreach(a = lst.nocloud, b = seq(data.bio.sp), .combine = "rbind") %do% {
   
   tmp.date <- a
-
+  
   ## Reformat date
   tmp.date <- paste0(substr(tmp.date, 1, 4),
                      substr(tmp.date, 6, 8),
@@ -152,35 +151,22 @@ greyvalues <- foreach(a = lst.nocloud, b = seq(data.bio.sp), .combine = "rbind")
   lst.tif.calc <- list.files(path.tif.calc, pattern = tmp.date, full.names = TRUE)
   lst.tif.calc.raster <- lapply(lst.tif.calc, raster)
   
-  ## Extract cell value
-  greyvalues.raw <- foreach(r = seq(lst.tif.calc.raster), 
-                            .combine = "cbind") %do% {
-                              lst.tif.calc.raster[[r]][cellFromXY(lst.tif.calc.raster[[r]], data.bio.sp[b,])] ############# possible bug!! doublecheck if data.bio.sp[b,] is right!
-                            }
+  ## Extract cell values from all bands
+  greyvalues.calc <- foreach(r = seq(lst.tif.calc.raster), 
+                             .combine = "cbind") %do% {
+                               lst.tif.calc.raster[[r]][cellFromXY(lst.tif.calc.raster[[r]], data.bio.sp[b,])] ############# possible bug!! doublecheck if data.bio.sp[b,] is right!
+                             }
+  
+#   ## Calculate first derivate (diff)
+#   diff <- as.data.frame(rowDiffs(as.matrix(greyvalues.calc)))
+#   diff <- cbind(0,diff)
+#   
+#   greyvalues.calc.diff <- cbind(greyvalues.calc, diff)
 }
+
 greyvalues
 
 
-
-################################################################################
-### Check extracted cell values for NA #########################################
-
-greyvalues.na <- greyvalues.raw
-greyvalues.na[, 1:ncol(greyvalues.na)][greyvalues.na[, 1:ncol(greyvalues.na)] > 32767] <- NA
-
-## Convert greyvalue matrices to data.frame
-greyvalues.raw <- data.frame(greyvalues.raw, stringsAsFactors = F)
-greyvalues.na <- data.frame(greyvalues.na, stringsAsFactors = F)
-
-
-
-################################################################################
-
-greyvalues.calc <- greyvalues.na * as.numeric(modscales[["scales"]])
-
-## Calculate first derivate (diff)
-diff <- as.data.frame(rowDiffs(as.matrix(greyvalues.calc)))
-diff <- cbind(0,diff) # add "0-column" because there is no slope for the first greyvalue
 
 ################################################################################
 ### Pixelraster ################################################################

@@ -140,10 +140,10 @@ lst.nocloud <- as.list(data.bio.raw$date_nocloud)
 #   tmp.date <- a
 tmp.date <- data.bio.raw$date_nocloud[1]
 
-# foreach(a = data.bio.raw$date_nocloud) %do% {
+# foreach(a = lst.nocloud) %do% {
   
+#   tmp.date <- a
 
-  
   ## Reformat date
   tmp.date <- paste0(substr(tmp.date, 1, 4),
                      substr(tmp.date, 6, 8),

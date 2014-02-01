@@ -137,7 +137,6 @@ foreach(a = lst.date) %do% {
 lst.nocloud <- as.list(data.bio.raw$date_nocloud)
 
 ## Extract date from biodiversity data
-#   tmp.date <- a
 tmp.date <- data.bio.raw$date_nocloud[1]
 
 # foreach(a = lst.nocloud) %do% {

@@ -27,7 +27,6 @@ path.hdf <- "/home/schmingo/Diplomarbeit/sample_myd02_hdf/"
 path.tif <- "/home/schmingo/Diplomarbeit/sample_myd02_tif/"
 path.tif.na <- "/home/schmingo/Diplomarbeit/sample_myd02_tif_na/"
 path.tif.calc <- "/home/schmingo/Diplomarbeit/sample_myd02_tif_calc/"
-
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
 ## Source modules
@@ -51,6 +50,7 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 ################################################################################
 ### List .hdf and .tif for specific date and import .tif as RasterLayer Object##
 
+## List unique cloudless dates
 lst.date <- unique(data.bio.raw$date_nocloud)
 lst.date
 
@@ -83,13 +83,12 @@ foreach(a = lst.date) %do% {
                             pattern = paste("QKM", tmp.date, sep = ".*"), 
                             full.names = TRUE)
   
+ 
+################################################################################
+### Check raster for NA values #################################################
   
-  
-  
-  
-  ################################################################################
-  ### Check raster for NA values #################################################
-  
+  print(paste0(tmp.date, " - Check raw raster files for NA values"))
+
   function.na <- function(x) {ifelse(x > 32767, x <- NA, x); return(x)}
   
   
@@ -101,17 +100,20 @@ foreach(a = lst.date) %do% {
   }
   
   
-  ################################################################################
-  ### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
+################################################################################
+### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
   
-  print(paste("Extract radiance_scale and reflectance_scale from original *.hdf for ", tmp.date))
+  print(paste0(tmp.date, " - Extract scalefactors from *.hdf"))
   
   modscales <- hdfExtractMODScale (lst.hdf.qkm,
                                    lst.hdf.hkm,
                                    lst.hdf.1km)
   
-  ################################################################################  
-  ## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster ##
+################################################################################  
+## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster ##
+  
+  print(paste0(tmp.date, " - Calculate new greyvalues"))
+  
   lst.tif.na <- list.files(path.tif.na, pattern = tmp.date, full.names = TRUE)
   lst.tif.na.raster <- lapply(lst.tif.na, raster)
   
@@ -125,9 +127,29 @@ foreach(a = lst.date) %do% {
                  overwrite = TRUE)        
           }
 }  
+
+
+################################################################################
+### Extraction of cell values ##################################################
+
+## List cloud-free dates from biodiversity dataset
+
+lst.nocloud <- as.list(data.bio.raw$date_nocloud)
+
+## Extract date from biodiversity data
+#   tmp.date <- a
+tmp.date <- data.bio.raw$date_nocloud[1]
+
+# foreach(a = data.bio.raw$date_nocloud) %do% {
   
-  ################################################################################
-  ### Extraction of cell values ##################################################
+
+  
+  ## Reformat date
+  tmp.date <- paste0(substr(tmp.date, 1, 4),
+                     substr(tmp.date, 6, 8),
+                     ".",
+                     substr(tmp.date, 10, 13)) 
+  
   
   ## List calculated raster images
   lst.tif.calc <- list.files(path.tif.calc, pattern = tmp.date, full.names = TRUE)

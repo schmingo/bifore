@@ -41,12 +41,6 @@ data.bio.raw <- read.csv2(path.biodiversity.csv,
                           stringsAsFactors = FALSE)
 
 
-## Import biodiversity dataset as SpatialPointsDataframe objects
-data.bio.sp <- data.bio.raw
-
-coordinates(data.bio.sp) <- c("lon", "lat")
-projection(data.bio.sp) <- "+init=epsg:4326"
-
 ################################################################################
 ### List .hdf and .tif for specific date and import .tif as RasterLayer Object##
 
@@ -133,15 +127,19 @@ foreach(a = lst.date) %do% {
 ### Extraction of cell values ##################################################
 
 ## List cloud-free dates from biodiversity dataset
-
 lst.nocloud <- as.list(data.bio.raw$date_nocloud)
 
-## Extract date from biodiversity data
-tmp.date <- data.bio.raw$date_nocloud[1]
+## Import biodiversity dataset as SpatialPointsDataframe objects
+data.bio.sp <- data.bio.raw
+coordinates(data.bio.sp) <- c("lon", "lat")
+projection(data.bio.sp) <- "+init=epsg:4326"
 
-# foreach(a = lst.nocloud) %do% {
+# Extract date from biodiversity data
+# tmp.date <- data.bio.raw$date_nocloud[1]
+
+foreach(a = lst.nocloud, b = seq(data.bio.sp)) %do% {
   
-#   tmp.date <- a
+  tmp.date <- a
 
   ## Reformat date
   tmp.date <- paste0(substr(tmp.date, 1, 4),
@@ -154,7 +152,15 @@ tmp.date <- data.bio.raw$date_nocloud[1]
   lst.tif.calc <- list.files(path.tif.calc, pattern = tmp.date, full.names = TRUE)
   lst.tif.calc.raster <- lapply(lst.tif.calc, raster)
   
-  greyvalues.raw <- foreach(i = seq(lst.tif.calc.raster))
+  ## Extract cell value
+  greyvalues.raw <- foreach(r = seq(lst.tif.calc.raster), 
+                            .combine = "cbind") %do% {
+                              lst.tif.calc.raster[[r]][cellFromXY(lst.tif.calc.raster[[r]], data.bio.sp[b,])] ############# possible bug!! doublecheck if data.bio.sp[b,] is right!
+                            }
+}
+greyvalues.raw
+
+
   #   registerDoParallel(cl <- makeCluster(detectCores()))
   
   greyvalues.raw <- foreach(i = seq(lst.tif.calc.raster), .combine = "cbind") %do% {

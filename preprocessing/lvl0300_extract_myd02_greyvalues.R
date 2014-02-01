@@ -137,7 +137,7 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 # Extract date from biodiversity data
 # tmp.date <- data.bio.raw$date_nocloud[1]
 
-foreach(a = lst.nocloud, b = seq(data.bio.sp)) %do% {
+greyvalues <- foreach(a = lst.nocloud, b = seq(data.bio.sp), .combine = "rbind") %do% {
   
   tmp.date <- a
 
@@ -158,18 +158,10 @@ foreach(a = lst.nocloud, b = seq(data.bio.sp)) %do% {
                               lst.tif.calc.raster[[r]][cellFromXY(lst.tif.calc.raster[[r]], data.bio.sp[b,])] ############# possible bug!! doublecheck if data.bio.sp[b,] is right!
                             }
 }
-greyvalues.raw
+greyvalues
 
 
-  #   registerDoParallel(cl <- makeCluster(detectCores()))
-  
-  greyvalues.raw <- foreach(i = seq(lst.tif.calc.raster), .combine = "cbind") %do% {
-    lst.tif.calc.raster[[i]][cellFromXY(lst.tif.calc.raster[[i]], data.bio.sp[1,])]
-  }
-  
-  stopCluster(cl)
-  
-}  
+
 ################################################################################
 ### Check extracted cell values for NA #########################################
 

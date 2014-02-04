@@ -98,9 +98,9 @@ dates.hkm %in% data$date_nocloud
 
 ## List hdf files
 lst.tif.b01 <- list.files(path.tif, pattern="B01", full.names=TRUE)
-lst.tif.b02 <- list.files(path.tif, pattern="B02", full.names=TRUE)
+lst.tif.b03 <- list.files(path.tif, pattern="B03", full.names=TRUE)
 
 dates.b01 <- substr(basename(lst.tif.b01), 15, 26)
-dates.b02 <- substr(basename(lst.tif.b02), 15, 26)
+dates.b03 <- substr(basename(lst.tif.b03), 15, 26)
 
-dates.b02 %in% dates.b01
+dates.b03 %in% dates.b01

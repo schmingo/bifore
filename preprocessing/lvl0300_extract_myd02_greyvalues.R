@@ -228,11 +228,11 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 
 
 
-# matrix.sd <- foreach(a = lst.nocloud[1:9], b = seq(nrow(data.bio.sp))[1:9], .combine = "rbind") %do% {
-#   
-#   tmp.date <- a
-tmp.date <- data.bio.raw$date_nocloud[3]
-b <- 3
+matrix.sd <- foreach(a = lst.nocloud[1:9], b = seq(nrow(data.bio.sp))[1:9], .combine = "rbind") %do% {
+  
+  tmp.date <- a
+# tmp.date <- data.bio.raw$date_nocloud[3]
+# b <- 3
   
   ## Reformat date
   tmp.date <- paste0(substr(tmp.date, 1, 4),
@@ -253,15 +253,15 @@ b <- 3
   
   
   ## Get pixel matrix for 1km resolution
-  cells.1km <- cellFromXY(lst.rst.1km[[b]], data.bio.sp[b,])
-  cells.adj.1km <- adjacent(lst.rst.1km[[b]], cells.1km, 
+  cells.1km <- cellFromXY(lst.rst.1km[[1]], data.bio.sp[b,])
+  cells.adj.1km <- adjacent(lst.rst.1km[[1]], cells.1km, 
                             directions = 8, 
                             pairs = FALSE, 
                             sorted = TRUE)
   
   ## Get pixel matrix for 500m resolution
-  cells.hkm <- cellFromXY(lst.rst.hkm[[b]], data.bio.sp[b,])
-  cells.adj.hkm <- adjacent(lst.rst.hkm[[b]], cells.hkm, 
+  cells.hkm <- cellFromXY(lst.rst.hkm[[1]], data.bio.sp[b,])
+  cells.adj.hkm <- adjacent(lst.rst.hkm[[1]], cells.hkm, 
                             directions = matrix(c(1,1,1,1,1,
                                                   1,1,1,1,1,
                                                   1,1,0,1,1,
@@ -272,8 +272,8 @@ b <- 3
                             sorted = TRUE)
   
   ## Get pixel matrix for 250m resolution
-  cells.qkm <- cellFromXY(lst.rst.qkm[[b]], data.bio.sp[b,])
-  cells.adj.qkm <- adjacent(lst.rst.qkm[[b]], cells.qkm, 
+  cells.qkm <- cellFromXY(lst.rst.qkm[[1]], data.bio.sp[b,])
+  cells.adj.qkm <- adjacent(lst.rst.qkm[[1]], cells.qkm, 
                             directions = matrix(c(1,1,1,1,1,1,1,1,1,1,1,
                                                   1,1,1,1,1,1,1,1,1,1,1,
                                                   1,1,1,1,1,1,1,1,1,1,1,
@@ -308,8 +308,8 @@ b <- 3
     return(cells.qkm.sd)
   }
   
-  row3.sd <- cbind(pxl.rst.qkm, pxl.rst.hkm, pxl.rst.1km)
-  row3.sd
+  row.sd <- cbind(pxl.rst.qkm, pxl.rst.hkm, pxl.rst.1km)
+  return(row.sd)
 }
 
 matrix.sd

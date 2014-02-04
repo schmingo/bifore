@@ -157,16 +157,41 @@ greyvalues <- foreach(a = lst.nocloud, b = seq(data.bio.sp), .combine = "rbind")
                                lst.tif.calc.raster[[r]][cellFromXY(lst.tif.calc.raster[[r]], data.bio.sp[b,])] ############# possible bug!! doublecheck if data.bio.sp[b,] is right!
                              }
   
-#   ## Calculate first derivate (diff)
-#   diff <- as.data.frame(rowDiffs(as.matrix(greyvalues.calc)))
-#   diff <- cbind(0,diff)
-#   
-#   greyvalues.calc.diff <- cbind(greyvalues.calc, diff)
 }
 
 greyvalues
 
+## Add bandnames to df header
+tmp.date <- data.bio.raw$date_nocloud[1]
 
+## Reformat date
+tmp.date <- paste0(substr(tmp.date, 1, 4),
+                   substr(tmp.date, 6, 8),
+                   ".",
+                   substr(tmp.date, 10, 13))
+
+lst.hdf.1km <- list.files(path.hdf, 
+                          pattern = paste("1KM", tmp.date, sep = ".*"), 
+                          full.names = TRUE)
+lst.hdf.hkm <- list.files(path.hdf, 
+                          pattern = paste("HKM", tmp.date, sep = ".*"), 
+                          full.names = TRUE)
+lst.hdf.qkm <- list.files(path.hdf, 
+                          pattern = paste("QKM", tmp.date, sep = ".*"), 
+                          full.names = TRUE)
+
+modscales <- hdfExtractMODScale (lst.hdf.qkm,
+                                 lst.hdf.hkm,
+                                 lst.hdf.1km)
+
+
+################################################################################
+### Calculate first derivate (diff) ############################################
+
+diff <- as.data.frame(rowDiffs(as.matrix(greyvalues)))
+diff <- cbind(0,diff)
+
+greyvalues.calc.diff <- cbind(greyvalues, diff)
 
 ################################################################################
 ### Pixelraster ################################################################

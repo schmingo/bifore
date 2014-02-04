@@ -228,11 +228,11 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 
 
 
-# matrix.sd <- foreach(a = lst.nocloud[1:9], b = seq(nrow(data.bio.sp))[1:9], .combine = "rbind") %do% { ## [1:9] should be removed for full dataset
+# matrix.sd <- foreach(a = lst.nocloud[1:9], b = seq(nrow(data.bio.sp))[1:9], .combine = "rbind") %do% {
 #   
 #   tmp.date <- a
-      tmp.date <- data.bio.raw$date_nocloud[1]
-b <- 1
+tmp.date <- data.bio.raw$date_nocloud[3]
+b <- 3
   
   ## Reformat date
   tmp.date <- paste0(substr(tmp.date, 1, 4),
@@ -308,8 +308,8 @@ b <- 1
     return(cells.qkm.sd)
   }
   
-  row.sd <- cbind(pxl.rst.qkm, pxl.rst.hkm, pxl.rst.1km)
-  return(row.sd)
+  row3.sd <- cbind(pxl.rst.qkm, pxl.rst.hkm, pxl.rst.1km)
+  row3.sd
 }
 
 matrix.sd

@@ -159,9 +159,12 @@ greyvalues <- foreach(a = lst.nocloud, b = seq(data.bio.sp), .combine = "rbind")
   
 }
 
-greyvalues
+greyvalues <- data.frame(greyvalues)
 
-## Add bandnames to df header
+################################################################################
+### Get bandnames for new df ###################################################
+
+## Set date for extraction
 tmp.date <- data.bio.raw$date_nocloud[1]
 
 ## Reformat date
@@ -180,18 +183,37 @@ lst.hdf.qkm <- list.files(path.hdf,
                           pattern = paste("QKM", tmp.date, sep = ".*"), 
                           full.names = TRUE)
 
+## Extract bandnames and scalefactor
 modscales <- hdfExtractMODScale (lst.hdf.qkm,
                                  lst.hdf.hkm,
                                  lst.hdf.1km)
 
 
+## Set names of greyvalues df
+names(greyvalues) <- foreach(i = modscales$bands, j = names(greyvalues)) %do% {
+  j <- paste0("greyval_band_", i)
+}
+
+names(greyvalues)
+
+
 ################################################################################
 ### Calculate first derivate (diff) ############################################
 
+## Calculate diff
 diff <- as.data.frame(rowDiffs(as.matrix(greyvalues)))
 diff <- cbind(0,diff)
 
-greyvalues.calc.diff <- cbind(greyvalues, diff)
+## Combine dataframes
+greyvalues.diff <- cbind(greyvalues, diff)
+
+## Set names for diffs
+names(greyvalues.diff)[39:76] <- foreach(i = modscales$bands, 
+                                         j = names(greyvalues.diff[39:76])) %do% {
+                                           j <- paste0("diff_band_", i)
+                                         }
+
+names(greyvalues.diff)[39:76]
 
 ################################################################################
 ### Pixelraster ################################################################

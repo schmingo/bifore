@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-01-24                                                        ##
+## Version: 2014-02-04                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -28,6 +28,8 @@ path.tif <- "/home/schmingo/Diplomarbeit/myd02_tif/"
 path.tif.na <- "/home/schmingo/Diplomarbeit/myd02_tif_na/"
 path.tif.calc <- "/home/schmingo/Diplomarbeit/myd02_tif_calc/"
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
+
+path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data.csv"
 
 ## Source modules
 source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
@@ -327,14 +329,22 @@ names(matrix.sd)
 ################################################################################
 ### Combine dataframes #########################################################
 
-greyvalues.diff.sd <- data.frame(t(cbind(data.bio.raw[1:9,], 
+greyvalues.diff.sd <- data.frame(t(cbind(data.bio.raw, 
                                          greyvalues, 
                                          diff, 
                                          matrix.sd)), 
                                  stringsAsFactors = FALSE)
 
 ## Set colnames
-names(greyvalues.diff.sd) <- data.bio.raw$date_nocloud[1:9]
+names(greyvalues.diff.sd) <- data.bio.raw$date_nocloud
+
+write.table(greyvalues.diff.sd, 
+            file = path.biodiversity.csv.out,
+            dec = ".",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = TRUE,
+            sep = ";")
 
 ################################################################################
 ### Check actual time again ####################################################

@@ -23,10 +23,10 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 ### Set filepaths ##############################################################
 
-path.hdf <- "/home/schmingo/Diplomarbeit/sample_myd02_hdf/"
-path.tif <- "/home/schmingo/Diplomarbeit/sample_myd02_tif/"
-path.tif.na <- "/home/schmingo/Diplomarbeit/sample_myd02_tif_na/"
-path.tif.calc <- "/home/schmingo/Diplomarbeit/sample_myd02_tif_calc/"
+path.hdf <- "/home/schmingo/Diplomarbeit/myd02_hdf/"
+path.tif <- "/home/schmingo/Diplomarbeit/myd02_tif/"
+path.tif.na <- "/home/schmingo/Diplomarbeit/myd02_tif_na/"
+path.tif.calc <- "/home/schmingo/Diplomarbeit/myd02_tif_calc/"
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
 ## Source modules
@@ -230,7 +230,7 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 
 
 
-matrix.sd <- foreach(a = lst.nocloud[1:9], b = seq(nrow(data.bio.sp))[1:9], .combine = "rbind") %do% {
+matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind") %do% {
   
   tmp.date <- a
   

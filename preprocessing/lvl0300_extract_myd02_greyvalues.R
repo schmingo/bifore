@@ -228,9 +228,9 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 
 
 
-# pxl.matrix <- foreach(a = lst.nocloud, b = seq(data.bio.sp), .combine = "rbind") %do% {
-#   tmp.date <- a
-    tmp.date <- data.bio.raw$date_nocloud[1]
+pxl.matrix <- foreach(a = lst.nocloud, b = seq(data.bio.sp), .combine = "rbind") %do% {
+  tmp.date <- a
+  #     tmp.date <- data.bio.raw$date_nocloud[1]
   
   ## Reformat date
   tmp.date <- paste0(substr(tmp.date, 1, 4),
@@ -251,7 +251,7 @@ projection(data.bio.sp) <- "+init=epsg:4326"
   
   ## Extract cell values from all bands for each 1km raster
   pxl.rst.1km <- foreach(r = seq(lst.rst.1km), .combine = "cbind") %do% {
-    cells.1km <- cellFromXY(lst.rst.1km[[r]], data.bio.sp[1,])
+    cells.1km <- cellFromXY(lst.rst.1km[[r]], data.bio.sp[b,])
     
     cells.adj.1km <- adjacent(lst.rst.1km[[r]], cells.1km, 
                               directions = 8, 
@@ -263,7 +263,7 @@ projection(data.bio.sp) <- "+init=epsg:4326"
   
   ## Extract cell values from all bands for each hkm raster
   pxl.rst.hkm <- foreach(r = seq(lst.rst.hkm), .combine = "cbind") %do% {
-    cells.hkm <- cellFromXY(lst.rst.hkm[[r]], data.bio.sp[1,])
+    cells.hkm <- cellFromXY(lst.rst.hkm[[r]], data.bio.sp[b,])
     
     cells.adj.hkm <- adjacent(lst.rst.hkm[[r]], cells.hkm, 
                               directions = matrix(c(1,1,1,1,1,
@@ -279,10 +279,11 @@ projection(data.bio.sp) <- "+init=epsg:4326"
   
   ## Extract cell values from all bands for each qkm raster
   pxl.rst.qkm <- foreach(r = seq(lst.rst.qkm), .combine = "cbind") %do% {
-    cells.qkm <- cellFromXY(lst.rst.qkm[[r]], data.bio.sp[1,])
+    cells.qkm <- cellFromXY(lst.rst.qkm[[r]], data.bio.sp[b,])
     
     cells.adj.qkm <- adjacent(lst.rst.qkm[[r]], cells.qkm, 
                               directions = matrix(c(1,1,1,1,1,1,1,1,1,1,1,
+                                                    1,1,1,1,1,1,1,1,1,1,1,
                                                     1,1,1,1,1,1,1,1,1,1,1,
                                                     1,1,1,1,1,1,1,1,1,1,1,
                                                     1,1,1,1,1,1,1,1,1,1,1,
@@ -290,7 +291,8 @@ projection(data.bio.sp) <- "+init=epsg:4326"
                                                     1,1,1,1,1,1,1,1,1,1,1,
                                                     1,1,1,1,1,1,1,1,1,1,1,
                                                     1,1,1,1,1,1,1,1,1,1,1,
-                                                    1,1,1,1,1,1,1,1,11,1,), ncol = 11),  
+                                                    1,1,1,1,1,1,1,1,1,1,1,
+                                                    1,1,1,1,1,1,1,1,1,1,1), ncol = 11),  
                               pairs = FALSE, 
                               sorted = TRUE)
     

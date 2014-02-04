@@ -22,10 +22,11 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 ### Set filepaths ##############################################################
 
-path.biodiversity.csv <- ("csv/kili/lvl0100_biodiversity_data.csv")
+path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
 # path.hdf.in <- ("E:/Diplomarbeit/myd02_hdf/")
-path.hdf.in <- ("/home/schmingo/Diplomarbeit/myd02_hdf/")
+path.hdf.in <- "/home/schmingo/Diplomarbeit/myd02_hdf/"
+path.tif <- "/home/schmingo/Diplomarbeit/myd02_tif/"
 
 ################################################################################
 ### Import biodiversity dataset ################################################
@@ -92,3 +93,14 @@ dates.1km %in% data$date_nocloud
 dates.qkm %in% data$date_nocloud
 dates.hkm %in% data$date_nocloud
 
+################################################################################
+### Check if *.tif are complete ################################################
+
+## List hdf files
+lst.tif.b01 <- list.files(path.tif, pattern="B01", full.names=TRUE)
+lst.tif.b02 <- list.files(path.tif, pattern="B02", full.names=TRUE)
+
+dates.b01 <- substr(basename(lst.tif.b01), 15, 26)
+dates.b02 <- substr(basename(lst.tif.b02), 15, 26)
+
+dates.b02 %in% dates.b01

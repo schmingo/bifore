@@ -217,7 +217,6 @@ names(greyvalues.diff)[39:76]
 
 ################################################################################
 ### Pixelraster ################################################################
-path.tif.calc <- "/home/schmingo/Diplomarbeit/sample_myd02_tif_calc/"
 
 ## List cloud-free dates from biodiversity dataset
 lst.nocloud <- as.list(data.bio.raw$date_nocloud)
@@ -251,57 +250,55 @@ pxl.matrix <- foreach(a = lst.nocloud, b = seq(data.bio.sp), .combine = "rbind")
   lst.rst.qkm <- lapply(lst.tif.calc.qkm, raster)
   
   ## Extract cell values from all bands for each 1km raster
-  pxl.rst.1km <- foreach(r = seq(lst.rst.1km), 
-                         .combine = "cbind") %do% {
-                           cells.1km <- cellFromXY(lst.rst.1km[[r]], data.bio.sp[b,])
-                           
-                           cells.adj.1km <- adjacent(lst.rst.1km[[r]], cells.1km, 
-                                                     directions = 8, 
-                                                     pairs = FALSE, 
-                                                     sorted = TRUE)
-                           
-                           cells.1km.mtrx.sd <- sd(lst.rst.1km[[r]][cells.adj.1km])
-                         }
+  pxl.rst.1km <- foreach(r = seq(lst.rst.1km), .combine = "cbind") %do% {
+    cells.1km <- cellFromXY(lst.rst.1km[[r]], data.bio.sp[b,])
+    
+    cells.adj.1km <- adjacent(lst.rst.1km[[r]], cells.1km, 
+                              directions = 8, 
+                              pairs = FALSE, 
+                              sorted = TRUE)
+    
+    cells.1km.mtrx.sd <- sd(lst.rst.1km[[r]][cells.adj.1km])
+  }
   
   ## Extract cell values from all bands for each hkm raster
-  pxl.rst.hkm <- foreach(r = seq(lst.rst.hkm), 
-                         .combine = "cbind") %do% {
-                           cells.hkm <- cellFromXY(lst.rst.hkm[[r]], data.bio.sp[b,])
-                           
-                           cells.adj.hkm <- adjacent(lst.rst.hkm[[r]], cells.hkm, 
-                                                     directions = matrix(c(1,1,1,1,1,
-                                                                           1,1,1,1,1,
-                                                                           1,1,0,1,1,
-                                                                           1,1,1,1,1,
-                                                                           1,1,1,1,1), ncol = 5), 
-                                                     pairs = FALSE, 
-                                                     sorted = TRUE)
-                           
-                           cells.hkm.mtrx.sd <- sd(lst.rst.hkm[[r]][cells.adj.hkm])
-                         }
+  pxl.rst.hkm <- foreach(r = seq(lst.rst.hkm), .combine = "cbind") %do% {
+    cells.hkm <- cellFromXY(lst.rst.hkm[[r]], data.bio.sp[b,])
+    
+    cells.adj.hkm <- adjacent(lst.rst.hkm[[r]], cells.hkm, 
+                              directions = matrix(c(1,1,1,1,1,
+                                                    1,1,1,1,1,
+                                                    1,1,0,1,1,
+                                                    1,1,1,1,1,
+                                                    1,1,1,1,1), ncol = 5), 
+                              pairs = FALSE, 
+                              sorted = TRUE)
+    
+    cells.hkm.mtrx.sd <- sd(lst.rst.hkm[[r]][cells.adj.hkm])
+  }
   
   ## Extract cell values from all bands for each qkm raster
-  pxl.rst.qkm <- foreach(r = seq(lst.rst.qkm), 
-                         .combine = "cbind") %do% {
-                           cells.qkm <- cellFromXY(lst.rst.qkm[[r]], data.bio.sp[b,])
-                           
-                           cells.adj.qkm <- adjacent(lst.rst.qkm[[r]], cells.qkm, 
-                                                     directions = matrix(c(1,1,1,1,1,1,1,1,1,1,1,
-                                                                           1,1,1,1,1,1,1,1,1,1,1,
-                                                                           1,1,1,1,1,1,1,1,1,1,1,
-                                                                           1,1,1,1,1,1,1,1,1,1,1,
-                                                                           1,1,1,1,1,0,1,1,1,1,1,
-                                                                           1,1,1,1,1,1,1,1,1,1,1,
-                                                                           1,1,1,1,1,1,1,1,1,1,1,
-                                                                           1,1,1,1,1,1,1,1,1,1,1,
-                                                                           1,1,1,1,1,1,1,1,11,1,), ncol = 11),  
-                                                     pairs = FALSE, 
-                                                     sorted = TRUE)
-                           
-                           cells.qkm.mtrx.sd <- sd(lst.rst.qkm[[r]][cells.adj.qkm])
-                         }
+  pxl.rst.qkm <- foreach(r = seq(lst.rst.qkm), .combine = "cbind") %do% {
+    cells.qkm <- cellFromXY(lst.rst.qkm[[r]], data.bio.sp[b,])
+    
+    cells.adj.qkm <- adjacent(lst.rst.qkm[[r]], cells.qkm, 
+                              directions = matrix(c(1,1,1,1,1,1,1,1,1,1,1,
+                                                    1,1,1,1,1,1,1,1,1,1,1,
+                                                    1,1,1,1,1,1,1,1,1,1,1,
+                                                    1,1,1,1,1,1,1,1,1,1,1,
+                                                    1,1,1,1,1,0,1,1,1,1,1,
+                                                    1,1,1,1,1,1,1,1,1,1,1,
+                                                    1,1,1,1,1,1,1,1,1,1,1,
+                                                    1,1,1,1,1,1,1,1,1,1,1,
+                                                    1,1,1,1,1,1,1,1,11,1,), ncol = 11),  
+                              pairs = FALSE, 
+                              sorted = TRUE)
+    
+    cells.qkm.mtrx.sd <- sd(lst.rst.qkm[[r]][cells.adj.qkm])
+  }
 }
 
+pxl.matrix <- data.frame(pxl.matrix)
 # cells.1km <- cellFromXY(lst.rst.1km[[1]], data.bio.sp[1,])
 # cells.hkm <- cellFromXY(lst.tif.raster.hkm[[1]], data.bio.sp[1,])
 # cells.qkm <- cellFromXY(lst.tif.raster.qkm[[1]], data.bio.sp[1,])

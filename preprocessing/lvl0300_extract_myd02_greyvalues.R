@@ -40,6 +40,38 @@ data.bio.raw <- read.csv2(path.biodiversity.csv,
                           header = TRUE, 
                           stringsAsFactors = FALSE)
 
+## Check actual time
+starttime <- Sys.time()
+
+################################################################################
+### Get MYD bandnames ##########################################################
+
+## Set date for extraction
+tmp.date <- data.bio.raw$date_nocloud[1]
+
+## Reformat date
+tmp.date <- paste0(substr(tmp.date, 1, 4),
+                   substr(tmp.date, 6, 8),
+                   ".",
+                   substr(tmp.date, 10, 13))
+
+lst.hdf.1km <- list.files(path.hdf, 
+                          pattern = paste("1KM", tmp.date, sep = ".*"), 
+                          full.names = TRUE)
+lst.hdf.hkm <- list.files(path.hdf, 
+                          pattern = paste("HKM", tmp.date, sep = ".*"), 
+                          full.names = TRUE)
+lst.hdf.qkm <- list.files(path.hdf, 
+                          pattern = paste("QKM", tmp.date, sep = ".*"), 
+                          full.names = TRUE)
+
+## Extract bandnames from *.hdf files
+bandnames <- hdfExtractMODScale (lst.hdf.qkm,
+                                 lst.hdf.hkm,
+                                 lst.hdf.1km)
+bandnames <- bandnames$bands
+
+
 
 ################################################################################
 ### List .hdf and .tif for specific date and import .tif as RasterLayer Object##
@@ -77,12 +109,12 @@ foreach(a = lst.date) %do% {
                             pattern = paste("QKM", tmp.date, sep = ".*"), 
                             full.names = TRUE)
   
- 
-################################################################################
-### Check raster for NA values #################################################
+  
+  ################################################################################
+  ### Check raster for NA values #################################################
   
   print(paste0(tmp.date, " - Check raw raster files for NA values"))
-
+  
   function.na <- function(x) {ifelse(x > 32767, x <- NA, x); return(x)}
   
   
@@ -94,8 +126,8 @@ foreach(a = lst.date) %do% {
   }
   
   
-################################################################################
-### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
+  ################################################################################
+  ### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
   
   print(paste0(tmp.date, " - Extract scalefactors from *.hdf"))
   
@@ -103,8 +135,8 @@ foreach(a = lst.date) %do% {
                                    lst.hdf.hkm,
                                    lst.hdf.1km)
   
-################################################################################  
-## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster ##
+  ################################################################################  
+  ## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster ##
   
   print(paste0(tmp.date, " - Calculate new greyvalues"))
   
@@ -161,36 +193,8 @@ greyvalues <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "r
 
 greyvalues <- data.frame(greyvalues)
 
-################################################################################
-### Get bandnames for new df ###################################################
-
-## Set date for extraction
-tmp.date <- data.bio.raw$date_nocloud[1]
-
-## Reformat date
-tmp.date <- paste0(substr(tmp.date, 1, 4),
-                   substr(tmp.date, 6, 8),
-                   ".",
-                   substr(tmp.date, 10, 13))
-
-lst.hdf.1km <- list.files(path.hdf, 
-                          pattern = paste("1KM", tmp.date, sep = ".*"), 
-                          full.names = TRUE)
-lst.hdf.hkm <- list.files(path.hdf, 
-                          pattern = paste("HKM", tmp.date, sep = ".*"), 
-                          full.names = TRUE)
-lst.hdf.qkm <- list.files(path.hdf, 
-                          pattern = paste("QKM", tmp.date, sep = ".*"), 
-                          full.names = TRUE)
-
-## Extract bandnames and scalefactor
-modscales <- hdfExtractMODScale (lst.hdf.qkm,
-                                 lst.hdf.hkm,
-                                 lst.hdf.1km)
-
-
 ## Set names of greyvalues df
-names(greyvalues) <- foreach(i = modscales$bands, j = names(greyvalues)) %do% {
+names(greyvalues) <- foreach(i = bandnames, j = names(greyvalues)) %do% {
   j <- paste0("greyval_band_", i)
 }
 
@@ -204,16 +208,14 @@ names(greyvalues)
 diff <- as.data.frame(rowDiffs(as.matrix(greyvalues)))
 diff <- cbind(0,diff)
 
-## Combine dataframes
-greyvalues.diff <- cbind(greyvalues, diff)
-
 ## Set names for diffs
-names(greyvalues.diff)[39:76] <- foreach(i = modscales$bands, 
-                                         j = names(greyvalues.diff[39:76])) %do% {
-                                           j <- paste0("deriv_band_", i)
-                                         }
+names(diff) <- foreach(i = bandnames, 
+                       j = names(diff)) %do% {
+                         j <- paste0("deriv_band_", i)
+                       }
 
-names(greyvalues.diff)[39:76]
+names(diff)
+
 
 ################################################################################
 ### Pixelraster ################################################################
@@ -231,8 +233,6 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 matrix.sd <- foreach(a = lst.nocloud[1:9], b = seq(nrow(data.bio.sp))[1:9], .combine = "rbind") %do% {
   
   tmp.date <- a
-# tmp.date <- data.bio.raw$date_nocloud[3]
-# b <- 3
   
   ## Reformat date
   tmp.date <- paste0(substr(tmp.date, 1, 4),
@@ -252,14 +252,14 @@ matrix.sd <- foreach(a = lst.nocloud[1:9], b = seq(nrow(data.bio.sp))[1:9], .com
   lst.rst.qkm <- lapply(lst.tif.calc.qkm, raster)
   
   
-  ## Get pixel matrix for 1km resolution
+  ## Get pixel matrix indices for 1km resolution
   cells.1km <- cellFromXY(lst.rst.1km[[1]], data.bio.sp[b,])
   cells.adj.1km <- adjacent(lst.rst.1km[[1]], cells.1km, 
                             directions = 8, 
                             pairs = FALSE, 
                             sorted = TRUE)
   
-  ## Get pixel matrix for 500m resolution
+  ## Get pixel matrix indices for 500m resolution
   cells.hkm <- cellFromXY(lst.rst.hkm[[1]], data.bio.sp[b,])
   cells.adj.hkm <- adjacent(lst.rst.hkm[[1]], cells.hkm, 
                             directions = matrix(c(1,1,1,1,1,
@@ -271,7 +271,7 @@ matrix.sd <- foreach(a = lst.nocloud[1:9], b = seq(nrow(data.bio.sp))[1:9], .com
                             pairs = FALSE, 
                             sorted = TRUE)
   
-  ## Get pixel matrix for 250m resolution
+  ## Get pixel matrix indices for 250m resolution
   cells.qkm <- cellFromXY(lst.rst.qkm[[1]], data.bio.sp[b,])
   cells.adj.qkm <- adjacent(lst.rst.qkm[[1]], cells.qkm, 
                             directions = matrix(c(1,1,1,1,1,1,1,1,1,1,1,
@@ -308,68 +308,38 @@ matrix.sd <- foreach(a = lst.nocloud[1:9], b = seq(nrow(data.bio.sp))[1:9], .com
     return(cells.qkm.sd)
   }
   
+  ## Combine calculated sd in a single row
   row.sd <- cbind(pxl.rst.qkm, pxl.rst.hkm, pxl.rst.1km)
   return(row.sd)
 }
 
-matrix.sd
-# pxl.matrix <- data.frame(pxl.matrix)
-# cells.1km <- cellFromXY(lst.rst.1km[[1]], data.bio.sp[1,])
-# cells.hkm <- cellFromXY(lst.tif.raster.hkm[[1]], data.bio.sp[1,])
-# cells.qkm <- cellFromXY(lst.tif.raster.qkm[[1]], data.bio.sp[1,])
-# 
-# cells.adj.1km <- adjacent(lst.tif.raster.1km[[1]], cells.1km, 
-#                           directions = 8, 
-#                           pairs = FALSE, 
-#                           sorted = TRUE)
-# 
-# cells.adj.hkm <- adjacent(lst.tif.raster.hkm[[1]], cells.hkm, 
-#                           directions = matrix(c(1,1,1,1,1,
-#                                                 1,1,1,1,1,
-#                                                 1,1,0,1,1,
-#                                                 1,1,1,1,1,
-#                                                 1,1,1,1,1), ncol = 5), 
-#                           pairs = FALSE, 
-#                           sorted = TRUE)
-# 
-# cells.adj.qkm <- adjacent(lst.tif.raster.qkm[[1]], cells.qkm, 
-#                           directions = matrix(c(1,1,1,1,1,1,1,1,1,1,1,
-#                                                 1,1,1,1,1,1,1,1,1,1,1,
-#                                                 1,1,1,1,1,1,1,1,1,1,1,
-#                                                 1,1,1,1,1,1,1,1,1,1,1,
-#                                                 1,1,1,1,1,0,1,1,1,1,1,
-#                                                 1,1,1,1,1,1,1,1,1,1,1,
-#                                                 1,1,1,1,1,1,1,1,1,1,1,
-#                                                 1,1,1,1,1,1,1,1,1,1,1,
-#                                                 1,1,1,1,1,1,1,1,11,1,), ncol = 11), 
-#                           pairs = FALSE, 
-#                           sorted = TRUE)
-# 
-# 
-# 
-# 
-# cells.1km.mtrx.sd <- sd(lst.tif.raster.1km[[1]][cells.adj.1km])
-# cells.hkm.mtrx.sd <- sd(cells.adj.hkm)
-# cells.qkm.mtrx.sd <- sd(cells.adj.qkm)
-# ################################################################################
-# 
-# 
-# # ## combine dataframes
-# # greyvalues.calc.diff <- data.frame(t(cbind(t(greyvalues.calc), t(diff))))
-# # 
-# # ## Set colnames and rownames for new df
-# # colnames(greyvalues.calc.diff) <- paste0("band_", as.character(modscales[["bands"]]))
-# # row.names(greyvalues.calc.diff) <- c("greyvalues", "first_derivate")
-# 
-# tmp.bio.df <- cbind(data.bio.raw[1,], greyvalues.calc, diff)
-# colnames(tmp.bio.df)[69:106] <- paste0("greyval_band_", as.character(modscales[["bands"]]))
-# colnames(tmp.bio.df)[107:144] <- paste0("deriv_band_", as.character(modscales[["bands"]]))
-# rownames(tmp.bio.df) <- tmp.date
-# # 
-# # 
-# # ## End foreach loop
-# # 
-# bio.df.greyvalues <- data.frame(t(tmp.bio.df), 
-#                                 stringsAsFactors = FALSE)
-# 
-# }
+## Write calculated values to new df
+matrix.sd <- data.frame(matrix.sd)
+
+## Set names of matrix.sd df
+names(matrix.sd) <- foreach(i = bandnames, j = names(matrix.sd)) %do% {
+  j <- paste0("sd_band_", i)
+}
+
+names(matrix.sd)
+
+
+################################################################################
+### Combine dataframes #########################################################
+
+greyvalues.diff.sd <- data.frame(t(cbind(data.bio.raw[1:9,], 
+                                         greyvalues, 
+                                         diff, 
+                                         matrix.sd)), 
+                                 stringsAsFactors = FALSE)
+
+## Set colnames
+names(greyvalues.diff.sd) <- data.bio.raw$date_nocloud[1:9]
+
+################################################################################
+### Check actual time again ####################################################
+
+endtime <- Sys.time()
+
+time <- endtime - starttime
+time

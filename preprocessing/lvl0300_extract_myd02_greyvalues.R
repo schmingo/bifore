@@ -228,9 +228,11 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 
 
 
-pxl.matrix <- foreach(a = lst.nocloud, b = seq(nrow((data.bio.sp)), .combine = "rbind") %do% {
-  tmp.date <- a
-  #     tmp.date <- data.bio.raw$date_nocloud[1]
+# matrix.sd <- foreach(a = lst.nocloud[1:9], b = seq(nrow(data.bio.sp))[1:9], .combine = "rbind") %do% { ## [1:9] should be removed for full dataset
+#   
+#   tmp.date <- a
+      tmp.date <- data.bio.raw$date_nocloud[1]
+b <- 1
   
   ## Reformat date
   tmp.date <- paste0(substr(tmp.date, 1, 4),
@@ -251,15 +253,15 @@ pxl.matrix <- foreach(a = lst.nocloud, b = seq(nrow((data.bio.sp)), .combine = "
   
   
   ## Get pixel matrix for 1km resolution
-  cells.1km <- cellFromXY(lst.rst.1km[[r]], data.bio.sp[b,])
-  cells.adj.1km <- adjacent(lst.rst.1km[[r]], cells.1km, 
+  cells.1km <- cellFromXY(lst.rst.1km[[b]], data.bio.sp[b,])
+  cells.adj.1km <- adjacent(lst.rst.1km[[b]], cells.1km, 
                             directions = 8, 
                             pairs = FALSE, 
                             sorted = TRUE)
   
   ## Get pixel matrix for 500m resolution
-  cells.hkm <- cellFromXY(lst.rst.hkm[[r]], data.bio.sp[b,])
-  cells.adj.hkm <- adjacent(lst.rst.hkm[[r]], cells.hkm, 
+  cells.hkm <- cellFromXY(lst.rst.hkm[[b]], data.bio.sp[b,])
+  cells.adj.hkm <- adjacent(lst.rst.hkm[[b]], cells.hkm, 
                             directions = matrix(c(1,1,1,1,1,
                                                   1,1,1,1,1,
                                                   1,1,0,1,1,
@@ -270,8 +272,8 @@ pxl.matrix <- foreach(a = lst.nocloud, b = seq(nrow((data.bio.sp)), .combine = "
                             sorted = TRUE)
   
   ## Get pixel matrix for 250m resolution
-  cells.qkm <- cellFromXY(lst.rst.qkm[[r]], data.bio.sp[b,])
-  cells.adj.qkm <- adjacent(lst.rst.qkm[[r]], cells.qkm, 
+  cells.qkm <- cellFromXY(lst.rst.qkm[[b]], data.bio.sp[b,])
+  cells.adj.qkm <- adjacent(lst.rst.qkm[[b]], cells.qkm, 
                             directions = matrix(c(1,1,1,1,1,1,1,1,1,1,1,
                                                   1,1,1,1,1,1,1,1,1,1,1,
                                                   1,1,1,1,1,1,1,1,1,1,1,
@@ -290,24 +292,28 @@ pxl.matrix <- foreach(a = lst.nocloud, b = seq(nrow((data.bio.sp)), .combine = "
   
   ## Calculate matrix sd for each 1km raster image
   pxl.rst.1km <- foreach(r = seq(lst.rst.1km), .combine = "cbind") %do% {
-    cells.1km.mtrx.sd <- sd(lst.rst.1km[[r]][cells.adj.1km])
-    return(cells.1km.mtrx.sd)
+    cells.1km.sd <- sd(lst.rst.1km[[r]][cells.adj.1km])
+    return(cells.1km.sd)
   }
   
   ## Calculate matrix sd for each 500m raster image
   pxl.rst.hkm <- foreach(r = seq(lst.rst.hkm), .combine = "cbind") %do% {
-    cells.hkm.mtrx.sd <- sd(lst.rst.hkm[[r]][cells.adj.hkm])
-    return(cells.hkm.mtrx.sd)
+    cells.hkm.sd <- sd(lst.rst.hkm[[r]][cells.adj.hkm])
+    return(cells.hkm.sd)
   }
   
   ## Calculate matrix sd for each 250m raster image
   pxl.rst.qkm <- foreach(r = seq(lst.rst.qkm), .combine = "cbind") %do% {
-    cells.qkm.mtrx.sd <- sd(lst.rst.qkm[[r]][cells.adj.qkm])
-    return(cells.qkm.mtrx.sd)
+    cells.qkm.sd <- sd(lst.rst.qkm[[r]][cells.adj.qkm])
+    return(cells.qkm.sd)
   }
+  
+  row.sd <- cbind(pxl.rst.qkm, pxl.rst.hkm, pxl.rst.1km)
+  return(row.sd)
 }
 
-pxl.matrix <- data.frame(pxl.matrix)
+matrix.sd
+# pxl.matrix <- data.frame(pxl.matrix)
 # cells.1km <- cellFromXY(lst.rst.1km[[1]], data.bio.sp[1,])
 # cells.hkm <- cellFromXY(lst.tif.raster.hkm[[1]], data.bio.sp[1,])
 # cells.qkm <- cellFromXY(lst.tif.raster.qkm[[1]], data.bio.sp[1,])

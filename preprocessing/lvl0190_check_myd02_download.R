@@ -25,7 +25,7 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 path.biodiversity.csv <- ("csv/kili/lvl0100_biodiversity_data.csv")
 
 # path.hdf.in <- ("E:/Diplomarbeit/myd02_hdf/")
-path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/myd02_hdf/")
+path.hdf.in <- ("/home/schmingo/Diplomarbeit/myd02_hdf/")
 
 ################################################################################
 ### Import biodiversity dataset ################################################

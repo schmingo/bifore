@@ -154,7 +154,7 @@ greyvalues <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "r
   ## Extract cell values from all bands
   greyvalues.calc <- foreach(r = seq(lst.tif.calc.raster), 
                              .combine = "cbind") %do% {
-                               lst.tif.calc.raster[[r]][cellFromXY(lst.tif.calc.raster[[r]], data.bio.sp[b,])] ############# possible bug!! doublecheck if data.bio.sp[b,] is right!
+                               lst.tif.calc.raster[[r]][cellFromXY(lst.tif.calc.raster[[r]], data.bio.sp[b,])]
                              }
   
 }

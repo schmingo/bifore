@@ -136,7 +136,7 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 
 # Extract date from biodiversity data
 # tmp.date <- data.bio.raw$date_nocloud[1]
-greyvalues <- foreach(a = lst.nocloud, b = seq(data.bio.sp), .combine = "rbind") %do% {
+greyvalues <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind") %do% {
   
   tmp.date <- a
   
@@ -228,7 +228,7 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 
 
 
-pxl.matrix <- foreach(a = lst.nocloud, b = seq(data.bio.sp), .combine = "rbind") %do% {
+pxl.matrix <- foreach(a = lst.nocloud, b = seq(nrow((data.bio.sp)), .combine = "rbind") %do% {
   tmp.date <- a
   #     tmp.date <- data.bio.raw$date_nocloud[1]
   
@@ -249,54 +249,61 @@ pxl.matrix <- foreach(a = lst.nocloud, b = seq(data.bio.sp), .combine = "rbind")
   lst.rst.hkm <- lapply(lst.tif.calc.hkm, raster)
   lst.rst.qkm <- lapply(lst.tif.calc.qkm, raster)
   
-  ## Extract cell values from all bands for each 1km raster
+  
+  ## Get pixel matrix for 1km resolution
+  cells.1km <- cellFromXY(lst.rst.1km[[r]], data.bio.sp[b,])
+  cells.adj.1km <- adjacent(lst.rst.1km[[r]], cells.1km, 
+                            directions = 8, 
+                            pairs = FALSE, 
+                            sorted = TRUE)
+  
+  ## Get pixel matrix for 500m resolution
+  cells.hkm <- cellFromXY(lst.rst.hkm[[r]], data.bio.sp[b,])
+  cells.adj.hkm <- adjacent(lst.rst.hkm[[r]], cells.hkm, 
+                            directions = matrix(c(1,1,1,1,1,
+                                                  1,1,1,1,1,
+                                                  1,1,0,1,1,
+                                                  1,1,1,1,1,
+                                                  1,1,1,1,1), 
+                                                ncol = 5), 
+                            pairs = FALSE, 
+                            sorted = TRUE)
+  
+  ## Get pixel matrix for 250m resolution
+  cells.qkm <- cellFromXY(lst.rst.qkm[[r]], data.bio.sp[b,])
+  cells.adj.qkm <- adjacent(lst.rst.qkm[[r]], cells.qkm, 
+                            directions = matrix(c(1,1,1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,0,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,1,1,
+                                                  1,1,1,1,1,1,1,1,1,1,1), 
+                                                ncol = 11),  
+                            pairs = FALSE, 
+                            sorted = TRUE)
+  
+  
+  ## Calculate matrix sd for each 1km raster image
   pxl.rst.1km <- foreach(r = seq(lst.rst.1km), .combine = "cbind") %do% {
-    cells.1km <- cellFromXY(lst.rst.1km[[r]], data.bio.sp[b,])
-    
-    cells.adj.1km <- adjacent(lst.rst.1km[[r]], cells.1km, 
-                              directions = 8, 
-                              pairs = FALSE, 
-                              sorted = TRUE)
-    
     cells.1km.mtrx.sd <- sd(lst.rst.1km[[r]][cells.adj.1km])
+    return(cells.1km.mtrx.sd)
   }
   
-  ## Extract cell values from all bands for each hkm raster
+  ## Calculate matrix sd for each 500m raster image
   pxl.rst.hkm <- foreach(r = seq(lst.rst.hkm), .combine = "cbind") %do% {
-    cells.hkm <- cellFromXY(lst.rst.hkm[[r]], data.bio.sp[b,])
-    
-    cells.adj.hkm <- adjacent(lst.rst.hkm[[r]], cells.hkm, 
-                              directions = matrix(c(1,1,1,1,1,
-                                                    1,1,1,1,1,
-                                                    1,1,0,1,1,
-                                                    1,1,1,1,1,
-                                                    1,1,1,1,1), ncol = 5), 
-                              pairs = FALSE, 
-                              sorted = TRUE)
-    
     cells.hkm.mtrx.sd <- sd(lst.rst.hkm[[r]][cells.adj.hkm])
+    return(cells.hkm.mtrx.sd)
   }
   
-  ## Extract cell values from all bands for each qkm raster
+  ## Calculate matrix sd for each 250m raster image
   pxl.rst.qkm <- foreach(r = seq(lst.rst.qkm), .combine = "cbind") %do% {
-    cells.qkm <- cellFromXY(lst.rst.qkm[[r]], data.bio.sp[b,])
-    
-    cells.adj.qkm <- adjacent(lst.rst.qkm[[r]], cells.qkm, 
-                              directions = matrix(c(1,1,1,1,1,1,1,1,1,1,1,
-                                                    1,1,1,1,1,1,1,1,1,1,1,
-                                                    1,1,1,1,1,1,1,1,1,1,1,
-                                                    1,1,1,1,1,1,1,1,1,1,1,
-                                                    1,1,1,1,1,1,1,1,1,1,1,
-                                                    1,1,1,1,1,0,1,1,1,1,1,
-                                                    1,1,1,1,1,1,1,1,1,1,1,
-                                                    1,1,1,1,1,1,1,1,1,1,1,
-                                                    1,1,1,1,1,1,1,1,1,1,1,
-                                                    1,1,1,1,1,1,1,1,1,1,1,
-                                                    1,1,1,1,1,1,1,1,1,1,1), ncol = 11),  
-                              pairs = FALSE, 
-                              sorted = TRUE)
-    
     cells.qkm.mtrx.sd <- sd(lst.rst.qkm[[r]][cells.adj.qkm])
+    return(cells.qkm.mtrx.sd)
   }
 }
 

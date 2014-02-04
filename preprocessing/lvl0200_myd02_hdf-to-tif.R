@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-01-31                                                        ##
+## Version: 2014-02-04                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -20,8 +20,8 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("/home/schmingo/Diplomarbeit/")
 
 path.hdf.in <- "/home/schmingo/Diplomarbeit/myd02_hdf/"
-tifsdir <- "/home/schmingo/Diplomarbeit/sample_myd02_tif/"
-mrtpath <- "/home/schmingo/apps/MRTSwath/bin/swath2grid"
+tifsdir <- "/home/schmingo/Diplomarbeit/myd02_tif/"
+mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
 
 ## Load required modules
 source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_1000.R")

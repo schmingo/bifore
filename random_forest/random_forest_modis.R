@@ -27,6 +27,7 @@ data <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
                   stringsAsFactors = FALSE
                   )
 
+
 # abundance <- read.csv2("csv/kili/kili_abundance.csv",
 #                        dec = ".",
 #                        header = TRUE,
@@ -37,7 +38,8 @@ data <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
 ################################################################################
 ### Combining and subsetting data ##############################################
 
-tmp.abundance <- abundance[6]
+data <- data.frame(t(data))
+tmp.speciesnr <- data[9]
 
 ## Modify abundance values - 2 digit numeric value
 tmp.abundance.list <- as.list(as.numeric(t(tmp.abundance)))

@@ -21,11 +21,15 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Import dataset
+data.t <- read.csv2("csv/kili/lvl0300_biodiversity_data_t.csv",
+                    dec = ".",
+                    header = TRUE,
+                    stringsAsFactors = FALSE)
+
 data <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
                   dec = ".",
                   header = TRUE,
-                  stringsAsFactors = FALSE
-                  )
+                  stringsAsFactors = FALSE)
 
 
 # abundance <- read.csv2("csv/kili/kili_abundance.csv",
@@ -38,20 +42,20 @@ data <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
 ################################################################################
 ### Combining and subsetting data ##############################################
 
-data <- data.frame(t(data))
+data <- data.frame(data)
 tmp.speciesnr <- data[9]
 
-## Modify abundance values - 2 digit numeric value
-tmp.abundance.list <- as.list(as.numeric(t(tmp.abundance)))
-tmp.abundance.list <- formatC(tmp.abundance.list, 
+## Modify biodiversity values to 2 digit numeric value
+tmp.speciesnr.list <- as.list(as.numeric(t(tmp.speciesnr)))
+tmp.speciesnr.list <- formatC(tmp.speciesnr.list, 
                               width = 2, 
                               format = "d", 
                               flag = "0")
 
-## Modify abundance values - paste "A" in front to create a character
-tmp.abundance <- as.data.frame(paste0("A", tmp.abundance.list))
+## Modify biodiversity values: paste "SP" in front to create a character
+tmp.speciesnr <- as.data.frame(paste0("SP", tmp.speciesnr.list))
 
-names(tmp.abundance) <- "abundance"
+names(tmp.speciesnr) <- "SpeciesNr"
 
 
 ## Select data for randomForest
@@ -104,7 +108,7 @@ detach(data)
 names(tmp.data)
 
 ## Combine MODIS and abundance data 
-train.data <- cbind(tmp.data, tmp.abundance)
+train.data <- cbind(tmp.data, tmp.speciesnr)
 names(train.data)
 
 

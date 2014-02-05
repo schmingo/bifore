@@ -30,6 +30,7 @@ path.tif.calc <- "/home/schmingo/Diplomarbeit/myd02_tif_calc/"
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
 path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data.csv"
+path.biodiversity.t.csv.out <- "csv/kili/lvl0300_biodiversity_data_t.csv"
 
 ## Source modules
 source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
@@ -329,14 +330,29 @@ names(matrix.sd)
 ################################################################################
 ### Combine dataframes #########################################################
 
-greyvalues.diff.sd <- data.frame(t(cbind(data.bio.raw, 
-                                         greyvalues, 
-                                         diff, 
-                                         matrix.sd)), 
-                                 stringsAsFactors = FALSE)
+greyvalues.diff.sd.t <- data.frame(t(cbind(data.bio.raw, 
+                                           greyvalues, 
+                                           diff, 
+                                           matrix.sd)), 
+                                   stringsAsFactors = FALSE)
+names(greyvalues.diff.sd.t) <- data.bio.raw$date_nocloud
 
-## Set colnames
-names(greyvalues.diff.sd) <- data.bio.raw$date_nocloud
+
+greyvalues.diff.sd <- data.frame(cbind(data.bio.raw, 
+                                       greyvalues, 
+                                       diff, 
+                                       matrix.sd), 
+                                 stringsAsFactors = FALSE)
+## names need to be added
+
+
+write.table(greyvalues.diff.sd.t, 
+            file = path.biodiversity.t.csv.out,
+            dec = ".",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = TRUE,
+            sep = ";")
 
 write.table(greyvalues.diff.sd, 
             file = path.biodiversity.csv.out,

@@ -4,7 +4,7 @@
 ## RANDOM FOREST FOR MODIS DATA                                               ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-10-31                                                        ##
+## Version: 2014-02-05                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -21,17 +21,17 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Import dataset
-data <- read.csv2("csv/kili/MODIS_20060129_greyvalues_NA_derivate.csv",
+data <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
                   dec = ".",
                   header = TRUE,
                   stringsAsFactors = FALSE
                   )
 
-abundance <- read.csv2("csv/kili/kili_abundance.csv",
-                       dec = ".",
-                       header = TRUE,
-                       stringsAsFactors = FALSE
-                       )
+# abundance <- read.csv2("csv/kili/kili_abundance.csv",
+#                        dec = ".",
+#                        header = TRUE,
+#                        stringsAsFactors = FALSE
+#                        )
 
 
 ################################################################################

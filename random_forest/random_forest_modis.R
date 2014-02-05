@@ -42,9 +42,10 @@ data <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
 ################################################################################
 ### Combining and subsetting data ##############################################
 
-data <- data.frame(data)
-tmp.speciesnr <- data[9]
+data.raw <- data.frame(data)
+tmp.speciesnr <- data.raw[9]
 
+### Biodiversity data
 ## Modify biodiversity values to 2 digit numeric value
 tmp.speciesnr.list <- as.list(as.numeric(t(tmp.speciesnr)))
 tmp.speciesnr.list <- formatC(tmp.speciesnr.list, 
@@ -58,62 +59,75 @@ tmp.speciesnr <- as.data.frame(paste0("SP", tmp.speciesnr.list))
 names(tmp.speciesnr) <- "SpeciesNr"
 
 
-## Select data for randomForest
-attach(data) 
-tmp.data <- data.frame(Plotid,
-#                        Easting,
-#                        Northing,
-#                        Longitude,
-#                        Latitude, 
-                       B01, 
-                       B02, 
-                       B03, 
-                       B04, 
-                       B05, 
-                       B06, 
-                       B07, 
-                       B08, 
-                       B09, 
-                       B10, 
-                       B11, 
-#                        B12, 
-#                        B13.1, 
-#                        B13.2, 
-#                        B14.1, 
-#                        B14.2, 
-#                        B15, 
-#                        B16, 
-#                        B17, 
-                       B18, 
-                       B19, 
-                       B20, 
-                       B21, 
-                       B22, 
-                       B23, 
-                       B24, 
-                       B25, 
-                       B26, 
-                       B27, 
-                       B28, 
-                       B29, 
-                       B30, 
-                       B31, 
-                       B32, 
-                       B33, 
-                       B34, 
-                       B35, 
-                       B36 
-                       )
-detach(data)
-names(tmp.data)
+### Observation date and corresponding greyvalues
+
+data.greyval <- cbind(data.raw[2], data.raw[69:106])
+data.diff <- cbind(data.raw[2], data.raw[107:144])
+data.sd <- cbind(data.raw[2], data.raw[145:182])
+
+
+
+
+
+
+# ## Select data for randomForest
+# attach(data) 
+# tmp.data <- data.frame(Plotid,
+# #                        Easting,
+# #                        Northing,
+# #                        Longitude,
+# #                        Latitude, 
+#                        B01, 
+#                        B02, 
+#                        B03, 
+#                        B04, 
+#                        B05, 
+#                        B06, 
+#                        B07, 
+#                        B08, 
+#                        B09, 
+#                        B10, 
+#                        B11, 
+# #                        B12, 
+# #                        B13.1, 
+# #                        B13.2, 
+# #                        B14.1, 
+# #                        B14.2, 
+# #                        B15, 
+# #                        B16, 
+# #                        B17, 
+#                        B18, 
+#                        B19, 
+#                        B20, 
+#                        B21, 
+#                        B22, 
+#                        B23, 
+#                        B24, 
+#                        B25, 
+#                        B26, 
+#                        B27, 
+#                        B28, 
+#                        B29, 
+#                        B30, 
+#                        B31, 
+#                        B32, 
+#                        B33, 
+#                        B34, 
+#                        B35, 
+#                        B36 
+#                        )
+# detach(data)
+# names(tmp.data)
 
 ## Combine MODIS and abundance data 
-train.data <- cbind(tmp.data, tmp.speciesnr)
+train.data <- cbind(data.greyval, tmp.speciesnr)
 names(train.data)
 
 
 ## Remove rows with NA values
-train.data <- na.omit(train.data)
+# train.data <- na.omit(train.data)
+?rfImpute
+# see http://stackoverflow.com/questions/8370455/how-to-use-random-forests-in-r-with-missing-values
 
 ################################################################################
 ### Random Forest ##############################################################
@@ -124,10 +138,10 @@ m.try <- 7 # Number of variables randomly sampled as candidates at each split
 
 
 ## Check colnames to get the right predictor values
-names(train.data[,4:ncol(train.data)-1])
+names(train.data[,3:ncol(train.data)-1])
 ## Function 
-train.rf <- randomForest(train.data[,4:ncol(train.data)-1],
-                         train.data[,names(train.data) %in% c("abundance")],
+train.rf <- randomForest(train.data[,3:ncol(train.data)-1],
+                         train.data[,names(train.data) %in% c("SpeciesNr")],
                          importance = TRUE,
 #                          na.action = na.omit(train.data),
 #                          type="classification",

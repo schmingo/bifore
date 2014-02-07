@@ -359,7 +359,7 @@ write.table(greyvalues.diff.sd,
             dec = ",",
             quote = FALSE,
             col.names = TRUE,
-            row.names = TRUE,
+            row.names = FALSE,
             sep = ";")
 
 ################################################################################

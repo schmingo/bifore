@@ -54,7 +54,7 @@ names(tmp.speciesnr) <- "SpeciesNr"
 
 ### Observation date and corresponding greyvalues
 
-data.greyval <- cbind(data.raw[2], data.raw[69:80], data.raw[87:106])
+data.greyval <- cbind(data.raw[2], data.raw[69:80], data.raw[88:106])
 
 data.diff <- cbind(data.raw[2], data.raw[107:144])
 data.sd <- cbind(data.raw[2], data.raw[145:182])
@@ -128,7 +128,8 @@ train.rf.imp <- rfImpute(x = train.data[,3:ncol(train.data)-1],
                          y = train.data[,names(train.data) %in% c("SpeciesNr")],
                          ntree = 500,
                          iter = 5,
-                         mtry = 7)
+                         mtry = 7,
+                         do.trace = 100)
 
 print(train.rf.imp)
 # see http://stackoverflow.com/questions/8370455/how-to-use-random-forests-in-r-with-missing-values
@@ -136,22 +137,22 @@ print(train.rf.imp)
 ################################################################################
 ### Random Forest ##############################################################
 
-## Define desired parameters
-n.tree <- 500 # Number of trees to grow
-m.try <- 7 # Number of variables randomly sampled as candidates at each split
-
-
-## Check colnames to get the right predictor values
-names(train.data[,3:ncol(train.data)-1])
-## Function 
-train.rf <- randomForest(train.data[,3:ncol(train.data)-1],
-                         train.data[,names(train.data) %in% c("SpeciesNr")],
-                         importance = TRUE,
-#                          na.action = na.omit(train.data),
-#                          type="classification",
-                         do.trace = 100)
-
-print(train.rf)
+# ## Define desired parameters
+# n.tree <- 500 # Number of trees to grow
+# m.try <- 7 # Number of variables randomly sampled as candidates at each split
+# 
+# 
+# ## Check colnames to get the right predictor values
+# names(train.data[,3:ncol(train.data)-1])
+# ## Function 
+# train.rf <- randomForest(train.data[,3:ncol(train.data)-1],
+#                          train.data[,names(train.data) %in% c("SpeciesNr")],
+#                          importance = TRUE,
+# #                          na.action = na.omit(train.data),
+# #                          type="classification",
+#                          do.trace = 100)
+# 
+# print(train.rf)
 
 
 ################################################################################
@@ -163,4 +164,4 @@ print(train.rf)
 # 
 # 
 # ##  predict RInfo for new data set
-# test.predict <- predict(train.rf, testData[,1:ncol(testData)])
+# test.predict <- predict(train.rf.imp, testData[,1:ncol(testData)])

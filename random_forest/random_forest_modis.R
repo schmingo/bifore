@@ -32,13 +32,6 @@ data <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
                   stringsAsFactors = FALSE)
 
 
-# abundance <- read.csv2("csv/kili/kili_abundance.csv",
-#                        dec = ".",
-#                        header = TRUE,
-#                        stringsAsFactors = FALSE
-#                        )
-
-
 ################################################################################
 ### Combining and subsetting data ##############################################
 

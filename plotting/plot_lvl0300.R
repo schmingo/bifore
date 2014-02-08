@@ -19,6 +19,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
 setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Set filepath
 path.lvl0300.csv <- "csv/kili/lvl0300_biodiversity_data_08022014.csv"
@@ -36,11 +37,15 @@ data.raw <- read.csv2(path.lvl0300.csv,
 data.sd <- cbind(data.raw[3], data.raw[145:182])
 
 ## Create df, count NA's
-data.sd.count.na <- data.frame(t(rbind(names(data.sd[2:39]),
-                                     colSums(is.na(data.sd[2:39])))), row.names = NULL)
-
-## Set colnames
-colnames(data.sd.count.na) <- c("bands", "count NA")
-
-## Plot NA's
-
+count_NA <- colSums(is.na(data.sd[2:39]))
+# data.sd.na <- as.data.frame(colSums(is.na(data.sd[2:39])), check.rows = FALSE, row.names = NULL)
+# 
+# data.sd.count.na <- as.data.frame(t(rbind(names(data.sd[2:39]),
+#                                      colSums(is.na(data.sd[2:39]))))row.names=NULL)
+# 
+# ## Set colnames
+# colnames(data.sd.count.na) <- c("bands", "count_NA")
+# 
+# ## Plot NA's
+# 
+qplot(y=count_NA, x=names(data.sd[2:39]), geom = "bar", binwidth = 2, stat="identity")

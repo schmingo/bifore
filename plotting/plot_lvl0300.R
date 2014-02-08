@@ -31,12 +31,16 @@ data.raw <- read.csv2(path.lvl0300.csv,
                           stringsAsFactors = FALSE)
 
 ################################################################################
-### Subsetting data ############################################################
+### Plot NA's in sd ############################################################
 
 data.sd <- cbind(data.raw[3], data.raw[145:182])
 
+## Create df, count NA's
+data.sd.count.na <- data.frame(t(rbind(names(data.sd[2:39]),
+                                     colSums(is.na(data.sd[2:39])))), row.names = NULL)
 
-qplot(x=data.sd[2:39],
-      data=data.sd,
-      geom="histogram",
-      binwidth=0.5)
+## Set colnames
+colnames(data.sd.count.na) <- c("bands", "count NA")
+
+## Plot NA's
+

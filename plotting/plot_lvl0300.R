@@ -25,8 +25,18 @@ path.lvl0300.csv <- "csv/kili/lvl0300_biodiversity_data_08022014.csv"
 
 
 ## Import dataset
-data.bio.raw <- read.csv2(path.lvl0300.csv,
+data.raw <- read.csv2(path.lvl0300.csv,
                           dec = ",",
                           header = TRUE, 
                           stringsAsFactors = FALSE)
 
+################################################################################
+### Subsetting data ############################################################
+
+data.sd <- cbind(data.raw[3], data.raw[145:182])
+
+
+qplot(x=data.sd[2:39],
+      data=data.sd,
+      geom="histogram",
+      binwidth=0.5)

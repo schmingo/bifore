@@ -1,10 +1,10 @@
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
-## RANDOM FOREST FOR MODIS DATA                                               ##
+## DATA PREPARATION FOR RANDOM FOREST                                         ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-02-05                                                        ##
+## Version: 2014-02-10                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -21,12 +21,12 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Import dataset
-data.t <- read.csv2("csv/kili/lvl0300_biodiversity_data_t.csv",
+data.t <- read.csv2("csv/kili/lvl0300_biodiversity_data_t_08022014.csv",
                     dec = ".",
                     header = TRUE,
                     stringsAsFactors = FALSE)
 
-data <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
+data <- read.csv2("csv/kili/lvl0300_biodiversity_data_08022014.csv",
                   dec = ".",
                   header = TRUE,
                   stringsAsFactors = FALSE)
@@ -58,3 +58,4 @@ data.greyval <- cbind(data.raw[2], data.raw[69:80], data.raw[88:106])
 
 data.diff <- cbind(data.raw[2], data.raw[107:144])
 data.sd <- cbind(data.raw[2], data.raw[145:182])
+

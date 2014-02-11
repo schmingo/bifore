@@ -87,7 +87,7 @@ foreach(a = lst.date) %do% {
   
   ## Extract date from biodiversity data
   tmp.date <- a
-  #     tmp.date <- data.bio.raw$date_nocloud[1]
+  #tmp.date <- data.bio.raw$date_nocloud[3]
   
   ## Reformat date
   tmp.date <- paste0(substr(tmp.date, 1, 4),
@@ -113,8 +113,8 @@ foreach(a = lst.date) %do% {
                             full.names = TRUE)
   
   
-  ################################################################################
-  ### Check raster for NA values #################################################
+  ##############################################################################
+  ### Check raster for NA values ###############################################
   
   # REFERING TO: Level 1B Product Data Dictionary V6.1.14
   # http://mcst.gsfc.nasa.gov/content/l1b-documents
@@ -143,19 +143,25 @@ foreach(a = lst.date) %do% {
   
   print(paste0(tmp.date, " - Check raw raster files for NA values"))
   
-  function.na <- function(x) {ifelse(x > 32767, x <- NA, x); return(x)}
+  #   function.na <- function(x) {ifelse(x > 32767, x <- NA, x); return(x)}
+  #   
+  #   
+  #   foreach (r = lst.tif.raster, n = lst.tif) %do% {
+  #     calc(r, 
+  #          fun = function.na, 
+  #          filename = paste0(path.tif.na, basename(n)),
+  #          overwrite = TRUE)
+  #   }
   
   
   foreach (r = lst.tif.raster, n = lst.tif) %do% {
-    calc(r, 
-         fun = function.na, 
-         filename = paste0(path.tif.na, basename(n)),
-         overwrite = TRUE)
+    values(r)[values(r) > 32767] <- NA
+    writeRaster(r, filename = paste0(path.tif.na, basename(n)))
   }
   
-  
-  ################################################################################
-  ### Extraction of radiance_scale and reflectance_scale from *.hdf ##############
+
+  ##############################################################################
+  ### Extraction of radiance_scale and reflectance_scale from *.hdf ############
   
   print(paste0(tmp.date, " - Extract scalefactors from *.hdf"))
   
@@ -163,8 +169,8 @@ foreach(a = lst.date) %do% {
                                    lst.hdf.hkm,
                                    lst.hdf.1km)
   
-  ################################################################################  
-  ## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster ##
+  ##############################################################################  
+  ## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster 
   
   print(paste0(tmp.date, " - Calculate new greyvalues"))
   

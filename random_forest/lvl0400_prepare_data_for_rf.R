@@ -17,8 +17,8 @@ lib <- c("randomForest")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Import dataset
 data.t <- read.csv2("csv/kili/lvl0300_biodiversity_data_t_08022014.csv",

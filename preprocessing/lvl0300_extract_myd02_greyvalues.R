@@ -116,6 +116,31 @@ foreach(a = lst.date) %do% {
   ################################################################################
   ### Check raster for NA values #################################################
   
+  # REFERING TO: Level 1B Product Data Dictionary V6.1.14
+  # http://mcst.gsfc.nasa.gov/content/l1b-documents
+  # http://mcst.gsfc.nasa.gov/sites/mcst.gsfc/files/file_attachments/M1055_PDD_D_072712final.pdf
+  # (P.80f)
+  # ...
+  # The valid range is [0-32767], inclusive.  Any value above 32767 represents 
+  # unusable data.  Table 2.2.3 shows the meaning of data values over 32767.
+  # Table 2.2.3:  Meaning of Data Values Outside of Valid Range
+  # 
+  # Value  Meaning
+  # --------------------------------------------------------------------------------
+  # 65535   Fill Value (includes reflective band data at night mode and completely missing L1A scans)
+  # 65534	 L1A DN is missing within a scan
+  # 65533	 Detector is saturated
+  # 65532	 Cannot compute  zero point DN
+  # 65531	 Detector is dead (see comments below)
+  # 65530	 RSB dn** below the minimum of the scaling range
+  # 65529	 TEB radiance or RSB dn** exceeds the maximum of the scaling range
+  # 65528	 Aggregation algorithm failure
+  # 65527	 Rotation of Earth view Sector from nominal science collection position
+  # 65526	 Calibration coefficient b1 could not be computed
+  # 65501 - 65525	(reserved for future use)
+  # 65500	 NAD closed upper limit
+  
+  
   print(paste0(tmp.date, " - Check raw raster files for NA values"))
   
   function.na <- function(x) {ifelse(x > 32767, x <- NA, x); return(x)}

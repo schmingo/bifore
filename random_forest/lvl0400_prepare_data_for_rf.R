@@ -54,8 +54,12 @@ names(tmp.speciesnr) <- "SpeciesNr"
 
 ### Observation date and corresponding greyvalues
 
-data.greyval <- cbind(data.raw[2], data.raw[69:80], data.raw[88:106])
-
+data.greyval <- cbind(data.raw[2], data.raw[69:106])
 data.diff <- cbind(data.raw[2], data.raw[107:144])
 data.sd <- cbind(data.raw[2], data.raw[145:182])
+
+
+data.greyval.na <- data.frame(colSums(is.na(data.greyval)))
+names(data.greyval.na) <- c("NAs of 225")
+data.greyval.na.row <- data.frame(rowSums(is.na(data.greyval)))
 

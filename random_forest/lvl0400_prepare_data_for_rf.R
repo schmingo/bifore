@@ -4,7 +4,7 @@
 ## DATA PREPARATION FOR RANDOM FOREST                                         ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-02-10                                                        ##
+## Version: 2014-02-11                                                        ##
 ##                                                                            ##
 ################################################################################
 

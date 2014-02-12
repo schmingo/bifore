@@ -17,19 +17,14 @@ lib <- c("randomForest")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Import dataset
-data.t <- read.csv2("csv/kili/lvl0300_biodiversity_data_t_08022014.csv",
-                    dec = ".",
+data <- read.csv2("csv/kili/lvl0300_biodiversity_data_2014-02-12.csv",
+                    dec = ",",
                     header = TRUE,
                     stringsAsFactors = FALSE)
-
-data <- read.csv2("csv/kili/lvl0300_biodiversity_data_08022014.csv",
-                  dec = ".",
-                  header = TRUE,
-                  stringsAsFactors = FALSE)
 
 
 ################################################################################
@@ -60,6 +55,12 @@ data.sd <- cbind(data.raw[2], data.raw[145:182])
 
 
 data.greyval.na <- data.frame(colSums(is.na(data.greyval)))
-names(data.greyval.na) <- c("NAs of 225")
-data.greyval.na.row <- data.frame(rowSums(is.na(data.greyval)))
+names(data.greyval.na) <- c("NAs out of 225")
+
+
+data.diff.na <- data.frame(colSums(is.na(data.diff)))
+names(data.diff.na) <- c("NAs out of 225")
+
+data.sd.na <- data.frame(colSums(is.na(data.sd)))
+names(data.sd.na) <- c("NAs out of 225")
 

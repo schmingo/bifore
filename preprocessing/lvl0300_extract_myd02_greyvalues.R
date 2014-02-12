@@ -317,19 +317,19 @@ matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rb
   
   ## Calculate matrix sd for each 1km raster image
   pxl.rst.1km <- foreach(r = seq(lst.rst.1km), .combine = "cbind") %do% {
-    cells.1km.sd <- sd(lst.rst.1km[[r]][cells.adj.1km])
+    cells.1km.sd <- sd(lst.rst.1km[[r]][cells.adj.1km], na.rm = TRUE)
     return(cells.1km.sd)
   }
   
   ## Calculate matrix sd for each 500m raster image
   pxl.rst.hkm <- foreach(r = seq(lst.rst.hkm), .combine = "cbind") %do% {
-    cells.hkm.sd <- sd(lst.rst.hkm[[r]][cells.adj.hkm])
+    cells.hkm.sd <- sd(lst.rst.hkm[[r]][cells.adj.hkm], na.rm = TRUE)
     return(cells.hkm.sd)
   }
   
   ## Calculate matrix sd for each 250m raster image
   pxl.rst.qkm <- foreach(r = seq(lst.rst.qkm), .combine = "cbind") %do% {
-    cells.qkm.sd <- sd(lst.rst.qkm[[r]][cells.adj.qkm])
+    cells.qkm.sd <- sd(lst.rst.qkm[[r]][cells.adj.qkm], na.rm = TRUE)
     return(cells.qkm.sd)
   }
   

@@ -73,6 +73,7 @@ data.speciesNR <- data.frame(cbind(data.raw[1:3],
                                    data.raw[107:116], data.raw[126:144],  ## diff
                                    data.raw[145:154], data.raw[163:182])) ## sd
 names(data.speciesNR)
+ifelse(TRUE %in% is.na(data.speciesNR), print("NA Werte enthalten"), print("Alles Ok!"))
 write.table(data.speciesNR, 
             file = path.speciesNR,
             dec = ",",

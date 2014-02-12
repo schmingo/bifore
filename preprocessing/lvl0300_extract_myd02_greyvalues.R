@@ -23,18 +23,18 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 ### Set filepaths ##############################################################
 
-path.hdf <- "/home/schmingo/Diplomarbeit/sample_myd02_hdf/"
-path.tif <- "/home/schmingo/Diplomarbeit/sample_myd02_tif/"
-path.tif.na <- "/home/schmingo/Diplomarbeit/sample_myd02_tif_na/"
-path.tif.calc <- "/home/schmingo/Diplomarbeit/sample_myd02_tif_calc/"
+path.hdf <- "/home/schmingo/Diplomarbeit/myd02_hdf/"
+path.tif <- "/home/schmingo/Diplomarbeit/myd02_tif/"
+path.tif.na <- "/home/schmingo/Diplomarbeit/myd02_tif_na/"
+path.tif.calc <- "/home/schmingo/Diplomarbeit/myd02_tif_calc/"
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
-path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data_testing.csv"
-path.biodiversity.t.csv.out <- "csv/kili/lvl0300_biodiversity_data_t_testing.csv"
+path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data.csv"
+path.biodiversity.t.csv.out <- "csv/kili/lvl0300_biodiversity_data_t.csv"
 
 ## Source modules
 # source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales2_ALPHA.R")
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
 
 ################################################################################
 ### Import biodiversity dataset ################################################
@@ -151,9 +151,9 @@ foreach(a = lst.date) %do% {
   
 
   ##############################################################################
-  ### Extraction of radiance_scale and reflectance_scale from *.hdf ############
+  ### Extraction of radiance-, reflectance scale and offset from *.hdf #########
   
-  print(paste0(tmp.date, " - Extract scalefactors from *.hdf"))
+  print(paste0(tmp.date, " - Extract scalefactors and offset from *.hdf"))
   
   modscales <- hdfExtractMODScale (lst.hdf.qkm,
                                    lst.hdf.hkm,
@@ -168,11 +168,12 @@ foreach(a = lst.date) %do% {
   lst.tif.na.raster <- lapply(lst.tif.na, raster)
   
   
-  foreach(c = as.list(lst.tif.na.raster), 
-          d = as.list(as.numeric(modscales[["scales"]])),
-          g = as.list(lst.tif.na)) %do% {
-            calc(c, fun = function(x) x * d, 
-                 filename = paste0(path.tif.calc, basename(g)), 
+  foreach(r = as.list(lst.tif.na.raster), 
+          s = as.list(as.numeric(modscales[["scales"]])),
+          t = as.list(lst.tif.na),
+          o = as.list(as.numeric(modscales[["offsets"]]))) %do% {
+            calc(r, fun = function(x) (x + o) * s, 
+                 filename = paste0(path.tif.calc, basename(t)), 
                  format = "GTiff", 
                  overwrite = TRUE)        
           }

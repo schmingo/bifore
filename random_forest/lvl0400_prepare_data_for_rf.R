@@ -68,7 +68,7 @@ names(data.sd.na) <- c("NAs out of 225")
 ### Create final df for RandomForest ###########################################
 
 data.speciesNR <- data.frame(cbind(data.raw[1:3], 
-                                   data.raw[9],
+                                   tmp.speciesnr,
                                    data.raw[69:78], data.raw[87:106],     ## greyvalues
                                    data.raw[107:116], data.raw[126:144],  ## diff
                                    data.raw[145:154], data.raw[163:182])) ## sd

@@ -23,17 +23,18 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 ### Set filepaths ##############################################################
 
-path.hdf <- "/home/schmingo/Diplomarbeit/myd02_hdf/"
-path.tif <- "/home/schmingo/Diplomarbeit/myd02_tif/"
-path.tif.na <- "/home/schmingo/Diplomarbeit/myd02_tif_na/"
-path.tif.calc <- "/home/schmingo/Diplomarbeit/myd02_tif_calc/"
+path.hdf <- "/home/schmingo/Diplomarbeit/sample_myd02_hdf/"
+path.tif <- "/home/schmingo/Diplomarbeit/sample_myd02_tif/"
+path.tif.na <- "/home/schmingo/Diplomarbeit/sample_myd02_tif_na/"
+path.tif.calc <- "/home/schmingo/Diplomarbeit/sample_myd02_tif_calc/"
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
-path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data.csv"
-path.biodiversity.t.csv.out <- "csv/kili/lvl0300_biodiversity_data_t.csv"
+path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data_testing.csv"
+path.biodiversity.t.csv.out <- "csv/kili/lvl0300_biodiversity_data_t_testing.csv"
 
 ## Source modules
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
+# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales2_ALPHA.R")
 
 ################################################################################
 ### Import biodiversity dataset ################################################

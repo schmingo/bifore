@@ -145,6 +145,12 @@ lst.date
   scales.refsb.500 <- unlist(strsplit(scales.refsb.500, "="))[2]
   scales.refsb.1km <- unlist(strsplit(scales.refsb.1km, "="))[2]
   scales.emiss.1km <- unlist(strsplit(scales.emiss.1km, "="))[2]
+
+  ## write extracted values as numeric list
+  sapply(strsplit(scales.refsb.250, ", "), as.numeric)
+  sapply(strsplit(scales.refsb.500, ", "), as.numeric)
+  sapply(strsplit(scales.refsb.1km, ", "), as.numeric)
+  sapply(strsplit(scales.emiss.1km, ", "), as.numeric)
   
   ## Extract bandnames from metadata
   bands.refsb.250 <- mdata.subds.refsb.250[grep("band_names", mdata.subds.refsb.250)]
@@ -157,13 +163,22 @@ lst.date
   bands.refsb.1km <- unlist(strsplit(bands.refsb.1km, "="))[2]
   bands.emiss.1km <- unlist(strsplit(bands.emiss.1km, "="))[2]
 
+  ## Exctract Offset from metadata
+  offset.refsb.250 <- mdata.subds.refsb.250[grep("reflectance_offsets", mdata.subds.refsb.250)]
+  offset.refsb.500 <- mdata.subds.refsb.500[grep("reflectance_offsets", mdata.subds.refsb.500)]
+  offset.refsb.1km <- mdata.subds.refsb.1km[grep("reflectance_offsets", mdata.subds.refsb.1km)]
+  offset.emiss.1km <- mdata.subds.emiss.1km[grep("radiance_offsets", mdata.subds.emiss.1km)]
+
+  offset.refsb.250 <- unlist(strsplit(offset.refsb.250, "="))[2]
+  offset.refsb.500 <- unlist(strsplit(offset.refsb.500, "="))[2]
+  offset.refsb.1km <- unlist(strsplit(offset.refsb.1km, "="))[2]
+  offset.emiss.1km <- unlist(strsplit(offset.emiss.1km, "="))[2]
 
   ## write extracted values as numeric list
-  sapply(strsplit(scales.refsb.250, ", "), as.numeric)
-  sapply(strsplit(scales.refsb.500, ", "), as.numeric)
-  sapply(strsplit(scales.refsb.1km, ", "), as.numeric)
-  sapply(strsplit(scales.emiss.1km, ", "), as.numeric)
-  
+  sapply(strsplit(offset.refsb.250, ", "), as.numeric)
+  sapply(strsplit(offset.refsb.500, ", "), as.numeric)
+  sapply(strsplit(offset.refsb.1km, ", "), as.numeric)
+  sapply(strsplit(offset.emiss.1km, ", "), as.numeric)
   
   ##############################################################################
   ## Write Modis bandnames and radiance scales to a single dataframe ###########
@@ -181,8 +196,14 @@ lst.date
                   scales.emiss.1km,
                   sep = ", ")
 
+  offsets <- paste(offset.refsb.250,
+                   offset.refsb.500,
+                   offset.refsb.1km,
+                   offset.emiss.1km,
+                   sep = ", ")
+
   
-  ## Write bandnames and radiance scales to separate dataframe
+  ## Write bandnames, radiance scales and offsets to separate dataframe
   bandnames <- data.frame(strsplit(unlist(bandnames), ","), 
                           stringsAsFactors = F)
   names(bandnames) <- "bands"
@@ -190,6 +211,10 @@ lst.date
   scales <- data.frame(strsplit(unlist(scales), ", "), 
                        stringsAsFactors = F)
   names(scales) <- "scales"
+
+  offsets <- data.frame(strsplit(unlist(offsets), ", "), 
+                       stringsAsFactors = F)
+  names(offsets) <- "offsets"
   
   
   ## Rename "hi" and "lo" bands to numeric values
@@ -207,7 +232,7 @@ lst.date
   
   
   ## Write bandnames and radiance scales to a single dataframe
-  modscales <- cbind(bandnames, scales)
+  modscales <- cbind(bandnames, scales, offsets)
 
   ## Order data frame
   modscales <- modscales[ order(modscales[,1]), ]

@@ -76,7 +76,7 @@ names(data.speciesNR)
 ifelse(TRUE %in% is.na(data.speciesNR), print("NA Werte enthalten"), print("Alles Ok!"))
 write.table(data.speciesNR, 
             file = path.speciesNR,
-            dec = ",",
+            dec = ".",
             quote = FALSE,
             col.names = TRUE,
             row.names = FALSE,

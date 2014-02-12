@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-02-11                                                        ##
+## Version: 2014-02-12                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -142,17 +142,6 @@ foreach(a = lst.date) %do% {
   
   
   print(paste0(tmp.date, " - Check raw raster files for NA values"))
-  
-  #   function.na <- function(x) {ifelse(x > 32767, x <- NA, x); return(x)}
-  #   
-  #   
-  #   foreach (r = lst.tif.raster, n = lst.tif) %do% {
-  #     calc(r, 
-  #          fun = function.na, 
-  #          filename = paste0(path.tif.na, basename(n)),
-  #          overwrite = TRUE)
-  #   }
-  
   
   foreach (r = lst.tif.raster, n = lst.tif) %do% {
     values(r)[values(r) > 32767] <- NA
@@ -361,12 +350,12 @@ names(matrix.sd)
 ################################################################################
 ### Combine dataframes #########################################################
 
-greyvalues.diff.sd.t <- data.frame(t(cbind(data.bio.raw, 
-                                           greyvalues, 
-                                           diff, 
-                                           matrix.sd)), 
-                                   stringsAsFactors = FALSE)
-names(greyvalues.diff.sd.t) <- data.bio.raw$date_nocloud
+# greyvalues.diff.sd.t <- data.frame(t(cbind(data.bio.raw, 
+#                                            greyvalues, 
+#                                            diff, 
+#                                            matrix.sd)), 
+#                                    stringsAsFactors = FALSE)
+# names(greyvalues.diff.sd.t) <- data.bio.raw$date_nocloud
 
 
 greyvalues.diff.sd <- data.frame(cbind(data.bio.raw, 
@@ -374,16 +363,14 @@ greyvalues.diff.sd <- data.frame(cbind(data.bio.raw,
                                        diff, 
                                        matrix.sd), 
                                  stringsAsFactors = FALSE)
-## names need to be added
 
-
-write.table(greyvalues.diff.sd.t, 
-            file = path.biodiversity.t.csv.out,
-            dec = ",",
-            quote = FALSE,
-            col.names = TRUE,
-            row.names = TRUE,
-            sep = ";")
+# write.table(greyvalues.diff.sd.t, 
+#             file = path.biodiversity.t.csv.out,
+#             dec = ",",
+#             quote = FALSE,
+#             col.names = TRUE,
+#             row.names = TRUE,
+#             sep = ";")
 
 write.table(greyvalues.diff.sd, 
             file = path.biodiversity.csv.out,

@@ -232,7 +232,7 @@ hdfExtractMODScale <- function(lst.hdf.qkm,
   
   
   ## Write bandnames and radiance scales to a single dataframe
-  modscales <- cbind(bandnames, scales, offsets)
+  modscales <- data.frame(cbind(bandnames, scales, offsets))
   
   ## Order data frame
   modscales <- modscales[ order(modscales[,1]), ]

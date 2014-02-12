@@ -25,14 +25,9 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 ### Set filepaths ##############################################################
 
-path.hdf <- "/home/schmingo/Diplomarbeit/myd02_hdf/"
-path.tif <- "/home/schmingo/Diplomarbeit/myd02_tif/"
-path.tif.na <- "/home/schmingo/Diplomarbeit/myd02_tif_na/"
-path.tif.calc <- "/home/schmingo/Diplomarbeit/myd02_tif_calc/"
+path.hdf <- "/home/schmingo/Diplomarbeit/sample_myd02_hdf/"
+path.tif <- "/home/schmingo/Diplomarbeit/sample_myd02_tif/"
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
-
-path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data.csv"
-path.biodiversity.t.csv.out <- "csv/kili/lvl0300_biodiversity_data_t.csv"
 
 ## Source modules
 source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
@@ -44,38 +39,6 @@ data.bio.raw <- read.csv2(path.biodiversity.csv,
                           dec = ".",
                           header = TRUE, 
                           stringsAsFactors = FALSE)
-
-## Check actual time
-starttime <- Sys.time()
-
-################################################################################
-### Get MYD bandnames ##########################################################
-
-## Set date for extraction
-tmp.date <- data.bio.raw$date_nocloud[1]
-
-## Reformat date
-tmp.date <- paste0(substr(tmp.date, 1, 4),
-                   substr(tmp.date, 6, 8),
-                   ".",
-                   substr(tmp.date, 10, 13))
-
-lst.hdf.1km <- list.files(path.hdf, 
-                          pattern = paste("1KM", tmp.date, sep = ".*"), 
-                          full.names = TRUE)
-lst.hdf.hkm <- list.files(path.hdf, 
-                          pattern = paste("HKM", tmp.date, sep = ".*"), 
-                          full.names = TRUE)
-lst.hdf.qkm <- list.files(path.hdf, 
-                          pattern = paste("QKM", tmp.date, sep = ".*"), 
-                          full.names = TRUE)
-
-## Extract bandnames from *.hdf files
-bandnames <- hdfExtractMODScale (lst.hdf.qkm,
-                                 lst.hdf.hkm,
-                                 lst.hdf.1km)
-bandnames <- bandnames$bands
-
 
 
 ################################################################################

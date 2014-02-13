@@ -13,7 +13,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("randomForest")
+lib <- c()
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
@@ -21,6 +21,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 path.speciesNR <- "csv/kili/lvl0400_speciesNR.csv"
+path.NA <- "csv/kili/lvl0400_NAsummary.csv"
 
 ## Import dataset
 data <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
@@ -55,13 +56,13 @@ data.diff <- cbind(data.raw[2], data.raw[107:144])
 data.sd <- cbind(data.raw[2], data.raw[145:182])
 
 ## Create NA tables
-data.greyval.na <- data.frame(colSums(is.na(data.greyval)))
+data.greyval.na <- data.frame(colSums(is.na(data.greyval[,2:ncol(data.greyval)])))
 names(data.greyval.na) <- c("NAs out of 225")
 
-data.diff.na <- data.frame(colSums(is.na(data.diff)))
+data.diff.na <- data.frame(colSums(is.na(data.diff[,2:ncol(data.greyval)])))
 names(data.diff.na) <- c("NAs out of 225")
 
-data.sd.na <- data.frame(colSums(is.na(data.sd)))
+data.sd.na <- data.frame(colSums(is.na(data.sd[,2:ncol(data.greyval)])))
 names(data.sd.na) <- c("NAs out of 225")
 
 ################################################################################
@@ -81,3 +82,23 @@ write.table(data.speciesNR,
             col.names = TRUE,
             row.names = FALSE,
             sep = ";")
+
+
+################################################################################
+### Write NA summary csv #######################################################
+
+## Combine NA tables
+na.tables <- data.frame(cbind("bands" = c(1:12, 13.1, 13.2, 14.1, 14.2, 15:36),
+                              data.greyval.na,
+                              data.diff.na,
+                              data.sd.na))
+names(na.tables) <- c("bands", "NAs greyval", "NAs diff", "NAs sd")
+
+## Write table
+write.table(na.tables, 
+            file = path.NA, 
+            quote = FALSE, 
+            sep = ";", 
+            dec = ",", 
+            row.names = FALSE, 
+            col.names = TRUE) 

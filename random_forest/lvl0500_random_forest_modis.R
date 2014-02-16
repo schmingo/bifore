@@ -24,7 +24,28 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 train.data <- read.csv2("csv/kili/lvl0400_speciesNR.csv",
                     dec = ".",
                     header = TRUE,
-                    stringsAsFactors = TRUE)
+                    stringsAsFactors = FALSE)
+
+################################################################################
+### Subsetting data ############################################################
+
+## Predictor
+train.greyval <- train.data[,4:33]
+names(train.greyval)
+
+train.diff <- train.data[,34:61]
+names(train.diff)
+
+train.diff.sd <- train.data[,35:ncol(train.data)-1]
+names(train.diff.sd)
+
+train.greyval.sd <- cbind(train.data[,4:33], train.data[62:91])
+names(train.greyval.sd)
+
+## Response
+response <- as.factor(train.data[,names(train.data) %in% c("SpeciesNr")])
+names(response)
+
 
 
 ################################################################################

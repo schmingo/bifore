@@ -52,17 +52,17 @@ names(response)
 ### Random Forest ##############################################################
 
 # ## Define desired parameters
-n.tree <- 2000 # Number of trees to grow
-m.try <- 5 # Number of variables randomly sampled as candidates at each split
+n.tree <- 500 # Number of trees to grow
+m.try <- 4 # Number of variables randomly sampled as candidates at each split
 
 
 ## Function 
-train.rf <- randomForest(x = train.diff,
+train.rf <- randomForest(x = train.diff.sd,
                          y = response,
                          importance = TRUE,
                          ntree = n.tree,
                          mtry = m.try,
-                         nodesize = 1,
+                         nodesize = 2,
 #                          na.action = na.omit(train.data),
                          type="classification",
                          do.trace = 100)

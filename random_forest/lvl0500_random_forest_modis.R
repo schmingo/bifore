@@ -52,23 +52,22 @@ names(response)
 ### Random Forest ##############################################################
 
 # ## Define desired parameters
-n.tree <- 500 # Number of trees to grow
-m.try <- 7 # Number of variables randomly sampled as candidates at each split
-# 
-# 
-# ## Check colnames to get the right predictor values
-names(train.data[,5:ncol(train.data)-1])
+n.tree <- 2000 # Number of trees to grow
+m.try <- 5 # Number of variables randomly sampled as candidates at each split
+
 
 ## Function 
-train.rf <- randomForest(x = train.data[,5:ncol(train.data)-1],
-                         y = train.data[,names(train.data) %in% c("SpeciesNr")],
+train.rf <- randomForest(x = train.diff,
+                         y = response,
                          importance = TRUE,
+                         ntree = n.tree,
+                         mtry = m.try,
+                         nodesize = 1,
 #                          na.action = na.omit(train.data),
                          type="classification",
                          do.trace = 100)
 
 print(train.rf)
-data.frame(train.rf)
 
 
 ################################################################################

@@ -4,7 +4,7 @@
 ## DATA PREPARATION FOR RANDOM FOREST                                         ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-02-11                                                        ##
+## Version: 2014-02-17                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -17,8 +17,8 @@ lib <- c()
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 path.speciesNR <- "csv/kili/lvl0400_speciesNR.csv"
 path.NA <- "csv/kili/lvl0400_NAsummary.csv"
@@ -75,13 +75,14 @@ data.speciesNR <- data.frame(cbind(data.raw[1:3],
                                    tmp.speciesnr))
 names(data.speciesNR)
 ifelse(TRUE %in% is.na(data.speciesNR), print("NA Werte enthalten"), print("Alles Ok!"))
-write.table(data.speciesNR, 
-            file = path.speciesNR,
-            dec = ".",
-            quote = FALSE,
-            col.names = TRUE,
-            row.names = FALSE,
-            sep = ";")
+
+# write.table(data.speciesNR, 
+#             file = path.speciesNR,
+#             dec = ".",
+#             quote = FALSE,
+#             col.names = TRUE,
+#             row.names = FALSE,
+#             sep = ";")
 
 
 ################################################################################
@@ -95,10 +96,49 @@ na.tables <- data.frame(cbind("bands" = c(1:12, 13.1, 13.2, 14.1, 14.2, 15:36),
 names(na.tables) <- c("bands", "NAs greyval", "NAs diff", "NAs sd")
 
 ## Write table
-write.table(na.tables, 
-            file = path.NA, 
+# write.table(na.tables, 
+#             file = path.NA, 
+#             quote = FALSE, 
+#             sep = ";", 
+#             dec = ",", 
+#             row.names = FALSE, 
+#             col.names = TRUE)
+
+################################################################################
+### Subset by species ##########################################################
+
+# summary(data[14:68])
+
+specfreq <- data.frame(colSums(data[14:68], na.rm = TRUE))
+# specfreq
+
+
+## Define speciesname to subset
+# Pnorisa.squalus data[63,] (112 observations)
+species <- "Pnorisa.squalus"
+
+## Select species data
+species.df <- data.frame(data.raw[,names(data.raw) %in% c(species)])
+names(species.df) <- species
+
+species.df[is.na(species.df)] <- 0
+
+
+data.species <- cbind(data.raw[1:3],
+                      data.raw[69:78], data.raw[87:106],     ## greyvalues
+                      data.raw[108:116], data.raw[126:144],  ## diff
+                      data.raw[145:154], data.raw[163:182], ## sd
+                      species.df) ## species
+
+## Remove rows containing NA values for species
+# data.species <- data.species[!is.na(data.species[ncol(data.species)]),]
+# data.species
+
+## Write table
+write.table(data.species, 
+            file = paste0("csv/kili/lvl0400_", species, ".csv"), 
             quote = FALSE, 
             sep = ";", 
             dec = ",", 
             row.names = FALSE, 
-            col.names = TRUE) 
+            col.names = TRUE)

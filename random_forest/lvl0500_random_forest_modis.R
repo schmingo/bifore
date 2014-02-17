@@ -21,13 +21,21 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Import dataset
-train.data <- read.csv2("csv/kili/lvl0400_speciesNR.csv",
+train.specNR <- read.csv2("csv/kili/lvl0400_speciesNR.csv",
                     dec = ".",
                     header = TRUE,
                     stringsAsFactors = FALSE)
 
+train.species <- read.csv2("csv/kili/lvl0400_Pnorisa.squalus.csv",
+                           dec = ".",
+                           header = TRUE,
+                           stringsAsFactors = FALSE)
+
 ################################################################################
 ### Subsetting data ############################################################
+
+train.data <- train.specNR
+
 
 ## Predictor
 train.greyval <- train.data[,4:33]

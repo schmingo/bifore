@@ -139,6 +139,6 @@ write.table(data.species,
             file = paste0("csv/kili/lvl0400_", species, ".csv"), 
             quote = FALSE, 
             sep = ";", 
-            dec = ",", 
+            dec = ".", 
             row.names = FALSE, 
             col.names = TRUE)

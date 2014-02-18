@@ -60,6 +60,7 @@ df.diff <- cbind(data.raw[108:116], data.raw[126:144])  ## diff
 df.sd <- cbind(data.raw[145:154], data.raw[163:182])    ## sd 
 
 
+################################################################################
 ### Species number #############################################################
 
 ## Extract species number column for converting it to a factor. Necessary for RandomForest classification
@@ -78,8 +79,36 @@ tmp.speciesnr <- as.data.frame(paste0("SP", tmp.speciesnr.list))
 ## Set columnname
 names(tmp.speciesnr) <- "SpeciesNr"
 
+## Create multiple dataframes with species number as predictor datasets
+df.spnr.greyval <- cbind(df.greyval, tmp.speciesnr)
+df.spnr.diff <- cbind(df.diff, tmp.speciesnr)
+df.spnr.greyval.sd <- cbind(df.greyval, df.sd, tmp.speciesnr)
+df.spnr.diff.sd <- cbind(df.diff, df.sd, tmp.speciesnr)
 
 
+################################################################################
+### Subset by species ##########################################################
+
+specfreq <- data.frame(colSums(data.raw[14:68], na.rm = TRUE))
+# specfreq
+
+
+## Define speciesname to subset
+# Pnorisa.squalus data[63,] (112 observations)
+species <- "Pnorisa.squalus"
+
+## Select species data
+species.df <- data.frame(data.raw[,names(data.raw) %in% c(species)])
+names(species.df) <- species
+
+## Replace NA-values by 0
+species.df[is.na(species.df)] <- 0
+
+## Create multiple dataframes with single species as predictor datasets
+df.spec.greyval <- cbind(df.greyval, species.df)
+df.spec.diff <- cbind(df.diff, species.df)
+df.spec.greyval.sd <- cbind(df.greyval, df.sd, species.df)
+df.spec.diff.sd <- cbind(df.diff, df.sd, species.df)
 
 
 ################################################################################

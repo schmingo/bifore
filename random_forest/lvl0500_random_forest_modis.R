@@ -20,19 +20,72 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 # setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
-## Import dataset
-train.specNR <- read.csv2("csv/kili/lvl0400_speciesNR.csv",
-                    dec = ".",
-                    header = TRUE,
-                    stringsAsFactors = FALSE)
 
-train.species <- read.csv2("csv/kili/lvl0400_Pnorisa.squalus.csv",
-                           dec = ".",
-                           header = TRUE,
-                           stringsAsFactors = FALSE)
+################################################################################
+### Import dataset #############################################################
+################################################################################
+
+data.raw <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
+                      dec = ".",
+                      header = TRUE,
+                      stringsAsFactors = FALSE)
+
 
 ################################################################################
 ### Subsetting data ############################################################
+################################################################################
+
+### Eliminate columns containing NA values and combine data in several ways ####
+### to get different dataframe combinations ####################################
+
+df.greyval.all <- data.raw[69:106]
+df.diff.all <- data.raw[107:144]
+df.sd.all <- data.raw[145:182]
+
+
+## Create NA tables
+df.na.greyval <- data.frame(colSums(is.na(df.greyval.all)))
+names(df.na.greyval) <- c("NAs out of 225")
+
+df.na.diff <- data.frame(colSums(is.na(df.diff.all)))
+names(df.na.diff) <- c("NAs out of 225")
+
+df.na.sd <- data.frame(colSums(is.na(df.sd.all)))
+names(df.na.sd) <- c("NAs out of 225")
+
+
+## Eliminate columns containing NA values
+df.greyval <- cbind(data.raw[69:78], data.raw[87:106])  ## greyvalues
+df.diff <- cbind(data.raw[108:116], data.raw[126:144])  ## diff
+df.sd <- cbind(data.raw[145:154], data.raw[163:182])    ## sd 
+
+
+### Species number #############################################################
+
+## Extract species number column for converting it to a factor. Necessary for RandomForest classification
+tmp.speciesnr <- data.raw[9]
+
+## Modify biodiversity values to 2 digit numeric value
+tmp.speciesnr.list <- as.list(as.numeric(t(tmp.speciesnr)))
+tmp.speciesnr.list <- formatC(tmp.speciesnr.list, 
+                              width = 2, 
+                              format = "d", 
+                              flag = "0")
+
+## Modify biodiversity values: paste "SP" in front to create a character
+tmp.speciesnr <- as.data.frame(paste0("SP", tmp.speciesnr.list))
+
+## Set columnname
+names(tmp.speciesnr) <- "SpeciesNr"
+
+
+
+
+
+################################################################################
+################################################################################
+################################################################################
+
 
 train.data <- train.specNR
 

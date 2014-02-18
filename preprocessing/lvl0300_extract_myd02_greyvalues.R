@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-02-12                                                        ##
+## Version: 2014-02-18                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -20,8 +20,10 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set working directory
 setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
+
 ################################################################################
 ### Set filepaths ##############################################################
+################################################################################
 
 path.hdf <- "/home/schmingo/Diplomarbeit/myd02_hdf/"
 path.tif <- "/home/schmingo/Diplomarbeit/myd02_tif/"
@@ -33,11 +35,11 @@ path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data.csv"
 path.biodiversity.t.csv.out <- "csv/kili/lvl0300_biodiversity_data_t.csv"
 
 ## Source modules
-# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
 source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
 
 ################################################################################
 ### Import biodiversity dataset ################################################
+################################################################################
 
 data.bio.raw <- read.csv2(path.biodiversity.csv,
                           dec = ".",
@@ -49,6 +51,7 @@ starttime <- Sys.time()
 
 ################################################################################
 ### Get MYD bandnames ##########################################################
+################################################################################
 
 ## Set date for extraction
 tmp.date <- data.bio.raw$date_nocloud[1]
@@ -79,6 +82,7 @@ bandnames <- bandnames$bands
 
 ################################################################################
 ### List .hdf and .tif for specific date and import .tif as RasterLayer Object##
+################################################################################
 
 ## List unique cloudless dates
 lst.date <- unique(data.bio.raw$date_nocloud)
@@ -116,6 +120,7 @@ foreach(a = lst.date) %do% {
   
   ##############################################################################
   ### Check raster for NA values ###############################################
+  ##############################################################################
   
   # REFERING TO: Level 1B Product Data Dictionary V6.1.14
   # http://mcst.gsfc.nasa.gov/content/l1b-documents
@@ -149,9 +154,10 @@ foreach(a = lst.date) %do% {
     writeRaster(r, filename = paste0(path.tif.na, basename(n)))
   }
   
-
+  
   ##############################################################################
   ### Extraction of radiance-, reflectance scale and offset from *.hdf #########
+  ##############################################################################
   
   print(paste0(tmp.date, " - Extract scalefactors and offset from *.hdf"))
   
@@ -160,7 +166,8 @@ foreach(a = lst.date) %do% {
                                    lst.hdf.1km)
   
   ##############################################################################  
-  ## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster 
+  ## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster#
+  ##############################################################################
   
   print(paste0(tmp.date, " - Calculate new greyvalues"))
   
@@ -182,6 +189,7 @@ foreach(a = lst.date) %do% {
 
 ################################################################################
 ### Extraction of cell values ##################################################
+################################################################################
 
 ## List cloud-free dates from biodiversity dataset
 lst.nocloud <- as.list(data.bio.raw$date_nocloud)
@@ -228,6 +236,7 @@ names(greyvalues)
 
 ################################################################################
 ### Calculate first derivate (diff) ############################################
+################################################################################
 
 ## Calculate diff
 diff <- as.data.frame(rowDiffs(as.matrix(greyvalues)))
@@ -244,6 +253,7 @@ names(diff)
 
 ################################################################################
 ### Pixelraster ################################################################
+################################################################################
 
 ## List cloud-free dates from biodiversity dataset
 lst.nocloud <- as.list(data.bio.raw$date_nocloud)
@@ -252,7 +262,6 @@ lst.nocloud <- as.list(data.bio.raw$date_nocloud)
 data.bio.sp <- data.bio.raw
 coordinates(data.bio.sp) <- c("lon", "lat")
 projection(data.bio.sp) <- "+init=epsg:4326"
-
 
 
 matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind") %do% {
@@ -351,28 +360,13 @@ names(matrix.sd)
 
 ################################################################################
 ### Combine dataframes #########################################################
-
-# greyvalues.diff.sd.t <- data.frame(t(cbind(data.bio.raw, 
-#                                            greyvalues, 
-#                                            diff, 
-#                                            matrix.sd)), 
-#                                    stringsAsFactors = FALSE)
-# names(greyvalues.diff.sd.t) <- data.bio.raw$date_nocloud
-
+################################################################################
 
 greyvalues.diff.sd <- data.frame(cbind(data.bio.raw, 
                                        greyvalues, 
                                        diff, 
                                        matrix.sd), 
                                  stringsAsFactors = FALSE)
-
-# write.table(greyvalues.diff.sd.t, 
-#             file = path.biodiversity.t.csv.out,
-#             dec = ",",
-#             quote = FALSE,
-#             col.names = TRUE,
-#             row.names = TRUE,
-#             sep = ";")
 
 write.table(greyvalues.diff.sd, 
             file = path.biodiversity.csv.out,
@@ -384,6 +378,7 @@ write.table(greyvalues.diff.sd,
 
 ################################################################################
 ### Check actual time again ####################################################
+################################################################################
 
 endtime <- Sys.time()
 

@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-02-04                                                        ##
+## Version: 2014-02-18                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -33,6 +33,7 @@ source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0230_renameS
 
 ################################################################################
 ### Preprocessing MYD35_L2 and MYD03 | Run MRTSwath tool "swath2grid" ##########
+################################################################################
 
 ### List hdf files
 fls.myd <- list.files(path.hdf.in,
@@ -53,6 +54,7 @@ starttime <- Sys.time()
 
 ################################################################################
 ### For-loop .hdf to .tif 1000m per pixel ######################################
+################################################################################
 
 # Get the matching data/geolocation file pairs
 fls.1km.matching = check_for_matching_geolocation_files(moddir = path.hdf.in,
@@ -90,6 +92,7 @@ for (i in 1:nrow(fls.1km.matching)) {
 
 ################################################################################
 ### For-loop .hdf to .tif 500m per pixel #######################################
+################################################################################
 
 # Get the matching data/geolocation file pairs
 fls.hkm.matching = check_for_matching_geolocation_files(moddir = path.hdf.in,
@@ -127,6 +130,7 @@ for (i in 1:nrow(fls.hkm.matching)) {
 
 ################################################################################
 ### For-loop .hdf to .tif 250m per pixel #######################################
+################################################################################
 
 # Get the matching data/geolocation file pairs
 fls.qkm.matching = check_for_matching_geolocation_files(moddir = path.hdf.in,
@@ -164,6 +168,7 @@ for (i in 1:nrow(fls.qkm.matching)) {
 
 ################################################################################
 ### Remove unnecessary tifs ####################################################
+################################################################################
 
 do.call(file.remove,list(list.files(tifsdir, pattern="Aggr", full.names=TRUE)))
 do.call(file.remove,list(list.files(tifsdir, pattern="Uncert", full.names=TRUE)))
@@ -172,6 +177,7 @@ do.call(file.remove,list(list.files(tifsdir, pattern="Band26", full.names=TRUE))
 
 ################################################################################
 ### Check actual time again ####################################################
+################################################################################
 
 endtime <- Sys.time()
 
@@ -180,6 +186,7 @@ time
 
 ################################################################################
 ### Rename .tif to proper filename e.g.: *_B20.tif #############################
+################################################################################
 
 lst.tif <- list.files(tifsdir, pattern=".tif", full.names=TRUE)
 

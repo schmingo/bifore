@@ -7,7 +7,7 @@
 ##       - MYD35 .hdf metadata                                                ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-01-25                                                        ##
+## Version: 2014-02-18                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -24,6 +24,7 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ################################################################################
 ### Set filepaths ##############################################################
+################################################################################
 
 ## To preprocess MYD35_L2 and MYD03 files; both must be in the same directory.
 
@@ -42,6 +43,7 @@ mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
 
 ################################################################################
 ### Import biodiversity dataset ################################################
+################################################################################
 
 data <- read.csv2(path.biodiversity.csv,
                   dec = ".",
@@ -56,6 +58,7 @@ data.orig <- data
 
 ################################################################################
 ### Separate day and night hdf files ###########################################
+################################################################################
 
 fls.myd03 <- list.files(path.hdf.in,
                         pattern="MYD03",
@@ -89,6 +92,7 @@ stopCluster(cl)
 
 ################################################################################
 ### Preprocessing MYD35_L2 and MYD03 | Run MRTSwath tool "swath2grid" ##########
+################################################################################
 
 ## List MYD-files
 list.files(path = path.hdf.sub, pattern = "MYD")
@@ -111,6 +115,7 @@ lr_lon <- 37.76
 
 ################################################################################
 ### For-loop .hdf to .tif ######################################################
+################################################################################
 
 for(i in 1:nrow(fls.matching)) {
   ## Write parameter file for each .hdf
@@ -140,6 +145,7 @@ for(i in 1:nrow(fls.matching)) {
 
 ################################################################################
 ### Check observations from csv file for cloudiness using tiffs ################
+################################################################################
 
 ## get .tif list from swath2grid output
 tiffns <- list.files(path.tif.cloudmask, pattern=".tif", full.names=TRUE)
@@ -206,8 +212,6 @@ myd02.lst <- foreach(g = 1:nrow(data), .packages = lib,
   
   ## Retrieve information about first cloud-free day
   return(substr(names(h), 11, 22))
-#   return(paste0(dirname(fls.avl)[1], "/", names(h), ".tif"))
-#   return(current.date)
 }
 
 
@@ -216,6 +220,7 @@ stopCluster(cl)
 
 ################################################################################
 ### Create new .csv with no-cloud date and diff-days ###########################
+################################################################################
 
 myd02.lst
 names(myd02.lst) <- "date_nocloud"

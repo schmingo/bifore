@@ -4,7 +4,7 @@
 ## Compare downloaded MYD02 with nocloud dates                                ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-01-24                                                        ##
+## Version: 2014-02-18                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -15,21 +15,21 @@ lib <- c()
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-# setwd("d:/Dropbox/Diplomarbeit/code/bifore/src/")
 setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################
 ### Set filepaths ##############################################################
+################################################################################
 
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
-# path.hdf.in <- ("E:/Diplomarbeit/myd02_hdf/")
 path.hdf.in <- "/home/schmingo/Diplomarbeit/myd02_hdf/"
 path.tif <- "/home/schmingo/Diplomarbeit/myd02_tif/"
 
 ################################################################################
 ### Import biodiversity dataset ################################################
+################################################################################
 
 data <- read.csv2(path.biodiversity.csv,
                   dec = ".",
@@ -39,6 +39,7 @@ data <- read.csv2(path.biodiversity.csv,
 
 ################################################################################
 ### Extract MYD02 date string ##################################################
+################################################################################
 
 ## List hdf files
 lst.1km <- list.files(path.hdf.in,
@@ -84,6 +85,7 @@ dates.hkm
 
 ################################################################################
 ### Check if downloaded MYD02 files are complete ###############################
+################################################################################
 
 data$date_nocloud %in% dates.1km
 data$date_nocloud %in% dates.qkm
@@ -95,6 +97,7 @@ dates.hkm %in% data$date_nocloud
 
 ################################################################################
 ### Check if *.tif are complete ################################################
+################################################################################
 
 ## List hdf files
 lst.tif.b01 <- list.files(path.tif, pattern="B01", full.names=TRUE)

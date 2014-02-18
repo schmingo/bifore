@@ -112,13 +112,6 @@ tmp.species.list <- formatC(tmp.species.list,
 
 tmp.species <- as.data.frame(paste0("PR", tmp.species.list))
 
-
-
-
-
-
-
-
 ## Create multiple dataframes with single species as predictor datasets
 df.spec.greyval <- cbind(df.greyval, tmp.species)
 df.spec.diff <- cbind(df.diff, tmp.species)
@@ -130,29 +123,10 @@ df.spec.diff.sd <- cbind(df.diff, df.sd, tmp.species)
 ## Define Random Forest input data #############################################
 ################################################################################
 
-df.input.rf <- df.spec.greyval ## Input predictor dataset here!
+df.input.rf <- df.spec.greyval ## Insert input dataset here!
+
 predictor <- df.input.rf[,1:ncol(df.input.rf)-1]
 response <- as.factor(df.input.rf[,ncol(df.input.rf)])
-
-
-
-# ## Predictor
-# train.greyval <- train.data[,4:33]
-# names(train.greyval)
-# 
-# train.diff <- train.data[,34:61]
-# names(train.diff)
-# 
-# train.diff.sd <- train.data[,35:ncol(train.data)-1]
-# names(train.diff.sd)
-# 
-# train.greyval.sd <- cbind(train.data[,4:33], train.data[62:91])
-# names(train.greyval.sd)
-# 
-# ## Response
-# response <- as.factor(train.data[,names(train.data) %in% c("SpeciesNr")])
-# names(response)
-
 
 
 ################################################################################
@@ -161,7 +135,7 @@ response <- as.factor(df.input.rf[,ncol(df.input.rf)])
 
 # ## Define desired parameters
 n.tree <- 500 # Number of trees to grow
-m.try <- 4 # Number of variables randomly sampled as candidates at each split
+m.try <- 2 # Number of variables randomly sampled as candidates at each split
 
 
 ## Function 

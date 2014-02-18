@@ -26,7 +26,7 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 
 data.raw <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
-                      dec = ".",
+                      dec = ",",
                       header = TRUE,
                       stringsAsFactors = FALSE)
 
@@ -104,42 +104,60 @@ names(species.df) <- species
 ## Replace NA-values by 0
 species.df[is.na(species.df)] <- 0
 
+tmp.species.list <- as.list(t(species.df))
+tmp.species.list <- formatC(tmp.species.list, 
+                            width = 2, 
+                            format = "d", 
+                            flag = "0")
+
+tmp.species <- as.data.frame(paste0("PR", tmp.species.list))
+
+
+
+
+
+
+
+
 ## Create multiple dataframes with single species as predictor datasets
-df.spec.greyval <- cbind(df.greyval, species.df)
-df.spec.diff <- cbind(df.diff, species.df)
-df.spec.greyval.sd <- cbind(df.greyval, df.sd, species.df)
-df.spec.diff.sd <- cbind(df.diff, df.sd, species.df)
+df.spec.greyval <- cbind(df.greyval, tmp.species)
+df.spec.diff <- cbind(df.diff, tmp.species)
+df.spec.greyval.sd <- cbind(df.greyval, df.sd, tmp.species)
+df.spec.diff.sd <- cbind(df.diff, df.sd, tmp.species)
 
 
 ################################################################################
+## Define Random Forest input data #############################################
 ################################################################################
+
+df.input.rf <- df.spec.greyval ## Input predictor dataset here!
+predictor <- df.input.rf[,1:ncol(df.input.rf)-1]
+response <- as.factor(df.input.rf[,ncol(df.input.rf)])
+
+
+
+# ## Predictor
+# train.greyval <- train.data[,4:33]
+# names(train.greyval)
+# 
+# train.diff <- train.data[,34:61]
+# names(train.diff)
+# 
+# train.diff.sd <- train.data[,35:ncol(train.data)-1]
+# names(train.diff.sd)
+# 
+# train.greyval.sd <- cbind(train.data[,4:33], train.data[62:91])
+# names(train.greyval.sd)
+# 
+# ## Response
+# response <- as.factor(train.data[,names(train.data) %in% c("SpeciesNr")])
+# names(response)
+
+
+
 ################################################################################
-
-
-train.data <- train.specNR
-
-
-## Predictor
-train.greyval <- train.data[,4:33]
-names(train.greyval)
-
-train.diff <- train.data[,34:61]
-names(train.diff)
-
-train.diff.sd <- train.data[,35:ncol(train.data)-1]
-names(train.diff.sd)
-
-train.greyval.sd <- cbind(train.data[,4:33], train.data[62:91])
-names(train.greyval.sd)
-
-## Response
-response <- as.factor(train.data[,names(train.data) %in% c("SpeciesNr")])
-names(response)
-
-
-
+### Random Forest function #####################################################
 ################################################################################
-### Random Forest ##############################################################
 
 # ## Define desired parameters
 n.tree <- 500 # Number of trees to grow
@@ -147,7 +165,7 @@ m.try <- 4 # Number of variables randomly sampled as candidates at each split
 
 
 ## Function 
-train.rf <- randomForest(x = train.diff.sd,
+train.rf <- randomForest(x = predictor,
                          y = response,
                          importance = TRUE,
                          ntree = n.tree,
@@ -163,13 +181,13 @@ print(train.rf)
 ################################################################################
 ### Prediction #################################################################
 
-## Create test-df
-names(train.data[1:180,5:ncol(train.data)-1])
-testData <- train.data[181:225,3:ncol(train.data)-1]
-
-
-##  predict RInfo for new data set
-test.predict <- predict(train.rf, testData,type="prob", index=2, na.rm=TRUE, progress="window", overwrite=TRUE, filename="ProbPred.png")
-test.predict <- data.frame(predict(train.rf, testData))
-test.predict
+# ## Create test-df
+# names(train.data[1:180,5:ncol(train.data)-1])
+# testData <- train.data[181:225,3:ncol(train.data)-1]
+# 
+# 
+# ##  predict RInfo for new data set
+# test.predict <- predict(train.rf, testData,type="prob", index=2, na.rm=TRUE, progress="window", overwrite=TRUE, filename="ProbPred.png")
+# test.predict <- data.frame(predict(train.rf, testData))
+# test.predict
 

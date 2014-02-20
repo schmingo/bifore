@@ -82,6 +82,7 @@ names(tmp.speciesnr) <- "SpeciesNr"
 ## Create multiple dataframes with species number as predictor datasets
 df.spnr.greyval <- cbind(df.greyval, tmp.speciesnr)
 df.spnr.diff <- cbind(df.diff, tmp.speciesnr)
+df.spnr.greyval.diff <- cbind(df.greyval, df.diff, tmp.speciesnr)
 df.spnr.greyval.sd <- cbind(df.greyval, df.sd, tmp.speciesnr)
 df.spnr.diff.sd <- cbind(df.diff, df.sd, tmp.speciesnr)
 
@@ -115,6 +116,7 @@ tmp.species <- as.data.frame(paste0("PR", tmp.species.list))
 ## Create multiple dataframes with single species as predictor datasets
 df.spec.greyval <- cbind(df.greyval, tmp.species)
 df.spec.diff <- cbind(df.diff, tmp.species)
+df.spec.greyval.diff <- cbind(df.greyval, df.diff, tmp.species)
 df.spec.greyval.sd <- cbind(df.greyval, df.sd, tmp.species)
 df.spec.diff.sd <- cbind(df.diff, df.sd, tmp.species)
 
@@ -123,7 +125,7 @@ df.spec.diff.sd <- cbind(df.diff, df.sd, tmp.species)
 ## Define Random Forest input data #############################################
 ################################################################################
 
-df.input.rf <- df.spec.greyval ## Insert input dataset here!
+df.input.rf <- df.spec.greyval.diff ## Insert input dataset here!
 
 predictor <- df.input.rf[,1:ncol(df.input.rf)-1]
 response <- as.factor(df.input.rf[,ncol(df.input.rf)])
@@ -134,8 +136,8 @@ response <- as.factor(df.input.rf[,ncol(df.input.rf)])
 ################################################################################
 
 # ## Define desired parameters
-n.tree <- 500 # Number of trees to grow
-m.try <- 2 # Number of variables randomly sampled as candidates at each split
+n.tree <- 1000 # Number of trees to grow
+m.try <- 5 # Number of variables randomly sampled as candidates at each split
 
 
 ## Function 
@@ -151,7 +153,15 @@ train.rf <- randomForest(x = predictor,
 
 print(train.rf)
 
-
+plot(randomForest(x = predictor,
+                  y = response,
+                  importance = TRUE,
+                  ntree = n.tree,
+                  mtry = m.try,
+                  nodesize = 2,
+                  #                          na.action = na.omit(train.data),
+                  type="classification",
+                  do.trace = 100))
 ################################################################################
 ### Prediction #################################################################
 

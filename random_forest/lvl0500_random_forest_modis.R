@@ -17,8 +17,8 @@ lib <- c("randomForest")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################
@@ -155,15 +155,24 @@ train.rf.spnr <- randomForest(x = predictor.spnr,
                               do.trace = 100)
 print(train.rf.spnr)
 
+## Define output image | open image port
+png("images/randomForest_regression_speciesno.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
-# plot(randomForest(x = predictor,
-#                   y = response.nofactor,
-#                   importance = TRUE,
-#                   ntree = n.tree,
-#                   mtry = m.try,
-#                   nodesize = 2,
-#                   type="regression",
-#                   do.trace = 100))
+plot(randomForest(x = predictor.spnr,
+                  y = response.nofactor,
+                  importance = TRUE,
+                  ntree = 500,
+                  mtry = 5,
+                  nodesize = 2,
+                  type="regression",
+                  do.trace = 100))
+
+## Close image port
+graphics.off()
 
 
 ################################################################################
@@ -187,14 +196,24 @@ train.rf.spec <- randomForest(x = predictor.spec,
                          do.trace = 100)
 print(train.rf.spec)
 
-# plot(randomForest(x = predictor,
-#                   y = response.factor,
-#                   importance = TRUE,
-#                   ntree = n.tree,
-#                   mtry = m.try,
-#                   nodesize = 2,
-#                   type="classification",
-#                   do.trace = 100))
+## Define output image | open image port
+png(paste0("images/randomForest_classification_", species, ".png"), 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
+
+plot(randomForest(x = predictor.spec,
+                  y = response.factor,
+                  importance = TRUE,
+                  ntree = 500,
+                  mtry = 2,
+                  nodesize = 2,
+                  type="classification",
+                  do.trace = 100))
+
+## Close image port
+graphics.off()
 
 print(train.rf.spnr)
 print(train.rf.spec)

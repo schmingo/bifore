@@ -68,13 +68,13 @@ tmp.speciesnr <- data.raw[9]
 
 ## Modify biodiversity values to 2 digit numeric value
 tmp.speciesnr.list <- as.list(as.numeric(t(tmp.speciesnr)))
-tmp.speciesnr.list <- formatC(tmp.speciesnr.list, 
-                              width = 2, 
-                              format = "d", 
-                              flag = "0")
-
-## Modify biodiversity values: paste "SP" in front to create a character
-tmp.speciesnr <- as.data.frame(paste0("SP", tmp.speciesnr.list))
+# tmp.speciesnr.list <- formatC(tmp.speciesnr.list, 
+#                               width = 2, 
+#                               format = "d", 
+#                               flag = "0")
+# 
+# ## Modify biodiversity values: paste "SP" in front to create a character
+# tmp.speciesnr <- as.data.frame(paste0("SP", tmp.speciesnr.list))
 
 ## Set columnname
 names(tmp.speciesnr) <- "SpeciesNr"
@@ -128,7 +128,8 @@ df.spec.diff.sd <- cbind(df.diff, df.sd, tmp.species)
 df.input.rf <- df.spec.greyval.diff ## Insert input dataset here!
 
 predictor <- df.input.rf[,1:ncol(df.input.rf)-1]
-response <- as.factor(df.input.rf[,ncol(df.input.rf)])
+response.factor <- as.factor(df.input.rf[,ncol(df.input.rf)])
+response.nofactor <- df.input.rf[,ncol(df.input.rf)]
 
 
 ################################################################################
@@ -136,13 +137,13 @@ response <- as.factor(df.input.rf[,ncol(df.input.rf)])
 ################################################################################
 
 # ## Define desired parameters
-n.tree <- 1000 # Number of trees to grow
-m.try <- 5 # Number of variables randomly sampled as candidates at each split
+n.tree <- 500 # Number of trees to grow
+m.try <- 2 # Number of variables randomly sampled as candidates at each split
 
 
 ## Function 
 train.rf <- randomForest(x = predictor,
-                         y = response,
+                         y = response.factor,
                          importance = TRUE,
                          ntree = n.tree,
                          mtry = m.try,
@@ -154,7 +155,7 @@ train.rf <- randomForest(x = predictor,
 print(train.rf)
 
 plot(randomForest(x = predictor,
-                  y = response,
+                  y = response.factor,
                   importance = TRUE,
                   ntree = n.tree,
                   mtry = m.try,

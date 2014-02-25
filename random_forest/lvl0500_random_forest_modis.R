@@ -144,16 +144,12 @@ predictor.spnr <- df.input.rf.spnr[,1:ncol(df.input.rf.spnr)-1]
 response.factor <- as.factor(df.input.rf.spnr[,ncol(df.input.rf.spnr)])
 response.nofactor <- df.input.rf.spnr[,ncol(df.input.rf.spnr)]
 
-## Define desired parameters ###################################################
-n.tree <- 500 # Number of trees to grow
-m.try <- 5 # Number of variables randomly sampled as candidates at each split
-
 ## Function ####################################################################
-train.rf.spnr <- randomForest(x = predictor,
+train.rf.spnr <- randomForest(x = predictor.spnr,
                               y = response.nofactor,
                               importance = TRUE,
-                              ntree = n.tree,
-                              mtry = m.try,
+                              ntree = 500,
+                              mtry = 5,
                               nodesize = 2,
                               type="regression",
                               do.trace = 100)
@@ -180,16 +176,12 @@ predictor.spec <- df.input.rf.spec[,1:ncol(df.input.rf.spec)-1]
 response.factor <- as.factor(df.input.rf.spec[,ncol(df.input.rf.spec)])
 response.nofactor <- df.input.rf.spec[,ncol(df.input.rf.spec)]
 
-## Define desired parameters ###################################################
-n.tree <- 500 # Number of trees to grow
-m.try <- 2 # Number of variables randomly sampled as candidates at each split
-
 ## Function ####################################################################
-train.rf.spec <- randomForest(x = predictor,
+train.rf.spec <- randomForest(x = predictor.spec,
                          y = response.factor,
                          importance = TRUE,
-                         ntree = n.tree,
-                         mtry = m.try,
+                         ntree = 500,
+                         mtry = 2,
                          nodesize = 2,
                          type="classification",
                          do.trace = 100)
@@ -204,8 +196,8 @@ print(train.rf.spec)
 #                   type="classification",
 #                   do.trace = 100))
 
-
-
+print(train.rf.spnr)
+print(train.rf.spec)
 ################################################################################
 ### Prediction #################################################################
 ################################################################################

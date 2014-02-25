@@ -122,49 +122,93 @@ df.spec.diff.sd <- cbind(df.diff, df.sd, tmp.species)
 
 
 ################################################################################
-## Define Random Forest input data #############################################
-################################################################################
-
-df.input.rf <- df.spec.greyval.diff ## Insert input dataset here!
-
-predictor <- df.input.rf[,1:ncol(df.input.rf)-1]
-response.factor <- as.factor(df.input.rf[,ncol(df.input.rf)])
-response.nofactor <- df.input.rf[,ncol(df.input.rf)]
-
-
-################################################################################
 ### Random Forest function #####################################################
 ################################################################################
 
-# ## Define desired parameters
+# MSE = Mean square error = Mittlere quadratische Abweichung
+# ME
+# MAE
+# RMSE
+# Rsq
+
+# beschreibung vom datensatz
+# min, max, median
+
+################################################################################
+### Regression - number of species #############################################
+
+## Define Random Forest input data #############################################
+df.input.rf.spnr <- df.spnr.greyval.diff ## Insert input dataset here!
+
+predictor.spnr <- df.input.rf.spnr[,1:ncol(df.input.rf.spnr)-1]
+response.factor <- as.factor(df.input.rf.spnr[,ncol(df.input.rf.spnr)])
+response.nofactor <- df.input.rf.spnr[,ncol(df.input.rf.spnr)]
+
+## Define desired parameters ###################################################
+n.tree <- 500 # Number of trees to grow
+m.try <- 5 # Number of variables randomly sampled as candidates at each split
+
+## Function ####################################################################
+train.rf.spnr <- randomForest(x = predictor,
+                              y = response.nofactor,
+                              importance = TRUE,
+                              ntree = n.tree,
+                              mtry = m.try,
+                              nodesize = 2,
+                              type="regression",
+                              do.trace = 100)
+print(train.rf.spnr)
+
+
+# plot(randomForest(x = predictor,
+#                   y = response.nofactor,
+#                   importance = TRUE,
+#                   ntree = n.tree,
+#                   mtry = m.try,
+#                   nodesize = 2,
+#                   type="regression",
+#                   do.trace = 100))
+
+
+################################################################################
+### Regression - single species ################################################
+
+## Define Random Forest input data #############################################
+df.input.rf.spec <- df.spec.greyval.diff ## Insert input dataset here!
+
+predictor.spec <- df.input.rf.spec[,1:ncol(df.input.rf.spec)-1]
+response.factor <- as.factor(df.input.rf.spec[,ncol(df.input.rf.spec)])
+response.nofactor <- df.input.rf.spec[,ncol(df.input.rf.spec)]
+
+## Define desired parameters ###################################################
 n.tree <- 500 # Number of trees to grow
 m.try <- 2 # Number of variables randomly sampled as candidates at each split
 
-
-## Function 
-train.rf <- randomForest(x = predictor,
+## Function ####################################################################
+train.rf.spec <- randomForest(x = predictor,
                          y = response.factor,
                          importance = TRUE,
                          ntree = n.tree,
                          mtry = m.try,
                          nodesize = 2,
-#                          na.action = na.omit(train.data),
                          type="classification",
                          do.trace = 100)
+print(train.rf.spec)
 
-print(train.rf)
+# plot(randomForest(x = predictor,
+#                   y = response.factor,
+#                   importance = TRUE,
+#                   ntree = n.tree,
+#                   mtry = m.try,
+#                   nodesize = 2,
+#                   type="classification",
+#                   do.trace = 100))
 
-plot(randomForest(x = predictor,
-                  y = response.factor,
-                  importance = TRUE,
-                  ntree = n.tree,
-                  mtry = m.try,
-                  nodesize = 2,
-                  #                          na.action = na.omit(train.data),
-                  type="classification",
-                  do.trace = 100))
+
+
 ################################################################################
 ### Prediction #################################################################
+################################################################################
 
 # ## Create test-df
 # names(train.data[1:180,5:ncol(train.data)-1])

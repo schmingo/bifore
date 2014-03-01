@@ -4,7 +4,7 @@
 ## RANDOM FOREST FOR MODIS DATA                                               ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-02-25                                                        ##
+## Version: 2014-03-01                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -61,7 +61,8 @@ df.sd <- cbind(data.raw[145:154], data.raw[163:182])    ## sd
 
 
 ################################################################################
-### Number of species ##########################################################
+### Combining data for randomForest ############################################
+################################################################################
 
 ## Extract response column
 tmp.speciesnr <- data.raw[9]
@@ -77,31 +78,47 @@ df.spnr.greyval.sd <- cbind(df.greyval, df.sd, tmp.speciesnr)
 df.spnr.diff.sd <- cbind(df.diff, df.sd, tmp.speciesnr)
 
 
+## Define Random Forest input data #############################################
+df.input.rf <- df.spnr.greyval.diff ## Insert input dataset here!
+
+
+################################################################################
+### Random sample ##############################################################
+################################################################################
+
+## Create tmp.index column
+tmp.index <- seq(1,nrow(df.input.rf))
+
+df.input.tmp <- cbind(df.input.rf, tmp.index)
+
+
+## Split dataset | 3/4 train.data, 1/4 test.data      
+df.input.split <- split(df.input.tmp, df.input.tmp$tmp.index)
+
+train.data <- sample(df.input.split, 
+                     size = round(length(df.input.split)*0.75), 
+                     replace = FALSE)
+
+test.data <- df.input.tmp[!as.character(df.input.tmp$tmp.index) %in% names(train.data), ]
+
+train.data <- as.data.frame(do.call("rbind", train.data), 
+                            stringsAsFactors = FALSE)
+
+## Remove tmp.index column
+train.data <- train.data[,1:ncol(train.data)-1]
+test.data <- test.data[,1:ncol(test.data)-1]
+
+names(train.data)
+names(test.data)
+
+
 ################################################################################
 ### Random Forest function #####################################################
-################################################################################
-
-# MSE = Mean square error = Mittlere quadratische Abweichung
-# ME
-# MAE
-# RMSE
-# Rsq
-
-# beschreibung vom datensatz
-# min, max, median
-
-
-
-
-################################################################################
 ### Regression - number of species #############################################
+################################################################################
 
-## Define Random Forest input data #############################################
-df.input.rf.spnr <- df.spnr.greyval.diff ## Insert input dataset here!
-
-predictor.spnr <- df.input.rf.spnr[,1:ncol(df.input.rf.spnr)-1]
-response.factor <- as.factor(df.input.rf.spnr[,ncol(df.input.rf.spnr)])
-response.nofactor <- df.input.rf.spnr[,ncol(df.input.rf.spnr)]
+predictor.spnr <- train.data[,1:ncol(train.data)-1]
+response.nofactor <- train.data[,ncol(train.data)]
 
 ## Function ####################################################################
 train.rf.spnr <- randomForest(x = predictor.spnr,

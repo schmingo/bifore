@@ -4,7 +4,7 @@
 ## RANDOM FOREST FOR MODIS DATA                                               ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-02-25                                                        ##
+## Version: 2014-03-01                                                        ##
 ##                                                                            ##
 ################################################################################
 

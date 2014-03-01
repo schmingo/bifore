@@ -156,11 +156,11 @@ train.rf.spnr <- randomForest(x = predictor.spnr,
 print(train.rf.spnr)
 
 ## Define output image | open image port
-png("images/randomForest_regression_speciesno.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/randomForest_regression_speciesno.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
 plot(randomForest(x = predictor.spnr,
                   y = response.nofactor,
@@ -172,7 +172,7 @@ plot(randomForest(x = predictor.spnr,
                   do.trace = 100))
 
 ## Close image port
-graphics.off()
+# graphics.off()
 
 
 ################################################################################
@@ -197,11 +197,11 @@ train.rf.spec <- randomForest(x = predictor.spec,
 print(train.rf.spec)
 
 ## Define output image | open image port
-png(paste0("images/randomForest_classification_", species, ".png"), 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png(paste0("images/randomForest_classification_", species, ".png"), 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
 plot(randomForest(x = predictor.spec,
                   y = response.factor,
@@ -213,7 +213,7 @@ plot(randomForest(x = predictor.spec,
                   do.trace = 100))
 
 ## Close image port
-graphics.off()
+# graphics.off()
 
 print(train.rf.spnr)
 print(train.rf.spec)

@@ -108,8 +108,8 @@ train.data <- as.data.frame(do.call("rbind", train.data),
 train.data <- train.data[,1:ncol(train.data)-1]
 test.data <- test.data[,1:ncol(test.data)-1]
 
-names(train.data)
-names(test.data)
+# names(train.data)
+# names(test.data)
 
 
 ################################################################################
@@ -121,15 +121,15 @@ predictor.spnr <- train.data[,1:ncol(train.data)-1]
 response.nofactor <- train.data[,ncol(train.data)]
 
 ## Function ####################################################################
-train.rf.spnr <- randomForest(x = predictor.spnr,
-                              y = response.nofactor,
-                              importance = TRUE,
-                              ntree = 500,
-                              mtry = 5,
-                              nodesize = 2,
-                              type="regression",
-                              do.trace = 100)
-print(train.rf.spnr)
+train.rf <- randomForest(x = predictor.spnr,
+                         y = response.nofactor,
+                         importance = TRUE,
+                         ntree = 500,
+                         mtry = 5,
+                         nodesize = 2,
+                         type="regression",
+                         do.trace = 100)
+print(train.rf)
 
 ## Define output image | open image port
 # png("images/randomForest_regression_speciesno.png", 
@@ -151,7 +151,7 @@ plot(randomForest(x = predictor.spnr,
 # graphics.off()
 
 
-print(train.rf.spnr)
+print(train.rf)
 ################################################################################
 ### Prediction #################################################################
 ################################################################################

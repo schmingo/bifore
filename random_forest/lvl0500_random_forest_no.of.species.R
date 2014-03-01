@@ -61,20 +61,10 @@ df.sd <- cbind(data.raw[145:154], data.raw[163:182])    ## sd
 
 
 ################################################################################
-### Species number #############################################################
+### Number of species ##########################################################
 
-## Extract species number column for converting it to a factor. Necessary for RandomForest classification
+## Extract response column
 tmp.speciesnr <- data.raw[9]
-
-## Modify biodiversity values to 2 digit numeric value
-tmp.speciesnr.list <- as.list(as.numeric(t(tmp.speciesnr)))
-# tmp.speciesnr.list <- formatC(tmp.speciesnr.list, 
-#                               width = 2, 
-#                               format = "d", 
-#                               flag = "0")
-# 
-# ## Modify biodiversity values: paste "SP" in front to create a character
-# tmp.speciesnr <- as.data.frame(paste0("SP", tmp.speciesnr.list))
 
 ## Set columnname
 names(tmp.speciesnr) <- "SpeciesNr"
@@ -99,6 +89,9 @@ df.spnr.diff.sd <- cbind(df.diff, df.sd, tmp.speciesnr)
 
 # beschreibung vom datensatz
 # min, max, median
+
+
+
 
 ################################################################################
 ### Regression - number of species #############################################

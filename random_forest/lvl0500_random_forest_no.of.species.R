@@ -156,13 +156,12 @@ print(train.rf)
 ### Prediction #################################################################
 ################################################################################
 
-# ## Create test-df
-# names(train.data[1:180,5:ncol(train.data)-1])
-# testData <- train.data[181:225,3:ncol(train.data)-1]
-# 
-# 
 # ##  predict RInfo for new data set
-# test.predict <- predict(train.rf, testData,type="prob", index=2, na.rm=TRUE, progress="window", overwrite=TRUE, filename="ProbPred.png")
-# test.predict <- data.frame(predict(train.rf, testData))
-# test.predict
+test2.predict <- predict(train.rf, test.data,index=2, na.rm=TRUE, progress="window", overwrite=TRUE, filename="ProbPred.png")
+test.predict <- data.frame(predict(train.rf, test.data))
+predict.compare <- cbind(test.data[,ncol(test.data)], 
+                         test.predict,
+                         abs(test.predict-test.data[,ncol(test.data)]))
+names(predict.compare) <- c("real.values", "predicted.values", "diff.abs")
 
+summary(predict.compare$diff)

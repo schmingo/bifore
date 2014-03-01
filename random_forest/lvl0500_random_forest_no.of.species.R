@@ -88,40 +88,6 @@ df.spnr.diff.sd <- cbind(df.diff, df.sd, tmp.speciesnr)
 
 
 ################################################################################
-### Subset by species ##########################################################
-
-specfreq <- data.frame(colSums(data.raw[14:68], na.rm = TRUE))
-# specfreq
-
-
-## Define speciesname to subset
-# Pnorisa.squalus data[63,] (112 observations)
-species <- "Pnorisa.squalus"
-
-## Select species data
-species.df <- data.frame(data.raw[,names(data.raw) %in% c(species)])
-names(species.df) <- species
-
-## Replace NA-values by 0
-species.df[is.na(species.df)] <- 0
-
-tmp.species.list <- as.list(t(species.df))
-tmp.species.list <- formatC(tmp.species.list, 
-                            width = 2, 
-                            format = "d", 
-                            flag = "0")
-
-tmp.species <- as.data.frame(paste0("PR", tmp.species.list))
-
-## Create multiple dataframes with single species as predictor datasets
-df.spec.greyval <- cbind(df.greyval, tmp.species)
-df.spec.diff <- cbind(df.diff, tmp.species)
-df.spec.greyval.diff <- cbind(df.greyval, df.diff, tmp.species)
-df.spec.greyval.sd <- cbind(df.greyval, df.sd, tmp.species)
-df.spec.diff.sd <- cbind(df.diff, df.sd, tmp.species)
-
-
-################################################################################
 ### Random Forest function #####################################################
 ################################################################################
 
@@ -175,48 +141,7 @@ plot(randomForest(x = predictor.spnr,
 # graphics.off()
 
 
-################################################################################
-### Regression - single species ################################################
-
-## Define Random Forest input data #############################################
-df.input.rf.spec <- df.spec.greyval.diff ## Insert input dataset here!
-
-predictor.spec <- df.input.rf.spec[,1:ncol(df.input.rf.spec)-1]
-response.factor <- as.factor(df.input.rf.spec[,ncol(df.input.rf.spec)])
-response.nofactor <- df.input.rf.spec[,ncol(df.input.rf.spec)]
-
-## Function ####################################################################
-train.rf.spec <- randomForest(x = predictor.spec,
-                         y = response.factor,
-                         importance = TRUE,
-                         ntree = 500,
-                         mtry = 2,
-                         nodesize = 2,
-                         type="classification",
-                         do.trace = 100)
-print(train.rf.spec)
-
-## Define output image | open image port
-# png(paste0("images/randomForest_classification_", species, ".png"), 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
-
-plot(randomForest(x = predictor.spec,
-                  y = response.factor,
-                  importance = TRUE,
-                  ntree = 500,
-                  mtry = 2,
-                  nodesize = 2,
-                  type="classification",
-                  do.trace = 100))
-
-## Close image port
-# graphics.off()
-
 print(train.rf.spnr)
-print(train.rf.spec)
 ################################################################################
 ### Prediction #################################################################
 ################################################################################

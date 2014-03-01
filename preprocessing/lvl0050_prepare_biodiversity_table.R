@@ -11,7 +11,7 @@
 ## - Add LatLong Coordinates                                                  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-02-18                                                        ##
+## Version: 2014-03-01                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -29,6 +29,7 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
 ## Set filepaths
 file.abundance.csv <- "src/csv/kili/abundance_matrix_hemp.csv"
 file.data.out <- "src/csv/kili/lvl0050_biodiversity_data.csv"
+file.specfreq.out <- "src/csv/kili/lvl0050_speciesfreq.csv"
 
 
 ################################################################################
@@ -154,6 +155,7 @@ names(data10.sp)[9] <- "lat"
 names(data10.sp)[10] <- "coordW"
 names(data10.sp)[11] <- "coordN"
 
+
 ################################################################################
 ### Write new csv ##############################################################
 ################################################################################
@@ -164,3 +166,30 @@ write.table(data10.sp, file = file.data.out,
             col.names = TRUE, 
             row.names = FALSE, 
             sep =";")
+
+
+################################################################################
+### Calculate species frequency ################################################
+################################################################################
+
+## Subset species dataset
+data.spec <- data10.sp[12:ncol(data10.sp)]
+
+## Calculate frequency
+specfreq <- data.frame(colSums(data.spec > 0, na.rm = TRUE), 
+                       row.names = NULL)
+
+## Combine new df
+df.specfreq <- cbind(names(data.spec), specfreq)
+
+## Set colnames
+colnames(df.specfreq) <- c("species", "frequency")
+
+
+## Write .csv
+write.table(df.specfreq, file = file.specfreq.out,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")

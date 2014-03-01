@@ -61,7 +61,8 @@ df.sd <- cbind(data.raw[145:154], data.raw[163:182])    ## sd
 
 
 ################################################################################
-### Subset by species ##########################################################
+### Combining data for randomForest ############################################
+################################################################################
 
 specfreq <- data.frame(colSums(data.raw[14:68], na.rm = TRUE))
 # specfreq
@@ -85,6 +86,7 @@ tmp.species.list <- formatC(tmp.species.list,
                             flag = "0")
 
 tmp.species <- as.data.frame(paste0("PR", tmp.species.list))
+names(tmp.species) <- species
 
 ## Create multiple dataframes with single species as predictor datasets
 df.spec.greyval <- cbind(df.greyval, tmp.species)
@@ -94,32 +96,50 @@ df.spec.greyval.sd <- cbind(df.greyval, df.sd, tmp.species)
 df.spec.diff.sd <- cbind(df.diff, df.sd, tmp.species)
 
 
+## Define Random Forest input data #############################################
+df.input.rf <- df.spec.greyval.diff ## Insert input dataset here!
+
+
+################################################################################
+### Random sample ##############################################################
+################################################################################
+
+## Create tmp.index column
+tmp.index <- seq(1,nrow(df.input.rf))
+
+df.input.tmp <- cbind(df.input.rf, tmp.index)
+
+
+## Split dataset | 3/4 train.data, 1/4 test.data      
+df.input.split <- split(df.input.tmp, df.input.tmp$tmp.index)
+
+train.data <- sample(df.input.split, 
+                     size = round(length(df.input.split)*0.75), 
+                     replace = FALSE)
+
+test.data <- df.input.tmp[!as.character(df.input.tmp$tmp.index) %in% names(train.data), ]
+
+train.data <- as.data.frame(do.call("rbind", train.data), 
+                            stringsAsFactors = TRUE)
+
+## Remove tmp.index column
+train.data <- train.data[,1:ncol(train.data)-1]
+test.data <- test.data[,1:ncol(test.data)-1]
+
+# names(train.data)
+# names(test.data)
+
+
 ################################################################################
 ### Random Forest function #####################################################
+### Classification - single species ############################################
 ################################################################################
 
-# MSE = Mean square error = Mittlere quadratische Abweichung
-# ME
-# MAE
-# RMSE
-# Rsq
-
-# beschreibung vom datensatz
-# min, max, median
-
-
-################################################################################
-### Regression - single species ################################################
-
-## Define Random Forest input data #############################################
-df.input.rf.spec <- df.spec.greyval.diff ## Insert input dataset here!
-
-predictor.spec <- df.input.rf.spec[,1:ncol(df.input.rf.spec)-1]
-response.factor <- as.factor(df.input.rf.spec[,ncol(df.input.rf.spec)])
-response.nofactor <- df.input.rf.spec[,ncol(df.input.rf.spec)]
+predictor.spec <- train.data[,1:ncol(train.data)-1]
+response.factor <- train.data[,ncol(train.data)]
 
 ## Function ####################################################################
-train.rf.spec <- randomForest(x = predictor.spec,
+train.rf <- randomForest(x = predictor.spec,
                          y = response.factor,
                          importance = TRUE,
                          ntree = 500,
@@ -127,7 +147,6 @@ train.rf.spec <- randomForest(x = predictor.spec,
                          nodesize = 2,
                          type="classification",
                          do.trace = 100)
-print(train.rf.spec)
 
 ## Define output image | open image port
 # png(paste0("images/randomForest_classification_", species, ".png"), 
@@ -148,7 +167,7 @@ plot(randomForest(x = predictor.spec,
 ## Close image port
 # graphics.off()
 
-print(train.rf.spec)
+print(train.rf)
 ################################################################################
 ### Prediction #################################################################
 ################################################################################

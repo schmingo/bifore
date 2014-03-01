@@ -17,8 +17,8 @@ lib <- c("randomForest")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################
@@ -64,12 +64,6 @@ df.sd <- cbind(data.raw[145:154], data.raw[163:182])    ## sd
 ### Combining data for randomForest ############################################
 ################################################################################
 
-specfreq <- data.frame(colSums(data.raw[14:68], na.rm = TRUE))
-specfreq
-
-
-## Define speciesname to subset
-# Pnorisa.squalus data[63,] (112 observations)
 species <- "Pnorisa.squalus"
 
 ## Select species data

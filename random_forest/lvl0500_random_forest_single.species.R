@@ -65,7 +65,7 @@ df.sd <- cbind(data.raw[145:154], data.raw[163:182])    ## sd
 ################################################################################
 
 specfreq <- data.frame(colSums(data.raw[14:68], na.rm = TRUE))
-# specfreq
+specfreq
 
 
 ## Define speciesname to subset
@@ -78,15 +78,16 @@ names(species.df) <- species
 
 ## Replace NA-values by 0
 species.df[is.na(species.df)] <- 0
-
-tmp.species.list <- as.list(t(species.df))
-tmp.species.list <- formatC(tmp.species.list, 
-                            width = 2, 
-                            format = "d", 
-                            flag = "0")
-
-tmp.species <- as.data.frame(paste0("PR", tmp.species.list))
-names(tmp.species) <- species
+tmp.species <- species.df
+# 
+# tmp.species.list <- as.list(t(species.df))
+# tmp.species.list <- formatC(tmp.species.list, 
+#                             width = 2, 
+#                             format = "d", 
+#                             flag = "0")
+# 
+# tmp.species <- as.data.frame(paste0("PR", tmp.species.list))
+# names(tmp.species) <- species
 
 ## Create multiple dataframes with single species as predictor datasets
 df.spec.greyval <- cbind(df.greyval, tmp.species)
@@ -136,13 +137,13 @@ test.data <- test.data[,1:ncol(test.data)-1]
 ################################################################################
 
 predictor.spec <- train.data[,1:ncol(train.data)-1]
-response.factor <- train.data[,ncol(train.data)]
+response.factor <- as.factor(train.data[,ncol(train.data)])
 
 ## Function ####################################################################
 train.rf <- randomForest(x = predictor.spec,
                          y = response.factor,
                          importance = TRUE,
-                         ntree = 500,
+                         ntree = 1000,
                          mtry = 2,
                          nodesize = 2,
                          type="classification",
@@ -158,7 +159,7 @@ train.rf <- randomForest(x = predictor.spec,
 plot(randomForest(x = predictor.spec,
                   y = response.factor,
                   importance = TRUE,
-                  ntree = 500,
+                  ntree = 1000,
                   mtry = 2,
                   nodesize = 2,
                   type="classification",

@@ -4,7 +4,7 @@
 ## RANDOM FOREST FOR MODIS DATA                                               ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-01                                                        ##
+## Version: 2014-03-02                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -17,8 +17,8 @@ lib <- c("randomForest")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################
@@ -163,6 +163,8 @@ plot(randomForest(x = predictor.spec,
 # graphics.off()
 
 print(train.rf)
+
+
 ################################################################################
 ### Prediction #################################################################
 ################################################################################

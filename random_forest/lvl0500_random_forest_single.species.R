@@ -176,9 +176,10 @@ predict.df <- data.frame(predict(train.rf, test.data))
 predict.df.comparison <- cbind(test.data[,ncol(test.data)], 
                                predict.df)
 
-names(predict.df.comparison) <- c("real.category", "predicted.category")
+names(predict.df.comparison) <- c("real.classes", "predicted.classes")
 
+predict.df.comparison
 
-## Calculation of non-identical classes
+## Calculation of identical classes
 notidentical <- which(test.data[,ncol(test.data)] != predict.df)
 print(paste0((1-length(notidentical)/nrow(test.data))*100, "% of predicted classes are identical to real classification."))

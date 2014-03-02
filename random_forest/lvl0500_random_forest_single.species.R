@@ -13,7 +13,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("randomForest")
+lib <- c("randomForest", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
@@ -66,8 +66,6 @@ df.sd <- cbind(data.raw[145:154], data.raw[163:182])    ## sd
 ################################################################################
 ### Combining data for randomForest ############################################
 ################################################################################
-
-
 
 ## Select species data
 species.df <- data.frame(data.raw[,names(data.raw) %in% c(species)])
@@ -153,33 +151,34 @@ train.rf <- randomForest(x = predictor.spec,
 #     units = "px", 
 #     res = 600)
 
-plot(randomForest(x = predictor.spec,
-                  y = response.factor,
-                  importance = TRUE,
-                  ntree = 1000,
-                  mtry = 2,
-                  nodesize = 2,
-                  type="classification",
-                  do.trace = 100))
-
-## Close image port
-# graphics.off()
-
-print(train.rf)
+# plot(randomForest(x = predictor.spec,
+#                   y = response.factor,
+#                   importance = TRUE,
+#                   ntree = 1000,
+#                   mtry = 2,
+#                   nodesize = 2,
+#                   type="classification",
+#                   do.trace = 100))
+# 
+# ## Close image port
+# # graphics.off()
+# 
+# print(train.rf)
 
 
 ################################################################################
 ### Prediction #################################################################
 ################################################################################
 
-# ##  predict RInfo for new data set
-# test2.predict <- predict(train.rf, test.data,index=2, na.rm=TRUE, progress="window", overwrite=TRUE, filename="ProbPred.png")
-test.predict <- data.frame(predict(train.rf, test.data))
 
-predict.compare <- cbind(test.data[,ncol(test.data)], 
-                         test.predict,
-                         abs(test.predict-test.data[,ncol(test.data)]))
-names(predict.compare) <- c("real.values", "predicted.values", "diff.abs")
+predict.df <- data.frame(predict(train.rf, test.data))
 
-summary(predict.compare$diff)
+predict.df.comparison <- cbind(test.data[,ncol(test.data)], 
+                               predict.df)
 
+names(predict.df.comparison) <- c("real.category", "predicted.category")
+
+
+## Calculation of non-identical classes
+notidentical <- which(test.data[,ncol(test.data)] != predict.df)
+print(paste0((1-length(notidentical)/nrow(test.data))*100, "% of predicted classes are identical to real classification."))

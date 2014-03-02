@@ -131,24 +131,24 @@ train.rf <- randomForest(x = predictor_modisVAL,
                          do.trace = 100)
 print(train.rf)
 
-## Define output image | open image port
-# png("images/randomForest_regression_speciesno.png", 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
-
-plot(randomForest(x = predictor_modisVAL,
-                  y = response_speciesNR,
-                  importance = TRUE,
-                  ntree = 500,
-                  mtry = 5,
-                  nodesize = 2,
-                  type="regression",
-                  do.trace = 100))
-
-## Close image port
-# graphics.off()
+# ## Define output image | open image port
+# # png("images/randomForest_regression_speciesno.png", 
+# #     width = 1024 * 6, 
+# #     height = 748 * 6, 
+# #     units = "px", 
+# #     res = 600)
+# 
+# plot(randomForest(x = predictor_modisVAL,
+#                   y = response_speciesNR,
+#                   importance = TRUE,
+#                   ntree = 500,
+#                   mtry = 5,
+#                   nodesize = 2,
+#                   type="regression",
+#                   do.trace = 100))
+# 
+# ## Close image port
+# # graphics.off()
 
 
 print(train.rf)

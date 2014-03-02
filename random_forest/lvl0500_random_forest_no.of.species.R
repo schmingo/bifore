@@ -117,12 +117,12 @@ test.data <- test.data[,1:ncol(test.data)-1]
 ### Regression - number of species #############################################
 ################################################################################
 
-predictor.spnr <- train.data[,1:ncol(train.data)-1]
-response.nofactor <- train.data[,ncol(train.data)]
+predictor_modisVAL <- train.data[,1:ncol(train.data)-1]
+response_speciesNR <- train.data[,ncol(train.data)]
 
 ## Function ####################################################################
-train.rf <- randomForest(x = predictor.spnr,
-                         y = response.nofactor,
+train.rf <- randomForest(x = predictor_modisVAL,
+                         y = response_speciesNR,
                          importance = TRUE,
                          ntree = 500,
                          mtry = 5,
@@ -138,8 +138,8 @@ print(train.rf)
 #     units = "px", 
 #     res = 600)
 
-plot(randomForest(x = predictor.spnr,
-                  y = response.nofactor,
+plot(randomForest(x = predictor_modisVAL,
+                  y = response_speciesNR,
                   importance = TRUE,
                   ntree = 500,
                   mtry = 5,

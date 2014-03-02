@@ -159,7 +159,7 @@ print(train.rf)
 ################################################################################
 
 # ##  predict RInfo for new data set
-test2.predict <- predict(train.rf, test.data,index=2, na.rm=TRUE, progress="window", overwrite=TRUE, filename="ProbPred.png")
+# test2.predict <- predict(train.rf, test.data,index=2, na.rm=TRUE, progress="window", overwrite=TRUE, filename="ProbPred.png")
 test.predict <- data.frame(predict(train.rf, test.data))
 predict.compare <- cbind(test.data[,ncol(test.data)], 
                          test.predict,

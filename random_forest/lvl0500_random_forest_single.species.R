@@ -131,12 +131,12 @@ test.data <- test.data[,1:ncol(test.data)-1]
 ### Classification - single species ############################################
 ################################################################################
 
-predictor.spec <- train.data[,1:ncol(train.data)-1]
-response.factor <- as.factor(train.data[,ncol(train.data)])
+predictor_modisVAL <- train.data[,1:ncol(train.data)-1]
+response_speciesCLASS <- as.factor(train.data[,ncol(train.data)])
 
 ## Function ####################################################################
-train.rf <- randomForest(x = predictor.spec,
-                         y = response.factor,
+train.rf <- randomForest(x = predictor_modisVAL,
+                         y = response_speciesCLASS,
                          importance = TRUE,
                          ntree = 1000,
                          mtry = 2,
@@ -151,19 +151,19 @@ train.rf <- randomForest(x = predictor.spec,
 #     units = "px", 
 #     res = 600)
 
-# plot(randomForest(x = predictor.spec,
-#                   y = response.factor,
+# plot(randomForest(x = predictor_modisVAL,
+#                   y = response_speciesCLASS,
 #                   importance = TRUE,
 #                   ntree = 1000,
 #                   mtry = 2,
 #                   nodesize = 2,
 #                   type="classification",
 #                   do.trace = 100))
-# 
-# ## Close image port
-# # graphics.off()
-# 
-# print(train.rf)
+
+## Close image port
+# graphics.off()
+
+print(train.rf)
 
 
 ################################################################################

@@ -57,7 +57,11 @@ names(df.NA) <- c("NA_greyvalues", "NA_diff", "NA_sd")
 ################################################################################
 
 ## Plot single subset (greyvalues, diff or sd)
-qplot(y=df.NA[,1], x=row.names(df.NA), geom = "bar", binwidth = 2, stat="identity")
+qplot(y=df.NA[,1], 
+      x=row.names(df.NA), 
+      geom = "bar", 
+      binwidth = 2, 
+      stat="identity")
 
 
 # ## Using barplot()

@@ -34,7 +34,7 @@ data.raw <- read.csv2(path.lvl0300.csv,
 
 bandnames <- read.csv2(path.bandnames.csv,
                        header = TRUE,
-                       stringsAsFactors = FALSE)
+                       stringsAsFactors = TRUE)
 
 ################################################################################
 ### Subsetting #################################################################
@@ -61,12 +61,12 @@ names(df.NA.melt) <- c("MODIS_bands", "NA_values", "NA_count")
 ################################################################################
 
 ## Plot single subset (greyvalues, diff or sd)
-qplot(y=df.NA[,1], 
-      x=df.NA$bandnames, 
-      geom = "bar", 
-      binwidth = 2, 
-      stat="identity",
-      position="dodge")
+# qplot(y=df.NA[,1], 
+#       x=df.NA$bandnames, 
+#       geom = "bar", 
+#       binwidth = 2, 
+#       stat="identity",
+#       position="dodge")
 
 
 # ## Using barplot()
@@ -78,16 +78,22 @@ qplot(y=df.NA[,1],
 
 
 ## Define output image | open image port
-# png("images/lvl0300_na_values.png", 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png("images/lvl0300_na_values.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
-ggplot(df.NA.melt, aes(x=MODIS_bands, y=NA_count, fill=NA_values)) + 
-  geom_bar(position="dodge", stat="identity") + 
-  theme(axis.text.x=element_text(angle=-90)) +
+plot <- ggplot(df.NA.melt, aes(x=MODIS_bands, y=NA_count, fill=NA_values)) + 
+  geom_bar(position="dodge", stat="identity", width=1, colour="white") +
+  theme(axis.text.x=element_text(angle=-90)) + 
+  scale_fill_grey() +
+#   coord_flip() +
+  xlab("MODIS bands") +
+  ylab("NA counts") +
   ggtitle("Summary of NA values for MODIS MYD02")
 
+plot
+
 ## Close image port
-# graphics.off()
+graphics.off()

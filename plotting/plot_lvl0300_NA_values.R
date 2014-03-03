@@ -78,7 +78,7 @@ names(df.NA.melt) <- c("MODIS_bands", "NA_values", "NA_count")
 
 
 ## Define output image | open image port
-png("images/lvl0300_na_values.png", 
+png("images/lvl0310_na_values.png", 
     width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 

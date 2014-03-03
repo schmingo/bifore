@@ -14,7 +14,7 @@ rm(list = ls(all = TRUE))
 
 
 ## Required libraries
-lib <- c("ggplot2")
+lib <- c("ggplot2", "reshape2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
@@ -32,20 +32,30 @@ data.raw <- read.csv2(path.lvl0300.csv,
                           stringsAsFactors = FALSE)
 
 ################################################################################
-### Plot NA's in sd ############################################################
+### Subsetting #################################################################
+################################################################################
 
-data.sd <- cbind(data.raw[3], data.raw[145:182])
+df.greyval.all <- data.raw[69:106]
+df.diff.all <- data.raw[107:144]
+df.sd.all <- data.raw[145:182]
 
-## Create df, count NA's
-count_NA <- colSums(is.na(data.sd[2:39]))
-# data.sd.na <- as.data.frame(colSums(is.na(data.sd[2:39])), check.rows = FALSE, row.names = NULL)
-# 
-# data.sd.count.na <- as.data.frame(t(rbind(names(data.sd[2:39]),
-#                                      colSums(is.na(data.sd[2:39]))))row.names=NULL)
-# 
-# ## Set colnames
-# colnames(data.sd.count.na) <- c("bands", "count_NA")
-# 
-# ## Plot NA's
-# 
-qplot(y=count_NA, x=names(data.sd[2:39]), geom = "bar", binwidth = 2, stat="identity")
+## Create df, count NA's for each MODIS band
+count_NA_all <- cbind(colSums(is.na(df.greyval.all)),
+                      colSums(is.na(df.diff.all)),
+                      colSums(is.na(df.sd.all)))
+
+
+################################################################################
+### Plotting ###################################################################
+################################################################################
+
+## Plot single subset (greyvalues, diff or sd)
+qplot(y=count_NA_all[,1], x=row.names(count_NA_all), geom = "bar", binwidth = 2, stat="identity")
+
+
+# ## Using barplot()
+# barplot(height = count_NA_all,
+#         width = length(row.names(count_NA_all)), 
+#         beside = TRUE,
+#         ylab = "count NA",
+#         xlab = "MODIS bands")

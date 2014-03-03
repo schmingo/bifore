@@ -25,6 +25,19 @@ path.bandnames.csv <- "csv/kili/bandnames.csv"
 ################################################################################
 
 ################################################################################
+## "raw bandno."
+
+number <- c()
+for(i in seq(1:9)) number[i] <- paste0("0", i)
+for(i in seq(10:12)) number[i+9] <- i+9
+number[13:16] <- c("13.1",
+                  "13.2",
+                  "14.1",
+                  "14.2")
+for(i in seq(15:36)) number[i+16] <- i+14
+
+
+################################################################################
 ## "band_"
 
 bands <- c()
@@ -80,7 +93,11 @@ for(i in seq(15:36)) sd_bands[i+16] <- paste0("sd_band_", i+14)
 ### Combine bandname sequences in a dataframe ##################################
 ################################################################################
 
-df.bandnames <- cbind.data.frame(bands, greyval_bands, diff_bands, sd_bands)
+df.bandnames <- cbind.data.frame(number, 
+                                 bands, 
+                                 greyval_bands, 
+                                 diff_bands, 
+                                 sd_bands)
 
 
 ################################################################################

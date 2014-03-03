@@ -78,11 +78,11 @@ qplot(y=df.NA[,1],
 
 
 ## Define output image | open image port
-png("images/lvl0300_na_values.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/lvl0300_na_values.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
 ggplot(df.NA.melt, aes(x=MODIS_bands, y=NA_count, fill=NA_values)) + 
   geom_bar(position="dodge", stat="identity") + 
@@ -90,4 +90,4 @@ ggplot(df.NA.melt, aes(x=MODIS_bands, y=NA_count, fill=NA_values)) +
   ggtitle("Summary of NA values for MODIS MYD02")
 
 ## Close image port
-graphics.off()
+# graphics.off()

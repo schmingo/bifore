@@ -49,10 +49,11 @@ df.NA <- cbind.data.frame(colSums(is.na(df.greyval.all)),
                           colSums(is.na(df.diff.all)),
                           colSums(is.na(df.sd.all)))
 
-names(df.NA) <- c("NA_greyvalues", "NA_diff", "NA_sd")
+names(df.NA) <- c("greyvalues", "first_derivate", "standard_deviation")
 df.NA$bandnames <- bandnames[,1]
 
 df.NA.melt <- melt(df.NA, id.vars="bandnames")
+names(df.NA.melt) <- c("MODIS_bands", "NA_values", "NA_count")
 
 
 ################################################################################
@@ -76,11 +77,17 @@ qplot(y=df.NA[,1],
 #         xlab = "MODIS bands")
 
 
-ggplot(df.NA.melt, aes(df.NA.melt$variable, df.NA.melt$value, fill = df.NA.melt$bandnames)) +
-  geom_bar(stat= "identity", position="dodge") + 
-  theme(axis.text.x=element_text(angle=-90))
+## Define output image | open image port
+png("images/lvl0300_na_values.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
-ggplot(df.NA.melt, aes(x=df.NA.melt$bandnames, y=df.NA.melt$value, fill=df.NA.melt$variable)) + 
+ggplot(df.NA.melt, aes(x=MODIS_bands, y=NA_count, fill=NA_values)) + 
   geom_bar(position="dodge", stat="identity") + 
   theme(axis.text.x=element_text(angle=-90)) +
   ggtitle("Summary of NA values for MODIS MYD02")
+
+## Close image port
+graphics.off()

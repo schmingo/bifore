@@ -82,4 +82,5 @@ ggplot(df.NA.melt, aes(df.NA.melt$variable, df.NA.melt$value, fill = df.NA.melt$
 
 ggplot(df.NA.melt, aes(x=df.NA.melt$bandnames, y=df.NA.melt$value, fill=df.NA.melt$variable)) + 
   geom_bar(position="dodge", stat="identity") + 
-  theme(axis.text.x=element_text(angle=-90))
+  theme(axis.text.x=element_text(angle=-90)) +
+  ggtitle("Summary of NA values for MODIS MYD02")

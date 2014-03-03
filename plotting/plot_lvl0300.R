@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-02-08                                                        ##
+## Version: 2014-03-03                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -18,11 +18,11 @@ lib <- c("ggplot2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Set filepath
-path.lvl0300.csv <- "csv/kili/lvl0300_biodiversity_data_08022014.csv"
+path.lvl0300.csv <- "csv/kili/lvl0300_biodiversity_data.csv"
 
 
 ## Import dataset

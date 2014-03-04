@@ -51,11 +51,11 @@ data.observations$year <- as.numeric(format(data.observations$date, "%Y"))
 ################################################################################
 
 ## Define output image | open image port
-png("images/map_kili_orthoptera_observations.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/map_kili_orthoptera_observations.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
 kili.extent <- get_map(location = c(36.93865,
                                     -3.454621,
@@ -92,7 +92,7 @@ kilimap + orthoptera.obs1 + colourscale + labeling.plot1 + style.plot1
 
 
 # ## Close image port
-graphics.off()
+# graphics.off()
 
 
 ################################################################################
@@ -100,11 +100,11 @@ graphics.off()
 ################################################################################
 
 ## Define output image | open image port
-png("images/map_kili_orthoptera_observations_year.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/map_kili_orthoptera_observations_year.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
 
 kili.extent <- get_map(location = c(36.93865,
@@ -140,7 +140,7 @@ kilimap + orthoptera.obs1 + colourscale + facet_wrap(~ year) + style.plot2 + lab
 
 
 # ## Close image port
-graphics.off()
+# graphics.off()
 
 ################################################################################
 ### Plot Phaneroptera.sparsa ###################################################
@@ -158,11 +158,11 @@ names(data.observations1)[13] <- "Phaneroptera.sparsa"
 data.observations1.1 <- na.omit(data.observations1)
 
 ## Define output image | open image port
-png("images/map_kili_Phaneroptera.sparsa_year.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/map_kili_Phaneroptera.sparsa_year.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
 kili.extent <- get_map(location = c(36.93865,
                                     -3.454621,
@@ -195,4 +195,4 @@ kilimap + species1.1 + colourscale + facet_wrap(~ year) + labeling.plot3 + style
   
 
 ## Close image port
-graphics.off()
+# graphics.off()

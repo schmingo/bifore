@@ -86,7 +86,7 @@ names(df.NA.melt) <- c("MODIS_bands", "NA_values", "NA_count")
 
 plot <- ggplot(df.NA.melt, aes(x=MODIS_bands, y=NA_count, fill=NA_values)) + 
   geom_bar(position="dodge", stat="identity", width=1, colour="white") +
-  theme(axis.text.x=element_text(angle=-90)) + 
+  theme(axis.text.x=element_text(angle=-90, hjust = 0, vjust = .5)) + 
   scale_fill_grey() +
 #   coord_flip() +
   xlab("MODIS bands") +

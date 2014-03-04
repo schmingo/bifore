@@ -21,7 +21,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Set species to test
-species <- "Pnorisa.squalus"
+species <- "Metaxymecus.gracilipes"
 
 
 ################################################################################
@@ -101,10 +101,11 @@ df.input.rf <- df.spec.greyval.diff ## Insert input dataset here!
 ################################################################################
 
 ## Split dataset | 3/4 train.data, 1/4 test.data      
-set.seed(10)
+set.seed(50)
 
-index <- sample(1:nrow(df.input.rf), nrow(df.input.rf)*.75)
+index <- sample(1:nrow(df.input.rf), nrow(df.input.rf)*.80)
 length(index)
+index
 
 train.data <- df.input.rf[index, ]
 test.data <- df.input.rf[-index, ]
@@ -135,14 +136,14 @@ train.rf <- randomForest(x = predictor_modisVAL,
 #     units = "px", 
 #     res = 600)
 
-# plot(randomForest(x = predictor_modisVAL,
-#                   y = response_speciesCLASS,
-#                   importance = TRUE,
-#                   ntree = 1000,
-#                   mtry = 2,
-#                   nodesize = 2,
-#                   type="classification",
-#                   do.trace = 100))
+plot(randomForest(x = predictor_modisVAL,
+                  y = response_speciesCLASS,
+                  importance = TRUE,
+                  ntree = 1000,
+                  mtry = 2,
+                  nodesize = 2,
+                  type="classification",
+                  do.trace = 100))
 
 ## Close image port
 # graphics.off()

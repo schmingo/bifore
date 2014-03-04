@@ -1,10 +1,10 @@
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
-## PLOT MYD02 GREYVALUES                                                      ##
+## PLOT PREVALENCE                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-03                                                        ##
+## Version: 2014-03-04                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -13,7 +13,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("ggplot2", "latticeExtra", "reshape2", "RColorBrewer", "colorspace")
+lib <- c("ggplot2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
@@ -25,19 +25,32 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
+data.raw <- read.csv2("csv/kili/lvl0050_prevalence.csv",
                       dec = ",",
                       header = TRUE,
                       stringsAsFactors = FALSE)
 
 
 ################################################################################
-### Subsetting data ############################################################
+### Plotting ###################################################################
 ################################################################################
 
-### Eliminate columns containing NA values and combine data in various ways ####
-### to get different dataframe combinations ####################################
+## Define output image | open image port
+# png("images/lvl0050_prevalence.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
-df.greyval.all <- data.raw[69:106]
-df.diff.all <- data.raw[107:144]
-df.sd.all <- data.raw[145:182]
+plot <- ggplot(data.raw, aes(x=species, y=prevalence)) + 
+  geom_bar(stat="identity") +
+  theme(axis.text.x=element_text(angle=-90, hjust = 0, vjust = 0)) + 
+  scale_fill_grey() +
+  xlab("species") +
+  ylab("prevalence") +
+  ggtitle("Orthoptera prevalence Kilimanjaro 2002-2012")
+
+plot
+
+## Close image port
+# graphics.off()

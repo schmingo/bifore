@@ -184,7 +184,7 @@ prevalence <- data.frame(colSums(data.spec > 0, na.rm = TRUE),
 df.prevalence <- cbind(names(data.spec), prevalence)
 
 ## Set colnames
-colnames(df.prevalence) <- c("species", "frequency")
+colnames(df.prevalence) <- c("species", "prevalence")
 
 
 ## Write .csv

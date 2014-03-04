@@ -100,30 +100,14 @@ df.input.rf <- df.spec.greyval.diff ## Insert input dataset here!
 ### Random sample ##############################################################
 ################################################################################
 
-## Create tmp.index column
-tmp.index <- seq(1,nrow(df.input.rf))
-
-df.input.tmp <- cbind(df.input.rf, tmp.index)
-
-
 ## Split dataset | 3/4 train.data, 1/4 test.data      
-df.input.split <- split(df.input.tmp, df.input.tmp$tmp.index)
+set.seed(10)
 
-train.data <- sample(df.input.split, 
-                     size = round(length(df.input.split)*0.75), 
-                     replace = FALSE)
+index <- sample(1:nrow(df.input.rf), nrow(df.input.rf)*.75)
+length(index)
 
-test.data <- df.input.tmp[!as.character(df.input.tmp$tmp.index) %in% names(train.data), ]
-
-train.data <- as.data.frame(do.call("rbind", train.data), 
-                            stringsAsFactors = TRUE)
-
-## Remove tmp.index column
-train.data <- train.data[,1:ncol(train.data)-1]
-test.data <- test.data[,1:ncol(test.data)-1]
-
-# names(train.data)
-# names(test.data)
+train.data <- df.input.rf[index, ]
+test.data <- df.input.rf[-index, ]
 
 
 ################################################################################

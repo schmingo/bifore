@@ -44,7 +44,7 @@ data.raw <- read.csv2("csv/kili/lvl0050_prevalence.csv",
 
 plot <- ggplot(data.raw, aes(x=species, y=prevalence)) + 
   geom_bar(stat="identity") +
-  theme(axis.text.x=element_text(angle=-90, hjust = 0, vjust = 0)) + 
+  theme(axis.text.x=element_text(angle=-90, hjust = 0, vjust = .5)) + 
   scale_fill_grey() +
   xlab("species") +
   ylab("prevalence") +

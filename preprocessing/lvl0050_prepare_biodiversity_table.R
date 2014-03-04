@@ -161,12 +161,12 @@ names(data10.sp)[11] <- "coordN"
 ### Write new csv ##############################################################
 ################################################################################
 
-# write.table(data10.sp, file = file.data.out, 
-#             dec = ".", 
-#             quote = FALSE, 
-#             col.names = TRUE, 
-#             row.names = FALSE, 
-#             sep =";")
+write.table(data10.sp, file = file.data.out, 
+            dec = ".", 
+            quote = FALSE, 
+            col.names = TRUE, 
+            row.names = FALSE, 
+            sep =";")
 
 
 ################################################################################

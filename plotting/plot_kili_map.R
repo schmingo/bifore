@@ -1,10 +1,10 @@
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
-## Plot Kilimanjaro Maps                                                      ##
+## Plot Kilimanjaro maps                                                      ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2013-11-28                                                        ##
+## Version: 2014-03-04                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -17,54 +17,59 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 
 ## set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
-# setwd("D:/Dropbox/Diplomarbeit/code/bifore/")
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## set filepaths
-file.abundance.csv <- "src/csv/kili/abundance_data_subset.csv"
+file.biodiversity.csv <- "csv/kili/lvl0050_biodiversity_data.csv"
 
 ################################################################################
-## read dataset
+## read dataset ################################################################
+################################################################################
 
-data10 <- read.csv2(file.abundance.csv, 
-                  header = TRUE, 
-                  sep = ";",
-                  dec = ".",
-                  fill = FALSE, 
-                  stringsAsFactors = FALSE)
+data.raw <- read.csv2(file.biodiversity.csv, 
+                      header = TRUE, 
+                      sep = ";",
+                      dec = ".",
+                      fill = FALSE, 
+                      stringsAsFactors = FALSE)
 
 ################################################################################
-## sp plot
-data10.sp <- data10
+## sp plot #####################################################################
+################################################################################
 
-coordinates(data10.sp) <- ~coordW + coordN
-spplot(data10.sp, zcol = "asl")
+data.raw.sp <- data.raw
 
+coordinates(data.raw.sp) <- ~coordW + coordN
+spplot(data.raw.sp, zcol = "asl")
 
-### ggmap
+################################################################################
+### ggmap ######################################################################
+################################################################################
 
 ## Define output image | open image port
-png("images/map_kili_abundance.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/map_kili_overview.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
 ## Plot
 kili.map <- qmap(location = "Kilimanjaro",
-                    color = "color",
-                    legend = "bottomright",
-                    extent = "panel",
-                    maptype = "terrain")
+                 color = "color",
+                 legend = "bottomright",
+                 extent = "panel",
+                 maptype = "terrain")
 
 points <- geom_point(
   aes(x = coordW,
       y = coordN,
-      colour = asl,
-      #                          fill = abundance,
+      #       colour = asl,
+      #       fill = abundance,
       size = 3),
-  data = data10)
+  data = data.raw)
 
-map <- kili.map + points
+map <- kili.map # + points
+map
 
-graphics.off()
+# graphics.off()

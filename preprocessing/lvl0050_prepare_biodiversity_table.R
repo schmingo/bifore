@@ -11,7 +11,7 @@
 ## - Add LatLong Coordinates                                                  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-01                                                        ##
+## Version: 2014-03-04                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -25,11 +25,12 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
 setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/")
+# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Set filepaths
-file.abundance.csv <- "src/csv/kili/abundance_matrix_hemp.csv"
-file.data.out <- "src/csv/kili/lvl0050_biodiversity_data.csv"
-file.specfreq.out <- "src/csv/kili/lvl0050_speciesfreq.csv"
+file.abundance.csv <- "csv/kili/abundance_matrix_hemp.csv"
+file.data.out <- "csv/kili/lvl0050_biodiversity_data.csv"
+file.prevalence.out <- "csv/kili/lvl0050_prevalence.csv"
 
 
 ################################################################################
@@ -160,12 +161,12 @@ names(data10.sp)[11] <- "coordN"
 ### Write new csv ##############################################################
 ################################################################################
 
-write.table(data10.sp, file = file.data.out, 
-            dec = ".", 
-            quote = FALSE, 
-            col.names = TRUE, 
-            row.names = FALSE, 
-            sep =";")
+# write.table(data10.sp, file = file.data.out, 
+#             dec = ".", 
+#             quote = FALSE, 
+#             col.names = TRUE, 
+#             row.names = FALSE, 
+#             sep =";")
 
 
 ################################################################################
@@ -176,18 +177,18 @@ write.table(data10.sp, file = file.data.out,
 data.spec <- data10.sp[12:ncol(data10.sp)]
 
 ## Calculate frequency
-specfreq <- data.frame(colSums(data.spec > 0, na.rm = TRUE), 
+prevalence <- data.frame(colSums(data.spec > 0, na.rm = TRUE), 
                        row.names = NULL)
 
 ## Combine new df
-df.specfreq <- cbind(names(data.spec), specfreq)
+df.prevalence <- cbind(names(data.spec), prevalence)
 
 ## Set colnames
-colnames(df.specfreq) <- c("species", "frequency")
+colnames(df.prevalence) <- c("species", "frequency")
 
 
 ## Write .csv
-write.table(df.specfreq, file = file.specfreq.out,
+write.table(df.prevalence, file = file.prevalence.out,
             dec = ",",
             quote = FALSE,
             col.names = TRUE,

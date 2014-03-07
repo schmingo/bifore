@@ -28,17 +28,18 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## To preprocess MYD35_L2 and MYD03 files; both must be in the same directory.
 
-path.biodiversity.csv <- ("csv/kili/lvl0050_biodiversity_data.csv")
+path.biodiversity.csv <- ("csv/kili/lvl0050_biodiversity_data2.csv")
 
-path.nocloud.csv <- ("csv/kili/lvl0100_biodiversity_data.csv")
+path.nocloud.csv <- ("csv/kili/lvl0100_biodiversity_data2.csv")
 
-path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/myd03-35_hdf/")
+# path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/myd03-35_hdf/")
+path.hdf.in <- ("/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf/")
 
 path.hdf.sub <- ("/home/schmingo/SAVE/Diplomarbeit/myd03-35_hdf_daytime/")
 
 path.tif.cloudmask <- ("/home/schmingo/SAVE/Diplomarbeit/myd_cloudmask_tif_daytime/")
 
-mrtpath <- ("/home/schmingo/apps/MRTSwath/bin/swath2grid")
+mrtpath <- ("/home/schmingo/apps/MRTswath/bin/swath2grid")
 
 
 ################################################################################

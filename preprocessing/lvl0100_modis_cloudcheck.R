@@ -7,7 +7,7 @@
 ##       - MYD35 .hdf metadata                                                ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-02-18                                                        ##
+## Version: 2014-03-07                                                       ##
 ##                                                                            ##
 ################################################################################
 
@@ -68,7 +68,7 @@ fls.myd35 <- list.files(path.hdf.in,
                         pattern="MYD35",
                         full.names=TRUE)
 
-registerDoParallel(cl <- makeCluster(4))
+registerDoParallel(cl <- makeCluster(8))
 
 ## MYD03
 foreach(a = fls.myd03, .packages = lib) %dopar% {

@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-02-18                                                        ##
+## Version: 2014-03-08                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -19,7 +19,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set working directory
 setwd("/home/schmingo/Diplomarbeit/")
 
-path.hdf.in <- "/home/schmingo/Diplomarbeit/myd02_hdf/"
+path.hdf.in <- "/home/schmingo/Diplomarbeit/myd02_03/"
 tifsdir <- "/home/schmingo/Diplomarbeit/myd02_tif/"
 mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
 

@@ -22,12 +22,11 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Set filepaths ##############################################################
 ################################################################################
 
-path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
+path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data2.csv"
 
-path.myd02 <- "/home/schmingo/Diplomarbeit/myd02_hdf/"
-path.myd03 <- "/home/schmingo/Diplomarbeit/myd03_35_daytime/"
+path.myd02 <- "/home/schmingo/Diplomarbeit/myd02/"
+path.myd03 <- "/home/schmingo/Diplomarbeit/myd03-35_hdf_daytime/"
 path.myd02_03 <- "/home/schmingo/Diplomarbeit/myd02_03/"
-path.tif <- "/home/schmingo/Diplomarbeit/myd02_tif/"
 
 ################################################################################
 ### Import biodiversity dataset ################################################
@@ -97,20 +96,6 @@ dates.1km %in% data$date_nocloud
 dates.qkm %in% data$date_nocloud
 dates.hkm %in% data$date_nocloud
 
-################################################################################
-### Check if *.tif are complete ################################################
-################################################################################
-
-## List hdf files
-lst.tif.b01 <- list.files(path.tif, pattern="B01", full.names=TRUE)
-lst.tif.b03 <- list.files(path.tif, pattern="B03", full.names=TRUE)
-
-dates.b01 <- substr(basename(lst.tif.b01), 15, 26)
-dates.b03 <- substr(basename(lst.tif.b03), 15, 26)
-
-dates.b03 %in% dates.b01
-
-
 
 ################################################################################
 ### Copy MYD03 files ###########################################################
@@ -118,9 +103,13 @@ dates.b03 %in% dates.b01
 
 lst.myd03 <- list.files(path.myd03, pattern="MYD03", full.names=TRUE)
 
+# substr(basename(lst.myd03[1]), 8, 19)
+# substr(basename(lst.1km[1]), 11, 22)
+
+
 for (i in lst.myd03)
   for (h in lst.1km)
-    if (substr(basename(i) 11, 22) == substr(basename(h) 11, 22))
+    if (substr(basename(i), 8, 19) == substr(basename(h), 11, 22))
       file.rename(from = i,
                   to = paste0(path.myd02_03, basename(i)))
 
@@ -137,7 +126,7 @@ for (f in lst.hkm)
   file.rename(from = f,
               to = paste0(path.myd02_03, basename(f)))
 
-for (e in lst.hkm)
+for (e in lst.qkm)
   file.rename(from = e,
               to = paste0(path.myd02_03, basename(e)))
 

@@ -24,7 +24,9 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
-path.hdf.in <- "/home/schmingo/Diplomarbeit/myd02_hdf/"
+path.myd02 <- "/home/schmingo/Diplomarbeit/myd02_hdf/"
+path.myd03 <- "/home/schmingo/Diplomarbeit/myd03_35_daytime/"
+path.myd02_03 <- "/home/schmingo/Diplomarbeit/myd02_03/"
 path.tif <- "/home/schmingo/Diplomarbeit/myd02_tif/"
 
 ################################################################################
@@ -42,15 +44,15 @@ data <- read.csv2(path.biodiversity.csv,
 ################################################################################
 
 ## List hdf files
-lst.1km <- list.files(path.hdf.in,
+lst.1km <- list.files(path.myd02,
                       pattern="MYD021KM",
                       full.names=TRUE)
   
-lst.qkm <- list.files(path.hdf.in,
+lst.qkm <- list.files(path.myd02,
                       pattern="MYD02QKM",
                       full.names=TRUE)
 
-lst.hkm <- list.files(path.hdf.in,
+lst.hkm <- list.files(path.myd02,
                       pattern="MYD02HKM",
                       full.names=TRUE)
 
@@ -107,3 +109,35 @@ dates.b01 <- substr(basename(lst.tif.b01), 15, 26)
 dates.b03 <- substr(basename(lst.tif.b03), 15, 26)
 
 dates.b03 %in% dates.b01
+
+
+
+################################################################################
+### Copy MYD03 files ###########################################################
+################################################################################
+
+lst.myd03 <- list.files(path.myd03, pattern="MYD03", full.names=TRUE)
+
+for (i in lst.myd03)
+  for (h in lst.1km)
+    if (substr(basename(i) 11, 22) == substr(basename(h) 11, 22))
+      file.rename(from = i,
+                  to = paste0(path.myd02_03, basename(i)))
+
+
+################################################################################
+### Copy MYD02 files ###########################################################
+################################################################################
+
+for (g in lst.1km)
+  file.rename(from = g,
+              to = paste0(path.myd02_03, basename(g)))
+
+for (f in lst.hkm)
+  file.rename(from = f,
+              to = paste0(path.myd02_03, basename(f)))
+
+for (e in lst.hkm)
+  file.rename(from = e,
+              to = paste0(path.myd02_03, basename(e)))
+

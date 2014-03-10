@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-03                                                        ##
+## Version: 2014-03-10                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -86,12 +86,13 @@ names(df.NA.melt) <- c("MODIS_bands", "NA_values", "NA_count")
 
 plot <- ggplot(df.NA.melt, aes(x=MODIS_bands, y=NA_count, fill=NA_values)) + 
   geom_bar(position="dodge", stat="identity", width=1, colour="white") +
-  theme(axis.text.x=element_text(angle=-90, hjust = 0, vjust = .5)) + 
   scale_fill_grey() +
 #   coord_flip() +
   xlab("MODIS bands") +
   ylab("NA counts") +
-  ggtitle("Summary of NA values for MODIS MYD02")
+  ggtitle("Summary of NA values for MODIS MYD02") +
+  theme(axis.text.x=element_text(angle=90, hjust = 0, vjust = .5),
+        plot.title = element_text(lineheight = .8, face = "bold"))
 
 plot
 

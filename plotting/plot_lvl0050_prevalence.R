@@ -44,11 +44,12 @@ data.raw <- read.csv2("csv/kili/lvl0050_prevalence.csv",
 
 plot <- ggplot(data.raw, aes(x=species, y=prevalence)) + 
   geom_bar(stat="identity") +
-  theme(axis.text.x=element_text(angle=-90, hjust = 0, vjust = .5)) + 
   scale_fill_grey() +
   xlab("species") +
   ylab("prevalence") +
-  ggtitle("Orthoptera prevalence Kilimanjaro 2002-2012")
+  ggtitle("Orthoptera prevalence Kilimanjaro 2002-2012") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 0, vjust = .5),
+        plot.title = element_text(lineheight = .8, face = "bold"))
 
 plot
 

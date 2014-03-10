@@ -57,7 +57,7 @@ hist <- ggplot(data, aes(x = diff_days_no_cloud)) +
   xlab("days") +
 #   ylab("count") +
   ggtitle("Gap between observations and cloud-free days") +
-  theme(plot.title = element_text(lineheight=.8, face="bold", size = 20))
+  theme(plot.title = element_text(lineheight=.8, size = 20))
 
 hist
 

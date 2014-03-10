@@ -4,7 +4,7 @@
 ## PLOT PREVALENCE                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-04                                                        ##
+## Version: 2014-03-10                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -47,7 +47,7 @@ plot <- ggplot(data.raw, aes(x=species, y=prevalence)) +
   scale_fill_grey() +
   xlab("species") +
   ylab("prevalence") +
-  ggtitle("Orthoptera prevalence Kilimanjaro 2002-2012") +
+  ggtitle("Orthoptera prevalence Mt. Kilimanjaro 2002-2012") +
   theme(axis.text.x = element_text(angle = 90, hjust = 0, vjust = .5),
         plot.title = element_text(lineheight = .8, face = "bold"))
 

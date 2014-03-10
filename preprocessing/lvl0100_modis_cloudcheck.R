@@ -264,17 +264,8 @@ write.table(data.orig,
             row.names = FALSE,
             sep = ";")
 
-## Plot diff dates histogram
-## Define output image | open image port
-# png("images/MYD_nocloud_observation.png", 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
-
+## plot diff_days_no-cloud
 qplot(x=diff_days_nocloud,
       data=data.orig,
       geom="histogram",
       binwidth=0.5)
-
-# graphics.off()

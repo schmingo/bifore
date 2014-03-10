@@ -49,7 +49,7 @@ plot <- ggplot(data.raw, aes(x=species, y=prevalence)) +
   ylab("prevalence") +
   ggtitle("Orthoptera prevalence Mt. Kilimanjaro 2002-2012") +
   theme(axis.text.x = element_text(angle = 90, hjust = 0, vjust = .5),
-        plot.title = element_text(lineheight = .8, face = "bold"))
+        plot.title = element_text(lineheight = .8, face = "bold", size = 20))
 
 plot
 

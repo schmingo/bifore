@@ -92,7 +92,7 @@ plot <- ggplot(df.NA.melt, aes(x=MODIS_bands, y=NA_count, fill=NA_values)) +
   ylab("NA counts") +
   ggtitle("Summary of NA values for MODIS MYD02") +
   theme(axis.text.x=element_text(angle=90, hjust = 0, vjust = .5),
-        plot.title = element_text(lineheight = .8, face = "bold"))
+        plot.title = element_text(lineheight = .8, face = "bold", size = 20))
 
 plot
 

@@ -37,7 +37,7 @@ bandnames <- read.csv2(path.bandnames.csv,
                        stringsAsFactors = FALSE)
 
 ################################################################################
-### Subsetting #################################################################
+### Subsetting greyvalues ######################################################
 ################################################################################
 
 ## greyvalues reflective bands 
@@ -68,15 +68,83 @@ greyval.emissive.melt <- melt(data.greyval.emissive, id = "date_nocloud",
 
 
 ################################################################################
-### Plotting ###################################################################
+### Plotting greyvalues ########################################################
 ################################################################################
 
 plot.greyval.reflective <- ggplot(greyval.reflective.melt, aes(x = variable, y = value)) +
-  geom_boxplot()
-plot.greyval.reflective
+  geom_boxplot() +
+  xlab("MYD02 reflective bands") +
+  ylab("value") +
+  ggtitle("MYD02 greyvalues reflective bands") +
+  theme(plot.title = element_text(lineheight=.8, size = 20),
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+
+plot.greyval.reflective 
 
 
 
 plot.greyval.emissive <- ggplot(greyval.emissive.melt, aes(x = variable, y = value)) +
-  geom_boxplot()
+  geom_boxplot() +
+  xlab("MYD02 emissive bands") +
+  ylab("value") +
+  ggtitle("MYD02 greyvalues emissive bands") +
+  theme(plot.title = element_text(lineheight=.8, size = 20),
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 plot.greyval.emissive
+
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+### Subsetting first derivate ##################################################
+################################################################################
+
+## greyvalues reflective bands 
+data.deriv.reflective <- cbind.data.frame(data.raw[,3],
+                                            data.raw[,107:127],
+                                            data.raw[,134])
+names(data.deriv.reflective) <- c("date_nocloud",
+                                    as.character(bandnames[1:21,3]),
+                                    as.character(bandnames[28,3]))
+names(data.deriv.reflective)
+
+deriv.reflective.melt <- melt(data.deriv.reflective, id = "date_nocloud", 
+                                measured = c(data.deriv.reflective[,2:ncol(data.deriv.reflective)]))
+
+
+## greyvalues emissive bands
+data.deriv.emissive <- cbind.data.frame(data.raw[,3],
+                                          data.raw[,128:133],
+                                          data.raw[,135:144])
+names(data.deriv.emissive) <- c("date_nocloud",
+                                  as.character(bandnames[22:27,3]),
+                                  as.character(bandnames[29:38,3]))
+names(data.deriv.emissive)
+
+deriv.emissive.melt <- melt(data.deriv.emissive, id = "date_nocloud", 
+                              measured = c(data.deriv.emissive[,2:ncol(data.deriv.emissive)]))
+
+
+################################################################################
+### Plotting greyvalues ########################################################
+################################################################################
+
+plot.deriv.reflective <- ggplot(deriv.reflective.melt, aes(x = variable, y = value)) +
+  geom_boxplot() +
+  xlab("MYD02 reflective bands") +
+  ylab("value") +
+  ggtitle("MYD02 greyvalues reflective bands - first derivate") +
+  theme(plot.title = element_text(lineheight=.8, size = 20),
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+plot.deriv.reflective 
+
+
+
+plot.deriv.emissive <- ggplot(deriv.emissive.melt, aes(x = variable, y = value)) +
+  geom_boxplot() +
+  xlab("MYD02 emissive bands") +
+  ylab("value") +
+  ggtitle("MYD02 greyvalues emissive bands - first derivate") +
+  theme(plot.title = element_text(lineheight=.8, size = 20),
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+plot.deriv.emissive

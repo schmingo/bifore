@@ -45,8 +45,8 @@ data.greyval.reflective <- cbind.data.frame(data.raw[,3],
                                             data.raw[,69:89],
                                             data.raw[,96])
 names(data.greyval.reflective) <- c("date_nocloud",
-                                    as.character(bandnames[1:21,2]),
-                                    as.character(bandnames[28,2]))
+                                    as.character(bandnames[1:21,3]),
+                                    as.character(bandnames[28,3]))
 names(data.greyval.reflective)
 
 greyval.reflective.melt <- melt(data.greyval.reflective, id = "date_nocloud", 
@@ -58,8 +58,8 @@ data.greyval.emissive <- cbind.data.frame(data.raw[,3],
                                           data.raw[,90:95],
                                           data.raw[,97:106])
 names(data.greyval.emissive) <- c("date_nocloud",
-                                  as.character(bandnames[22:27,2]),
-                                  as.character(bandnames[29:38,2]))
+                                  as.character(bandnames[22:27,3]),
+                                  as.character(bandnames[29:38,3]))
 names(data.greyval.emissive)
 
 greyval.emissive.melt <- melt(data.greyval.emissive, id = "date_nocloud", 
@@ -117,8 +117,8 @@ data.deriv.reflective <- cbind.data.frame(data.raw[,3],
                                             data.raw[,107:127],
                                             data.raw[,134])
 names(data.deriv.reflective) <- c("date_nocloud",
-                                    as.character(bandnames[1:21,3]),
-                                    as.character(bandnames[28,3]))
+                                    as.character(bandnames[1:21,4]),
+                                    as.character(bandnames[28,4]))
 names(data.deriv.reflective)
 
 deriv.reflective.melt <- melt(data.deriv.reflective, id = "date_nocloud", 
@@ -130,8 +130,8 @@ data.deriv.emissive <- cbind.data.frame(data.raw[,3],
                                           data.raw[,128:133],
                                           data.raw[,135:144])
 names(data.deriv.emissive) <- c("date_nocloud",
-                                  as.character(bandnames[22:27,3]),
-                                  as.character(bandnames[29:38,3]))
+                                  as.character(bandnames[22:27,4]),
+                                  as.character(bandnames[29:38,4]))
 names(data.deriv.emissive)
 
 deriv.emissive.melt <- melt(data.deriv.emissive, id = "date_nocloud", 

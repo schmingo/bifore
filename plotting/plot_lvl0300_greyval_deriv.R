@@ -71,6 +71,12 @@ greyval.emissive.melt <- melt(data.greyval.emissive, id = "date_nocloud",
 ### Plotting greyvalues ########################################################
 ################################################################################
 
+## Define output image | open image port
+# png("images/lvl0300_boxplot_greyvalues_reflective.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 plot.greyval.reflective <- ggplot(greyval.reflective.melt, aes(x = variable, y = value)) +
   geom_boxplot() +
   xlab("MYD02 reflective bands") +
@@ -78,11 +84,16 @@ plot.greyval.reflective <- ggplot(greyval.reflective.melt, aes(x = variable, y =
   ggtitle("MYD02 greyvalues reflective bands") +
   theme(plot.title = element_text(lineheight=.8, size = 20),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
-
 plot.greyval.reflective 
+# graphics.off()
 
 
-
+## Define output image | open image port
+# png("images/lvl0300_boxplot_greyvalues_emissive.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 plot.greyval.emissive <- ggplot(greyval.emissive.melt, aes(x = variable, y = value)) +
   geom_boxplot() +
   xlab("MYD02 emissive bands") +
@@ -91,6 +102,8 @@ plot.greyval.emissive <- ggplot(greyval.emissive.melt, aes(x = variable, y = val
   theme(plot.title = element_text(lineheight=.8, size = 20),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 plot.greyval.emissive
+# graphics.off()
+
 
 ################################################################################
 ################################################################################
@@ -129,6 +142,12 @@ deriv.emissive.melt <- melt(data.deriv.emissive, id = "date_nocloud",
 ### Plotting greyvalues ########################################################
 ################################################################################
 
+## Define output image | open image port
+# png("images/lvl0300_boxplot_derivate_reflective.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 plot.deriv.reflective <- ggplot(deriv.reflective.melt, aes(x = variable, y = value)) +
   geom_boxplot() +
   xlab("MYD02 reflective bands") +
@@ -137,9 +156,14 @@ plot.deriv.reflective <- ggplot(deriv.reflective.melt, aes(x = variable, y = val
   theme(plot.title = element_text(lineheight=.8, size = 20),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 plot.deriv.reflective 
+# graphics.off()
 
-
-
+## Define output image | open image port
+# png("images/lvl0300_boxplot_derivate_emissive.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 plot.deriv.emissive <- ggplot(deriv.emissive.melt, aes(x = variable, y = value)) +
   geom_boxplot() +
   xlab("MYD02 emissive bands") +
@@ -148,3 +172,4 @@ plot.deriv.emissive <- ggplot(deriv.emissive.melt, aes(x = variable, y = value))
   theme(plot.title = element_text(lineheight=.8, size = 20),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 plot.deriv.emissive
+# graphics.off()

@@ -21,7 +21,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Set species to test
-species <- "Pnorisa.squalus"
+species <- "Catantops.momboensis"
 
 
 ################################################################################

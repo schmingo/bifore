@@ -21,7 +21,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Set species to test
-species <- "Orthochtha.dasycnemis"
+species <- "Pnorisa.squalus"
 
 
 ################################################################################
@@ -93,7 +93,7 @@ df.spec.diff.sd <- cbind(df.diff, df.sd, tmp.species)
 
 
 ## Define Random Forest input data #############################################
-df.input.rf <- df.spec.greyval.diff ## Insert input dataset here!
+df.input.rf <- df.spec.greyval ## Insert input dataset here!
 
 
 ################################################################################
@@ -136,7 +136,10 @@ png(paste0("images/randomForest_classification_", species, ".png"),
     units = "px", 
     res = 600)
 
-plot(train.rf)
+rf.plot <- plot(train.rf, main = paste0(species, "\n RandomForest classification \n", 
+                                        "Mean squared error"))
+
+rf.plot
 
 ## Close image port
 graphics.off()
@@ -167,7 +170,19 @@ print(paste0((1-length(notidentical)/nrow(test.data))*100, "% of predicted class
 ################################################################################
 
 varimp <- importance(train.rf)
-varimp.plot <- varImpPlot(train.rf, sort = TRUE, n.var = 30)
+
+
+## Define output image | open image port
+png(paste0("images/randomForest_classification_", species, "_varImp.png"), 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
+varimp.plot <- varImpPlot(train.rf, sort = TRUE, n.var = 30,
+                          main = paste0(species," - Variable importance"))
+## Close image port
+graphics.off()
+
 
 ## The first measure is computed from permuting OOB data: For each tree, 
 ## the prediction error on the out-of-bag portion of the data is recorded 

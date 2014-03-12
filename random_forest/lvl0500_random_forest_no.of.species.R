@@ -4,7 +4,7 @@
 ## RANDOM FOREST FOR MODIS DATA                                               ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-02                                                        ##
+## Version: 2014-03-12                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -151,3 +151,25 @@ predict.compare <- cbind(test.data[,ncol(test.data)],
 names(predict.compare) <- c("real.values", "predicted.values", "diff.abs")
 
 summary(predict.compare$diff)
+
+
+################################################################################
+### Further interpretation #####################################################
+################################################################################
+
+varimp <- importance(train.rf, conditional = TRUE)
+varimp.plot <- varImpPlot(train.rf, sort = FALSE)
+
+## The first measure is computed from permuting OOB data: For each tree, 
+## the prediction error on the out-of-bag portion of the data is recorded 
+## (error rate for classification, MSE for regression). Then the same is 
+## done after permuting each predictor variable. The difference between 
+## the two are then averaged over all trees, and normalized by 
+## the standard deviation of the differences. If the standard deviation 
+## of the differences is equal to 0 for a variable, the division is 
+## not done (but the average is almost always equal to 0 in that case).
+## 
+## The second measure is the total decrease in node impurities from 
+## splitting on the variable, averaged over all trees. 
+## For classification, the node impurity is measured by the Gini index. 
+## For regression, it is measured by residual sum of squares.

@@ -123,30 +123,23 @@ response_speciesCLASS <- as.factor(train.data[,ncol(train.data)])
 train.rf <- randomForest(x = predictor_modisVAL,
                          y = response_speciesCLASS,
                          importance = TRUE,
-                         ntree = 1000,
+                         ntree = 10000,
                          mtry = 2,
                          nodesize = 2,
                          type="classification",
                          do.trace = 100)
 
 ## Define output image | open image port
-# png(paste0("images/randomForest_classification_", species, ".png"), 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png(paste0("images/randomForest_classification_", species, ".png"), 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
-plot(randomForest(x = predictor_modisVAL,
-                  y = response_speciesCLASS,
-                  importance = TRUE,
-                  ntree = 1000,
-                  mtry = 2,
-                  nodesize = 2,
-                  type="classification",
-                  do.trace = 100))
+plot(train.rf)
 
 ## Close image port
-# graphics.off()
+graphics.off()
 
 print(train.rf)
 
@@ -173,8 +166,8 @@ print(paste0((1-length(notidentical)/nrow(test.data))*100, "% of predicted class
 ### Further interpretation #####################################################
 ################################################################################
 
-varimp <- importance(train.rf, conditional = TRUE)
-varimp.plot <- varImpPlot(train.rf, sort = FALSE)
+varimp <- importance(train.rf)
+varimp.plot <- varImpPlot(train.rf, sort = TRUE, n.var = 30)
 
 ## The first measure is computed from permuting OOB data: For each tree, 
 ## the prediction error on the out-of-bag portion of the data is recorded 

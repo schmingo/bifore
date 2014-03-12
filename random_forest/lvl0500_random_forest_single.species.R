@@ -21,7 +21,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Set species to test
-species <- "Catantops.momboensis"
+species <- "Pnorisa.squalus"
 
 
 ################################################################################
@@ -123,7 +123,7 @@ response_speciesCLASS <- as.factor(train.data[,ncol(train.data)])
 train.rf <- randomForest(x = predictor_modisVAL,
                          y = response_speciesCLASS,
                          importance = TRUE,
-                         ntree = 10000,
+                         ntree = 500,
                          mtry = 2,
                          nodesize = 2,
                          type="classification",
@@ -146,7 +146,8 @@ rf.plot
 
 print(train.rf)
 
-
+print("Observed classes")
+table(tmp.species)
 ################################################################################
 ### Prediction #################################################################
 ################################################################################

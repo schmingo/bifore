@@ -79,7 +79,7 @@ df.spnr.diff.sd <- cbind(df.diff, df.sd, tmp.speciesnr)
 
 
 ## Define Random Forest input data #############################################
-df.input.rf <- df.spnr.greyval.diff ## Insert input dataset here!
+df.input.rf <- df.spnr.greyval ## Insert input dataset here!
 
 
 ################################################################################
@@ -115,24 +115,17 @@ train.rf <- randomForest(x = predictor_modisVAL,
                          do.trace = 100)
 print(train.rf)
 
-# ## Define output image | open image port
-# # png("images/randomForest_regression_speciesno.png", 
-# #     width = 1024 * 6, 
-# #     height = 748 * 6, 
-# #     units = "px", 
-# #     res = 600)
-# 
-# plot(randomForest(x = predictor_modisVAL,
-#                   y = response_speciesNR,
-#                   importance = TRUE,
-#                   ntree = 500,
-#                   mtry = 5,
-#                   nodesize = 2,
-#                   type="regression",
-#                   do.trace = 100))
-# 
-# ## Close image port
-# # graphics.off()
+## Define output image | open image port
+png("images/randomForest_regression_speciesno.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
+
+plot(train.rf)
+
+## Close image port
+graphics.off()
 
 
 print(train.rf)
@@ -157,8 +150,8 @@ summary(predict.compare$diff)
 ### Further interpretation #####################################################
 ################################################################################
 
-varimp <- importance(train.rf, conditional = TRUE)
-varimp.plot <- varImpPlot(train.rf, sort = FALSE)
+varimp <- importance(train.rf)
+varimp.plot <- varImpPlot(train.rf, sort = TRUE, n.var = 30)
 
 ## The first measure is computed from permuting OOB data: For each tree, 
 ## the prediction error on the out-of-bag portion of the data is recorded 

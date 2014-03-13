@@ -19,7 +19,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("ggplot2", "raster", "sp", "rgdal")
+lib <- c("ggplot2", "raster", "rgdal")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 

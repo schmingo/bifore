@@ -103,7 +103,7 @@ df.input.rf <- df.spec.greyval ## Insert input dataset here!
 ## Split dataset | 3/4 train.data, 1/4 test.data      
 set.seed(50)
 
-index <- sample(1:nrow(df.input.rf), nrow(df.input.rf)*.80)
+index <- sample(1:nrow(df.input.rf), nrow(df.input.rf)*.75)
 length(index)
 index
 

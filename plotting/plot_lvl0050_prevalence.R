@@ -25,7 +25,7 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0050_prevalence.csv",
+data.raw <- read.csv2("csv/kili/lvl0050_prevalence_all_spec.csv",
                       dec = ",",
                       header = TRUE,
                       stringsAsFactors = FALSE)
@@ -36,7 +36,7 @@ data.raw <- read.csv2("csv/kili/lvl0050_prevalence.csv",
 ################################################################################
 
 ## Define output image | open image port
-# png("images/lvl0050_prevalence.png", 
+# png("images/lvl0050_prevalence_all_spec.png", 
 #     width = 1024 * 6, 
 #     height = 748 * 6, 
 #     units = "px", 

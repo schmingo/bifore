@@ -25,7 +25,7 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
+data.raw <- read.csv2("csv/kili/lvl0300_biodiversity_data_all_spec.csv",
                       dec = ",",
                       header = TRUE,
                       stringsAsFactors = FALSE)
@@ -38,26 +38,26 @@ data.raw <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
 ### Eliminate columns containing NA values and combine data in several ways ####
 ### to get different dataframe combinations ####################################
 
-df.greyval.all <- data.raw[69:106]
-df.diff.all <- data.raw[107:144]
-df.sd.all <- data.raw[145:182]
+df.greyval.all <- data.raw[204:241]
+df.diff.all <- data.raw[242:279]
+df.sd.all <- data.raw[280:317]
 
 
-## Create NA tables
-df.na.greyval <- data.frame(colSums(is.na(df.greyval.all)))
-names(df.na.greyval) <- c("NAs out of 225")
-
-df.na.diff <- data.frame(colSums(is.na(df.diff.all)))
-names(df.na.diff) <- c("NAs out of 225")
-
-df.na.sd <- data.frame(colSums(is.na(df.sd.all)))
-names(df.na.sd) <- c("NAs out of 225")
+# ## Create NA tables
+# df.na.greyval <- data.frame(colSums(is.na(df.greyval.all)))
+# names(df.na.greyval) <- c("NAs out of 225")
+# 
+# df.na.diff <- data.frame(colSums(is.na(df.diff.all)))
+# names(df.na.diff) <- c("NAs out of 225")
+# 
+# df.na.sd <- data.frame(colSums(is.na(df.sd.all)))
+# names(df.na.sd) <- c("NAs out of 225")
 
 
 ## Eliminate columns containing NA values
-df.greyval <- cbind(data.raw[69:78], data.raw[87:106])  ## greyvalues
-df.diff <- cbind(data.raw[108:116], data.raw[126:144])  ## diff
-df.sd <- cbind(data.raw[145:154], data.raw[163:182])    ## sd 
+df.greyval <- cbind(data.raw[204:213], data.raw[222:241])  ## greyvalues
+df.diff <- cbind(data.raw[242:251], data.raw[261:279])  ## diff
+df.sd <- cbind(data.raw[280:289], data.raw[298:317])    ## sd 
 
 
 ################################################################################
@@ -87,7 +87,7 @@ df.input.rf <- df.spnr.greyval ## Insert input dataset here!
 ################################################################################
 
 ## Split dataset | 3/4 train.data, 1/4 test.data      
-set.seed(10)
+set.seed(50)
 
 index <- sample(1:nrow(df.input.rf), nrow(df.input.rf)*.75)
 length(index)
@@ -109,7 +109,7 @@ train.rf <- randomForest(x = predictor_modisVAL,
                          y = response_speciesNR,
                          importance = TRUE,
                          ntree = 500,
-                         mtry = 5,
+                         mtry = 6,
                          nodesize = 2,
                          type="regression",
                          do.trace = 100)

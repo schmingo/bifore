@@ -24,13 +24,13 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Set filepaths
 file.hemp.csv <- "csv/kili/abundance_matrix_hemp.csv"
-file.data.out <- "csv/kili/lvl0050_biodiversity_data2.csv"
-file.prevalence.out <- "csv/kili/lvl0050_prevalence2.csv"
+file.data.out <- "csv/kili/lvl0050_biodiversity_data_all_spec.csv"
+file.prevalence.out <- "csv/kili/lvl0050_prevalence_all_spec.csv"
 
 
 ################################################################################
@@ -84,20 +84,22 @@ data <- data[!is.na(data$coordN | data$coordW),]
 ### Remove species with less than 10 observations ##############################
 ################################################################################
 
-data.list <- split(data, data$plot)
+# data.list <- split(data, data$plot)
+# 
+# test.list <- do.call("rbind", lapply(seq(data.list), function(i) {
+#   tmp.mat <- as.matrix(data.list[[i]][, 9:ncol(data.list[[i]])])
+#   t <- apply(tmp.mat, 2, sum, na.rm = TRUE)
+#   t[t == 0] <- NA
+#   t[t > 0] <- 1
+#   return(t)
+# }))
+# 
+# index.species10 <- which(apply(test.list, 2, sum, na.rm = TRUE) >= 10) + 8
+# 
+# data10 <- data[, c(1:8, index.species10)]
 
-test.list <- do.call("rbind", lapply(seq(data.list), function(i) {
-  tmp.mat <- as.matrix(data.list[[i]][, 9:ncol(data.list[[i]])])
-  t <- apply(tmp.mat, 2, sum, na.rm = TRUE)
-  t[t == 0] <- NA
-  t[t > 0] <- 1
-  return(t)
-}))
 
-index.species10 <- which(apply(test.list, 2, sum, na.rm = TRUE) >= 10) + 8
-
-data10 <- data[, c(1:8, index.species10)]
-
+data10 <- data
 
 ################################################################################
 ### Calculate number of species ################################################
@@ -162,7 +164,7 @@ names(data10.sp)[11] <- "coordN"
 ################################################################################
 
 write.table(data10.sp, file = file.data.out, 
-            dec = ".", 
+            dec = ",", 
             quote = FALSE, 
             col.names = TRUE, 
             row.names = FALSE, 

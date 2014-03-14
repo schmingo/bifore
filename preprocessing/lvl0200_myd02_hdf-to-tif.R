@@ -19,8 +19,8 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set working directory
 setwd("/home/schmingo/Diplomarbeit/")
 
-path.hdf.in <- "/home/schmingo/Diplomarbeit/myd02_03/"
-tifsdir <- "/home/schmingo/Diplomarbeit/myd02_tif/"
+path.hdf.in <- "/media/schmingo/Daten/Diplomarbeit/myd02-03_hdf/"
+tifsdir <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif/"
 mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
 
 ## Load required modules

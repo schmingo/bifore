@@ -222,53 +222,67 @@ stopCluster(cl)
 ################################################################################
 ### Create new .csv with no-cloud date and diff-days ###########################
 ################################################################################
+len <- length(names(data.orig))
+len
+
+data.clouddates <- data.orig
 
 myd02.lst
 names(myd02.lst) <- "date_nocloud"
-names(data.orig)[2] <- "date_observation"
+names(data.clouddates)[2] <- "date_observation"
 
 ## Create no-cloud date
-data.orig["date_nocloud"] <- myd02.lst$date_nocloud
+data.clouddates$date_nocloud <- myd02.lst$date_nocloud
 
 # ## Create diff-days
-# data.orig["diff_days_nocloud"] <- as.numeric(as.Date(data.orig$date_nocloud, format = "%Y%j.%H%M") - as.Date(data.orig$date_observation, format = "%Y%j"))
-# 
-# ## Reorder df
+data.clouddates$diff_days_nocloud <- as.numeric(as.Date(data.clouddates$date_nocloud, format = "%Y%j.%H%M") - as.Date(data.clouddates$date_observation, format = "%Y%j"))
+
+## Reorder df
 # data.orig <- data.orig[c(1,2,67,68,3:66)]
-# 
+data.clouddates <- cbind(data.clouddates[1:2],
+                         data.clouddates[ncol(data.clouddates)-1],
+                         data.clouddates[ncol(data.clouddates)],
+                         data.clouddates[3:11],
+                         data.clouddates[12:len])
+names(data.clouddates)
+
+
 # ## Reformat dates
-# for (i in 1:nrow(data.orig)) {
-#   data.orig$date_nocloud[i] <- paste0(substr(data.orig$date_nocloud[i], 1, 4), 
-#                                       "-", 
-#                                       substr(data.orig$date_nocloud[i], 5, 7), 
-#                                       "_", 
-#                                       substr(data.orig$date_nocloud[i], 9, 13))
-#   
-# }
-# 
-# for (i in 1:nrow(data.orig)) {
-#   data.orig$date_observation[i] <- paste0(substr(data.orig$date_observation[i], 1, 4), 
-#                                           "-", 
-#                                           substr(data.orig$date_observation[i], 5, 7))                                         
-# }
-# 
-# 
-# 
-# 
-# ## write new .csv
-# write.table(data.orig, 
-#             file = path.nocloud.csv,
-#             dec = ".",
-#             quote = FALSE,
-#             col.names = TRUE,
-#             row.names = FALSE,
-#             sep = ";")
-# 
-# ## plot diff_days_no-cloud
-# qplot(x=diff_days_nocloud,
-#       data=data.orig,
-#       geom="histogram",
-#       binwidth=0.5)
+for (i in 1:nrow(data.clouddates)) {
+  data.clouddates$date_nocloud[i] <- paste0(substr(data.clouddates$date_nocloud[i], 1, 4), 
+                                      "-", 
+                                      substr(data.clouddates$date_nocloud[i], 5, 7), 
+                                      "_", 
+                                      substr(data.clouddates$date_nocloud[i], 9, 13))
+  
+}
+
+for (i in 1:nrow(data.clouddates)) {
+  data.clouddates$date_observation[i] <- paste0(substr(data.clouddates$date_observation[i], 1, 4), 
+                                          "-", 
+                                          substr(data.clouddates$date_observation[i], 5, 7))                                         
+}
+
+
+
+
+## write new .csv
+write.table(data.clouddates, 
+            file = path.nocloud.csv,
+            dec = ".",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")
+
+## plot diff_days_no-cloud
+qplot(x=diff_days_nocloud,
+      data=data.clouddates,
+      geom="histogram",
+      binwidth=0.5)
+
+
+
 endtime <- Sys.time()
 
 time <- endtime - starttime

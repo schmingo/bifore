@@ -24,8 +24,8 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Import data ################################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0050_biodiversity_data.csv",
-                     dec = ".",
+data.raw <- read.csv2("csv/kili/lvl0050_biodiversity_data_all_spec.csv",
+                     dec = ",",
                      header = TRUE, 
                      stringsAsFactors = TRUE,
                      )
@@ -51,7 +51,7 @@ data.observations$year <- as.numeric(format(data.observations$date, "%Y"))
 ################################################################################
 
 ## Define output image | open image port
-# png("images/map_kili_orthoptera_observations.png", 
+# png("images/map_kili_orthoptera_observations_all_spec.png", 
 #     width = 1024 * 6, 
 #     height = 748 * 6, 
 #     units = "px", 
@@ -100,7 +100,7 @@ kilimap + orthoptera.obs1 + colourscale + labeling.plot1 + style.plot1
 ################################################################################
 
 ## Define output image | open image port
-# png("images/map_kili_orthoptera_observations_year.png", 
+# png("images/map_kili_orthoptera_observations_year_all_spec.png", 
 #     width = 1024 * 6, 
 #     height = 748 * 6, 
 #     units = "px", 
@@ -158,7 +158,7 @@ names(data.observations1)[13] <- "Phaneroptera.sparsa"
 data.observations1.1 <- na.omit(data.observations1)
 
 ## Define output image | open image port
-# png("images/map_kili_Phaneroptera.sparsa_year.png", 
+# png("images/map_kili_Phaneroptera.sparsa_year_all_spec.png", 
 #     width = 1024 * 6, 
 #     height = 748 * 6, 
 #     units = "px", 

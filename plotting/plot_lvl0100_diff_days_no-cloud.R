@@ -25,7 +25,7 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0100_biodiversity_data.csv",
+data.raw <- read.csv2("csv/kili/lvl0100_biodiversity_data_all_spec.csv",
                       dec = ".",
                       header = TRUE,
                       stringsAsFactors = FALSE)
@@ -46,7 +46,7 @@ names(data) <- "diff_days_no_cloud"
 ################################################################################
 
 ## Define output image | open image port
-# png("images/lvl0100_diff_days_no-cloud.png", 
+# png("images/lvl0100_diff_days_no-cloud_all_spec.png", 
 #     width = 1024 * 6, 
 #     height = 748 * 6, 
 #     units = "px", 

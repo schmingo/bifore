@@ -28,16 +28,15 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## To preprocess MYD35_L2 and MYD03 files; both must be in the same directory.
 
-path.biodiversity.csv <- ("csv/kili/lvl0050_biodiversity_data2.csv")
+path.biodiversity.csv <- ("csv/kili/lvl0050_biodiversity_data_all_spec.csv")
 
-path.nocloud.csv <- ("csv/kili/lvl0100_biodiversity_data2.csv")
+path.nocloud.csv <- ("csv/kili/lvl0100_biodiversity_data_all_spec.csv")
 
-# path.hdf.in <- ("/home/schmingo/SAVE/Diplomarbeit/myd03-35_hdf/")
 path.hdf.in <- ("/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf/")
 
-path.hdf.sub <- ("/home/schmingo/SAVE/Diplomarbeit/myd03-35_hdf_daytime/")
+path.hdf.sub <- ("/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf_daytime/")
 
-path.tif.cloudmask <- ("/home/schmingo/SAVE/Diplomarbeit/myd_cloudmask_tif_daytime/")
+path.tif.cloudmask <- ("/media/schmingo/Daten/Diplomarbeit/myd_cloudmask_tif_daytime/")
 
 mrtpath <- ("/home/schmingo/apps/MRTswath/bin/swath2grid")
 
@@ -47,7 +46,7 @@ mrtpath <- ("/home/schmingo/apps/MRTswath/bin/swath2grid")
 ################################################################################
 
 data <- read.csv2(path.biodiversity.csv,
-                  dec = ".",
+                  dec = ",",
                   header = TRUE, 
                   stringsAsFactors = TRUE)
 

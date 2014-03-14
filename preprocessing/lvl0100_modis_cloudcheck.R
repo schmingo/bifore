@@ -7,7 +7,7 @@
 ##       - MYD35 .hdf metadata                                                ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-10                                                        ##
+## Version: 2014-03-14                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -55,7 +55,8 @@ data$date <- strftime(as.POSIXct(data$date, format="%Y-%m-%d"), format = "%Y%j")
 
 data.orig <- data
 
-
+## Check actual time
+starttime <- Sys.time()
 ################################################################################
 ### Separate day and night hdf files ###########################################
 ################################################################################
@@ -268,3 +269,7 @@ data.orig["date_nocloud"] <- myd02.lst$date_nocloud
 #       data=data.orig,
 #       geom="histogram",
 #       binwidth=0.5)
+endtime <- Sys.time()
+
+time <- endtime - starttime
+time

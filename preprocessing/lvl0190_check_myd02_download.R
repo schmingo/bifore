@@ -22,11 +22,11 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Set filepaths ##############################################################
 ################################################################################
 
-path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data2.csv"
+path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data_all_spec.csv"
 
-path.myd02 <- "/home/schmingo/Diplomarbeit/myd02/"
-path.myd03 <- "/home/schmingo/Diplomarbeit/myd03-35_hdf_daytime/"
-path.myd02_03 <- "/home/schmingo/Diplomarbeit/myd02_03/"
+path.myd02 <- "/media/schmingo/Daten/Diplomarbeit/myd02_hdf/"
+path.myd03 <- "/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf_daytime/"
+path.myd02_03 <- "/media/schmingo/Daten/Diplomarbeit/myd02-03_hdf/"
 
 ################################################################################
 ### Import biodiversity dataset ################################################

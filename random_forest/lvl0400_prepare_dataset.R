@@ -22,6 +22,14 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 
 ################################################################################
+### Set filepaths ##############################################################
+################################################################################
+
+path.biodiversity.allspec <- "csv/kili/lvl0400_biodiversity_data_all_spec.csv"
+
+
+
+################################################################################
 ### Import dataset #############################################################
 ################################################################################
 
@@ -72,6 +80,13 @@ data <- cbind(df.basics,
 names(data)
 
 ################################################################################
-### Write new table - all species - without bands containing NA values #########
+### Write new table - all species - bands containing NA values removed #########
 ################################################################################
 
+write.table(data, 
+            file = path.biodiversity.allspec,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")

@@ -19,7 +19,7 @@ lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "raster", "ggplot2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("/home/schmingo/")
 
 
 ################################################################################
@@ -28,9 +28,9 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## To preprocess MYD35_L2 and MYD03 files; both must be in the same directory.
 
-path.biodiversity.csv <- ("csv/kili/lvl0050_biodiversity_data_all_spec.csv")
+path.biodiversity.csv <- ("Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0050_biodiversity_data.csv")
 
-path.nocloud.csv <- ("csv/kili/lvl0100_biodiversity_data_all_spec.csv")
+path.nocloud.csv <- ("Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0100_biodiversity_data_all_spec.csv")
 
 path.hdf.in <- ("/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf/")
 

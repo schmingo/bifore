@@ -11,7 +11,7 @@
 ## - Add LatLong Coordinates                                                  ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-04                                                        ##
+## Version: 2014-03-15                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -138,10 +138,27 @@ names(data.all.sp)[11] <- "coordN"
 
 
 ################################################################################
+### Remove species with less than 1 observation ################################
+################################################################################
+
+data.list <- split(data, data$plot)
+tst.list <- do.call("rbind", lapply(seq(data.list), function(i) {
+  matrix <- as.matrix(data.list[[i]][, 10:ncol(data.list[[i]])])
+  t <- apply(matrix, 2, sum, na.rm = TRUE)
+  t[t == 0] <- NA
+  t[t > 0] <- 1
+  return(t)
+}))
+
+index.species0 <- which(apply(tst.list, 2, sum, na.rm = TRUE) >= 1) + 9
+data0 <- data[, c(1:9, index.species0)]
+
+
+################################################################################
 ### Write new csv ##############################################################
 ################################################################################
 
-write.table(data.all.sp, file = file.data.out, 
+write.table(data0, file = file.data.out, 
             dec = ",", 
             quote = FALSE, 
             col.names = TRUE, 

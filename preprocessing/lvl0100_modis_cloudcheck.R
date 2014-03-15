@@ -30,7 +30,7 @@ setwd("/home/schmingo/")
 
 path.biodiversity.csv <- ("Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0050_biodiversity_data.csv")
 
-path.nocloud.csv <- ("Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0100_biodiversity_data_all_spec.csv")
+path.nocloud.csv <- ("Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0100_biodiversity_data.csv")
 
 path.hdf.in <- ("/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf/")
 

@@ -153,7 +153,8 @@ tiffns <- list.files(path.tif.cloudmask, pattern=".tif", full.names=TRUE)
 tiffns
 
 ## Parallelization
-registerDoParallel(cl <- makeCluster(4))
+ncores <- detectCores()
+registerDoParallel(cl <- makeCluster(ncores))
                    
 ## Convert data to spatial object
 coordinates(data) <- ~ lon + lat
@@ -247,7 +248,7 @@ data.clouddates <- cbind(data.clouddates[1:2],
 names(data.clouddates)
 
 
-# ## Reformat dates
+## Reformat dates
 for (i in 1:nrow(data.clouddates)) {
   data.clouddates$date_nocloud[i] <- paste0(substr(data.clouddates$date_nocloud[i], 1, 4), 
                                       "-", 

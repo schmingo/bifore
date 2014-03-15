@@ -51,10 +51,10 @@ data.raw <- read.csv2(path.biodiversity.in,
 ### to get different dataframe combinations ####################################
 
 df.basics <- data.raw[1:13]
-df.species <- data.raw[14:203]
-df.greyval.all <- data.raw[204:241]
-df.diff.all <- data.raw[242:279]
-df.sd.all <- data.raw[280:317]
+df.species <- data.raw[14:178]
+df.greyval.all <- data.raw[179:216]
+df.diff.all <- data.raw[217:254]
+df.sd.all <- data.raw[255:292]
 
 
 ################################################################################
@@ -73,9 +73,9 @@ names(df.na.sd) <- c("NAs out of 225")
 
 
 ## Eliminate columns containing NA values
-df.greyval <- cbind(data.raw[204:213], data.raw[222:241])  ## greyvalues
-df.diff <- cbind(data.raw[243:251], data.raw[261:279])  ## diff
-df.sd <- cbind(data.raw[280:289], data.raw[298:317])    ## sd
+df.greyval <- cbind(data.raw[179:188], data.raw[197:216])  ## greyvalues
+df.diff <- cbind(data.raw[218:226], data.raw[236:254])  ## diff
+df.sd <- cbind(data.raw[255:264], data.raw[273:292])    ## sd
 
 
 ## Recombine dataframes
@@ -101,7 +101,7 @@ write.table(data,
 ################################################################################
 
 ## Subset species dataset
-data.all.spec <- data[14:203]
+data.all.spec <- data[14:178]
 
 ## Calculate prevalence
 prevalence.all <- data.frame(colSums(data.all.spec > 0, na.rm = TRUE), 
@@ -129,7 +129,7 @@ write.table(df.prevalence.all.spec, file = file.all.spec.prevalence,
 
 data.list <- split(data, data$plot)
 tst.list <- do.call("rbind", lapply(seq(data.list), function(i) {
-  matrix <- as.matrix(data.list[[i]][, 14:203])
+  matrix <- as.matrix(data.list[[i]][, 14:178])
   t <- apply(matrix, 2, sum, na.rm = TRUE)
   t[t == 0] <- NA
   t[t > 0] <- 1
@@ -137,8 +137,8 @@ tst.list <- do.call("rbind", lapply(seq(data.list), function(i) {
 }))
 
 index.species10 <- which(apply(tst.list, 2, sum, na.rm = TRUE) >= 10) + 13
-data10 <- data[, c(1:13, index.species10, 203:ncol(data))]
-# names(data10)
+data10 <- data[, c(1:13, index.species10, 178:ncol(data))]
+names(data10)
 
 ## Write table
 write.table(data10, 

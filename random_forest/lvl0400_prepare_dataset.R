@@ -55,7 +55,11 @@ df.diff.all <- data.raw[242:279]
 df.sd.all <- data.raw[280:317]
 
 
-## Create NA tables
+################################################################################
+### Remove bands containing NA values ##########################################
+################################################################################
+
+
 df.na.greyval <- data.frame(colSums(is.na(df.greyval.all)))
 names(df.na.greyval) <- c("NAs out of 225")
 

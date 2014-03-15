@@ -81,51 +81,30 @@ data <- data[!is.na(data$coordN | data$coordW),]
 
 
 ################################################################################
-### Remove species with less than 10 observations ##############################
-################################################################################
-
-# data.list <- split(data, data$plot)
-# 
-# test.list <- do.call("rbind", lapply(seq(data.list), function(i) {
-#   tmp.mat <- as.matrix(data.list[[i]][, 9:ncol(data.list[[i]])])
-#   t <- apply(tmp.mat, 2, sum, na.rm = TRUE)
-#   t[t == 0] <- NA
-#   t[t > 0] <- 1
-#   return(t)
-# }))
-# 
-# index.species10 <- which(apply(test.list, 2, sum, na.rm = TRUE) >= 10) + 8
-# 
-# data10 <- data[, c(1:8, index.species10)]
-
-
-data10 <- data
-
-################################################################################
 ### Calculate number of species ################################################
 ################################################################################
 
-data10$nr.of.species <- apply(data10,
+data$nr.of.species <- apply(data,
                               1,
-                              function(x) sum(!is.na(x[9:ncol(data10)])))
+                              function(x) sum(!is.na(x[9:ncol(data)])))
 
-data10 <- cbind(data10[1:8],
-                data10$nr.of.species,
-                data10[10:ncol(data10)-1])
+data <- cbind(data[1:8],
+                data$nr.of.species,
+                data[10:ncol(data)-1])
 
-colnames(data10)[9] <- "nr.of.species"
+colnames(data)[9] <- "nr.of.species"
 
 ################################################################################
 ### Plot single species ########################################################
 ################################################################################
 
-# plot(data10[,9],data10$date, type="p")
+# plot(data[,9],data$date, type="p")
 # 
-# qplot(x=data10[,9], 
+# qplot(x=data[,9], 
 #       y=date, 
-#       data=data10,
+#       data=data,
 #       geom="jitter",
-#       main=colnames(data10[9]),
+#       main=colnames(data[9]),
 #       xlab="Prävalenz",
 #       ylab="Zeit")
 
@@ -133,7 +112,7 @@ colnames(data10)[9] <- "nr.of.species"
 ### Transform UTM to LatLong coordinates #######################################
 ################################################################################
 
-data.sp <- data10
+data.sp <- data
 
 coordinates(data.sp) <- c("coordW", "coordN")
 projection(data.sp) <- "+proj=utm +zone=37 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
@@ -145,25 +124,25 @@ names(data.sp)[1] <- "lon"
 names(data.sp)[2] <- "lat"
 
 ## Recombine dataframes
-data10.sp <- cbind(data10[1:3],
-                   data10[6:9],
+data.all.sp <- cbind(data[1:3],
+                   data[6:9],
                    data.sp$lon,
                    data.sp$lat,
-                   data10$coordW,
-                   data10$coordN,
-                   data10[10:ncol(data10)])
+                   data$coordW,
+                   data$coordN,
+                   data[10:ncol(data)])
 
-names(data10.sp)[8] <- "lon"
-names(data10.sp)[9] <- "lat"
-names(data10.sp)[10] <- "coordW"
-names(data10.sp)[11] <- "coordN"
+names(data.all.sp)[8] <- "lon"
+names(data.all.sp)[9] <- "lat"
+names(data.all.sp)[10] <- "coordW"
+names(data.all.sp)[11] <- "coordN"
 
 
 ################################################################################
 ### Write new csv ##############################################################
 ################################################################################
 
-write.table(data10.sp, file = file.data.out, 
+write.table(data.all.sp, file = file.data.out, 
             dec = ",", 
             quote = FALSE, 
             col.names = TRUE, 
@@ -176,7 +155,7 @@ write.table(data10.sp, file = file.data.out,
 ################################################################################
 
 ## Subset species dataset
-data.spec <- data10.sp[12:ncol(data10.sp)]
+data.spec <- data.all.sp[12:ncol(data.all.sp)]
 
 ## Calculate frequency
 prevalence <- data.frame(colSums(data.spec > 0, na.rm = TRUE), 

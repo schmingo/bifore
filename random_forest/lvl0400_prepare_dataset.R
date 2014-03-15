@@ -26,6 +26,7 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 
 path.biodiversity.allspec <- "csv/kili/lvl0400_biodiversity_data_all_spec.csv"
+path.biodiversity.data10 <- "csv/kili/lvl0400_biodiversity_data_10.csv"
 path.biodiversity.strat.plot <- "csv/kili/lvl0400_biodiversity_data_strat_plot.csv"
 
 
@@ -67,7 +68,7 @@ names(df.na.sd) <- c("NAs out of 225")
 
 ## Eliminate columns containing NA values
 df.greyval <- cbind(data.raw[204:213], data.raw[222:241])  ## greyvalues
-df.diff <- cbind(data.raw[242:251], data.raw[261:279])  ## diff
+df.diff <- cbind(data.raw[243:251], data.raw[261:279])  ## diff
 df.sd <- cbind(data.raw[280:289], data.raw[298:317])    ## sd
 
 
@@ -85,6 +86,32 @@ data <- cbind(df.basics,
 
 write.table(data, 
             file = path.biodiversity.allspec,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")
+
+
+################################################################################
+### Remove species with less than 10 observations ##############################
+################################################################################
+
+data.list <- split(data, data$plot)
+tst.list <- do.call("rbind", lapply(seq(data.list), function(i) {
+  matrix <- as.matrix(data.list[[i]][, 14:203])
+  t <- apply(matrix, 2, sum, na.rm = TRUE)
+  t[t == 0] <- NA
+  t[t > 0] <- 1
+  return(t)
+}))
+
+index.species10 <- which(apply(tst.list, 2, sum, na.rm = TRUE) >= 10) + 13
+data10 <- data[, c(1:13, index.species10, 203:ncol(data))]
+# names(data10)
+
+write.table(data10, 
+            file = path.biodiversity.data10,
             dec = ",",
             quote = FALSE,
             col.names = TRUE,

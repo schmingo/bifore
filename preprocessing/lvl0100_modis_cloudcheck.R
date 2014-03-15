@@ -21,6 +21,8 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set working directory
 setwd("/home/schmingo/")
 
+ncores <- detectCores()
+
 
 ################################################################################
 ### Set filepaths ##############################################################
@@ -69,7 +71,7 @@ fls.myd35 <- list.files(path.hdf.in,
                         pattern="MYD35",
                         full.names=TRUE)
 
-registerDoParallel(cl <- makeCluster(8))
+registerDoParallel(cl <- makeCluster(ncores))
 
 ## MYD03
 foreach(a = fls.myd03, .packages = lib) %dopar% {
@@ -153,7 +155,7 @@ tiffns <- list.files(path.tif.cloudmask, pattern=".tif", full.names=TRUE)
 tiffns
 
 ## Parallelization
-ncores <- detectCores()
+
 registerDoParallel(cl <- makeCluster(ncores))
                    
 ## Convert data to spatial object

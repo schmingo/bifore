@@ -20,6 +20,8 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set working directory
 setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
+ncores <- detectCores()
+
 
 ################################################################################
 ### Set filepaths ##############################################################

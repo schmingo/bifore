@@ -13,7 +13,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("randomForest")
+lib <- c("sampling")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
@@ -38,10 +38,11 @@ data.raw <- read.csv2("csv/kili/lvl0300_biodiversity_data_all_spec.csv",
 ### Eliminate columns containing NA values and combine data in several ways ####
 ### to get different dataframe combinations ####################################
 
+df.basics <- data.raw[1:13]
+df.species <- data.raw[14:203]
 df.greyval.all <- data.raw[204:241]
 df.diff.all <- data.raw[242:279]
 df.sd.all <- data.raw[280:317]
-
 
 
 ## Create NA tables
@@ -58,4 +59,19 @@ names(df.na.sd) <- c("NAs out of 225")
 ## Eliminate columns containing NA values
 df.greyval <- cbind(data.raw[204:213], data.raw[222:241])  ## greyvalues
 df.diff <- cbind(data.raw[242:251], data.raw[261:279])  ## diff
-df.sd <- cbind(data.raw[280:289], data.raw[298:317])    ## sd 
+df.sd <- cbind(data.raw[280:289], data.raw[298:317])    ## sd
+
+
+## Recombine dataframes
+data <- cbind(df.basics, 
+              df.species,
+              df.greyval, 
+              df.diff, 
+              df.sd)
+
+names(data)
+
+################################################################################
+### Write new table - all species - without bands containing NA values #########
+################################################################################
+

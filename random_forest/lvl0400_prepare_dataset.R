@@ -80,10 +80,7 @@ data <- cbind(df.basics,
               df.sd)
 
 
-################################################################################
-### Write new table - all species - bands containing NA values removed #########
-################################################################################
-
+## Write new table - all species - bands containing NA values removed
 write.table(data, 
             file = path.biodiversity.allspec,
             dec = ",",
@@ -110,6 +107,7 @@ index.species10 <- which(apply(tst.list, 2, sum, na.rm = TRUE) >= 10) + 13
 data10 <- data[, c(1:13, index.species10, 203:ncol(data))]
 # names(data10)
 
+## Write table
 write.table(data10, 
             file = path.biodiversity.data10,
             dec = ",",
@@ -120,7 +118,7 @@ write.table(data10,
 
 
 ################################################################################
-### Stratified sampling ########################################################
+### Stratified sampling - only one random observation per plot #################
 ################################################################################
 
 set.seed(50)
@@ -131,10 +129,7 @@ data.strat <- data[strata(data,
                            method = "srswor")$ID_unit, ]
 
 
-################################################################################
-### Write new table - stratified sampling (each plot is unique) ################
-################################################################################
-
+## Write table
 write.table(data.strat, 
             file = path.biodiversity.strat.plot,
             dec = ",",

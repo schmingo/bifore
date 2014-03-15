@@ -269,7 +269,7 @@ for (i in 1:nrow(data.clouddates)) {
 ## write new .csv
 write.table(data.clouddates, 
             file = path.nocloud.csv,
-            dec = ".",
+            dec = ",",
             quote = FALSE,
             col.names = TRUE,
             row.names = FALSE,

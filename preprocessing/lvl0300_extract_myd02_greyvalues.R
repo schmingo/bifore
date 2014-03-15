@@ -29,9 +29,9 @@ path.hdf <- "/media/schmingo/Daten/Diplomarbeit/myd02-03_hdf/"
 path.tif <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif/"
 path.tif.na <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif_na/"
 path.tif.calc <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif_calc/"
-path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data_all_spec.csv"
+path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
-path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data_all_spec.csv"
+path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data.csv"
 
 ## Source modules
 source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
@@ -41,7 +41,7 @@ source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtr
 ################################################################################
 
 data.bio.raw <- read.csv2(path.biodiversity.csv,
-                          dec = ".",
+                          dec = ",",
                           header = TRUE, 
                           stringsAsFactors = FALSE)
 

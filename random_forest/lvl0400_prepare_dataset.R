@@ -25,6 +25,7 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Set filepaths ##############################################################
 ################################################################################
 
+path.biodiversity.in <- "csv/kili/lvl0300_biodiversity_data.csv"
 path.biodiversity.allspec <- "csv/kili/lvl0400_biodiversity_data_all_spec.csv"
 path.biodiversity.data10 <- "csv/kili/lvl0400_biodiversity_data_10.csv"
 path.biodiversity.strat.plot <- "csv/kili/lvl0400_biodiversity_data_strat_plot.csv"
@@ -36,7 +37,7 @@ file.data10.prevalence <- "csv/kili/lvl0400_prevalence_data_10.csv"
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0300_biodiversity_data_all_spec.csv",
+data.raw <- read.csv2(path.biodiversity.in,
                       dec = ",",
                       header = TRUE,
                       stringsAsFactors = FALSE)

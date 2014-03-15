@@ -24,8 +24,8 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 
 ## Set working directory
-# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Set filepaths
 file.hemp.csv <- "csv/kili/abundance_matrix_hemp.csv"
@@ -136,22 +136,22 @@ names(data.all.sp)[9] <- "lat"
 names(data.all.sp)[10] <- "coordW"
 names(data.all.sp)[11] <- "coordN"
 
-
+data <- data.all.sp
 ################################################################################
 ### Remove species with less than 1 observation ################################
 ################################################################################
 
 data.list <- split(data, data$plot)
 tst.list <- do.call("rbind", lapply(seq(data.list), function(i) {
-  matrix <- as.matrix(data.list[[i]][, 10:ncol(data.list[[i]])])
+  matrix <- as.matrix(data.list[[i]][, 12:ncol(data.list[[i]])])
   t <- apply(matrix, 2, sum, na.rm = TRUE)
   t[t == 0] <- NA
   t[t > 0] <- 1
   return(t)
 }))
 
-index.species0 <- which(apply(tst.list, 2, sum, na.rm = TRUE) >= 1) + 9
-data0 <- data[, c(1:9, index.species0)]
+index.species0 <- which(apply(tst.list, 2, sum, na.rm = TRUE) >= 1) + 11
+data0 <- data[, c(1:11, index.species0)]
 
 
 ################################################################################

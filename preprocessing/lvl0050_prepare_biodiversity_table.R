@@ -148,30 +148,3 @@ write.table(data.all.sp, file = file.data.out,
             col.names = TRUE, 
             row.names = FALSE, 
             sep =";")
-
-
-################################################################################
-### Calculate prevalence #######################################################
-################################################################################
-
-## Subset species dataset
-data.spec <- data.all.sp[12:ncol(data.all.sp)]
-
-## Calculate frequency
-prevalence <- data.frame(colSums(data.spec > 0, na.rm = TRUE), 
-                       row.names = NULL)
-
-## Combine new df
-df.prevalence <- cbind(names(data.spec), prevalence)
-
-## Set colnames
-colnames(df.prevalence) <- c("species", "prevalence")
-
-
-## Write .csv
-write.table(df.prevalence, file = file.prevalence.out,
-            dec = ",",
-            quote = FALSE,
-            col.names = TRUE,
-            row.names = FALSE,
-            sep = ";")

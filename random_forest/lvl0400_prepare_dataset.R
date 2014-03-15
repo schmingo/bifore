@@ -28,7 +28,8 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 path.biodiversity.allspec <- "csv/kili/lvl0400_biodiversity_data_all_spec.csv"
 path.biodiversity.data10 <- "csv/kili/lvl0400_biodiversity_data_10.csv"
 path.biodiversity.strat.plot <- "csv/kili/lvl0400_biodiversity_data_strat_plot.csv"
-
+file.all.spec.prevalence <- "csv/kili/lvl0400_prevalence_all_species.csv"
+file.data10.prevalence <- "csv/kili/lvl0400_prevalence_data_10.csv"
 
 
 ################################################################################
@@ -95,7 +96,34 @@ write.table(data,
 
 
 ################################################################################
-### Remove species with less than 10 observations ##############################
+### Calculate prevalence for all species #######################################
+################################################################################
+
+## Subset species dataset
+data.all.spec <- data[14:203]
+
+## Calculate prevalence
+prevalence.all <- data.frame(colSums(data.all.spec > 0, na.rm = TRUE), 
+                         row.names = NULL)
+
+## Combine new df
+df.prevalence.all.spec <- cbind(names(data.all.spec), prevalence.all)
+
+## Set colnames
+colnames(df.prevalence.all.spec) <- c("species", "prevalence")
+
+
+## Write table
+write.table(df.prevalence.all.spec, file = file.all.spec.prevalence,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")
+
+
+################################################################################
+### Remove species with less than 10 observations in different plots ###########
 ################################################################################
 
 data.list <- split(data, data$plot)
@@ -114,6 +142,33 @@ data10 <- data[, c(1:13, index.species10, 203:ncol(data))]
 ## Write table
 write.table(data10, 
             file = path.biodiversity.data10,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")
+
+
+################################################################################
+### Prevalence - species with less than 10 observations in different plots #####
+################################################################################
+
+## Subset species dataset
+data10.spec <- data10[14:69]
+
+## Calculate prevalence
+prevalence.10 <- data.frame(colSums(data10.spec > 0, na.rm = TRUE), 
+                            row.names = NULL)
+
+## Combine new df
+df.prevalence.10 <- cbind(names(data10.spec), prevalence.10)
+
+## Set colnames
+colnames(df.prevalence.10) <- c("species", "prevalence")
+
+
+## Write table
+write.table(df.prevalence.10, file = file.data10.prevalence,
             dec = ",",
             quote = FALSE,
             col.names = TRUE,

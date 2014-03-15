@@ -26,6 +26,7 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 
 path.biodiversity.allspec <- "csv/kili/lvl0400_biodiversity_data_all_spec.csv"
+path.biodiversity.strat.plot <- "csv/kili/lvl0400_biodiversity_data_strat_plot.csv"
 
 
 
@@ -77,7 +78,6 @@ data <- cbind(df.basics,
               df.diff, 
               df.sd)
 
-names(data)
 
 ################################################################################
 ### Write new table - all species - bands containing NA values removed #########
@@ -85,6 +85,31 @@ names(data)
 
 write.table(data, 
             file = path.biodiversity.allspec,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")
+
+
+################################################################################
+### Stratified sampling ########################################################
+################################################################################
+
+set.seed(50)
+
+data.strat <- data[strata(data, 
+                           stratanames = "plot", 
+                           size = rep(1,length(unique(data$plot))),
+                           method = "srswor")$ID_unit, ]
+
+
+################################################################################
+### Write new table - stratified sampling (each plot is unique) ################
+################################################################################
+
+write.table(data.strat, 
+            file = path.biodiversity.strat.plot,
             dec = ",",
             quote = FALSE,
             col.names = TRUE,

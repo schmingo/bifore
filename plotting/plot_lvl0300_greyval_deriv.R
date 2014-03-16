@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-11                                                        ##
+## Version: 2014-03-16                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -42,8 +42,8 @@ bandnames <- read.csv2(path.bandnames.csv,
 
 ## greyvalues reflective bands 
 data.greyval.reflective <- cbind.data.frame(data.raw[,3],
-                                            data.raw[,69:89],
-                                            data.raw[,96])
+                                            data.raw[,179:199],
+                                            data.raw[,206])
 names(data.greyval.reflective) <- c("date_nocloud",
                                     as.character(bandnames[1:21,3]),
                                     as.character(bandnames[28,3]))
@@ -55,8 +55,8 @@ greyval.reflective.melt <- melt(data.greyval.reflective, id = "date_nocloud",
 
 ## greyvalues emissive bands
 data.greyval.emissive <- cbind.data.frame(data.raw[,3],
-                                          data.raw[,90:95],
-                                          data.raw[,97:106])
+                                          data.raw[,200:205],
+                                          data.raw[,207:216])
 names(data.greyval.emissive) <- c("date_nocloud",
                                   as.character(bandnames[22:27,3]),
                                   as.character(bandnames[29:38,3]))
@@ -114,8 +114,8 @@ plot.greyval.emissive
 
 ## greyvalues reflective bands 
 data.deriv.reflective <- cbind.data.frame(data.raw[,3],
-                                            data.raw[,107:127],
-                                            data.raw[,134])
+                                            data.raw[,217:237],
+                                            data.raw[,244])
 names(data.deriv.reflective) <- c("date_nocloud",
                                     as.character(bandnames[1:21,4]),
                                     as.character(bandnames[28,4]))
@@ -127,8 +127,8 @@ deriv.reflective.melt <- melt(data.deriv.reflective, id = "date_nocloud",
 
 ## greyvalues emissive bands
 data.deriv.emissive <- cbind.data.frame(data.raw[,3],
-                                          data.raw[,128:133],
-                                          data.raw[,135:144])
+                                          data.raw[,238:243],
+                                          data.raw[,245:254])
 names(data.deriv.emissive) <- c("date_nocloud",
                                   as.character(bandnames[22:27,4]),
                                   as.character(bandnames[29:38,4]))

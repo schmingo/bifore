@@ -4,7 +4,7 @@
 ## PLOT PREVALENCE                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-10                                                        ##
+## Version: 2014-03-16                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -25,29 +25,60 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0050_prevalence_all_spec.csv",
-                      dec = ",",
-                      header = TRUE,
-                      stringsAsFactors = FALSE)
+data.raw.all <- read.csv2("csv/kili/lvl0400_prevalence_all_species.csv",
+                          dec = ",",
+                          header = TRUE,
+                          stringsAsFactors = FALSE)
+
+data.raw.10 <- read.csv2("csv/kili/lvl0400_prevalence_data_10.csv",
+                         dec = ",",
+                         header = TRUE,
+                         stringsAsFactors = FALSE)
 
 
 ################################################################################
-### Plotting ###################################################################
+### Plotting - prevalence - all species ########################################
 ################################################################################
 
 ## Define output image | open image port
-# png("images/lvl0050_prevalence_all_spec.png", 
-#     width = 1024 * 6, 
+# png("images/lvl0400_prevalence_all_spec.png", 
+#     width = 2048 * 6, 
 #     height = 748 * 6, 
 #     units = "px", 
 #     res = 600)
 
-plot <- ggplot(data.raw, aes(x=species, y=prevalence)) + 
+plot <- ggplot(data.raw.all, aes(x=species, y=prevalence)) + 
   geom_bar(stat="identity") +
   scale_fill_grey() +
   xlab("species") +
   ylab("prevalence") +
   ggtitle("Orthoptera prevalence Mt. Kilimanjaro 2002-2012") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5, size = 8),
+        plot.title = element_text(lineheight = .8, size = 20))
+
+plot
+
+## Close image port
+# graphics.off()
+
+
+################################################################################
+### Plotting - prevalence - species with more than 10 observations in different plots
+################################################################################
+
+## Define output image | open image port
+# png("images/lvl0400_prevalence_10.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
+
+plot <- ggplot(data.raw.10, aes(x=species, y=prevalence)) + 
+  geom_bar(stat="identity") +
+  scale_fill_grey() +
+  xlab("species") +
+  ylab("prevalence") +
+  ggtitle("Orthoptera prevalence Mt. Kilimanjaro 2002-2012 \n Species with more than 10 observations in different plots") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5),
         plot.title = element_text(lineheight = .8, size = 20))
 

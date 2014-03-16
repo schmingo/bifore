@@ -4,7 +4,7 @@
 ## RANDOM FOREST FOR MODIS DATA                                               ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-12                                                        ##
+## Version: 2014-03-16                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -25,50 +25,26 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0300_biodiversity_data_all_spec.csv",
+data.raw <- read.csv2("csv/kili/lvl0400_biodiversity_data_all_spec.csv",
                       dec = ",",
                       header = TRUE,
                       stringsAsFactors = FALSE)
 
-
-################################################################################
-### Subsetting data ############################################################
-################################################################################
-
-### Eliminate columns containing NA values and combine data in several ways ####
-### to get different dataframe combinations ####################################
-
-df.greyval.all <- data.raw[204:241]
-df.diff.all <- data.raw[242:279]
-df.sd.all <- data.raw[280:317]
-
-
-# ## Create NA tables
-# df.na.greyval <- data.frame(colSums(is.na(df.greyval.all)))
-# names(df.na.greyval) <- c("NAs out of 225")
-# 
-# df.na.diff <- data.frame(colSums(is.na(df.diff.all)))
-# names(df.na.diff) <- c("NAs out of 225")
-# 
-# df.na.sd <- data.frame(colSums(is.na(df.sd.all)))
-# names(df.na.sd) <- c("NAs out of 225")
-
-
-## Eliminate columns containing NA values
-df.greyval <- cbind(data.raw[204:213], data.raw[222:241])  ## greyvalues
-df.diff <- cbind(data.raw[242:251], data.raw[261:279])  ## diff
-df.sd <- cbind(data.raw[280:289], data.raw[298:317])    ## sd 
+data <- data.raw
 
 
 ################################################################################
 ### Combining data for randomForest ############################################
 ################################################################################
 
-## Extract response column
-tmp.speciesnr <- data.raw[9]
-
-## Set columnname
+## split incoming dataset
+tmp.speciesnr <- data[9]
 names(tmp.speciesnr) <- "SpeciesNr"
+
+df.greyval <- data[179:208]
+df.diff <- data[209:236]
+df.sd <- data[237:266]
+
 
 ## Create multiple dataframes with species number as predictor datasets
 df.spnr.greyval <- cbind(df.greyval, tmp.speciesnr)
@@ -109,7 +85,7 @@ train.rf <- randomForest(x = predictor_modisVAL,
                          y = response_speciesNR,
                          importance = TRUE,
                          ntree = 500,
-                         mtry = 6,
+                         mtry = 5,
                          nodesize = 2,
                          type="regression",
                          do.trace = 100)

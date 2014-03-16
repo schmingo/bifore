@@ -4,7 +4,7 @@
 ## PLOTTING ORTHOPTERA OBSERVATIONS AT MT. KILIMANJARO                        ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-04                                                        ##
+## Version: 2014-03-16                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -24,7 +24,7 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Import data ################################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0050_biodiversity_data_all_spec.csv",
+data.raw <- read.csv2("csv/kili/lvl0050_biodiversity_data.csv",
                      dec = ",",
                      header = TRUE, 
                      stringsAsFactors = TRUE,

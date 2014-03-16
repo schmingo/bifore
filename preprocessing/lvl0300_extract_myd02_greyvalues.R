@@ -18,25 +18,42 @@ lib <- c("rgdal", "doParallel", "raster", "matrixStats", "doSNOW")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
-ncores <- detectCores()
+ncores <- detectCores()-4
 
 
 ################################################################################
 ### Set filepaths ##############################################################
 ################################################################################
 
-path.hdf <- "/media/schmingo/Daten/Diplomarbeit/myd02-03_hdf/"
-path.tif <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif/"
-path.tif.na <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif_na/"
-path.tif.calc <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif_calc/"
+# path.hdf <- "/media/schmingo/Daten/Diplomarbeit/myd02-03_hdf/"
+# path.tif <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif/"
+# path.tif.na <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif_na/"
+# path.tif.calc <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif_calc/"
+# path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
+# 
+# path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data_test.csv"
+# 
+# ## Source modules
+# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
+
+
+
+path.hdf <- "D:/Diplomarbeit/myd02-03_hdf/"
+path.tif <- "D:/Diplomarbeit/myd02_tif/"
+path.tif.na <- "D:/Diplomarbeit/myd02_tif_na/"
+path.tif.calc <- "D:/Diplomarbeit/myd02_tif_calc/"
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
-path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data.csv"
+path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data_test.csv"
 
 ## Source modules
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
+source("D:/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
+
+
+
 
 ################################################################################
 ### Import biodiversity dataset ################################################
@@ -89,7 +106,9 @@ bandnames <- bandnames$bands
 lst.date <- unique(data.bio.raw$date_nocloud)
 lst.date
 
-foreach(a = lst.date) %do% {
+
+registerDoParallel(cl <- makeCluster(ncores))
+foreach(a = lst.date, .packages = lib) %dopar% {
   
   ## Extract date from biodiversity data
   tmp.date <- a
@@ -186,6 +205,8 @@ foreach(a = lst.date) %do% {
                  overwrite = TRUE)        
           }
 }  
+stopCluster(cl)
+
 
 ################################################################################
 ### Extraction of cell values ##################################################
@@ -201,7 +222,8 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 
 # Extract date from biodiversity data
 # tmp.date <- data.bio.raw$date_nocloud[1]
-greyvalues <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind") %do% {
+registerDoParallel(cl <- makeCluster(ncores))
+greyvalues <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind", .packages = lib) %dopar% {
   
   tmp.date <- a
   
@@ -223,7 +245,7 @@ greyvalues <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "r
                              }
   
 }
-
+stopCluster(cl)
 
 greyvalues <- data.frame(greyvalues)
 
@@ -264,8 +286,8 @@ data.bio.sp <- data.bio.raw
 coordinates(data.bio.sp) <- c("lon", "lat")
 projection(data.bio.sp) <- "+init=epsg:4326"
 
-
-matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind") %do% {
+registerDoParallel(cl <- makeCluster(ncores))
+matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind", .packages = lib) %dopar% {
   
   tmp.date <- a
   
@@ -347,6 +369,7 @@ matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rb
   row.sd <- cbind(pxl.rst.qkm, pxl.rst.hkm, pxl.rst.1km)
   return(row.sd)
 }
+stopCluster(cl)
 
 ## Write calculated values to new df
 matrix.sd <- data.frame(matrix.sd)

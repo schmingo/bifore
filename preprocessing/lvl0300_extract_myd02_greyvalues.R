@@ -18,41 +18,25 @@ lib <- c("rgdal", "doParallel", "raster", "matrixStats", "doSNOW")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
-ncores <- detectCores()-4
+ncores <- detectCores()-2
 
 
 ################################################################################
 ### Set filepaths ##############################################################
 ################################################################################
 
-# path.hdf <- "/media/schmingo/Daten/Diplomarbeit/myd02-03_hdf/"
-# path.tif <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif/"
-# path.tif.na <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif_na/"
-# path.tif.calc <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif_calc/"
-# path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
-# 
-# path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data_test.csv"
-# 
-# ## Source modules
-# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
-
-
-
-path.hdf <- "D:/Diplomarbeit/myd02-03_hdf/"
-path.tif <- "D:/Diplomarbeit/myd02_tif/"
-path.tif.na <- "D:/Diplomarbeit/myd02_tif_na/"
-path.tif.calc <- "D:/Diplomarbeit/myd02_tif_calc/"
+path.hdf <- "/media/schmingo/Daten/Diplomarbeit/myd02-03_hdf/"
+path.tif <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif/"
+path.tif.na <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif_na/"
+path.tif.calc <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif_calc/"
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
 path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data_test.csv"
 
 ## Source modules
-source("D:/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
-
-
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
 
 
 ################################################################################

@@ -4,7 +4,7 @@
 ## PLOT DIFF DAYS NO-CLOUD                                                    ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-10                                                        ##
+## Version: 2014-03-16                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -25,8 +25,8 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0100_biodiversity_data_all_spec.csv",
-                      dec = ".",
+data.raw <- read.csv2("csv/kili/lvl0100_biodiversity_data.csv",
+                      dec = ",",
                       header = TRUE,
                       stringsAsFactors = FALSE)
 

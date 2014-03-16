@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-10                                                        ##
+## Version: 2014-03-16                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -40,9 +40,9 @@ bandnames <- read.csv2(path.bandnames.csv,
 ### Subsetting #################################################################
 ################################################################################
 
-df.greyval.all <- data.raw[69:106]
-df.diff.all <- data.raw[107:144]
-df.sd.all <- data.raw[145:182]
+df.greyval.all <- data.raw[179:216]
+df.diff.all <- data.raw[217:254]
+df.sd.all <- data.raw[255:292]
 
 ## Create df, count NA's for each MODIS band
 df.NA <- cbind.data.frame(colSums(is.na(df.greyval.all)),
@@ -78,7 +78,7 @@ names(df.NA.melt) <- c("MODIS_bands", "NA_values", "NA_count")
 
 
 ## Define output image | open image port
-# png("images/lvl0310_na_values.png", 
+# png("images/lvl0300_na_values.png", 
 #     width = 1024 * 6, 
 #     height = 748 * 6, 
 #     units = "px", 

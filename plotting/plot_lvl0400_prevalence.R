@@ -41,11 +41,11 @@ data.raw.10 <- read.csv2("csv/kili/lvl0400_prevalence_data_10.csv",
 ################################################################################
 
 ## Define output image | open image port
-# png("images/lvl0400_prevalence_all_spec.png", 
-#     width = 2048 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png("images/lvl0400_prevalence_all_spec.png", 
+    width = 2048 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
 plot <- ggplot(data.raw.all, aes(x=species, y=prevalence)) + 
   geom_bar(stat="identity") +
@@ -59,7 +59,7 @@ plot <- ggplot(data.raw.all, aes(x=species, y=prevalence)) +
 plot
 
 ## Close image port
-# graphics.off()
+graphics.off()
 
 
 ################################################################################
@@ -67,11 +67,11 @@ plot
 ################################################################################
 
 ## Define output image | open image port
-# png("images/lvl0400_prevalence_10.png", 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png("images/lvl0400_prevalence_10.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
 plot <- ggplot(data.raw.10, aes(x=species, y=prevalence)) + 
   geom_bar(stat="identity") +
@@ -85,4 +85,4 @@ plot <- ggplot(data.raw.10, aes(x=species, y=prevalence)) +
 plot
 
 ## Close image port
-# graphics.off()
+graphics.off()

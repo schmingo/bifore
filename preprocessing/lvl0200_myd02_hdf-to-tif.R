@@ -75,8 +75,7 @@ for (i in 1:nrow(fls.1km.matching)) {
                                       ul_lon = ul_lon, 
                                       ul_lat = ul_lat, 
                                       lr_lon = lr_lon, 
-                                      lr_lat = lr_lat,
-                                      overwrite = TRUE)
+                                      lr_lat = lr_lat)
   
   
   runSwath2Grid(mrtpath = mrtpath, 

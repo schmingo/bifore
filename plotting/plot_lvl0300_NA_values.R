@@ -78,11 +78,11 @@ names(df.NA.melt) <- c("MODIS_bands", "NA_values", "NA_count")
 
 
 ## Define output image | open image port
-# png("images/lvl0300_na_values.png", 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png("images/lvl0300_na_values.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
 plot <- ggplot(df.NA.melt, aes(x=MODIS_bands, y=NA_count, fill=NA_values)) + 
   geom_bar(position="dodge", stat="identity", width=1, colour="white") +
@@ -98,4 +98,4 @@ plot <- ggplot(df.NA.melt, aes(x=MODIS_bands, y=NA_count, fill=NA_values)) +
 plot
 
 ## Close image port
-# graphics.off()
+graphics.off()

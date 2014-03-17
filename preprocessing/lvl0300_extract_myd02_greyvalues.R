@@ -20,7 +20,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set working directory
 setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
-ncores <- detectCores()-2
+ncores <- detectCores()-1
 
 
 ################################################################################
@@ -98,9 +98,9 @@ lst.date <- unique(data.bio.raw$date_nocloud)
 lst.date
 
 
-# registerDoParallel(cl <- makeCluster(ncores))
-# foreach(a = lst.date, .packages = lib) %dopar% {
-foreach(a = lst.date) %do% {  
+registerDoParallel(cl <- makeCluster(ncores))
+foreach(a = lst.date, .packages = lib) %dopar% {
+# foreach(a = lst.date) %do% {  
   ## Extract date from biodiversity data
   tmp.date <- a
   #tmp.date <- data.bio.raw$date_nocloud[3]
@@ -215,6 +215,7 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 # tmp.date <- data.bio.raw$date_nocloud[1]
 registerDoParallel(cl <- makeCluster(ncores))
 greyvalues <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind", .packages = lib) %dopar% {
+# greyvalues <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind") %do% {
   
   tmp.date <- a
   
@@ -279,6 +280,7 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 
 registerDoParallel(cl <- makeCluster(ncores))
 matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind", .packages = lib) %dopar% {
+# matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind") %do% {
   
   tmp.date <- a
   

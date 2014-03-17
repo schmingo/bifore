@@ -213,8 +213,9 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 
 # Extract date from biodiversity data
 # tmp.date <- data.bio.raw$date_nocloud[1]
-registerDoParallel(cl <- makeCluster(ncores))
-greyvalues <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind", .packages = lib) %dopar% {
+# registerDoParallel(cl <- makeCluster(ncores))
+# greyvalues <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind", .packages = lib) %dopar% {
+greyvalues <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind") %do% {
   
   tmp.date <- a
   
@@ -277,8 +278,9 @@ data.bio.sp <- data.bio.raw
 coordinates(data.bio.sp) <- c("lon", "lat")
 projection(data.bio.sp) <- "+init=epsg:4326"
 
-registerDoParallel(cl <- makeCluster(ncores))
-matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind", .packages = lib) %dopar% {
+# registerDoParallel(cl <- makeCluster(ncores))
+# matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind", .packages = lib) %dopar% {
+matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind") %do% {
   
   tmp.date <- a
   

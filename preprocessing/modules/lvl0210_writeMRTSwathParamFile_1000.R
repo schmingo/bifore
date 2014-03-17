@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-01-22                                                        ##
+## Version: 2014-03-17                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -25,8 +25,8 @@ writeMRTSwathParamFile_1000 <- function(prmfn = "tmpMRTparams.prm",
   prmfile[[(pnum=pnum+1)]] =   paste("INPUT_FILENAME = ", modfn, sep="")
   prmfile[[(pnum=pnum+1)]] = 	" "
   prmfile[[(pnum=pnum+1)]] = 	paste("GEOLOCATION_FILENAME = ", geoloc_fn, sep="")
-#   prmfile[[(pnum=pnum+1)]] = 	" "
-#   prmfile[[(pnum=pnum+1)]] =   paste("INPUT_SDS_NAME = ", sds, ", 1", sep = "")  
+  prmfile[[(pnum=pnum+1)]] = 	" "
+  prmfile[[(pnum=pnum+1)]] =  "INPUT_SDS_NAME = EV_1KM_RefSB, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1; EV_1KM_Emissive, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1"  
   
   # Subset parameters
   prmfile[[(pnum=pnum+1)]] = 	" "

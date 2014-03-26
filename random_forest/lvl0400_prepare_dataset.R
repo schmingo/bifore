@@ -4,7 +4,7 @@
 ## PREPARE DATASET FOR RANDOMFOREST                                           ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-15                                                        ##
+## Version: 2014-03-26                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -197,3 +197,17 @@ write.table(data.strat,
             col.names = TRUE,
             row.names = FALSE,
             sep = ";")
+
+
+################################################################################
+### Create df indicating if species has been observed or not ###################
+################################################################################
+
+## Read as matrix
+spec.matrix <- as.matrix(df.species)
+
+## Replace NA with 0
+spec.matrix[is.na(spec.matrix)] <- 0
+
+## Replace values >=1 with 1
+spec.matrix <- ifelse(spec.matrix >= 1,1,0)

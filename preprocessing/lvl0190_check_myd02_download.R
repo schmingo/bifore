@@ -24,7 +24,7 @@ setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
-path.myd02 <- "/media/schmingo/Daten/Diplomarbeit/myd02_hdf/"
+path.myd02 <- "/media/schmingo/Daten/Diplomarbeit/myd02-03_hdf/"
 path.myd03 <- "/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf_daytime/"
 path.myd02_03 <- "/media/schmingo/Daten/Diplomarbeit/myd02-03_hdf/"
 

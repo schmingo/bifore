@@ -10,7 +10,7 @@
 ################################################################################
 
 
-writeMRTSwathParamFile_cloud <- function(prmfn = "tmpMRTparams.prm", 
+writeMRTSwathParamFile_cloud <- function(prmfn = "/home/schmingo/Diplomarbeit/tmpMRTparams.prm", 
                                         tifsdir, 
                                         modfn, geoloc_fn, 
                                         sds = NULL, 

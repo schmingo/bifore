@@ -31,15 +31,10 @@ ncores <- detectCores()
 ## To preprocess MYD35_L2 and MYD03 files; both must be in the same directory.
 
 path.biodiversity.csv <- "Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0050_biodiversity_data.csv"
-
 path.nocloud.csv <- "Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0100_biodiversity_data.csv"
-
 path.hdf.in <- "/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf/"
-
 path.hdf.sub <- "/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf_daytime/"
-
 path.tif.cloudmask <- "/media/schmingo/Daten/Diplomarbeit/myd_cloudmask_tif_daytime/"
-
 mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
 
 ## Load required modules

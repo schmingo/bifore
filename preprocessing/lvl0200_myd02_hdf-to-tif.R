@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-17                                                        ##
+## Version: 2014-03-28                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -19,8 +19,8 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set working directory
 setwd("/home/schmingo/Diplomarbeit/")
 
-path.hdf.in <- "/media/schmingo/Daten/Diplomarbeit/sample_myd02_hdf/"
-tifsdir <- "/media/schmingo/Daten/Diplomarbeit/sample_myd02_tif/"
+path.hdf.in <- "/media/schmingo/Daten/Diplomarbeit/myd02-03_hdf/"
+tifsdir <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif/"
 mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
 
 ## Load required modules
@@ -30,7 +30,8 @@ source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMR
 source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0220_runSwath2Grid.R")
 source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0230_renameSuffix.R")
 
-
+## Check actual time
+starttime <- Sys.time()
 ################################################################################
 ### Preprocessing MYD35_L2 and MYD03 | Run MRTSwath tool "swath2grid" ##########
 ################################################################################
@@ -47,9 +48,6 @@ ul_lat <- -2.77
 ul_lon <- 36.93
 lr_lat <- -3.45
 lr_lon <- 37.76
-
-## Check actual time
-starttime <- Sys.time()
 
 
 ################################################################################
@@ -170,9 +168,9 @@ for (i in 1:nrow(fls.qkm.matching)) {
 ### Remove unnecessary tifs ####################################################
 ################################################################################
 
-do.call(file.remove,list(list.files(tifsdir, pattern="Aggr", full.names=TRUE)))
-do.call(file.remove,list(list.files(tifsdir, pattern="Uncert", full.names=TRUE)))
-do.call(file.remove,list(list.files(tifsdir, pattern="Band26", full.names=TRUE)))
+# do.call(file.remove,list(list.files(tifsdir, pattern="Aggr", full.names=TRUE)))
+# do.call(file.remove,list(list.files(tifsdir, pattern="Uncert", full.names=TRUE)))
+# do.call(file.remove,list(list.files(tifsdir, pattern="Band26", full.names=TRUE)))
 
 
 ################################################################################

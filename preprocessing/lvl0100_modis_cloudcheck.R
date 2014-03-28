@@ -7,7 +7,7 @@
 ##       - MYD35 .hdf metadata                                                ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-15                                                        ##
+## Version: 2014-03-28                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -42,6 +42,9 @@ path.tif.cloudmask <- ("/media/schmingo/Daten/Diplomarbeit/myd_cloudmask_tif_day
 
 mrtpath <- ("/home/schmingo/apps/MRTswath/bin/swath2grid")
 
+
+## Load required modules
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0110_writeMRTSwathParamFile_cloudcheck.R")
 
 ################################################################################
 ### Import biodiversity dataset ################################################
@@ -122,16 +125,27 @@ lr_lon <- 37.76
 
 for(i in 1:nrow(fls.matching)) {
   ## Write parameter file for each .hdf
-  prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
-                                     tifsdir=path.tif.cloudmask,
-                                     modfn=fls.matching$mod35_L2_fns[i],
-                                     geoloc_fn=fls.matching$mod03_fns[i],
-                                     ul_lon=ul_lon,
-                                     ul_lat=ul_lat,
-                                     lr_lon=lr_lon,
-                                     lr_lat=lr_lat)
+#   prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
+#                                      tifsdir=path.tif.cloudmask,
+#                                      modfn=fls.matching$mod35_L2_fns[i],
+#                                      geoloc_fn=fls.matching$mod03_fns[i],
+#                                      ul_lon=ul_lon,
+#                                      ul_lat=ul_lat,
+#                                      lr_lon=lr_lon,
+#                                      lr_lat=lr_lat)
+  prmfn = writeMRTSwathParamFile_cloud(prmfn = "/home/schmingo/Diplomarbeit/tmpMRTparams.prm", 
+                                       tifsdir = path.tif.cloudmask, 
+                                       modfn = fls.matching$mod35_L2_fns[i], 
+                                       geoloc_fn = fls.matching$mod03_fns[i], 
+                                       # sds = sds, 
+                                       ul_lon = ul_lon, 
+                                       ul_lat = ul_lat, 
+                                       lr_lon = lr_lon, 
+                                       lr_lat = lr_lat)
+  
   
   print(scan(file=prmfn, what="character", sep="\n"))
+
   
   ## hdf to raster using parameter file and subset box
   run_swath2grid(mrtpath="swath2grid",

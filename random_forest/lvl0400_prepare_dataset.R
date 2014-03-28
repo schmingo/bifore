@@ -31,6 +31,7 @@ path.biodiversity.data10 <- "csv/kili/lvl0400_biodiversity_data_10.csv"
 path.biodiversity.strat.plot <- "csv/kili/lvl0400_biodiversity_data_strat_plot.csv"
 file.all.spec.prevalence <- "csv/kili/lvl0400_prevalence_all_species.csv"
 file.data10.prevalence <- "csv/kili/lvl0400_prevalence_data_10.csv"
+file.presence.absence <- "csv/kili/lvl0400_presence-absence.csv"
 
 
 ################################################################################
@@ -204,10 +205,25 @@ write.table(data.strat,
 ################################################################################
 
 ## Read as matrix
-spec.matrix <- as.matrix(df.species)
+pres.abs.matrix <- as.matrix(df.species)
 
 ## Replace NA with 0
-spec.matrix[is.na(spec.matrix)] <- 0
+pres.abs.matrix[is.na(pres.abs.matrix)] <- 0
 
 ## Replace values >=1 with 1
-spec.matrix <- ifelse(spec.matrix >= 1,1,0)
+pres.abs.matrix <- ifelse(pres.abs.matrix >= 1,1,0)
+
+## Combine dataframes
+df.presence.absence <- cbind(df.basics,
+                             as.data.frame(pres.abs.matrix),
+                             df.greyval,
+                             df.diff,
+                             df.sd)
+# names(df.presence.absence)
+
+write.table(df.presence.absence, file = file.presence.absence,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")

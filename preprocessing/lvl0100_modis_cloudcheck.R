@@ -15,7 +15,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "raster", "ggplot2")
+lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "raster", "ggplot2", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
@@ -30,21 +30,21 @@ ncores <- detectCores()
 
 ## To preprocess MYD35_L2 and MYD03 files; both must be in the same directory.
 
-path.biodiversity.csv <- ("Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0050_biodiversity_data.csv")
+path.biodiversity.csv <- "Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0050_biodiversity_data.csv"
 
-path.nocloud.csv <- ("Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0100_biodiversity_data.csv")
+path.nocloud.csv <- "Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0100_biodiversity_data.csv"
 
-path.hdf.in <- ("/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf/")
+path.hdf.in <- "/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf/"
 
-path.hdf.sub <- ("/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf_daytime/")
+path.hdf.sub <- "/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf_daytime/"
 
-path.tif.cloudmask <- ("/media/schmingo/Daten/Diplomarbeit/myd_cloudmask_tif_daytime/")
+path.tif.cloudmask <- "/media/schmingo/Daten/Diplomarbeit/myd_cloudmask_tif_daytime/"
 
-mrtpath <- ("/home/schmingo/apps/MRTswath/bin/swath2grid")
-
+mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
 
 ## Load required modules
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0110_writeMRTSwathParamFile_cloudcheck.R")
+source("Diplomarbeit/bifore/preprocessing/modules/lvl0110_writeMRTSwathParamFile_cloudcheck.R")
+source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0110_runSwath2Grid.R")
 
 ################################################################################
 ### Import biodiversity dataset ################################################
@@ -124,16 +124,9 @@ lr_lon <- 37.76
 ################################################################################
 
 for(i in 1:nrow(fls.matching)) {
+  
   ## Write parameter file for each .hdf
-#   prmfn <- write_MRTSwath_param_file(prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
-#                                      tifsdir=path.tif.cloudmask,
-#                                      modfn=fls.matching$mod35_L2_fns[i],
-#                                      geoloc_fn=fls.matching$mod03_fns[i],
-#                                      ul_lon=ul_lon,
-#                                      ul_lat=ul_lat,
-#                                      lr_lon=lr_lon,
-#                                      lr_lat=lr_lat)
-  prmfn = writeMRTSwathParamFile_cloud(prmfn = "/home/schmingo/Diplomarbeit/tmpMRTparams.prm", 
+  prmfn = writeMRTSwathParamFile_cloud(prmfn = "tmpMRTparams.prm", 
                                        tifsdir = path.tif.cloudmask, 
                                        modfn = fls.matching$mod35_L2_fns[i], 
                                        geoloc_fn = fls.matching$mod03_fns[i], 
@@ -144,19 +137,16 @@ for(i in 1:nrow(fls.matching)) {
                                        lr_lat = lr_lat)
   
   
-  print(scan(file=prmfn, what="character", sep="\n"))
-
+  runSwath2Grid(mrtpath = mrtpath, 
+                prmfn = "tmpMRTparams.prm", 
+                tifsdir = tifsdir, 
+                modfn = ffls.matching$mod35_L2_fns[i], 
+                geoloc_fn = fls.matching$mod03_fns[i], 
+                ul_lon = ul_lon, 
+                ul_lat = ul_lat, 
+                lr_lon = lr_lon, 
+                lr_lat = lr_lat)
   
-  ## hdf to raster using parameter file and subset box
-  run_swath2grid(mrtpath="swath2grid",
-                 prmfn="/home/schmingo/Diplomarbeit/tmpMRTparams.prm",
-                 tifsdir=path.tif.cloudmask,
-                 modfn=fls.matching$mod35_L2_fns[i],
-                 geoloc_fn=fls.matching$mod03_fns[i],
-                 ul_lon=ul_lon,
-                 ul_lat=ul_lat,
-                 lr_lon=lr_lon,
-                 lr_lat=lr_lat)
 }
 
 

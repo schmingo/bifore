@@ -26,22 +26,14 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ################################################################################
 
 file.in.0300 <- "csv/kili/lvl0300_biodiversity_data.csv"
+file.out.abundance.all <- "csv/kili/lvl0400_abundance_all.csv"
+file.out.abundance.10 <- "csv/kili/lvl0400_abundance_10.csv"
 file.out.specno.all <- "csv/kili/lvl0400_specno_all.csv"
 file.out.specno.10 <- "csv/kili/lvl0400_specno_10.csv"
 file.out.prevalence.all <- "csv/kili/lvl0400_prevalence_all.csv"
 file.out.prevalence.10 <- "csv/kili/lvl0400_prevalence_10.csv"
 file.out.presabs.all <- "csv/kili/lvl0400_presence-absence_all.csv"
 file.out.presabs.10 <- "csv/kili/lvl0400_presence-absence_10.csv"
-
-
-
-# file.biodiversity.in <- "csv/kili/lvl0300_biodiversity_data.csv"
-# path.biodiversity.allspec <- "csv/kili/lvl0400_all_spec.csv"
-# path.biodiversity.data10 <- "csv/kili/lvl0400_biodiversity_data_10.csv"
-# path.biodiversity.strat.plot <- "csv/kili/lvl0400_biodiversity_data_strat_plot.csv"
-# file.all.spec.prevalence <- "csv/kili/lvl0400_prevalence_all_species.csv"
-# file.data10.prevalence <- "csv/kili/lvl0400_prevalence_data_10.csv"
-# file.presence.absence <- "csv/kili/lvl0400_presence-absence.csv"
 
 
 ################################################################################
@@ -98,6 +90,14 @@ data <- cbind(df.sub.basics,
               df.sub.diff, 
               df.sub.sd)
 
+## write abundance table
+write.table(data, 
+            file = file.out.abundance.all,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")
 
 ################################################################################
 ### Remove species with less than 10 observations in different plots ###########
@@ -116,7 +116,6 @@ data10.species.index <- which(apply(data10.tmp.list, 2, sum, na.rm = TRUE) >= 10
 data10 <- data[, c(1:13, data10.species.index, 178:ncol(data))]
 # names(data10)
 
-
 ## Subset data10
 df.sub.10.basics <- data10[1:12]
 df.sub.10.specno <- data10[13]
@@ -125,8 +124,18 @@ df.sub.10.greyval <- data10[70:99]
 df.sub.10.diff <- data10[100:127]
 df.sub.10.sd <- data10[128:157]
 
+## write abundance table
+write.table(data10, 
+            file = file.out.abundance.10,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")
+
+
 ################################################################################
-### Create speciesnumber dataframe for RandomForest ############################
+### Create prevalence dataframe for RandomForest ###############################
 ################################################################################
 
 ### For all species
@@ -166,149 +175,169 @@ write.table(data.rf.specno,
             sep = ";")
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-################################################################################
-### Calculate prevalence for all species #######################################
-################################################################################
-
-## Subset species dataset
-data.all.spec <- data[14:178]
-
-## Calculate prevalence
-prevalence.all <- data.frame(colSums(df.sub.species > 0, na.rm = TRUE), 
-                             row.names = NULL)
-
-## Combine new df
-df.prevalence.all.spec <- cbind(names(df.sub.species), prevalence.all)
-
-## Set colnames
-colnames(df.prevalence.all.spec) <- c("species", "prevalence")
-
-
-## Write table
-write.table(df.prevalence.all.spec, file = file.out.prevalence.all,
-            dec = ",",
-            quote = FALSE,
-            col.names = TRUE,
-            row.names = FALSE,
-            sep = ";")
-
-
-################################################################################
-### Remove species with less than 10 observations in different plots ###########
-################################################################################
-
-data.list <- split(data, data$plot)
-tst.list <- do.call("rbind", lapply(seq(data.list), function(i) {
-  matrix <- as.matrix(data.list[[i]][, 14:178])
-  t <- apply(matrix, 2, sum, na.rm = TRUE)
-  t[t == 0] <- NA
-  t[t > 0] <- 1
-  return(t)
-}))
-
-index.species10 <- which(apply(tst.list, 2, sum, na.rm = TRUE) >= 10) + 13
-data10 <- data[, c(1:13, index.species10, 178:ncol(data))]
-names(data10)
-
-## Write table
-write.table(data10, 
-            file = file.out.specno.10,
-            dec = ",",
-            quote = FALSE,
-            col.names = TRUE,
-            row.names = FALSE,
-            sep = ";")
-
-
-################################################################################
-### Prevalence - species with less than 10 observations in different plots #####
-################################################################################
-
-## Subset species dataset
-data10.spec <- data10[14:69]
-
-## Calculate prevalence
-prevalence.10 <- data.frame(colSums(data10.spec > 0, na.rm = TRUE), 
-                            row.names = NULL)
-
-## Combine new df
-df.prevalence.10 <- cbind(names(data10.spec), prevalence.10)
-
-## Set colnames
-colnames(df.prevalence.10) <- c("species", "prevalence")
-
-
-## Write table
-write.table(df.prevalence.10, file = file.out.prevalence.10,
-            dec = ",",
-            quote = FALSE,
-            col.names = TRUE,
-            row.names = FALSE,
-            sep = ";")
-
-
-################################################################################
-### Stratified sampling - only one random observation per plot #################
-################################################################################
-
-set.seed(50)
-
-data.strat <- data[strata(data, 
-                          stratanames = "plot", 
-                          size = rep(1,length(unique(data$plot))),
-                          method = "srswor")$ID_unit, ]
-
-
-## Write table
-write.table(data.strat, 
-            file = path.biodiversity.strat.plot,
-            dec = ",",
-            quote = FALSE,
-            col.names = TRUE,
-            row.names = FALSE,
-            sep = ";")
-
-
 ################################################################################
 ### Create presence-absence df #################################################
 ################################################################################
 
+### For all species
 ## Read as matrix
-pres.abs.matrix <- as.matrix(df.sub.10.species)
+matrix.presabs.all <- as.matrix(df.sub.species)
 
 ## Replace NA with 0
-pres.abs.matrix[is.na(pres.abs.matrix)] <- 0
+matrix.presabs.all[is.na(matrix.presabs.all)] <- 0
 
 ## Replace values >=1 with 1
-pres.abs.matrix <- ifelse(pres.abs.matrix >= 1,1,0)
+matrix.presabs.all <- ifelse(matrix.presabs.all >= 1,1,0)
 
 ## Combine dataframes
-df.presence.absence <- cbind(df.sub.10.basics,
-                             as.data.frame(pres.abs.matrix),
-                             df.sub.10.greyval,
-                             df.sub.10.diff,
-                             df.sub.10.sd)
-# names(df.presence.absence)
+data.rf.presabs.all <- cbind(df.sub.basics,
+                         as.data.frame(matrix.presabs.all),
+                         df.sub.greyval,
+                         df.sub.diff,
+                         df.sub.sd)
+# names(data.rf.presabs.all)
 
-write.table(df.presence.absence, file = file.out.presabs.10,
+write.table(data.rf.presabs.all,
+            file = file.out.presabs.all,
             dec = ",",
             quote = FALSE,
             col.names = TRUE,
             row.names = FALSE,
             sep = ";")
+
+################################################################################
+### For species with less than 10 observations in different plots
+
+## Read as matrix
+matrix.presabs.10 <- as.matrix(df.sub.10.species)
+
+## Replace NA with 0
+matrix.presabs.10[is.na(matrix.presabs.10)] <- 0
+
+## Replace values >=1 with 1
+matrix.presabs.10 <- ifelse(matrix.presabs.10 >= 1,1,0)
+
+## Combine dataframes
+data.rf.presabs.10 <- cbind(df.sub.10.basics,
+                         as.data.frame(matrix.presabs.10),
+                         df.sub.10.greyval,
+                         df.sub.10.diff,
+                         df.sub.10.sd)
+# names(data.rf.presabs.10)
+
+write.table(data.rf.presabs.10,
+            file = file.out.presabs.10,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")
+
+
+
+
+# ################################################################################
+# ### Calculate prevalence for all species #######################################
+# ################################################################################
+# 
+# ## Calculate prevalence for all species
+# prevalence.all <- data.frame(colSums(df.sub.species > 0, na.rm = TRUE), 
+#                              row.names = NULL)
+# 
+# ## Combine new df
+# df.prevalence.all.spec <- cbind(names(df.sub.species), prevalence.all)
+# 
+# ## Set colnames
+# colnames(df.prevalence.all.spec) <- c("species", "prevalence")
+# 
+# 
+# ## Write table
+# write.table(df.prevalence.all.spec, 
+#             file = file.out.prevalence.all,
+#             dec = ",",
+#             quote = FALSE,
+#             col.names = TRUE,
+#             row.names = FALSE,
+#             sep = ";")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ################################################################################
+# ### Remove species with less than 10 observations in different plots ###########
+# ################################################################################
+# 
+# data.list <- split(data, data$plot)
+# tst.list <- do.call("rbind", lapply(seq(data.list), function(i) {
+#   matrix <- as.matrix(data.list[[i]][, 14:178])
+#   t <- apply(matrix, 2, sum, na.rm = TRUE)
+#   t[t == 0] <- NA
+#   t[t > 0] <- 1
+#   return(t)
+# }))
+# 
+# index.species10 <- which(apply(tst.list, 2, sum, na.rm = TRUE) >= 10) + 13
+# data10 <- data[, c(1:13, index.species10, 178:ncol(data))]
+# names(data10)
+# 
+# ## Write table
+# write.table(data10, 
+#             file = file.out.specno.10,
+#             dec = ",",
+#             quote = FALSE,
+#             col.names = TRUE,
+#             row.names = FALSE,
+#             sep = ";")
+# 
+# 
+# 
+# 
+# 
+# ################################################################################
+# ### Stratified sampling - only one random observation per plot #################
+# ################################################################################
+# 
+# set.seed(50)
+# 
+# data.strat <- data[strata(data, 
+#                           stratanames = "plot", 
+#                           size = rep(1,length(unique(data$plot))),
+#                           method = "srswor")$ID_unit, ]
+# 
+# 
+# ## Write table
+# write.table(data.strat, 
+#             file = path.biodiversity.strat.plot,
+#             dec = ",",
+#             quote = FALSE,
+#             col.names = TRUE,
+#             row.names = FALSE,
+#             sep = ";")
+
+
+

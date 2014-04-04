@@ -113,7 +113,7 @@ data10.tmp.list <- do.call("rbind", lapply(seq(data10.list), function(i) {
 }))
 
 data10.species.index <- which(apply(data10.tmp.list, 2, sum, na.rm = TRUE) >= 10) + 13
-data10 <- data[, c(1:13, data10.species.index, 178:ncol(data))]
+data10 <- data[, c(1:13, data10.species.index, 179:ncol(data))]
 # names(data10)
 
 ## Subset data10

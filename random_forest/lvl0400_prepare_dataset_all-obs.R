@@ -33,6 +33,9 @@ file.out.specno.10 <- "csv/kili/lvl0400_specno_10.csv"
 file.out.prevalence.all <- "csv/kili/lvl0400_prevalence_all.csv"
 file.out.prevalence.10 <- "csv/kili/lvl0400_prevalence_10.csv"
 
+file.out.simple.noofspecies.all <- "csv/kili/lvl0400_simple_number.of.species_all.csv"
+file.out.simple.noofspecies.10 <- "csv/kili/lvl0400_simple_number.of.species_10.csv"
+
 
 ################################################################################
 ### Import dataset #############################################################
@@ -201,149 +204,103 @@ write.table(data.rf.specno.10,
             sep = ";")
 
 
-# ################################################################################
-# ### Create presence-absence df #################################################
-# ################################################################################
-# 
-# ### For all species
-# ## Read as matrix
-# matrix.presabs.all <- as.matrix(df.sub.species)
-# 
-# ## Replace NA with 0
-# matrix.presabs.all[is.na(matrix.presabs.all)] <- 0
-# 
-# ## Replace values >=1 with 1
-# matrix.presabs.all <- ifelse(matrix.presabs.all >= 1,1,0)
-# 
-# ## Combine dataframes
-# data.rf.presabs.all <- cbind(df.sub.basics,
-#                          as.data.frame(matrix.presabs.all),
-#                          df.sub.greyval,
-#                          df.sub.diff,
-#                          df.sub.sd)
-# # names(data.rf.presabs.all)
-# 
-# write.table(data.rf.presabs.all,
-#             file = file.out.presabs.all,
-#             dec = ",",
-#             quote = FALSE,
-#             col.names = TRUE,
-#             row.names = FALSE,
-#             sep = ";")
-# 
-# ################################################################################
-# ### For species with less than 10 observations in different plots
-# 
-# ## Read as matrix
-# matrix.presabs.10 <- as.matrix(df.sub.10.species)
-# 
-# ## Replace NA with 0
-# matrix.presabs.10[is.na(matrix.presabs.10)] <- 0
-# 
-# ## Replace values >=1 with 1
-# matrix.presabs.10 <- ifelse(matrix.presabs.10 >= 1,1,0)
-# 
-# ## Combine dataframes
-# data.rf.presabs.10 <- cbind(df.sub.10.basics,
-#                          as.data.frame(matrix.presabs.10),
-#                          df.sub.10.greyval,
-#                          df.sub.10.diff,
-#                          df.sub.10.sd)
-# # names(data.rf.presabs.10)
-# 
-# write.table(data.rf.presabs.10,
-#             file = file.out.presabs.10,
-#             dec = ",",
-#             quote = FALSE,
-#             col.names = TRUE,
-#             row.names = FALSE,
-#             sep = ";")
-# 
-# 
-# 
-# 
-# # ################################################################################
-# # ### Calculate prevalence for all species #######################################
-# # ################################################################################
-# # 
-# # ## Calculate prevalence for all species
-# # prevalence.all <- data.frame(colSums(df.sub.species > 0, na.rm = TRUE), 
-# #                              row.names = NULL)
-# # 
-# # ## Combine new df
-# # df.prevalence.all.spec <- cbind(names(df.sub.species), prevalence.all)
-# # 
-# # ## Set colnames
-# # colnames(df.prevalence.all.spec) <- c("species", "prevalence")
-# # 
-# # 
-# # ## Write table
-# # write.table(df.prevalence.all.spec, 
-# #             file = file.out.prevalence.all,
-# #             dec = ",",
-# #             quote = FALSE,
-# #             col.names = TRUE,
-# #             row.names = FALSE,
-# #             sep = ";")
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# # ################################################################################
-# # ### Remove species with less than 10 observations in different plots ###########
-# # ################################################################################
-# # 
-# # data.list <- split(data, data$plot)
-# # tst.list <- do.call("rbind", lapply(seq(data.list), function(i) {
-# #   matrix <- as.matrix(data.list[[i]][, 14:178])
-# #   t <- apply(matrix, 2, sum, na.rm = TRUE)
-# #   t[t == 0] <- NA
-# #   t[t > 0] <- 1
-# #   return(t)
-# # }))
-# # 
-# # index.species10 <- which(apply(tst.list, 2, sum, na.rm = TRUE) >= 10) + 13
-# # data10 <- data[, c(1:13, index.species10, 178:ncol(data))]
-# # names(data10)
-# # 
-# # ## Write table
-# # write.table(data10, 
-# #             file = file.out.specno.10,
-# #             dec = ",",
-# #             quote = FALSE,
-# #             col.names = TRUE,
-# #             row.names = FALSE,
-# #             sep = ";")
-# # 
-# # 
-# # 
-# # 
-# # 
+################################################################################
+### Create prevalence dataframe ################################################
+################################################################################
+
+### For all species
+## Read as matrix
+matrix.prevalence.all <- as.matrix(df.sub.species)
+
+## Replace NA with 0
+matrix.prevalence.all[is.na(matrix.prevalence.all)] <- 0
+
+## Replace values >=1 with 1
+matrix.prevalence.all <- ifelse(matrix.prevalence.all >= 1,1,0)
+
+## Combine dataframes
+data.rf.prevalence.all <- cbind(df.sub.basics,
+                         as.data.frame(matrix.prevalence.all),
+                         df.sub.greyval,
+                         df.sub.diff,
+                         df.sub.sd)
+# names(data.rf.prevalence.all)
+
+write.table(data.rf.prevalence.all,
+            file = file.out.prevalence.all,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")
+
+################################################################################
+### For species with less than 10 observations in different plots
+
+## Read as matrix
+matrix.prevalence.10 <- as.matrix(df.sub.10.species)
+
+## Replace NA with 0
+matrix.prevalence.10[is.na(matrix.prevalence.10)] <- 0
+
+## Replace values >=1 with 1
+matrix.prevalence.10 <- ifelse(matrix.prevalence.10 >= 1,1,0)
+
+## Combine dataframes
+data.rf.prevalence.10 <- cbind(df.sub.10.basics,
+                         as.data.frame(matrix.prevalence.10),
+                         df.sub.10.greyval,
+                         df.sub.10.diff,
+                         df.sub.10.sd)
+names(data.rf.prevalence.10)
+
+write.table(data.rf.prevalence.10,
+            file = file.out.prevalence.10,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")
+
+
+
+
+################################################################################
+### Create simple number of species table for all plots ########################
+################################################################################
+
+## Calculate prevalence for all species
+df.noofspecies.all <- data.frame(colSums(df.sub.species > 0, na.rm = TRUE), 
+                                 row.names = NULL)
+df.noofspecies.10 <- data.frame(colSums(df.sub.10.species > 0, na.rm = TRUE), 
+                                row.names = NULL)
+
+## Combine new df
+df.noofspecies.all <- cbind(names(df.sub.species), df.noofspecies.all)
+df.noofspecies.10 <- cbind(names(df.sub.10.species), df.noofspecies.10)
+
+## Set colnames
+colnames(df.noofspecies.all) <- c("species", "number.of.species")
+colnames(df.noofspecies.10) <- c("species", "number.of.species")
+
+## Write table
+write.table(df.noofspecies.all, 
+            file = file.out.simple.noofspecies.all,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")
+
+write.table(df.noofspecies.10, 
+            file = file.out.simple.noofspecies.10,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")# 
+
+
 # # ################################################################################
 # # ### Stratified sampling - only one random observation per plot #################
 # # ################################################################################

@@ -4,7 +4,7 @@
 ## PREPARE DATASET FOR RANDOMFOREST - ALL OBSERVATIONS                        ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-04-01                                                        ##
+## Version: 2014-04-06                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -32,8 +32,6 @@ file.out.specno.all <- "csv/kili/lvl0400_specno_all.csv"
 file.out.specno.10 <- "csv/kili/lvl0400_specno_10.csv"
 file.out.prevalence.all <- "csv/kili/lvl0400_prevalence_all.csv"
 file.out.prevalence.10 <- "csv/kili/lvl0400_prevalence_10.csv"
-file.out.presabs.all <- "csv/kili/lvl0400_presence-absence_all.csv"
-file.out.presabs.10 <- "csv/kili/lvl0400_presence-absence_10.csv"
 
 
 ################################################################################
@@ -90,8 +88,15 @@ data <- cbind(df.sub.basics,
               df.sub.diff, 
               df.sub.sd)
 
+## Combine braun-blanquet table for single species modeling
+data.rf.braunblanq.all <- cbind(df.sub.basics,
+                                df.sub.species,
+                                df.sub.greyval, 
+                                df.sub.diff, 
+                                df.sub.sd)
+
 ## write braun-blanquet table
-write.table(data, 
+write.table(data.rf.braunblanq.all, 
             file = file.out.braunblanq.all,
             dec = ",",
             quote = FALSE,
@@ -101,6 +106,7 @@ write.table(data,
 
 ################################################################################
 ### Remove species with less than 10 observations in different plots ###########
+### Most abundant species ######################################################
 ################################################################################
 
 data10.list <- split(data, data$plot)
@@ -114,18 +120,27 @@ data10.tmp.list <- do.call("rbind", lapply(seq(data10.list), function(i) {
 
 data10.species.index <- which(apply(data10.tmp.list, 2, sum, na.rm = TRUE) >= 10) + 13
 data10 <- data[, c(1:13, data10.species.index, 179:ncol(data))]
-# names(data10)
+names(data10)
 
-## Subset data10
+## Subset data10 (most abundant species)
 df.sub.10.basics <- data10[1:12]
 df.sub.10.specno <- data10[13]
-df.sub.10.species <- data10[14:69]
-df.sub.10.greyval <- data10[70:99]
-df.sub.10.diff <- data10[100:127]
-df.sub.10.sd <- data10[128:157]
+df.sub.10.species <- data10[14:68]
+df.sub.10.greyval <- data10[69:98]
+df.sub.10.diff <- data10[99:126]
+df.sub.10.sd <- data10[127:156]
 
-## write braun-blanquet table
-write.table(data10, 
+
+## Combine braun-blanquet table for single species modeling
+## Most abundant species
+data.rf.braunblanq.10 <- cbind(df.sub.10.basics,
+                               df.sub.10.species,
+                               df.sub.10.greyval,
+                               df.sub.10.diff,
+                               df.sub.10.sd)
+
+## write braun-blanquet table for most abundant species
+write.table(data.rf.braunblanq.10, 
             file = file.out.braunblanq.10,
             dec = ",",
             quote = FALSE,
@@ -134,71 +149,58 @@ write.table(data10,
             sep = ";")
 
 
-### Test data10
-
-test.data10.matrix <- as.matrix(df.sub.10.species)
-test.data10.matrix[is.na(test.data10.matrix)] <- 0
-test.data10.matrix <- ifelse(test.data10.matrix >= 1,1,0)
-df.test.data10 <- as.data.frame(colSums(test.data10.matrix, na.rm = TRUE))
-
-print(df.test.data10)
-summary(df.test.data10)
-
-
-
-
-
-
-
-
-
-
-
-
+# ## Test data10 (most abundant species)
+# test.data10.matrix <- as.matrix(df.sub.10.species)
+# test.data10.matrix[is.na(test.data10.matrix)] <- 0
+# test.data10.matrix <- ifelse(test.data10.matrix >= 1,1,0)
+# df.test.data10 <- as.data.frame(colSums(test.data10.matrix, na.rm = TRUE))
 # 
-# 
-# 
-# ################################################################################
-# ### Create prevalence dataframe for RandomForest ###############################
-# ################################################################################
-# 
-# ### For all species
-# data.rf.specno <- cbind(df.sub.basics,
-#                         df.sub.specno,
-#                         df.sub.species,
-#                         df.sub.greyval,
-#                         df.sub.diff,
-#                         df.sub.sd)
-# 
-# ## Write table - all species - bands containing NA values removed
-# write.table(data.rf.specno, 
-#             file = file.out.specno.all,
-#             dec = ",",
-#             quote = FALSE,
-#             col.names = TRUE,
-#             row.names = FALSE,
-#             sep = ";")
-# 
-# ################################################################################
-# ### For species with less than 10 observations in different plots
-# 
-# data.rf.specno <- cbind(df.sub.10.basics,
-#                         df.sub.10.specno,
-#                         df.sub.10.species,
-#                         df.sub.10.greyval,
-#                         df.sub.10.diff,
-#                         df.sub.10.sd)
-# 
-# ## Write table - all species - bands containing NA values removed
-# write.table(data.rf.specno, 
-#             file = file.out.specno.10,
-#             dec = ",",
-#             quote = FALSE,
-#             col.names = TRUE,
-#             row.names = FALSE,
-#             sep = ";")
-# 
-# 
+# print(df.test.data10)
+# summary(df.test.data10)
+
+
+################################################################################
+### Create number of species dataframe for RandomForest ########################
+################################################################################
+
+### For all species
+data.rf.specno.all <- cbind(df.sub.basics,
+                            df.sub.specno,
+#                             df.sub.species,
+                            df.sub.greyval,
+                            df.sub.diff,
+                            df.sub.sd)
+
+## Write table - all species - bands containing NA values removed
+write.table(data.rf.specno.all, 
+            file = file.out.specno.all,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")
+
+################################################################################
+### For species with less than 10 observations in different plots
+### Most abundant species
+
+data.rf.specno.10 <- cbind(df.sub.10.basics,
+                           df.sub.10.specno,
+#                            df.sub.10.species,
+                           df.sub.10.greyval,
+                           df.sub.10.diff,
+                           df.sub.10.sd)
+
+## Write table - most abundant species - bands containing NA values removed
+write.table(data.rf.specno.10, 
+            file = file.out.specno.10,
+            dec = ",",
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";")
+
+
 # ################################################################################
 # ### Create presence-absence df #################################################
 # ################################################################################

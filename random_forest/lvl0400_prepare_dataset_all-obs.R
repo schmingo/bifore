@@ -298,29 +298,4 @@ write.table(df.noofspecies.10,
             quote = FALSE,
             col.names = TRUE,
             row.names = FALSE,
-            sep = ";")# 
-
-
-# # ################################################################################
-# # ### Stratified sampling - only one random observation per plot #################
-# # ################################################################################
-# # 
-# # set.seed(50)
-# # 
-# # data.strat <- data[strata(data, 
-# #                           stratanames = "plot", 
-# #                           size = rep(1,length(unique(data$plot))),
-# #                           method = "srswor")$ID_unit, ]
-# # 
-# # 
-# # ## Write table
-# # write.table(data.strat, 
-# #             file = path.biodiversity.strat.plot,
-# #             dec = ",",
-# #             quote = FALSE,
-# #             col.names = TRUE,
-# #             row.names = FALSE,
-# #             sep = ";")
-# 
-# 
-# 
+            sep = ";")

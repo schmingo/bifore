@@ -4,12 +4,13 @@
 ## PREPARE DATASET FOR RANDOMFOREST - ALL OBSERVATIONS                        ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-04-06                                                        ##
+## Version: 2014-04-07                                                        ##
 ##                                                                            ##
 ################################################################################
 
 
 ## Clear workspace
+cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries

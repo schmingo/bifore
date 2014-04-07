@@ -13,7 +13,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("sampling")
+lib <- c()
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory

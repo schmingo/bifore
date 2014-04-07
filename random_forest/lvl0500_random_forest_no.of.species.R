@@ -4,12 +4,13 @@
 ## RANDOM FOREST FOR MODIS DATA                                               ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-16                                                        ##
+## Version: 2014-04-07                                                        ##
 ##                                                                            ##
 ################################################################################
 
 
 ## Clear workspace
+cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
@@ -25,7 +26,7 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0400_biodiversity_data_all_spec.csv",
+data.raw <- read.csv2("csv/kili/lvl0400_rf_number-of-species_all.csv",
                       dec = ",",
                       header = TRUE,
                       stringsAsFactors = FALSE)
@@ -38,12 +39,12 @@ data <- data.raw
 ################################################################################
 
 ## split incoming dataset
-tmp.speciesnr <- data[9]
+tmp.speciesnr <- data[13]
 names(tmp.speciesnr) <- "SpeciesNr"
 
-df.greyval <- data[179:208]
-df.diff <- data[209:236]
-df.sd <- data[237:266]
+df.greyval <- data[14:43]
+df.diff <- data[44:71]
+df.sd <- data[72:101]
 
 
 ## Create multiple dataframes with species number as predictor datasets
@@ -155,3 +156,4 @@ varimp.plot <- varImpPlot(train.rf, sort = TRUE, n.var = 30,
 ## splitting on the variable, averaged over all trees. 
 ## For classification, the node impurity is measured by the Gini index. 
 ## For regression, it is measured by residual sum of squares.
+

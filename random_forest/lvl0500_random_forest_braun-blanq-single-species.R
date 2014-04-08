@@ -4,7 +4,7 @@
 ## RANDOM FOREST FOR MODIS DATA                                               ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-12                                                        ##
+## Version: 2014-04-08                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -13,7 +13,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("randomForest", "foreach")
+lib <- c("randomForest")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory

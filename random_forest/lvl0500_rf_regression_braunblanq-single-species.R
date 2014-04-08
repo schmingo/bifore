@@ -94,11 +94,11 @@ test.data <- df.input.rf[-index, ]
 ################################################################################
 
 predictor_modisVAL <- train.data[,1:ncol(train.data)-1]
-response_speciesCLASS <- as.factor(train.data[,ncol(train.data)])
+response_species <-train.data[,ncol(train.data)]
 
 ## Function ####################################################################
 train.rf <- randomForest(x = predictor_modisVAL,
-                         y = response_speciesCLASS,
+                         y = response_species,
                          importance = TRUE,
                          ntree = 500,
                          mtry = 2,
@@ -107,14 +107,13 @@ train.rf <- randomForest(x = predictor_modisVAL,
                          do.trace = 100)
 
 ## Define output image | open image port
-# png(paste0("images/randomForest_classification_", species, ".png"), 
+# png(paste0("images/randomForest_regression_", species, ".png"), 
 #     width = 1024 * 6, 
 #     height = 748 * 6, 
 #     units = "px", 
 #     res = 600)
 
-rf.plot <- plot(train.rf, main = paste0(species, "\n RandomForest regression \n", 
-                                        "Mean squared error"))
+rf.plot <- plot(train.rf, main = paste0(species, "\n RandomForest regression \n Mean squared error"))
 
 rf.plot
 
@@ -122,9 +121,6 @@ rf.plot
 # graphics.off()
 
 print(train.rf)
-
-print("Observed classes")
-table(tmp.species)
 
 
 ################################################################################

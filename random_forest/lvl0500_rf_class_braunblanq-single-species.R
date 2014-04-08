@@ -10,6 +10,7 @@
 
 
 ## Clear workspace
+cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
@@ -28,54 +29,30 @@ species <- "Pnorisa.squalus"
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0300_biodiversity_data.csv",
+data.raw <- read.csv2("csv/kili/lvl0400_rf_braun-blanquet_all.csv",
                       dec = ",",
                       header = TRUE,
                       stringsAsFactors = FALSE)
 
 
 ################################################################################
-### Subsetting data ############################################################
-################################################################################
-
-### Eliminate columns containing NA values and combine data in several ways ####
-### to get different dataframe combinations ####################################
-
-df.greyval.all <- data.raw[69:106]
-df.diff.all <- data.raw[107:144]
-df.sd.all <- data.raw[145:182]
-
-
-## Create NA tables
-df.na.greyval <- data.frame(colSums(is.na(df.greyval.all)))
-names(df.na.greyval) <- c("NAs out of 225")
-
-df.na.diff <- data.frame(colSums(is.na(df.diff.all)))
-names(df.na.diff) <- c("NAs out of 225")
-
-df.na.sd <- data.frame(colSums(is.na(df.sd.all)))
-names(df.na.sd) <- c("NAs out of 225")
-
-
-## Eliminate columns containing NA values
-df.greyval <- cbind(data.raw[69:78], data.raw[87:106])  ## greyvalues
-df.diff <- cbind(data.raw[108:116], data.raw[126:144])  ## diff
-df.sd <- cbind(data.raw[145:154], data.raw[163:182])    ## sd 
-
-
-################################################################################
 ### Combining data for randomForest ############################################
 ################################################################################
 
+## Split incoming dataset
+df.greyval <- data.raw[178:207]  ## greyvalues
+df.diff <- data.raw[208:235]  ## diff
+df.sd <- data.raw[236:265]  ## sd 
+
 ## Select species data
-species.df <- data.frame(data.raw[,names(data.raw) %in% c(species)])
-names(species.df) <- species
+df.species <- data.frame(data.raw[,names(data.raw) %in% c(species)])
+names(df.species) <- species
 
 ## Replace NA-values by 0
-species.df[is.na(species.df)] <- 0
-tmp.species <- species.df
+df.species[is.na(df.species)] <- 0
+tmp.species <- df.species
 # 
-# tmp.species.list <- as.list(t(species.df))
+# tmp.species.list <- as.list(t(df.species))
 # tmp.species.list <- formatC(tmp.species.list, 
 #                             width = 2, 
 #                             format = "d", 
@@ -105,7 +82,7 @@ set.seed(50)
 
 index <- sample(1:nrow(df.input.rf), nrow(df.input.rf)*.75)
 length(index)
-index
+# index
 
 train.data <- df.input.rf[index, ]
 test.data <- df.input.rf[-index, ]
@@ -148,6 +125,8 @@ print(train.rf)
 
 print("Observed classes")
 table(tmp.species)
+
+
 ################################################################################
 ### Prediction #################################################################
 ################################################################################
@@ -198,3 +177,4 @@ varimp.plot <- varImpPlot(train.rf, sort = TRUE, n.var = 30,
 ## splitting on the variable, averaged over all trees. 
 ## For classification, the node impurity is measured by the Gini index. 
 ## For regression, it is measured by residual sum of squares.
+

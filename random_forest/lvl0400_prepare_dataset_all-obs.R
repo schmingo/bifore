@@ -34,7 +34,7 @@ file.out.specno.10 <- "csv/kili/lvl0400_rf_number-of-species_10.csv"
 file.out.prevalence.all <- "csv/kili/lvl0400_rf_prevalence_all.csv"
 # file.out.prevalence.10 <- "csv/kili/lvl0400_rf_prevalence_10.csv"
 
-file.out.simple.noofspecies.all <- "csv/kili/lvl0400_simple_number.of.species_all.csv"
+file.out.simple.noofspecies.all <- "csv/kili/lvl0400_simple_number-of-species_all.csv"
 file.out.simple.noofspecies.10 <- "csv/kili/lvl0400_simple_number-of-species_10.csv"
 
 

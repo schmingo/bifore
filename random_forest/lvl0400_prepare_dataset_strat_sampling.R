@@ -28,11 +28,11 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 file.in.0300 <- "csv/kili/lvl0300_biodiversity_data.csv"
 file.out.braunblanq.all <- "csv/kili/lvl0400_rf_strat_braun-blanquet_all.csv"
-file.out.braunblanq.10 <- "csv/kili/lvl0400_rf_strat_braun-blanquet_10.csv"
+# file.out.braunblanq.10 <- "csv/kili/lvl0400_rf_strat_braun-blanquet_10.csv"
 # file.out.specno.all <- "csv/kili/lvl0400_rf_strat_number-of-species_all.csv"
 # file.out.specno.10 <- "csv/kili/lvl0400_rf_strat_number-of-species_10.csv"
 file.out.prevalence.all <- "csv/kili/lvl0400_rf_strat_prevalence_all.csv"
-file.out.prevalence.10 <- "csv/kili/lvl0400_rf_strat_prevalence_10.csv"
+# file.out.prevalence.10 <- "csv/kili/lvl0400_rf_strat_prevalence_10.csv"
 
 # file.out.simple.noofspecies.all <- "csv/kili/lvl0400_strat_simple_number.of.species_all.csv"
 # file.out.simple.noofspecies.10 <- "csv/kili/lvl0400_strat_simple_number.of.species_10.csv"

@@ -107,11 +107,11 @@ train.rf <- randomForest(x = predictor_modisVAL,
                          do.trace = 100)
 
 ## Define output image | open image port
-# png(paste0("images/randomForest_classification_", species, ".png"), 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png(paste0("images/rf_", species, "_classification_braunblanq.png"), 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
 rf.plot <- plot(train.rf, main = paste0(species, "\n RandomForest classification \n", 
                                         "Mean squared error"))
@@ -153,15 +153,15 @@ varimp <- importance(train.rf)
 
 
 ## Define output image | open image port
-# png(paste0("images/randomForest_classification_", species, "_varImp.png"), 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png(paste0("images/rf_", species, "_classification_braunblanq_varImp.png"), 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 varimp.plot <- varImpPlot(train.rf, sort = TRUE, n.var = 30,
                           main = paste0(species," - Variable importance"))
 ## Close image port
-# graphics.off()
+graphics.off()
 
 
 ## The first measure is computed from permuting OOB data: For each tree, 

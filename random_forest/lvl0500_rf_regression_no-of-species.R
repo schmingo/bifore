@@ -93,7 +93,7 @@ train.rf <- randomForest(x = predictor_modisVAL,
 print(train.rf)
 
 ## Define output image | open image port
-png("images/randomForest_regression_speciesno.png", 
+png("images/rf_speciesno_regression.png", 
     width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 
@@ -131,7 +131,7 @@ varimp <- importance(train.rf)
 
 
 ## Define output image | open image port
-png("images/randomForest_regression_speciesno_varImp.png", 
+png("images/rf_speciesno_regression_varImp.png", 
     width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 

@@ -96,7 +96,7 @@ train.rf <- randomForest(x = predictor_modisVAL,
                          do.trace = 100)
 
 ## Define output image | open image port
-png(paste0("images/randomForest_regression_", species, "_prevalence.png"), 
+png(paste0("images/rf_", species, "_classification_prevalence.png"), 
     width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 
@@ -143,7 +143,7 @@ varimp <- importance(train.rf)
 
 
 ## Define output image | open image port
-png(paste0("images/randomForest_classification_", species, "_prevalence_varImp.png"), 
+png(paste0("images/rf_", species, "_classification_prevalence_varImp.png"), 
     width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 

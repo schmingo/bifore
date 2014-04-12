@@ -93,16 +93,16 @@ train.rf <- randomForest(x = predictor_modisVAL,
 print(train.rf)
 
 ## Define output image | open image port
-# png("images/randomForest_regression_speciesno.png", 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png("images/randomForest_regression_speciesno.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
 plot(train.rf, main = "Number of species \n RandomForest regression \n Mean squared error")
 
 ## Close image port
-# graphics.off()
+graphics.off()
 
 
 print(train.rf)
@@ -131,17 +131,17 @@ varimp <- importance(train.rf)
 
 
 ## Define output image | open image port
-# png("images/randomForest_regression_speciesno_varImp.png", 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png("images/randomForest_regression_speciesno_varImp.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
 varimp.plot <- varImpPlot(train.rf, sort = TRUE, n.var = 30,
                           main = paste0("Number of species - Variable importance"))
 
 ## Close image port
-# graphics.off()
+graphics.off()
 
 ## The first measure is computed from permuting OOB data: For each tree, 
 ## the prediction error on the out-of-bag portion of the data is recorded 

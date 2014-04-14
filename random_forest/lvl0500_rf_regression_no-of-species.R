@@ -98,13 +98,13 @@ train.rf <- randomForest(x = predictor_modisVAL,
 print(train.rf)
 
 ## Define output image | open image port
-# png("images/rf_speciesno_regression.png", 
+# png("images/rf_speciesno_regression_10.png", 
 #     width = 1024 * 6, 
 #     height = 748 * 6, 
 #     units = "px", 
 #     res = 600)
 
-plot(train.rf, main = "Number of species \n RandomForest regression \n Mean squared error")
+plot(train.rf, main = "Number of species (10)\n RandomForest regression \n Mean squared error")
 
 ## Close image port
 # graphics.off()
@@ -123,6 +123,7 @@ test.predict <- data.frame(predict(train.rf, test.data))
 predict.compare <- cbind(test.data[,ncol(test.data)], 
                          test.predict,
                          abs(test.predict-test.data[,ncol(test.data)]))
+
 names(predict.compare) <- c("real.values", "predicted.values", "diff.abs")
 
 summary(predict.compare$diff)
@@ -136,14 +137,14 @@ varimp <- importance(train.rf)
 
 
 ## Define output image | open image port
-# png("images/rf_speciesno_regression_varImp.png", 
+# png("images/rf_speciesno_regression_varImp_10.png", 
 #     width = 1024 * 6, 
 #     height = 748 * 6, 
 #     units = "px", 
 #     res = 600)
 
 varimp.plot <- varImpPlot(train.rf, sort = TRUE, n.var = 30,
-                          main = paste0("Number of species - Variable importance"))
+                          main = paste0("Number of species - Variable importance (10)"))
 
 ## Close image port
 # graphics.off()

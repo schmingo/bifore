@@ -126,10 +126,18 @@ data10.species.index <- which(apply(data10.tmp.list, 2, sum, na.rm = TRUE) >= 10
 data10 <- data[, c(1:13, data10.species.index, 179:ncol(data))]
 names(data10)
 
+
+## Calculate new number of species
+data10$nr.of.species <- apply(data10,
+                              1,
+                              function(x) sum(!is.na(x[14:68]))) # check df.sub.10.species - should have same borders
+
+
+
 ## Subset data10 (most abundant species)
 df.sub.10.basics <- data10[1:12]
 df.sub.10.specno <- data10[13]
-df.sub.10.species <- data10[14:68]
+df.sub.10.species <- data10[14:68] # check function above - should have same borders
 df.sub.10.greyval <- data10[69:98]
 df.sub.10.diff <- data10[99:126]
 df.sub.10.sd <- data10[127:156]

@@ -29,7 +29,7 @@ species <- "Pnorisa.squalus"
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0400_rf_prevalence_all.csv",
+data.raw <- read.csv2("csv/kili/lvl0400_rf_strat_prevalence_all.csv",
                       dec = ",",
                       header = TRUE,
                       stringsAsFactors = FALSE)
@@ -49,6 +49,8 @@ df.species <- data.frame(data.raw[,names(data.raw) %in% c(species)])
 names(df.species) <- species
 
 tmp.species <- df.species
+
+summary(tmp.species)
 
 ## Create multiple dataframes with single species as predictor datasets
 df.spec.greyval <- cbind(df.greyval, tmp.species)
@@ -76,6 +78,9 @@ length(index)
 train.data <- df.input.rf[index, ]
 test.data <- df.input.rf[-index, ]
 
+nrow(train.data)
+nrow(test.data)
+
 
 ################################################################################
 ### Random Forest function #####################################################
@@ -96,11 +101,11 @@ train.rf <- randomForest(x = predictor_modisVAL,
                          do.trace = 100)
 
 ## Define output image | open image port
-png(paste0("images/rf_", species, "_classification_prevalence.png"), 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png(paste0("images/rf_", species, "_classification_prevalence.png"), 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
 rf.plot <- plot(train.rf, main = paste0("Prevalence ", species, 
                                         "\n RandomForest classification \n", 
@@ -143,15 +148,16 @@ varimp <- importance(train.rf)
 
 
 ## Define output image | open image port
-png(paste0("images/rf_", species, "_classification_prevalence_varImp.png"), 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png(paste0("images/rf_", species, "_classification_prevalence_varImp.png"), 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
+
 varimp.plot <- varImpPlot(train.rf, sort = TRUE, n.var = 30,
                           main = paste0(species," - Variable importance"))
 ## Close image port
-graphics.off()
+# graphics.off()
 
 
 ## The first measure is computed from permuting OOB data: For each tree, 

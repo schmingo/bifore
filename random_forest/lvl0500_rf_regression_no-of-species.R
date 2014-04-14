@@ -26,7 +26,7 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0400_rf_number-of-species_all.csv",
+data.raw <- read.csv2("csv/kili/lvl0400_rf_number-of-species_10.csv",
                       dec = ",",
                       header = TRUE,
                       stringsAsFactors = FALSE)
@@ -41,6 +41,8 @@ data <- data.raw
 ## split incoming dataset
 tmp.speciesnr <- data[13]
 names(tmp.speciesnr) <- "SpeciesNr"
+
+summary(tmp.speciesnr)
 
 df.greyval <- data[14:43]
 df.diff <- data[44:71]

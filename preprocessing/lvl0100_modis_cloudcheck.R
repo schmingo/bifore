@@ -15,7 +15,7 @@
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("modiscloud", "devtools", "doParallel", "rgdal", "raster", "ggplot2", "foreach")
+lib <- c("modiscloud", "devtools", "rgdal", "raster", "foreach", "doParallel", "ggplot2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
@@ -32,14 +32,14 @@ ncores <- detectCores()
 
 path.biodiversity.csv <- "Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0050_biodiversity_data.csv"
 path.nocloud.csv <- "Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0100_biodiversity_data.csv"
-path.hdf.in <- "/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf/"
-path.hdf.sub <- "/media/schmingo/Daten/Diplomarbeit/myd03-35_hdf_daytime/"
-path.tif.cloudmask <- "/media/schmingo/Daten/Diplomarbeit/myd_cloudmask_tif_daytime/"
+path.hdf.in <- "Daten/Diplomarbeit/data/myd03-35_hdf/"
+path.hdf.sub <- "Daten/Diplomarbeit/data/myd03-35_hdf_daytime/"
+path.tif.cloudmask <- "Daten/Diplomarbeit/data/myd_cloudmask_tif_daytime/"
 mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
 
 ## Load required modules
 source("Diplomarbeit/bifore/preprocessing/modules/lvl0110_writeMRTSwathParamFile_cloudcheck.R")
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0110_runSwath2Grid.R")
+source("Diplomarbeit/bifore/preprocessing/modules/lvl0110_runSwath2Grid.R")
 
 ################################################################################
 ### Import biodiversity dataset ################################################

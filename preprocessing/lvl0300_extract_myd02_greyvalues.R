@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-17                                                        ##
+## Version: 2014-04-17                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -14,11 +14,11 @@ rm(list = ls(all = TRUE))
 
 
 ## Required libraries
-lib <- c("rgdal", "doParallel", "raster", "matrixStats", "doSNOW")
+lib <- c("rgdal", "doParallel", "raster", "matrixStats", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("/home/schmingo/")
 
 ncores <- detectCores()-1
 
@@ -27,23 +27,15 @@ ncores <- detectCores()-1
 ### Set filepaths ##############################################################
 ################################################################################
 
-# path.hdf <- "/media/schmingo/Daten/Diplomarbeit/myd02-03_hdf/"
-# path.tif <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif/"
-# path.tif.na <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif_na/"
-# path.tif.calc <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif_calc/"
-# path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
-# path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data.csv"
-
-## Sample filepaths
-path.hdf <- "/media/schmingo/Daten/Diplomarbeit/myd02-03_hdf/"
-path.tif <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif/"
-path.tif.na <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif_na/"
-path.tif.calc <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif_calc/"
-path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
-path.biodiversity.csv.out <- "csv/kili/lvl0300_biodiversity_data.csv"
+path.hdf <- "Daten/Diplomarbeit/data/myd02-03_hdf/"
+path.tif <- "Daten/Diplomarbeit/data/myd02_tif/"
+path.tif.na <- "Daten/Diplomarbeit/data/myd02_tif_na/"
+path.tif.calc <- "Daten/Diplomarbeit/data/myd02_tif_calc/"
+path.biodiversity.csv <- "Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0100_biodiversity_data.csv"
+path.biodiversity.csv.out <- "Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0300_biodiversity_data.csv"
 
 ## Source modules
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
+source("Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
 
 
 ################################################################################

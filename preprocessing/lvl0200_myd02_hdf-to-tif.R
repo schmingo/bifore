@@ -5,7 +5,7 @@
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-28                                                        ##
+## Version: 2014-04-17                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -17,18 +17,18 @@ lib <- c("modiscloud", "devtools", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Diplomarbeit/")
+setwd("/home/schmingo/")
 
-path.hdf.in <- "/media/schmingo/Daten/Diplomarbeit/myd02-03_hdf/"
-tifsdir <- "/media/schmingo/Daten/Diplomarbeit/myd02_tif/"
+path.hdf.in <- "Daten/Diplomarbeit/data/myd02-03_hdf/"
+tifsdir <- "Daten/Diplomarbeit/data/myd02_tif/"
 mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
 
 ## Load required modules
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_1000.R")
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_500.R")
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_250.R")
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0220_runSwath2Grid.R")
-source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0230_renameSuffix.R")
+source("Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_1000.R")
+source("Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_500.R")
+source("Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_250.R")
+source("Diplomarbeit/bifore/preprocessing/modules/lvl0220_runSwath2Grid.R")
+source("Diplomarbeit/bifore/preprocessing/modules/lvl0230_renameSuffix.R")
 
 ## Check actual time
 starttime <- Sys.time()

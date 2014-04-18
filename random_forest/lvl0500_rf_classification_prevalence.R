@@ -50,7 +50,7 @@ names(df.species) <- species
 
 tmp.species <- df.species
 
-summary(tmp.species)
+# summary(tmp.species)
 
 ## Create multiple dataframes with single species as predictor datasets
 df.spec.greyval <- cbind(df.greyval, tmp.species)
@@ -114,7 +114,7 @@ rf.plot <- plot(train.rf, main = paste0("Prevalence ", species,
 rf.plot
 
 ## Close image port
-graphics.off()
+# graphics.off()
 
 print(train.rf)
 

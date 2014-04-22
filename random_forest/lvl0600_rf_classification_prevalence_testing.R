@@ -18,7 +18,7 @@ rm(list = ls(all = TRUE))
 lib <- c("randomForest", "foreach", "doParallel")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
-ncores <- detectCores()-1
+# ncores <- detectCores()-1
 
 ## set working directory
 # setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
@@ -44,16 +44,16 @@ data.raw <- read.csv2("lvl0400_rf_strat_prevalence_10.csv",
 set.seed(50)
 
 ## List species
-lst.species <- names(data.raw[13:67])
+lst.species <- names(data.raw[13:55])
 lst.species
 
 ## Split incoming dataset
-df.greyval <- data.raw[68:97]  ## greyvalues
-df.diff <- data.raw[98:125]  ## diff
-df.sd <- data.raw[126:155]  ## sd 
+df.greyval <- data.raw[56:85]  ## greyvalues
+df.diff <- data.raw[86:113]  ## diff
+df.sd <- data.raw[114:143]  ## sd 
 
 
-s <- lst.species[47]
+s <- lst.species[37]
 
 ## Select species data
 df.species <- data.frame(data.raw[,names(data.raw) %in% c(s)])
@@ -114,7 +114,10 @@ conf.matrix <- as.data.frame(c(mean(conf.1.1),
                                mean(conf.1.3),
                                mean(conf.2.1), 
                                mean(conf.2.2),
-                               mean(conf.2.3)))
+                               mean(conf.2.3),
+                               colSums(tmp.species)))
+
+
 
 ## Set colnames (species)
 names(conf.matrix) <- s
@@ -128,7 +131,8 @@ df.rownames <- as.data.frame(c("Actual=0, predict=0",
                                "Class.error 0",
                                "Actual=1, predict=0",
                                "Actual=1, predict=1",
-                               "Class.error 1"))
+                               "Class.error 1",
+                               "no.of.species"))
 names(df.rownames) <- "confusion.matrix"
 
 ## Set rownames for new dataframe
@@ -144,3 +148,4 @@ write.table(conf.matrix,
             col.names = TRUE,
             row.names = FALSE,
             sep = ";")
+

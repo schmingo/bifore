@@ -89,8 +89,10 @@ species.conf.matrix <- foreach(s = lst.species,
   ## Initialize confusion matrix variables
   conf.1.1 = NULL
   conf.1.2 = NULL
+  conf.1.3 = NULL
   conf.2.1 = NULL
   conf.2.2 = NULL
+  conf.2.3 = NULL
   
   ## Function ##################################################################
   
@@ -100,7 +102,7 @@ species.conf.matrix <- foreach(s = lst.species,
                              y = response_speciesCLASS,
                              importance = TRUE,
                              ntree = 500,
-                             mtry = 2,
+#                              mtry = 5,
                              nodesize = 2,
                              type="classification",
                              do.trace = FALSE)

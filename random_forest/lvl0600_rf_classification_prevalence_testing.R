@@ -52,12 +52,6 @@ df.greyval <- data.raw[68:97]  ## greyvalues
 df.diff <- data.raw[98:125]  ## diff
 df.sd <- data.raw[126:155]  ## sd 
 
-## Calculate randomForest for all Species
-# registerDoParallel(cl <- makeCluster(ncores))
-# 
-# species.conf.matrix <- foreach(s = lst.species, 
-#                                .combine = "cbind", 
-#                                .packages = lib) %dopar% {
 
 s <- lst.species[47]
 
@@ -89,18 +83,18 @@ response_speciesCLASS <- as.factor(train.data[,ncol(train.data)])
 ## Initialize confusion matrix variables
 conf.1.1 = NULL
 conf.1.2 = NULL
+conf.1.3 = NULL
 conf.2.1 = NULL
 conf.2.2 = NULL
+conf.2.3 = NULL
 
 ## Function ##################################################################
-
-#   foreach(i = seq(1:100)) %do% {
 
 train.rf <- randomForest(x = predictor_modisVAL,
                          y = response_speciesCLASS,
                          importance = TRUE,
                          ntree = 500,
-                         mtry = 2,
+#                          mtry = 5,
                          nodesize = 2,
                          type="classification",
                          do.trace = FALSE)
@@ -109,29 +103,22 @@ confusion.matrix = train.rf$confusion
 
 conf.1.1 = train.rf$confusion[1,1]
 conf.1.2 = train.rf$confusion[1,2]
+conf.1.3 = train.rf$confusion[1,3]
 conf.2.1 = train.rf$confusion[2,1]
 conf.2.2 = train.rf$confusion[2,2]
-#   }
-
-## Get mean values
-mean(conf.1.1)
-mean(conf.1.2)
-mean(conf.2.1)
-mean(conf.2.2)
+conf.2.3 = train.rf$confusion[2,3]
 
 ## Save mean confusion matrix values into a dataframe
 conf.matrix <- as.data.frame(c(mean(conf.1.1), 
-                               mean(conf.1.2), 
+                               mean(conf.1.2),
+                               mean(conf.1.3),
                                mean(conf.2.1), 
-                               mean(conf.2.2)))
+                               mean(conf.2.2),
+                               mean(conf.2.3)))
 
 ## Set colnames (species)
 names(conf.matrix) <- s
 
 conf.matrix
 
-confusion.matrix = train.rf$confusion    
-confusion.matrix
-
-train.rf$confusion[1,3]
-train.rf$confusion[2,3]
+train.rf$confusion    

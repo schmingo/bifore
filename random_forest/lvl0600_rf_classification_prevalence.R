@@ -15,7 +15,7 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("randomForest")
+lib <- c("randomForest", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
@@ -77,19 +77,34 @@ train.data <- df.spec.greyval ## Insert input dataset here!
 predictor_modisVAL <- train.data[,1:ncol(train.data)-1]
 response_speciesCLASS <- as.factor(train.data[,ncol(train.data)])
 
+## Initiate rF variables
+conf.1.1 = NULL
+conf.1.2 = NULL
+conf.2.1 = NULL
+conf.2.2 = NULL
+
 ## Function ####################################################################
-train.rf <- randomForest(x = predictor_modisVAL,
-                         y = response_speciesCLASS,
-                         importance = TRUE,
-                         ntree = 500,
-                         mtry = 2,
-                         nodesize = 2,
-                         type="classification",
-                         do.trace = 100)
+set.seed(50)
 
+foreach(i = seq(1:100)) %do% {
+  
+  train.rf <- randomForest(x = predictor_modisVAL,
+                           y = response_speciesCLASS,
+                           importance = TRUE,
+                           ntree = 500,
+                           mtry = 2,
+                           nodesize = 2,
+                           type="classification",
+                           do.trace = FALSE)
+  
+  conf.1.1[i] = train.rf$confusion[1,1]
+  conf.1.2[i] = train.rf$confusion[1,2]
+  conf.2.1[i] = train.rf$confusion[2,1]
+  conf.2.2[i] = train.rf$confusion[2,2]
+}
 
-train.rf$confusion
-train.rf$confusion[1,1]
-train.rf$confusion[1,2]
-train.rf$confusion[2,1]
-train.rf$confusion[2,2]
+## Get mean values
+mean(conf.1.1)
+mean(conf.1.2)
+mean(conf.2.1)
+mean(conf.2.2)

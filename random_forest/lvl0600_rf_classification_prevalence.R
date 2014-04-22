@@ -5,7 +5,7 @@
 ## FURTHER PREVALENCE CALCULATIONS FOR ALL SPECIES                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-04-18                                                        ##
+## Version: 2014-04-22                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -107,21 +107,28 @@ species.conf.matrix <- foreach(s = lst.species,
     
     conf.1.1[i] = train.rf$confusion[1,1]
     conf.1.2[i] = train.rf$confusion[1,2]
+    conf.1.3[i] = train.rf$confusion[1,3]
     conf.2.1[i] = train.rf$confusion[2,1]
     conf.2.2[i] = train.rf$confusion[2,2]
+    conf.2.3[i] = train.rf$confusion[2,3]
+
   }
   
   ## Get mean values
   mean(conf.1.1)
   mean(conf.1.2)
+  mean(conf.1.3)
   mean(conf.2.1)
   mean(conf.2.2)
+  mean(conf.2.3)
   
   ## Save mean confusion matrix values into a dataframe
   conf.matrix <- as.data.frame(c(mean(conf.1.1), 
-                                 mean(conf.1.2), 
+                                 mean(conf.1.2),
+                                 mean(conf.1.3),
                                  mean(conf.2.1), 
-                                 mean(conf.2.2)))
+                                 mean(conf.2.2),
+                                 mean(conf.2.3)))
   
   ## Set colnames (species)
   names(conf.matrix) <- s

@@ -47,13 +47,13 @@ data.raw <- read.csv2("lvl0400_rf_strat_prevalence_10.csv",
 set.seed(50)
 
 ## List species
-lst.species <- names(data.raw[13:67])
+lst.species <- names(data.raw[13:55])
 lst.species
 
 ## Split incoming dataset
-df.greyval <- data.raw[68:97]  ## greyvalues
-df.diff <- data.raw[98:125]  ## diff
-df.sd <- data.raw[126:155]  ## sd 
+df.greyval <- data.raw[56:85]  ## greyvalues
+df.diff <- data.raw[86:113]  ## diff
+df.sd <- data.raw[114:143]  ## sd 
 
 ## Calculate randomForest for all Species
 registerDoParallel(cl <- makeCluster(ncores))
@@ -131,7 +131,8 @@ species.conf.matrix <- foreach(s = lst.species, .combine = "cbind", .packages = 
                                  mean(conf.1.3),
                                  mean(conf.2.1), 
                                  mean(conf.2.2),
-                                 mean(conf.2.3)))
+                                 mean(conf.2.3),
+                                 colSums(tmp.species)))
   
   ## Set colnames (species)
   names(conf.matrix) <- s
@@ -150,7 +151,8 @@ df.rownames <- as.data.frame(c("Actual=0, predict=0",
                                "Class.error 0",
                                "Actual=1, predict=0",
                                "Actual=1, predict=1",
-                               "Class.error 1"))
+                               "Class.error 1",
+                               "no.of.species"))
 names(df.rownames) <- "confusion.matrix"
 
 species.conf.matrix <- cbind(df.rownames,

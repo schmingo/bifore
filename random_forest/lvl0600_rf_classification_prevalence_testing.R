@@ -99,6 +99,8 @@ train.rf <- randomForest(x = predictor_modisVAL,
                          type="classification",
                          do.trace = FALSE)
 
+
+importance(train.rf)
 confusion.matrix = train.rf$confusion    
 
 conf.1.1 = train.rf$confusion[1,1]

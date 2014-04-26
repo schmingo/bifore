@@ -3,7 +3,7 @@
 ##                                                                            ##
 ## RANDOM FOREST FOR MODIS DATA                                               ##
 ## FURTHER PREVALENCE CALCULATIONS FOR ALL SPECIES                            ##
-## (VARIABLE IMPORTANCE AND CONFUSION MATRIX)
+## (VARIABLE IMPORTANCE AND CONFUSION MATRIX)                                 ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
 ## Version: 2014-04-26                                                        ##

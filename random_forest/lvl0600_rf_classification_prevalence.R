@@ -61,7 +61,7 @@ registerDoParallel(cl <- makeCluster(ncores))
 
 df.species.lvl0600 <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %dopar% {
   
-  #   species <- lst.species[47]
+  # species <- lst.species[47]
   
   ## Select species data
   df.species <- data.frame(data.raw[,names(data.raw) %in% c(s)])

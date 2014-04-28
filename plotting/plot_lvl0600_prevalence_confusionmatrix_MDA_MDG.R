@@ -13,7 +13,7 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("ggplot2")
+lib <- c("ggplot2", "reshape2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
@@ -30,6 +30,18 @@ data.raw <- read.csv2("csv/kili/lvl0600_rf_prevalence_species10_mean100.csv",
                       header = TRUE,
                       row.names = 1,
                       stringsAsFactors = FALSE)
+
+################################################################################
+### Subset / merge data ########################################################
+################################################################################
+
+df.confusion <- data.raw[ ,2:7]
+df.varimp.MDA <- data.raw[ ,8:37]
+df.varimp.MDG <- data.raw[ ,38:67]
+
+df.confusion.melt <- melt(df.confusion, id.vars="Class.error.0")
+names(df.NA.melt) <- c("MODIS_bands", "NA_values", "NA_count")
+
 
 ################################################################################
 ### Plotting - confusion matrix ################################################

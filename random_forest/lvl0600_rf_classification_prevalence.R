@@ -27,6 +27,7 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/")
 
 ## Set filenames
 file.out.confusion.species.10 <- "lvl0600_rf_prevalence_species10_mean100.csv"
+file.out.confusion.species.10.t <- "lvl0600_rf_prevalence_species10_mean100_t.csv"
 
 ## Timekeeping
 starttime <- Sys.time()
@@ -488,6 +489,12 @@ time
 
 ## write confusion matrix table
 write.csv2(df_t.species.lvl0600, 
-            file = file.out.confusion.species.10,
+            file = file.out.confusion.species.10.t,
             quote = FALSE,
             row.names = TRUE)
+
+write.csv2(df.species.lvl0600, 
+           file = file.out.confusion.species.10,
+           quote = FALSE,
+           row.names = TRUE)
+

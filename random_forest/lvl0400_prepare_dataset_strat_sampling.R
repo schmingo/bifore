@@ -28,14 +28,14 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 file.in.0300 <- "csv/kili/lvl0300_biodiversity_data.csv"
 file.out.braunblanq.all <- "csv/kili/lvl0400_rf_strat_braun-blanquet_all.csv"
-# file.out.braunblanq.10 <- "csv/kili/lvl0400_rf_strat_braun-blanquet_10.csv"
-# file.out.specno.all <- "csv/kili/lvl0400_rf_strat_number-of-species_all.csv"
-# file.out.specno.10 <- "csv/kili/lvl0400_rf_strat_number-of-species_10.csv"
+file.out.braunblanq.10 <- "csv/kili/lvl0400_rf_strat_braun-blanquet_10.csv"
+file.out.specno.all <- "csv/kili/lvl0400_rf_strat_number-of-species_all.csv"
+file.out.specno.10 <- "csv/kili/lvl0400_rf_strat_number-of-species_10.csv"
 file.out.prevalence.all <- "csv/kili/lvl0400_rf_strat_prevalence_all.csv"
 file.out.prevalence.10 <- "csv/kili/lvl0400_rf_strat_prevalence_10.csv"
 
-# file.out.simple.noofspecies.all <- "csv/kili/lvl0400_strat_simple_number-of-species_all.csv"
-# file.out.simple.noofspecies.10 <- "csv/kili/lvl0400_strat_simple_number-of-species_10.csv"
+file.out.simple.noofspecies.all <- "csv/kili/lvl0400_strat_simple_number-of-species_all.csv"
+file.out.simple.noofspecies.10 <- "csv/kili/lvl0400_strat_simple_number-of-species_10.csv"
 
 
 ################################################################################
@@ -58,11 +58,6 @@ data.raw <- data.raw[strata(data.raw,
                             stratanames = "plot", 
                             size = rep(1,length(unique(data.raw$plot))),
                             method = "srswor")$ID_unit, ]
-
-
-
-
-
 
 
 ################################################################################
@@ -96,9 +91,13 @@ df.sub.sd.all <- data.raw[255:292]
 
 
 ## Eliminate columns containing NA values
-df.sub.greyval <- cbind(data.raw[179:188], data.raw[197:216])  ## greyvalues
-df.sub.diff <- cbind(data.raw[218:226], data.raw[236:254])  ## diff
-df.sub.sd <- cbind(data.raw[255:264], data.raw[273:292])    ## sd
+df.sub.greyval <- cbind(df.sub.greyval.all[1:10], df.sub.greyval.all[19:38])
+df.sub.diff <- cbind(df.sub.diff.all[1:10], df.sub.diff.all[20:38])
+df.sub.sd <- cbind(df.sub.sd.all[1:10], df.sub.sd.all[19:38])
+
+anyNA(df.sub.greyval) # if TRUE -> check for NA again
+anyNA(df.sub.diff) # if TRUE -> check for NA again
+anyNA(df.sub.sd) # if TRUE -> check for NA again
 
 
 ## Recombine dataframes
@@ -182,13 +181,14 @@ write.table(data.rf.braunblanq.10,
 
 
 # ## Test data10 (most abundant species)
-# test.data10.matrix <- as.matrix(df.sub.10.species)
-# test.data10.matrix[is.na(test.data10.matrix)] <- 0
-# test.data10.matrix <- ifelse(test.data10.matrix >= 1,1,0)
-# df.test.data10 <- as.data.frame(colSums(test.data10.matrix, na.rm = TRUE))
-# 
-# print(df.test.data10)
-# summary(df.test.data10)
+test.data10.matrix <- as.matrix(df.sub.10.species)
+test.data10.matrix[is.na(test.data10.matrix)] <- 0
+test.data10.matrix <- ifelse(test.data10.matrix >= 1,1,0)
+df.test.data10 <- as.data.frame(colSums(test.data10.matrix, na.rm = TRUE))
+
+print(df.test.data10)
+nrow(df.test.data10)
+summary(df.test.data10) # min shold be >= 10
 
 
 ################################################################################
@@ -198,7 +198,6 @@ write.table(data.rf.braunblanq.10,
 ### For all species
 data.rf.specno.all <- cbind(df.sub.basics,
                             df.sub.specno,
-                            #                             df.sub.species,
                             df.sub.greyval,
                             df.sub.diff,
                             df.sub.sd)
@@ -218,7 +217,6 @@ write.table(data.rf.specno.all,
 
 data.rf.specno.10 <- cbind(df.sub.10.basics,
                            df.sub.10.specno,
-                           #                            df.sub.10.species,
                            df.sub.10.greyval,
                            df.sub.10.diff,
                            df.sub.10.sd)

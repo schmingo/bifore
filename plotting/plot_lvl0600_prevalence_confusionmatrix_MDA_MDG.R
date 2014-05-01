@@ -40,8 +40,13 @@ data.raw$species <- factor(data.raw$species,
                            levels=unique(data.raw$species), 
                            ordered=TRUE)
 
+
+
 ## recombine dataframes
 df.classError <- cbind(data.raw[1], data.raw[5], data.raw[8])
+
+## 20 commonest species
+data.raw <- data.raw[1:15,]
 df.varimp.MDA.reflect <- cbind(data.raw[1],data.raw[9:21])
 df.varimp.MDA.emit <- cbind(data.raw[1],data.raw[22:38])
 df.varimp.MDG.reflect <- cbind(data.raw[1],data.raw[39:51])
@@ -62,7 +67,7 @@ df.varimp.MDG.emit.melt <- melt(df.varimp.MDG.emit, id="species")
 
 ## Define output image | open image port
 png("images/lvl0600_prevalence_confusion_classError.png", 
-    width = 2048 * 6, 
+    width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 
     res = 600)
@@ -85,20 +90,23 @@ graphics.off()
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0600_prevalence_MeanDecreaseAccuracy_reflect.png", 
-    width = 2048 * 6, 
+png("images/lvl0600_prevalence_MeanDecreaseAccuracy_reflective.png", 
+    width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 
     res = 600)
 
 ggplot(data=df.varimp.MDA.reflect.melt,
-       aes(x=species, y=value, colour=variable, group=variable)) +
+       aes(x=species, y=value, group=variable)) +
   geom_line() +
+  ylim(-2,15) +
   xlab(NULL) +
   ylab("Mean Decrease Accuracy") +
-  ggtitle("RandomForest prevalence - Mean Decrease Accuracy") +
-  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 12),
-        plot.title = element_text(lineheight = .8, size = 20))
+  theme_bw() +
+  ggtitle("Prevalence - RandomForest - Mean Decrease Accuracy (reflective bands)") +
+  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 8),
+        plot.title = element_text(lineheight = .8, size = 20)) +
+  facet_wrap(~variable, as.table=FALSE, ncol = 4)
 
 ## Close image port
 graphics.off()
@@ -106,20 +114,25 @@ graphics.off()
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0600_prevalence_MeanDecreaseAccuracy_emit.png", 
-    width = 2048 * 6, 
+png("images/lvl0600_prevalence_MeanDecreaseAccuracy_emissive.png", 
+    width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 
     res = 600)
 
 ggplot(data=df.varimp.MDA.emit.melt,
-       aes(x=species, y=value, colour=variable, group=variable)) +
+       aes(x=species, y=value, group=variable)) +
   geom_line() +
+  ylim(-2,15) +
   xlab(NULL) +
   ylab("Mean Decrease Accuracy") +
-  ggtitle("RandomForest prevalence - Mean Decrease Accuracy") +
-  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 12),
-        plot.title = element_text(lineheight = .8, size = 20))
+  theme_bw() +
+  ggtitle("Prevalence - RandomForest - Mean Decrease Accuracy (emissive bands)") +
+  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 8),
+        plot.title = element_text(lineheight = .8, size = 20)) +
+  facet_wrap(~variable, as.table=FALSE, ncol = 4)
+
+
 
 ## Close image port
 graphics.off()

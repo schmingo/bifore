@@ -1,3 +1,4 @@
+cat("\014")
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
@@ -6,13 +7,12 @@
 ## (VARIABLE IMPORTANCE AND CONFUSION MATRIX)                                 ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-04-29                                                        ##
+## Version: 2014-05-01                                                        ##
 ##                                                                            ##
 ################################################################################
 
 
 ## Clear workspace
-cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
@@ -410,6 +410,12 @@ names(df.species.lvl0600) <- c("species",
                                "MeanDecreaseGini_band34",
                                "MeanDecreaseGini_band35",
                                "MeanDecreaseGini_band36")
+
+
+## Order dataset by no.of.species (descending)
+attach(df.species.lvl0600)
+df.species.lvl0600 <- df.species.lvl0600[order(-no.of.species),]
+detach(df.species.lvl0600)
 
 
 

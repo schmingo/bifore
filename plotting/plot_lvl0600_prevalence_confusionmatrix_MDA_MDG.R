@@ -42,14 +42,18 @@ data.raw$species <- factor(data.raw$species,
 
 ## recombine dataframes
 df.classError <- cbind(data.raw[1], data.raw[5], data.raw[8])
-df.varimp.MDA <- cbind(data.raw[1],data.raw[9:38])
-df.varimp.MDG <- cbind(data.raw[1],data.raw[39:68])
+df.varimp.MDA.reflect <- cbind(data.raw[1],data.raw[9:21])
+df.varimp.MDA.emit <- cbind(data.raw[1],data.raw[22:38])
+df.varimp.MDG.reflect <- cbind(data.raw[1],data.raw[39:51])
+df.varimp.MDG.emit <- cbind(data.raw[1],data.raw[52:68])
 
 
 ## melt dataframes
 df.classError.melt <- melt(df.classError, id="species")
-df.varimp.MDA.melt <- melt(df.varimp.MDA, id="species")
-df.varimp.MDG.melt <- melt(df.varimp.MDG, id="species")
+df.varimp.MDA.reflect.melt <- melt(df.varimp.MDA.reflect, id="species")
+df.varimp.MDA.emit.melt <- melt(df.varimp.MDA.emit, id="species")
+df.varimp.MDG.reflect.melt <- melt(df.varimp.MDG.reflect, id="species")
+df.varimp.MDG.emit.melt <- melt(df.varimp.MDG.emit, id="species")
 
   
 ################################################################################
@@ -81,13 +85,13 @@ graphics.off()
 ################################################################################
 
 ## Define output image | open image port
-# png("images/lvl0600_prevalence_MeanDecreaseAccuracy.png", 
-#     width = 2048 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png("images/lvl0600_prevalence_MeanDecreaseAccuracy_reflect.png", 
+    width = 2048 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
-ggplot(data=df.varimp.MDA.melt,
+ggplot(data=df.varimp.MDA.reflect.melt,
        aes(x=species, y=value, colour=variable, group=variable)) +
   geom_line() +
   xlab(NULL) +
@@ -97,32 +101,26 @@ ggplot(data=df.varimp.MDA.melt,
         plot.title = element_text(lineheight = .8, size = 20))
 
 ## Close image port
-# graphics.off()
+graphics.off()
 
+################################################################################
 
+## Define output image | open image port
+png("images/lvl0600_prevalence_MeanDecreaseAccuracy_emit.png", 
+    width = 2048 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
+ggplot(data=df.varimp.MDA.emit.melt,
+       aes(x=species, y=value, colour=variable, group=variable)) +
+  geom_line() +
+  xlab(NULL) +
+  ylab("Mean Decrease Accuracy") +
+  ggtitle("RandomForest prevalence - Mean Decrease Accuracy") +
+  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 12),
+        plot.title = element_text(lineheight = .8, size = 20))
 
-
-
-
-
-
-
-
-
-
-
-
-
-# test_data <- data.frame(
-#   var0 = 100 + c(0, cumsum(runif(49, -20, 20))),
-#   var1 = 150 + c(0, cumsum(runif(49, -10, 10))),
-#   date = seq.Date(as.Date("2002-01-01"), by="1 month", length.out=100))
-# 
-# test_data_long <- melt(test_data, id="date")  # convert to long format
-# 
-# ggplot(data=test_data_long,
-#        aes(x=date, y=value, colour=variable)) +
-#   geom_line()
-
+## Close image port
+graphics.off()
 

@@ -5,7 +5,7 @@ cat("\014")
 ## PLOT PREVALENCE LVL0600 CONFUSION MATRIX, MEAN DECREASE ACCURACY AND       ##
 ## MEAN DECREASE GINI                                                         ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-04-29                                                        ##
+## Version: 2014-05-01                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -35,11 +35,18 @@ data.raw <- read.csv2("csv/kili/lvl0600_rf_prevalence_species10_mean100.csv",
 ### Subset / merge data ########################################################
 ################################################################################
 
+## Keep order by no.of.species in ggplot (x-axis)
+data.raw$species <- factor(data.raw$species, 
+                           levels=unique(data.raw$species), 
+                           ordered=TRUE)
+
+## recombine dataframes
 df.classError <- cbind(data.raw[1], data.raw[5], data.raw[8])
 df.varimp.MDA <- cbind(data.raw[1],data.raw[9:38])
 df.varimp.MDG <- cbind(data.raw[1],data.raw[39:68])
 
 
+## melt dataframes
 df.classError.melt <- melt(df.classError, id="species")
 df.varimp.MDA.melt <- melt(df.varimp.MDA, id="species")
 df.varimp.MDG.melt <- melt(df.varimp.MDG, id="species")
@@ -50,11 +57,11 @@ df.varimp.MDG.melt <- melt(df.varimp.MDG, id="species")
 ################################################################################
 
 ## Define output image | open image port
-# png("images/lvl0600_prevalence_confusion_classError.png", 
-#     width = 2048 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png("images/lvl0600_prevalence_confusion_classError.png", 
+    width = 2048 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
 ggplot(data=df.classError.melt,
        aes(x=species, y=value, colour=variable, group=variable)) +
@@ -62,11 +69,11 @@ ggplot(data=df.classError.melt,
   xlab(NULL) +
   ylab("Classification Error") +
   ggtitle("RandomForest prevalence - confusion matrix") +
-  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 8),
+  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 12),
         plot.title = element_text(lineheight = .8, size = 20))
 
 ## Close image port
-# graphics.off()
+graphics.off()
 
 
 ################################################################################
@@ -86,7 +93,7 @@ ggplot(data=df.varimp.MDA.melt,
   xlab(NULL) +
   ylab("Mean Decrease Accuracy") +
   ggtitle("RandomForest prevalence - Mean Decrease Accuracy") +
-  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 8),
+  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 12),
         plot.title = element_text(lineheight = .8, size = 20))
 
 ## Close image port

@@ -137,3 +137,11 @@ ggplot(data=df.varimp.MDA.emit.melt,
 ## Close image port
 graphics.off()
 
+# ggplot(df, aes(Date)) + 
+#   geom_bar(aes(y = d2,fill="d2"), stat="identity") +
+#   geom_line(aes(y = d1, group = 1, color = "d1")) +
+#   scale_colour_manual(" ", values=c("d1" = "blue", "d2" = "red"))+
+#   scale_fill_manual("",values="red")+
+#   theme(legend.key=element_blank(),
+#         legend.title=element_blank(),
+#         legend.box="horizontal")

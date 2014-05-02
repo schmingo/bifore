@@ -3,11 +3,14 @@ cat("\014")
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
 ## RANDOM FOREST FOR MODIS DATA                                               ##
+##                                                                            ##
 ## FURTHER PREVALENCE CALCULATIONS FOR ALL SPECIES                            ##
-## (VARIABLE IMPORTANCE AND CONFUSION MATRIX)                                 ##
+## EXECUTE RANDOM FOREST 100 TIMES AND CALCULATE MEAN VALUES FOR              ##
+## CONFUSION MATRIX AND VARIABLE IMPORTANCE                                   ##
+##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-05-01                                                        ##
+## Version: 2014-05-02                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -26,7 +29,9 @@ ncores <- detectCores()-1
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/")
 
 ## Set filenames
-file.out.lvl0600 <- "lvl0600_rf_prevalence_species10_mean100.csv"
+file.out.confusion <- "lvl0600_rf_prevalence_species10_mean100_confusion.csv"
+file.out.varimp.MDA <- "lvl0600_rf_prevalence_species10_mean100_MDA.csv"
+file.out.varimp.MDG <- "lvl0600_rf_prevalence_species10_mean100_MDG.csv"
 
 ## Timekeeping
 starttime <- Sys.time()
@@ -40,6 +45,9 @@ data.raw <- read.csv2("lvl0400_rf_strat_prevalence_10.csv",
                       dec = ",",
                       header = TRUE,
                       stringsAsFactors = FALSE)
+
+## Note: 1. Species with less than 10 observations in different plots removed
+##       2. Stratified sampling (only 1 random observation per plot)
 
 
 ################################################################################
@@ -340,8 +348,14 @@ stopCluster(cl)
 
 ## Transpose df
 df.species.lvl0600 <- as.data.frame(t(df.species.lvl0600))
+
+## Write species into first row
 df.species.lvl0600 <- cbind(rownames(df.species.lvl0600), df.species.lvl0600)
+
+## Remove rownames
 row.names(df.species.lvl0600) <- NULL
+
+## Define colnames
 names(df.species.lvl0600) <- c("species",
                                "no.of.species",
                                "Actual=0, predict=0",
@@ -350,66 +364,66 @@ names(df.species.lvl0600) <- c("species",
                                "Actual=1, predict=0",
                                "Actual=1, predict=1",
                                "Class.error 1",
-                               "MeanDecreaseAccuracy_band01",
-                               "MeanDecreaseAccuracy_band02",
-                               "MeanDecreaseAccuracy_band03",
-                               "MeanDecreaseAccuracy_band04",
-                               "MeanDecreaseAccuracy_band05",
-                               "MeanDecreaseAccuracy_band06",
-                               "MeanDecreaseAccuracy_band07",
-                               "MeanDecreaseAccuracy_band08",
-                               "MeanDecreaseAccuracy_band09",
-                               "MeanDecreaseAccuracy_band10",
-                               "MeanDecreaseAccuracy_band17",
-                               "MeanDecreaseAccuracy_band18",
-                               "MeanDecreaseAccuracy_band19",
-                               "MeanDecreaseAccuracy_band20",
-                               "MeanDecreaseAccuracy_band21",
-                               "MeanDecreaseAccuracy_band22",
-                               "MeanDecreaseAccuracy_band23",
-                               "MeanDecreaseAccuracy_band24",
-                               "MeanDecreaseAccuracy_band25",
-                               "MeanDecreaseAccuracy_band26",
-                               "MeanDecreaseAccuracy_band27",
-                               "MeanDecreaseAccuracy_band28",
-                               "MeanDecreaseAccuracy_band29",
-                               "MeanDecreaseAccuracy_band30",
-                               "MeanDecreaseAccuracy_band31",
-                               "MeanDecreaseAccuracy_band32",
-                               "MeanDecreaseAccuracy_band33",
-                               "MeanDecreaseAccuracy_band34",
-                               "MeanDecreaseAccuracy_band35",
-                               "MeanDecreaseAccuracy_band36",
-                               "MeanDecreaseGini_band01",
-                               "MeanDecreaseGini_band02",
-                               "MeanDecreaseGini_band03",
-                               "MeanDecreaseGini_band04",
-                               "MeanDecreaseGini_band05",
-                               "MeanDecreaseGini_band06",
-                               "MeanDecreaseGini_band07",
-                               "MeanDecreaseGini_band08",
-                               "MeanDecreaseGini_band09",
-                               "MeanDecreaseGini_band10",
-                               "MeanDecreaseGini_band17",
-                               "MeanDecreaseGini_band18",
-                               "MeanDecreaseGini_band19",
-                               "MeanDecreaseGini_band20",
-                               "MeanDecreaseGini_band21",
-                               "MeanDecreaseGini_band22",
-                               "MeanDecreaseGini_band23",
-                               "MeanDecreaseGini_band24",
-                               "MeanDecreaseGini_band25",
-                               "MeanDecreaseGini_band26",
-                               "MeanDecreaseGini_band27",
-                               "MeanDecreaseGini_band28",
-                               "MeanDecreaseGini_band29",
-                               "MeanDecreaseGini_band30",
-                               "MeanDecreaseGini_band31",
-                               "MeanDecreaseGini_band32",
-                               "MeanDecreaseGini_band33",
-                               "MeanDecreaseGini_band34",
-                               "MeanDecreaseGini_band35",
-                               "MeanDecreaseGini_band36")
+                               "MDA_band01",
+                               "MDA_band02",
+                               "MDA_band03",
+                               "MDA_band04",
+                               "MDA_band05",
+                               "MDA_band06",
+                               "MDA_band07",
+                               "MDA_band08",
+                               "MDA_band09",
+                               "MDA_band10",
+                               "MDA_band17",
+                               "MDA_band18",
+                               "MDA_band19",
+                               "MDA_band20",
+                               "MDA_band21",
+                               "MDA_band22",
+                               "MDA_band23",
+                               "MDA_band24",
+                               "MDA_band25",
+                               "MDA_band26",
+                               "MDA_band27",
+                               "MDA_band28",
+                               "MDA_band29",
+                               "MDA_band30",
+                               "MDA_band31",
+                               "MDA_band32",
+                               "MDA_band33",
+                               "MDA_band34",
+                               "MDA_band35",
+                               "MDA_band36",
+                               "MDG_band01",
+                               "MDG_band02",
+                               "MDG_band03",
+                               "MDG_band04",
+                               "MDG_band05",
+                               "MDG_band06",
+                               "MDG_band07",
+                               "MDG_band08",
+                               "MDG_band09",
+                               "MDG_band10",
+                               "MDG_band17",
+                               "MDG_band18",
+                               "MDG_band19",
+                               "MDG_band20",
+                               "MDG_band21",
+                               "MDG_band22",
+                               "MDG_band23",
+                               "MDG_band24",
+                               "MDG_band25",
+                               "MDG_band26",
+                               "MDG_band27",
+                               "MDG_band28",
+                               "MDG_band29",
+                               "MDG_band30",
+                               "MDG_band31",
+                               "MDG_band32",
+                               "MDG_band33",
+                               "MDG_band34",
+                               "MDG_band35",
+                               "MDG_band36")
 
 
 ## Order dataset by no.of.species (descending)
@@ -417,6 +431,11 @@ attach(df.species.lvl0600)
 df.species.lvl0600 <- df.species.lvl0600[order(-no.of.species),]
 detach(df.species.lvl0600)
 
+## Split data into 3 separate dataframes - confusion matrix & variable importance (MDA + MDG)
+
+df.out.confusion <- df.species.lvl0600[1:8]
+df.out.varimp.MDA <- cbind(df.species.lvl0600[1:2], df.species.lvl0600[9:38])
+df.out.varimp.MDG <- cbind(df.species.lvl0600[1:2], df.species.lvl0600[39:68])
 
 
 ## Timekeeping
@@ -425,8 +444,17 @@ time <- endtime - starttime
 time
 
 
-write.csv2(df.species.lvl0600, 
-           file = file.out.lvl0600,
+write.csv2(df.out.confusion, 
+           file = file.out.confusion,
            quote = FALSE,
            row.names = FALSE)
 
+write.csv2(df.out.varimp.MDA, 
+           file = file.out.varimp.MDA,
+           quote = FALSE,
+           row.names = FALSE)
+
+write.csv2(df.out.varimp.MDG, 
+           file = file.out.varimp.MDG,
+           quote = FALSE,
+           row.names = FALSE)

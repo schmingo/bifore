@@ -5,7 +5,7 @@ cat("\014")
 ## PREPARE DATASET FOR RANDOMFOREST - ONE RANDOM OBSERVATION PER PLOT         ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-05-02                                                        ##
+## Version: 2014-05-03                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -144,6 +144,14 @@ len <- len + length(df.sub.cut.diff)
 df.sub.cut.sd <- data.cut[(len + 1):(len + length(df.sub.all.sd))]
 
 
+## calculate new no.of.species (cut sophisticates old no.of.species)
+df.sub.cut.specno <- data.frame(apply(df.sub.cut.species,
+                                      1,
+                                      function(x) sum(!is.na(x[1:ncol(df.sub.cut.species)]))))
+names(df.sub.cut.specno) <- "nr.of.species"
+
+
+
 ################################################################################
 ################################################################################
 ### BRAUN-BLANQUET #############################################################
@@ -152,7 +160,11 @@ df.sub.cut.sd <- data.cut[(len + 1):(len + length(df.sub.all.sd))]
 ################################################################################
 
 ## All species #################################################################
-data.rf.braunblanq.all <- data.raw
+data.rf.braunblanq.all <- cbind(df.sub.all.basics,
+                                df.sub.all.species,
+                                df.sub.all.greyval,
+                                df.sub.all.diff,
+                                df.sub.all.sd)
 
 write.table(data.rf.braunblanq.all,
             file = file.out.braunblanq.all,
@@ -163,7 +175,11 @@ write.table(data.rf.braunblanq.all,
             sep = ";")
 
 ## Most abundant species (cut) #################################################
-data.rf.braunblanq.cut <- data.cut
+data.rf.braunblanq.cut <- cbind(df.sub.cut.basics,
+                                df.sub.cut.species,
+                                df.sub.cut.greyval,
+                                df.sub.cut.diff,
+                                df.sub.cut.sd)
 
 ## write braun-blanquet table for most abundant species
 write.table(data.rf.braunblanq.cut, 
@@ -187,17 +203,19 @@ write.table(data.rf.braunblanq.cut,
 
 
 ################################################################################
+################################################################################
 ### Create number of species dataframe for RandomForest ########################
+### All species + most abundant species ########################################
+################################################################################
 ################################################################################
 
-### For all species
-data.rf.specno.all <- cbind(df.sub.basics,
-                            df.sub.specno,
-                            df.sub.greyval,
-                            df.sub.diff,
-                            df.sub.sd)
+## All species #################################################################
+data.rf.specno.all <- cbind(df.sub.all.basics,
+                            df.sub.all.specno,
+                            df.sub.all.greyval,
+                            df.sub.all.diff,
+                            df.sub.all.sd)
 
-## Write table - all species - bands containing NA values removed
 write.table(data.rf.specno.all, 
             file = file.out.specno.all,
             dec = ",",
@@ -206,17 +224,13 @@ write.table(data.rf.specno.all,
             row.names = FALSE,
             sep = ";")
 
-################################################################################
-### For species with less than x observations in different plots
-### Most abundant species
-
+## Most abundant species (cut) #################################################
 data.rf.specno.cut <- cbind(df.sub.cut.basics,
-                           df.sub.cut.specno,
-                           df.sub.cut.greyval,
-                           df.sub.cut.diff,
-                           df.sub.cut.sd)
+                            df.sub.cut.specno,
+                            df.sub.cut.greyval,
+                            df.sub.cut.diff,
+                            df.sub.cut.sd)
 
-## Write table - most abundant species - bands containing NA values removed
 write.table(data.rf.specno.cut, 
             file = file.out.specno.cut,
             dec = ",",
@@ -227,12 +241,15 @@ write.table(data.rf.specno.cut,
 
 
 ################################################################################
+################################################################################
 ### Create prevalence dataframe ################################################
+### All species + most abundant species ########################################
+################################################################################
 ################################################################################
 
-### For all species
+## All species #################################################################
 ## Read as matrix
-matrix.prevalence.all <- as.matrix(df.sub.species)
+matrix.prevalence.all <- as.matrix(df.sub.all.species)
 
 ## Replace NA with 0
 matrix.prevalence.all[is.na(matrix.prevalence.all)] <- 0
@@ -241,12 +258,11 @@ matrix.prevalence.all[is.na(matrix.prevalence.all)] <- 0
 matrix.prevalence.all <- ifelse(matrix.prevalence.all >= 1,1,0)
 
 ## Combine dataframes
-data.rf.prevalence.all <- cbind(df.sub.basics,
+data.rf.prevalence.all <- cbind(df.sub.all.basics,
                                 as.data.frame(matrix.prevalence.all),
-                                df.sub.greyval,
-                                df.sub.diff,
-                                df.sub.sd)
-# names(data.rf.prevalence.all)
+                                df.sub.all.greyval,
+                                df.sub.all.diff,
+                                df.sub.all.sd)
 
 write.table(data.rf.prevalence.all,
             file = file.out.prevalence.all,
@@ -256,9 +272,7 @@ write.table(data.rf.prevalence.all,
             row.names = FALSE,
             sep = ";")
 
-################################################################################
-### For species with less than x observations in different plots
-
+## Most abundant species (cut) #################################################
 ## Read as matrix
 matrix.prevalence.cut <- as.matrix(df.sub.cut.species)
 
@@ -274,7 +288,6 @@ data.rf.prevalence.cut <- cbind(df.sub.cut.basics,
                                df.sub.cut.greyval,
                                df.sub.cut.diff,
                                df.sub.cut.sd)
-names(data.rf.prevalence.cut)
 
 write.table(data.rf.prevalence.cut,
             file = file.out.prevalence.cut,
@@ -285,20 +298,21 @@ write.table(data.rf.prevalence.cut,
             sep = ";")
 
 
-
-
+################################################################################
 ################################################################################
 ### Create simple number of species table for all plots ########################
+### All species + most abundant species ########################################
+################################################################################
 ################################################################################
 
-## Calculate prevalence for all species
-df.noofspecies.all <- data.frame(colSums(df.sub.species > 0, na.rm = TRUE), 
+## Calculate no.of.species for all species
+df.noofspecies.all <- data.frame(colSums(df.sub.all.species > 0, na.rm = TRUE), 
                                  row.names = NULL)
 df.noofspecies.cut <- data.frame(colSums(df.sub.cut.species > 0, na.rm = TRUE), 
                                 row.names = NULL)
 
 ## Combine new df
-df.noofspecies.all <- cbind(names(df.sub.species), df.noofspecies.all)
+df.noofspecies.all <- cbind(names(df.sub.all.species), df.noofspecies.all)
 df.noofspecies.cut <- cbind(names(df.sub.cut.species), df.noofspecies.cut)
 
 ## Set colnames

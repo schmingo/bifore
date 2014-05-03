@@ -10,7 +10,7 @@ cat("\014")
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-05-02                                                        ##
+## Version: 2014-05-03                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -29,9 +29,10 @@ ncores <- detectCores()-1
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/")
 
 ## Set filenames
-file.out.confusion <- "lvl0600_rf_prevalence_species10_mean100_confusion.csv"
-file.out.varimp.MDA <- "lvl0600_rf_prevalence_species10_mean100_MDA.csv"
-file.out.varimp.MDG <- "lvl0600_rf_prevalence_species10_mean100_MDG.csv"
+file.in <- "lvl0400_rf_strat_prevalence_cut.csv"
+file.out.confusion <- "lvl0600_rf_prevalence_species-cut_mean100_confusion.csv"
+file.out.varimp.MDA <- "lvl0600_rf_prevalence_species-cut_mean100_MDA.csv"
+file.out.varimp.MDG <- "lvl0600_rf_prevalence_species-cut_mean100_MDG.csv"
 
 ## Timekeeping
 starttime <- Sys.time()
@@ -41,12 +42,12 @@ starttime <- Sys.time()
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw <- read.csv2("lvl0400_rf_strat_prevalence_10.csv",
+data.raw <- read.csv2(file.in,
                       dec = ",",
                       header = TRUE,
                       stringsAsFactors = FALSE)
 
-## Note: 1. Species with less than 10 observations in different plots removed
+## Note: 1. Species with less than x observations in different plots removed
 ##       2. Stratified sampling (only 1 random observation per plot)
 
 
@@ -56,13 +57,15 @@ data.raw <- read.csv2("lvl0400_rf_strat_prevalence_10.csv",
 set.seed(50)
 
 ## List species
-lst.species <- names(data.raw[13:55])
+names(data.raw)
+
+lst.species <- names(data.raw[(which(names(data.raw)=="coordN")+1):(which(names(data.raw)=="greyval_band_1")-1)])
 lst.species
 
 ## Split incoming dataset
-df.greyval <- data.raw[56:85]  ## greyvalues
-df.diff <- data.raw[86:113]  ## diff
-df.sd <- data.raw[114:143]  ## sd 
+df.greyval <- data.raw[(which(names(data.raw)=="greyval_band_1")):(which(names(data.raw)=="greyval_band_36"))]
+df.deriv <- data.raw[(which(names(data.raw)=="deriv_band_1")):(which(names(data.raw)=="deriv_band_36"))]
+df.sd <- data.raw[(which(names(data.raw)=="sd_band_1")):(which(names(data.raw)=="sd_band_36"))]
 
 ## Calculate randomForest for all Species
 registerDoParallel(cl <- makeCluster(ncores))

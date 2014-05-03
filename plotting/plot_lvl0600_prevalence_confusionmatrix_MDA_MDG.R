@@ -5,7 +5,7 @@ cat("\014")
 ## PLOT PREVALENCE LVL0600 CONFUSION MATRIX, MEAN DECREASE ACCURACY AND       ##
 ## MEAN DECREASE GINI                                                         ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-05-01                                                        ##
+## Version: 2014-05-03                                                        ##
 ##                                                                            ##
 ################################################################################
 

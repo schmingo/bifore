@@ -20,15 +20,29 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 # setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
+## Set filenames
+file.in.confusion <- "csv/kili/lvl0600_rf_prevalence_species-cut_mean100_confusion.csv"
+file.in.varimp.MDA <- "csv/kili/lvl0600_rf_prevalence_species-cut_mean100_MDA.csv"
+file.in.varimp.MDG <- "csv/kili/lvl0600_rf_prevalence_species-cut_mean100_MDG.csv"
 
 ################################################################################
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0600_rf_prevalence_species10_mean100.csv",
-                      dec = ",",
-                      header = TRUE,
-                      stringsAsFactors = FALSE)
+df.confusion <- read.csv2(file.in.confusion,
+                          dec = ",",
+                          header = TRUE,
+                          stringsAsFactors = FALSE)
+
+df.varimp.MDA <- read.csv2(file.in.varimp.MDA,
+                           dec = ",",
+                           header = TRUE,
+                           stringsAsFactors = FALSE)
+
+df.varimp.MDG <- read.csv2(file.in.varimp.MDG,
+                           dec = ",",
+                           header = TRUE,
+                           stringsAsFactors = FALSE)
 
 
 ################################################################################
@@ -36,31 +50,48 @@ data.raw <- read.csv2("csv/kili/lvl0600_rf_prevalence_species10_mean100.csv",
 ################################################################################
 
 ## Keep order by no.of.species in ggplot (x-axis)
-data.raw$species <- factor(data.raw$species, 
-                           levels=unique(data.raw$species), 
-                           ordered=TRUE)
+df.confusion$species <- factor(df.confusion$species, 
+                               levels=unique(df.confusion$species), 
+                               ordered=TRUE)
+
+## Keep order by no.of.species in ggplot (x-axis)
+df.varimp.MDA$species <- factor(df.varimp.MDA$species, 
+                                levels=unique(df.varimp.MDA$species), 
+                                ordered=TRUE)
+
+## Keep order by no.of.species in ggplot (x-axis)
+df.varimp.MDG$species <- factor(df.varimp.MDG$species, 
+                                levels=unique(df.varimp.MDG$species), 
+                                ordered=TRUE)
 
 
 
 ## recombine dataframes
-df.classError <- cbind(data.raw[1], data.raw[5], data.raw[8])
+df.classError <- cbind(df.confusion[1], df.confusion[5], df.confusion[8])
 
-## 20 commonest species
-data.raw <- data.raw[1:15,]
-df.varimp.MDA.reflect <- cbind(data.raw[1],data.raw[9:21])
-df.varimp.MDA.emit <- cbind(data.raw[1],data.raw[22:38])
-df.varimp.MDG.reflect <- cbind(data.raw[1],data.raw[39:51])
-df.varimp.MDG.emit <- cbind(data.raw[1],data.raw[52:68])
+## 15 commonest species
+df.varimp.MDA <- df.varimp.MDA[1:15,]
+df.varimp.MDG <- df.varimp.MDG[1:15,]
+
+df.varimp.MDA <- cbind(df.varimp.MDA[1],df.varimp.MDA[3:ncol(df.varimp.MDA)])
+df.varimp.MDG <- cbind(df.varimp.MDG[1],df.varimp.MDG[3:ncol(df.varimp.MDG)])
+
+df.varimp.MDA.reflect <- cbind(df.varimp.MDA[1],df.varimp.MDA[2:14])
+df.varimp.MDA.emit <- cbind(df.varimp.MDA[1],df.varimp.MDA[15:ncol(df.varimp.MDA)])
+df.varimp.MDG.reflect <- cbind(df.varimp.MDG[1],df.varimp.MDG[2:14])
+df.varimp.MDG.emit <- cbind(df.varimp.MDG[1],df.varimp.MDG[15:ncol(df.varimp.MDA)])
 
 
 ## melt dataframes
 df.classError.melt <- melt(df.classError, id="species")
+df.varimp.MDA.melt <- melt(df.varimp.MDA, id="species")
+df.varimp.MDG.melt <- melt(df.varimp.MDG, id="species")
 df.varimp.MDA.reflect.melt <- melt(df.varimp.MDA.reflect, id="species")
 df.varimp.MDA.emit.melt <- melt(df.varimp.MDA.emit, id="species")
 df.varimp.MDG.reflect.melt <- melt(df.varimp.MDG.reflect, id="species")
 df.varimp.MDG.emit.melt <- melt(df.varimp.MDG.emit, id="species")
 
-  
+
 ################################################################################
 ### Plotting - Classification Error ############################################
 ################################################################################
@@ -137,11 +168,28 @@ ggplot(data=df.varimp.MDA.emit.melt,
 ## Close image port
 graphics.off()
 
-# ggplot(df, aes(Date)) + 
-#   geom_bar(aes(y = d2,fill="d2"), stat="identity") +
-#   geom_line(aes(y = d1, group = 1, color = "d1")) +
-#   scale_colour_manual(" ", values=c("d1" = "blue", "d2" = "red"))+
-#   scale_fill_manual("",values="red")+
-#   theme(legend.key=element_blank(),
-#         legend.title=element_blank(),
-#         legend.box="horizontal")
+################################################################################
+
+## Define output image | open image port
+png("images/lvl0600_prevalence_MeanDecreaseAccuracy.png", 
+    width = 748 * 6, 
+    height = 1024 * 6, 
+    units = "px", 
+    res = 600)
+
+ggplot(data=df.varimp.MDA.melt,
+       aes(x=species, y=value, group=variable)) +
+  geom_line() +
+  ylim(-2,15) +
+  xlab(NULL) +
+  ylab("Mean Decrease Accuracy") +
+  theme_bw() +
+  ggtitle("Prevalence - RandomForest - Mean Decrease Accuracy") +
+  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 8),
+        plot.title = element_text(lineheight = .8, size = 20)) +
+  facet_wrap(~variable, as.table=FALSE, ncol = 4)
+
+
+
+## Close image port
+graphics.off()

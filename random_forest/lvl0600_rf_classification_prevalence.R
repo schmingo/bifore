@@ -64,8 +64,8 @@ lst.species
 
 ## Split incoming dataset
 df.greyval <- data.raw[(which(names(data.raw)=="greyval_band_1")):(which(names(data.raw)=="greyval_band_36"))]
-df.deriv <- data.raw[(which(names(data.raw)=="deriv_band_1")):(which(names(data.raw)=="deriv_band_36"))]
-df.sd <- data.raw[(which(names(data.raw)=="sd_band_1")):(which(names(data.raw)=="sd_band_36"))]
+# df.deriv <- data.raw[(which(names(data.raw)=="deriv_band_1")):(which(names(data.raw)=="deriv_band_36"))]
+# df.sd <- data.raw[(which(names(data.raw)=="sd_band_1")):(which(names(data.raw)=="sd_band_36"))]
 
 ## Calculate randomForest for all Species
 registerDoParallel(cl <- makeCluster(ncores))
@@ -271,9 +271,9 @@ df.species.lvl0600 <- foreach(s = lst.species, .combine = "cbind", .packages = l
   df.species.lvl0600 <- as.data.frame(c(colSums(tmp.species),
                                         mean(conf.1.1), 
                                         mean(conf.1.2),
-                                        mean(conf.1.3),
                                         mean(conf.2.1), 
                                         mean(conf.2.2),
+                                        mean(conf.1.3),
                                         mean(conf.2.3),
                                         mean(vi_MDA_01),
                                         mean(vi_MDA_02),
@@ -361,11 +361,11 @@ row.names(df.species.lvl0600) <- NULL
 ## Define colnames
 names(df.species.lvl0600) <- c("species",
                                "no.of.species",
-                               "Actual=0, predict=0",
-                               "Actual=0, predict=1",
+                               "M0_P0",
+                               "M0_P1",
+                               "M1_P0",
+                               "M1_P1",
                                "Class.error 0",
-                               "Actual=1, predict=0",
-                               "Actual=1, predict=1",
                                "Class.error 1",
                                "MDA_band01",
                                "MDA_band02",
@@ -439,6 +439,37 @@ detach(df.species.lvl0600)
 df.out.confusion <- df.species.lvl0600[1:8]
 df.out.varimp.MDA <- cbind(df.species.lvl0600[1:2], df.species.lvl0600[9:38])
 df.out.varimp.MDG <- cbind(df.species.lvl0600[1:2], df.species.lvl0600[39:68])
+
+
+################################################################################
+### Further Confusion Matrix calculations ######################################
+################################################################################
+
+
+## Sum measured 0
+df.out.confusion$sum.M0 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+  sum.tmp <- df.out.confusion[i,3] + df.out.confusion[i,4]
+  return(sum.tmp)
+}
+
+## Sum measured 1
+df.out.confusion$sum.M1 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+  sum.tmp <- df.out.confusion[i,5] + df.out.confusion[i,6]
+  return(sum.tmp)
+}
+
+## Sum predicted 0
+df.out.confusion$sum.P0 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+  sum.tmp <- df.out.confusion[i,3] + df.out.confusion[i,5]
+  return(sum.tmp)
+}
+
+## Sum predicted 1
+df.out.confusion$sum.P1 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+  sum.tmp <- df.out.confusion[i,4] + df.out.confusion[i,6]
+  return(sum.tmp)
+}
+
 
 
 ## Timekeeping

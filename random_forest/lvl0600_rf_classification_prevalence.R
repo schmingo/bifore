@@ -470,6 +470,20 @@ df.out.confusion$sum.P1 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rb
   return(sum.tmp)
 }
 
+## POD (Probability of detection)
+df.out.confusion$POD <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+#   POD.tmp <- (df.out.confusion[i,3]) / (df.out.confusion[i,3] + df.out.confusion[i,5])
+  POD.tmp <- (df.out.confusion[i,3]) / (df.out.confusion[i,11])
+  return(POD.tmp)
+}
+
+## FAR (False alarm ratio)
+df.out.confusion$FAR <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+  #   FAR.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,3] + df.out.confusion[i,4])
+  FAR.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,9])
+  return(FAR.tmp)
+}
+
 
 
 ## Timekeeping

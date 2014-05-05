@@ -5,7 +5,7 @@ cat("\014")
 ## PLOT PREVALENCE LVL0600 CONFUSION MATRIX, MEAN DECREASE ACCURACY AND       ##
 ## MEAN DECREASE GINI                                                         ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-05-03                                                        ##
+## Version: 2014-05-05                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -21,18 +21,12 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Set filenames
-file.in.confusion <- "csv/kili/lvl0600_rf_prevalence_species-cut_mean100_confusion.csv"
 file.in.varimp.MDA <- "csv/kili/lvl0600_rf_prevalence_species-cut_mean100_MDA.csv"
 file.in.varimp.MDG <- "csv/kili/lvl0600_rf_prevalence_species-cut_mean100_MDG.csv"
 
 ################################################################################
 ### Import dataset #############################################################
 ################################################################################
-
-df.confusion <- read.csv2(file.in.confusion,
-                          dec = ",",
-                          header = TRUE,
-                          stringsAsFactors = FALSE)
 
 df.varimp.MDA <- read.csv2(file.in.varimp.MDA,
                            dec = ",",
@@ -50,11 +44,6 @@ df.varimp.MDG <- read.csv2(file.in.varimp.MDG,
 ################################################################################
 
 ## Keep order by no.of.species in ggplot (x-axis)
-df.confusion$species <- factor(df.confusion$species, 
-                               levels=unique(df.confusion$species), 
-                               ordered=TRUE)
-
-## Keep order by no.of.species in ggplot (x-axis)
 df.varimp.MDA$species <- factor(df.varimp.MDA$species, 
                                 levels=unique(df.varimp.MDA$species), 
                                 ordered=TRUE)
@@ -67,7 +56,6 @@ df.varimp.MDG$species <- factor(df.varimp.MDG$species,
 
 
 ## recombine dataframes
-df.classError <- cbind(df.confusion[1], df.confusion[5], df.confusion[8])
 
 ## 15 commonest species
 df.varimp.MDA <- df.varimp.MDA[1:15,]
@@ -83,37 +71,12 @@ df.varimp.MDG.emit <- cbind(df.varimp.MDG[1],df.varimp.MDG[15:ncol(df.varimp.MDA
 
 
 ## melt dataframes
-df.classError.melt <- melt(df.classError, id="species")
 df.varimp.MDA.melt <- melt(df.varimp.MDA, id="species")
 df.varimp.MDG.melt <- melt(df.varimp.MDG, id="species")
 df.varimp.MDA.reflect.melt <- melt(df.varimp.MDA.reflect, id="species")
 df.varimp.MDA.emit.melt <- melt(df.varimp.MDA.emit, id="species")
 df.varimp.MDG.reflect.melt <- melt(df.varimp.MDG.reflect, id="species")
 df.varimp.MDG.emit.melt <- melt(df.varimp.MDG.emit, id="species")
-
-
-################################################################################
-### Plotting - Classification Error ############################################
-################################################################################
-
-## Define output image | open image port
-png("images/lvl0600_prevalence_confusion_classError.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
-
-ggplot(data=df.classError.melt,
-       aes(x=species, y=value, colour=variable, group=variable)) +
-  geom_line() +
-  xlab(NULL) +
-  ylab("Classification Error") +
-  ggtitle("RandomForest prevalence - confusion matrix") +
-  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 12),
-        plot.title = element_text(lineheight = .8, size = 20))
-
-## Close image port
-graphics.off()
 
 
 ################################################################################

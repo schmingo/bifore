@@ -494,7 +494,7 @@ df.out.confusion$CSI <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind
 df.out.confusion$POFD <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
   POFD.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,4] + df.out.confusion[i,6])
 #   POFD.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,12])
-  return(CSI.tmp)
+  return(POFD.tmp)
 }
 
 ################################################################################

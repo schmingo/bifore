@@ -484,7 +484,20 @@ df.out.confusion$FAR <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind
   return(FAR.tmp)
 }
 
+## CSI (Critical success index)
+df.out.confusion$CSI <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+    CSI.tmp <- (df.out.confusion[i,3]) / (df.out.confusion[i,3] + df.out.confusion[i,5] + df.out.confusion[i,4])
+  return(CSI.tmp)
+}
 
+## POFD (Probability of false detection)
+df.out.confusion$POFD <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+  POFD.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,4] + df.out.confusion[i,6])
+#   POFD.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,12])
+  return(CSI.tmp)
+}
+
+################################################################################
 
 ## Timekeeping
 endtime <- Sys.time()

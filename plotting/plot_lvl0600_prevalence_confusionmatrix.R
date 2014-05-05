@@ -66,7 +66,6 @@ png("images/lvl0600_prevalence_confusion_classError.png",
 ggplot(data=df.classError.melt,
        aes(x=species, y=value, colour=variable, group=variable)) +
   geom_line() +
-  geom_abline() +
   xlab(NULL) +
   ylab("Classification Error") +
   ggtitle("RandomForest prevalence - confusion matrix") +

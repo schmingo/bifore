@@ -47,9 +47,11 @@ df.confusion$species <- factor(df.confusion$species,
 
 ## recombine dataframes
 df.classError <- cbind(df.confusion[1], df.confusion[7], df.confusion[8])
+df.PODFAR <- cbind(df.confusion[1], df.confusion[2], df.confusion[13], df.confusion[14])
 
 ## melt dataframes
 df.classError.melt <- melt(df.classError, id="species")
+df.PODFAR.melt <- melt(df.PODFAR, id="species")
 
 
 ################################################################################
@@ -68,9 +70,34 @@ ggplot(data=df.classError.melt,
   geom_line() +
   xlab(NULL) +
   ylab("Classification Error") +
-  ggtitle("RandomForest prevalence - confusion matrix") +
+  ggtitle("RandomForest prevalence - confusion matrix - Classification error") +
   theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 12),
         plot.title = element_text(lineheight = .8, size = 20))
+
+## Close image port
+graphics.off()
+
+
+################################################################################
+### Plotting - POD ~ FAR #######################################################
+################################################################################
+
+## Define output image | open image port
+png("images/lvl0600_prevalence_confusion_POD-FAR.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
+
+ggplot(data=df.PODFAR,
+       aes(x=POD, y=FAR, size=2, colour=no.of.species)) +
+  geom_point() +
+#   scale_colour_grey(start = .7, end = 0) +   # !!! -> colour=factor(no.of.species)
+  scale_colour_gradient(limits=c(10, 40)) +
+  ggtitle("RandomForest prevalence - confusion matrix - POD~FAR") +
+  theme_bw() +
+  guides(size=FALSE) +
+  theme(plot.title = element_text(lineheight = .8, size = 20))
 
 ## Close image port
 graphics.off()

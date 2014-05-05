@@ -46,7 +46,7 @@ df.confusion$species <- factor(df.confusion$species,
 # df.classError <- df.varimp.MDA[1:15,]
 
 ## recombine dataframes
-df.classError <- cbind(df.confusion[1], df.confusion[5], df.confusion[8])
+df.classError <- cbind(df.confusion[1], df.confusion[7], df.confusion[8])
 
 ## melt dataframes
 df.classError.melt <- melt(df.classError, id="species")
@@ -66,6 +66,7 @@ png("images/lvl0600_prevalence_confusion_classError.png",
 ggplot(data=df.classError.melt,
        aes(x=species, y=value, colour=variable, group=variable)) +
   geom_line() +
+  geom_abline() +
   xlab(NULL) +
   ylab("Classification Error") +
   ggtitle("RandomForest prevalence - confusion matrix") +

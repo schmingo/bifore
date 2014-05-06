@@ -13,7 +13,7 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("ggplot2", "reshape2")
+lib <- c("ggplot2", "reshape2", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory

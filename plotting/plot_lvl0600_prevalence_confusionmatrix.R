@@ -59,11 +59,11 @@ df.PODFAR.melt <- melt(df.PODFAR, id="species")
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0600_prevalence_confusion_classError.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/lvl0600_prevalence_confusion_classError.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
 ggplot(data=df.classError.melt,
        aes(x=species, y=value, colour=variable, group=variable)) +
@@ -75,7 +75,7 @@ ggplot(data=df.classError.melt,
         plot.title = element_text(lineheight = .8, size = 20))
 
 ## Close image port
-graphics.off()
+# graphics.off()
 
 
 ################################################################################

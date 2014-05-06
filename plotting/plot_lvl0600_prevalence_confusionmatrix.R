@@ -52,7 +52,6 @@ df.confusion.sums <- cbind(df.confusion[1], df.confusion[9:12])
 df.PODFAR <- cbind(df.confusion[1], df.confusion[2], df.confusion[13], df.confusion[14])
 df.PODPOFD <- cbind(df.confusion[1], df.confusion[2], df.confusion[13], df.confusion[16])
 
-
 ## Modify df.classError species column (add sum M0 & sum M1)
 df.classError$species <- foreach(i=seq(1:nrow(df.confusion)), .combine="rbind") %do% {
   species.tmp <- paste0("sumM0=", df.confusion[i,9], # 
@@ -60,11 +59,11 @@ df.classError$species <- foreach(i=seq(1:nrow(df.confusion)), .combine="rbind") 
                         " ", df.confusion[i,1])
   return(species.tmp)
 }
+
 ## Keep order by no.of.species in ggplot (x-axis)
 df.classError$species <- factor(df.classError$species, 
                                 levels=unique(df.classError$species), 
                                 ordered=TRUE)
-
 
 ## melt dataframes
 df.classError.melt <- melt(df.classError, id="species")

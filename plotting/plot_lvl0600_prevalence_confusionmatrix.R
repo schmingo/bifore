@@ -5,7 +5,7 @@ cat("\014")
 ## PLOT PREVALENCE LVL0600 CONFUSION MATRIX                                   ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-05-05                                                        ##
+## Version: 2014-05-06                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -33,6 +33,14 @@ df.confusion <- read.csv2(file.in.confusion,
                           stringsAsFactors = FALSE)
 
 
+## Add sum M0 & sum M1 to species column
+df.confusion$species <- foreach(i=seq(1:nrow(df.confusion)), .combine="rbind") %do% {
+  species.tmp <- paste0("sumM0=", df.confusion[i,9], 
+                        " sumM1=", df.confusion[i,10],
+                        " ", df.confusion[i,1])
+  return(species.tmp)
+}
+
 ################################################################################
 ### Subset / merge data ########################################################
 ################################################################################
@@ -59,11 +67,11 @@ df.PODFAR.melt <- melt(df.PODFAR, id="species")
 ################################################################################
 
 ## Define output image | open image port
-# png("images/lvl0600_prevalence_confusion_classError.png", 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png("images/lvl0600_prevalence_confusion_classError.png", 
+    width = 1024 * 6, 
+    height = 1024 * 6, 
+    units = "px", 
+    res = 600)
 
 ggplot(data=df.classError.melt,
        aes(x=species, y=value, colour=variable, group=variable)) +
@@ -71,11 +79,11 @@ ggplot(data=df.classError.melt,
   xlab(NULL) +
   ylab("Classification Error") +
   ggtitle("RandomForest prevalence - confusion matrix - Classification error") +
-  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 12),
+  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 11),
         plot.title = element_text(lineheight = .8, size = 20))
 
 ## Close image port
-# graphics.off()
+graphics.off()
 
 
 ################################################################################
@@ -83,11 +91,11 @@ ggplot(data=df.classError.melt,
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0600_prevalence_confusion_POD-FAR.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/lvl0600_prevalence_confusion_POD-FAR.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
 ggplot(data=df.PODFAR,
        aes(x=POD, y=FAR, size=2, colour=no.of.species)) +
@@ -100,4 +108,4 @@ ggplot(data=df.PODFAR,
   theme(plot.title = element_text(lineheight = .8, size = 20))
 
 ## Close image port
-graphics.off()
+# graphics.off()

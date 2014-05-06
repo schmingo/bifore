@@ -33,14 +33,6 @@ df.confusion <- read.csv2(file.in.confusion,
                           stringsAsFactors = FALSE)
 
 
-## Add sum M0 & sum M1 to species column
-df.confusion$species <- foreach(i=seq(1:nrow(df.confusion)), .combine="rbind") %do% {
-  species.tmp <- paste0("sumM0=", df.confusion[i,9], 
-                        " sumM1=", df.confusion[i,10],
-                        " ", df.confusion[i,1])
-  return(species.tmp)
-}
-
 ################################################################################
 ### Subset / merge data ########################################################
 ################################################################################
@@ -55,10 +47,21 @@ df.confusion$species <- factor(df.confusion$species,
 
 ## recombine dataframes
 df.classError <- cbind(df.confusion[1], df.confusion[7], df.confusion[8])
+df.confusion.tst <- cbind(df.confusion[1], df.confusion[3:6])
 df.PODFAR <- cbind(df.confusion[1], df.confusion[2], df.confusion[13], df.confusion[14])
+
+
+## Modify df.classError species column (add sum M0 & sum M1)
+df.classError$species <- foreach(i=seq(1:nrow(df.confusion)), .combine="rbind") %do% {
+  species.tmp <- paste0("sumM0=", df.confusion[i,9], # 
+                        " sumM1=", df.confusion[i,10],
+                        " ", df.confusion[i,1])
+  return(species.tmp)
+}
 
 ## melt dataframes
 df.classError.melt <- melt(df.classError, id="species")
+df.confusion.tst.melt <- melt(df.confusion.tst, id="species")
 df.PODFAR.melt <- melt(df.PODFAR, id="species")
 
 
@@ -78,7 +81,31 @@ ggplot(data=df.classError.melt,
   geom_line() +
   xlab(NULL) +
   ylab("Classification Error") +
-  ggtitle("RandomForest prevalence - confusion matrix - Classification error") +
+  ggtitle("Prevalence - confusion matrix - Classification error") +
+  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 11),
+        plot.title = element_text(lineheight = .8, size = 20))
+
+## Close image port
+graphics.off()
+
+
+################################################################################
+### Plotting - confusion matrix variables ######################################
+################################################################################
+
+## Define output image | open image port
+png("images/lvl0600_prevalence_confusion_variables.png", 
+    width = 1024 * 6, 
+    height = 1024 * 6, 
+    units = "px", 
+    res = 600)
+
+ggplot(data=df.confusion.tst.melt,
+       aes(x=species, y=value, colour=variable, group=variable)) +
+  geom_line() +
+  xlab(NULL) +
+  ylab("confusion matrix variables") +
+  ggtitle("Prevalence - confusion matrix - confusion matrix variables") +
   theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 11),
         plot.title = element_text(lineheight = .8, size = 20))
 
@@ -91,21 +118,21 @@ graphics.off()
 ################################################################################
 
 ## Define output image | open image port
-# png("images/lvl0600_prevalence_confusion_POD-FAR.png", 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png("images/lvl0600_prevalence_confusion_POD-FAR.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
 ggplot(data=df.PODFAR,
        aes(x=POD, y=FAR, size=2, colour=no.of.species)) +
   geom_point() +
 #   scale_colour_grey(start = .7, end = 0) +   # !!! -> colour=factor(no.of.species)
   scale_colour_gradient(limits=c(10, 40)) +
-  ggtitle("RandomForest prevalence - confusion matrix - POD~FAR") +
+  ggtitle("Prevalence - confusion matrix - POD~FAR") +
   theme_bw() +
   guides(size=FALSE) +
   theme(plot.title = element_text(lineheight = .8, size = 20))
 
 ## Close image port
-# graphics.off()
+graphics.off()

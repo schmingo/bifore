@@ -4,13 +4,13 @@ cat("\014")
 ##                                                                            ##
 ## RANDOM FOREST FOR MODIS DATA                                               ##
 ##                                                                            ##
-## FURTHER PREVALENCE CALCULATIONS FOR ALL SPECIES                            ##
+## FURTHER PREVALENCE CALCULATIONS FOR ALL SPECIES (switched)                 ##
 ## EXECUTE RANDOM FOREST 100 TIMES AND CALCULATE MEAN VALUES FOR              ##
 ## CONFUSION MATRIX AND VARIABLE IMPORTANCE                                   ##
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-05-03                                                        ##
+## Version: 2014-05-06                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -30,7 +30,7 @@ setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/")
 
 ## Set filenames
 file.in <- "lvl0400_rf_strat_prevalence_cut.csv"
-file.out.confusion <- "lvl0600_rf_prevalence_species-cut_mean100_confusion.csv"
+file.out.confusion <- "lvl0600_rf_prevalence_species-cut_mean100_confusion_switch.csv"
 file.out.varimp.MDA <- "lvl0600_rf_prevalence_species-cut_mean100_MDA.csv"
 file.out.varimp.MDG <- "lvl0600_rf_prevalence_species-cut_mean100_MDG.csv"
 
@@ -470,39 +470,58 @@ df.out.confusion$sum.P1 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rb
   return(sum.tmp)
 }
 
-## POD (Probability of detection)
-df.out.confusion$POD <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-#   POD.tmp <- (df.out.confusion[i,3]) / (df.out.confusion[i,3] + df.out.confusion[i,5])
-  POD.tmp <- (df.out.confusion[i,3]) / (df.out.confusion[i,11])
-  return(POD.tmp)
-}
+# ## POD (Probability of detection)
+# df.out.confusion$POD <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+# #   POD.tmp <- (df.out.confusion[i,3]) / (df.out.confusion[i,3] + df.out.confusion[i,5])
+#   POD.tmp <- (df.out.confusion[i,3]) / (df.out.confusion[i,11])
+#   return(POD.tmp)
+# }
 
 
 ## POD_switch (Probability of detection)
-df.out.confusion$POD_switch <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+df.out.confusion$PODs <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
   #   POD.tmp <- (df.out.confusion[i,3]) / (df.out.confusion[i,3] + df.out.confusion[i,5])
   POD.tmp <- (df.out.confusion[i,6]) / (df.out.confusion[i,12])
   return(POD.tmp)
 }
 
+# ## FAR (False alarm ratio)
+# df.out.confusion$FAR <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+#   #   FAR.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,3] + df.out.confusion[i,4])
+#   FAR.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,9])
+#   return(FAR.tmp)
+# }
 
-## FAR (False alarm ratio)
-df.out.confusion$FAR <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+## FAR_switch (False alarm ratio)
+df.out.confusion$FARs <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
   #   FAR.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,3] + df.out.confusion[i,4])
-  FAR.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,9])
+  FAR.tmp <- (df.out.confusion[i,5]) / (df.out.confusion[i,10])
   return(FAR.tmp)
 }
 
-## CSI (Critical success index)
-df.out.confusion$CSI <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-    CSI.tmp <- (df.out.confusion[i,3]) / (df.out.confusion[i,3] + df.out.confusion[i,5] + df.out.confusion[i,4])
+# ## CSI (Critical success index)
+# df.out.confusion$CSI <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+#     CSI.tmp <- (df.out.confusion[i,3]) / (df.out.confusion[i,3] + df.out.confusion[i,5] + df.out.confusion[i,4])
+#   return(CSI.tmp)
+# }
+
+## CSI_switch (Critical success index)
+df.out.confusion$CSIs <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+  CSI.tmp <- (df.out.confusion[i,6]) / (df.out.confusion[i,6] + df.out.confusion[i,4] + df.out.confusion[i,5])
   return(CSI.tmp)
 }
 
-## POFD (Probability of false detection)
-df.out.confusion$POFD <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-  POFD.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,4] + df.out.confusion[i,6])
-#   POFD.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,12])
+# ## POFD (Probability of false detection)
+# df.out.confusion$POFD <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+#   POFD.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,4] + df.out.confusion[i,6])
+# #   POFD.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,12])
+#   return(POFD.tmp)
+# }
+
+## POFD_switch (Probability of false detection)
+df.out.confusion$POFDs <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+  POFD.tmp <- (df.out.confusion[i,5]) / (df.out.confusion[i,5] + df.out.confusion[i,3])
+  #   POFD.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,12])
   return(POFD.tmp)
 }
 

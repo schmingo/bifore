@@ -73,7 +73,7 @@ registerDoParallel(cl <- makeCluster(ncores))
 df.species.lvl0600 <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %dopar% {
   
   # species <- lst.species[47]
-  
+  set.seed(50)
   ## Select species data
   df.species <- data.frame(data.raw[,names(data.raw) %in% c(s)])
   names(df.species) <- s
@@ -168,7 +168,7 @@ df.species.lvl0600 <- foreach(s = lst.species, .combine = "cbind", .packages = l
   vi_MDG_36 = NULL
   
   ## Function ##################################################################
-  
+  set.seed(50)
   foreach(i = seq(1:100)) %do% {
     
     train.rf <- randomForest(x = predictor_modisVAL,

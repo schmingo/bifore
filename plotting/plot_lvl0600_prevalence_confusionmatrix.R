@@ -50,6 +50,7 @@ df.classError <- cbind(df.confusion[1], df.confusion[7], df.confusion[8])
 df.confusion.variables <- cbind(df.confusion[1], df.confusion[3:6])
 df.confusion.sums <- cbind(df.confusion[1], df.confusion[9:12])
 df.PODFAR <- cbind(df.confusion[1], df.confusion[2], df.confusion[13], df.confusion[14])
+df.PODPOFD <- cbind(df.confusion[1], df.confusion[2], df.confusion[13], df.confusion[16])
 
 
 ## Modify df.classError species column (add sum M0 & sum M1)
@@ -70,6 +71,7 @@ df.classError.melt <- melt(df.classError, id="species")
 df.confusion.variables.melt <- melt(df.confusion.variables, id="species")
 df.confusion.sums.melt <- melt(df.confusion.sums, id="species")
 df.PODFAR.melt <- melt(df.PODFAR, id="species")
+df.PODPOFD.melt <- melt(df.PODPOFD, id="species")
 
 
 ################################################################################
@@ -161,6 +163,31 @@ ggplot(data=df.PODFAR,
   #   scale_colour_grey(start = .7, end = 0) +   # !!! -> colour=factor(no.of.species)
   scale_colour_gradient(limits=c(10, 40)) +
   ggtitle("Prevalence - confusion matrix - POD~FAR") +
+  theme_bw() +
+  guides(size=FALSE) +
+  theme(plot.title = element_text(lineheight = .8, size = 20))
+
+## Close image port
+graphics.off()
+
+
+################################################################################
+### Plotting - POD ~ POFD ######################################################
+################################################################################
+
+## Define output image | open image port
+png("images/lvl0600_prevalence_confusion_POD-POFD.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
+
+ggplot(data=df.PODPOFD,
+       aes(x=POD, y=POFD, size=2, colour=no.of.species)) +
+  geom_point() +
+  #   scale_colour_grey(start = .7, end = 0) +   # !!! -> colour=factor(no.of.species)
+  scale_colour_gradient(limits=c(10, 40)) +
+  ggtitle("Prevalence - confusion matrix - POD~POFD") +
   theme_bw() +
   guides(size=FALSE) +
   theme(plot.title = element_text(lineheight = .8, size = 20))

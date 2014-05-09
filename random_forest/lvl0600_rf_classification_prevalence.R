@@ -357,7 +357,7 @@ row.names(df.species.lvl0600) <- NULL
 
 ## Define colnames
 names(df.species.lvl0600) <- c("species",
-                               "no.of.species",
+                               "no.of.prevalence",
                                "M0_P0",
                                "M0_P1",
                                "M1_P0",

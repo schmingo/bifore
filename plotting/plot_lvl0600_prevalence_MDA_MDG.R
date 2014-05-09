@@ -132,11 +132,11 @@ df.varimp.MDG.emit.melt <- melt(df.varimp.MDG.emit, id="species")
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0600_prevalence_bybands_MDA.png", 
-    width = 748 * 6, 
-    height = 1024 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/lvl0600_prevalence_bybands_MDA.png", 
+#     width = 748 * 6, 
+#     height = 1024 * 6, 
+#     units = "px", 
+#     res = 600)
 
 ggplot(data=df.varimp.MDA.melt,
        aes(x=species, y=value, group=variable)) +
@@ -151,7 +151,7 @@ ggplot(data=df.varimp.MDA.melt,
   facet_wrap(~variable, as.table=TRUE, ncol = 3)
 
 ## Close image port
-graphics.off()
+# graphics.off()
 
 
 ################################################################################
@@ -207,11 +207,11 @@ graphics.off()
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0600_prevalence_bybands_MDG.png", 
-    width = 748 * 6, 
-    height = 1024 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/lvl0600_prevalence_bybands_MDG.png", 
+#     width = 748 * 6, 
+#     height = 1024 * 6, 
+#     units = "px", 
+#     res = 600)
 
 ggplot(data=df.varimp.MDG.melt,
        aes(x=species, y=value, group=variable)) +
@@ -228,7 +228,7 @@ ggplot(data=df.varimp.MDG.melt,
 
 
 ## Close image port
-graphics.off()
+# graphics.off()
 
 
 
@@ -238,11 +238,11 @@ graphics.off()
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0600_prevalence_byspecies_MDA.png", 
-    width = 1024 * 6, 
-    height = 1024 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/lvl0600_prevalence_byspecies_MDA.png", 
+#     width = 1024 * 6, 
+#     height = 1024 * 6, 
+#     units = "px", 
+#     res = 600)
 
 ggplot(data=df.varimp.MDA.melt,
        aes(x=variable, y=value, group=species)) +
@@ -257,7 +257,7 @@ ggplot(data=df.varimp.MDA.melt,
   facet_wrap(~species, as.table=TRUE, ncol = 3)
 
 ## Close image port
-graphics.off()
+# graphics.off()
 
 
 ################################################################################
@@ -265,11 +265,11 @@ graphics.off()
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0600_prevalence_byspecies_MDG.png", 
-    width = 1024 * 6, 
-    height = 1024 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/lvl0600_prevalence_byspecies_MDG.png", 
+#     width = 1024 * 6, 
+#     height = 1024 * 6, 
+#     units = "px", 
+#     res = 600)
 
 ggplot(data=df.varimp.MDG.melt,
        aes(x=variable, y=value, group=species)) +
@@ -284,4 +284,28 @@ ggplot(data=df.varimp.MDG.melt,
   facet_wrap(~species, as.table=TRUE, ncol = 3)
 
 ## Close image port
-graphics.off()
+# graphics.off()
+
+
+################################################################################
+### Plotting - Mean Decrease Accuracy - Principal Components Analysis ##########
+################################################################################
+# df.varimp.MDA.princomp <- data.frame(t(df.varimp.MDA))
+
+## Transpose df
+df.varimp.MDA.princomp <- as.data.frame(t(df.varimp.MDA))
+
+## Write species into first row
+df.varimp.MDA.princomp <- cbind(rownames(df.varimp.MDA.princomp), df.varimp.MDA.princomp)
+
+## Remove rownames
+row.names(df.varimp.MDA.princomp) <- NULL
+names(df.varimp.MDA.princomp) <- dimnames(df.varimp.MDA[[2]])
+
+dimnames(df.varimp.MDA)[[2]]
+
+.
+.
+.
+
+princomp()

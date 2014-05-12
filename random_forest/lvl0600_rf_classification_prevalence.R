@@ -441,55 +441,57 @@ df.out.varimp.MDG <- cbind(df.species.lvl0600[1:2], df.species.lvl0600[39:68])
 ################################################################################
 ### Further Confusion Matrix calculations ######################################
 ################################################################################
-
+attach(df.out.confusion)
 
 ## Sum observed 0
 df.out.confusion$sum.O0 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-  sum.tmp <- df.out.confusion[i,3] + df.out.confusion[i,4]
+  sum.tmp <- df.out.confusion[i,"O0_P0"] + df.out.confusion[i,"O0_P1"]
   return(sum.tmp)
 }
 
 ## Sum observed 1
 df.out.confusion$sum.O1 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-  sum.tmp <- df.out.confusion[i,5] + df.out.confusion[i,6]
+  sum.tmp <- df.out.confusion[i,"O1_P0"] + df.out.confusion[i,"O1_P1"]
   return(sum.tmp)
 }
 
 ## Sum predicted 0
 df.out.confusion$sum.P0 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-  sum.tmp <- df.out.confusion[i,3] + df.out.confusion[i,5]
+  sum.tmp <- df.out.confusion[i,"O0_P0"] + df.out.confusion[i,"O1_P0"]
   return(sum.tmp)
 }
 
 ## Sum predicted 1
 df.out.confusion$sum.P1 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-  sum.tmp <- df.out.confusion[i,4] + df.out.confusion[i,6]
+  sum.tmp <- df.out.confusion[i,"O0_P1"] + df.out.confusion[i,"O1_P1"]
   return(sum.tmp)
 }
 
 ## POD (Probability of detection)
 df.out.confusion$POD <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-  POD.tmp <- (df.out.confusion[i,6]) / (df.out.confusion[i,10])
+  POD.tmp <- (df.out.confusion[i,"O1_P1"]) / (df.out.confusion[i,"sum.P1"])
   return(POD.tmp)
 }
 
 ## FAR (False alarm ratio)
 df.out.confusion$FAR <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-  FAR.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,12])
+  FAR.tmp <- (df.out.confusion[i,"O0_P1"]) / (df.out.confusion[i,"sum.P1"])
   return(FAR.tmp)
 }
 
 ## CSI (Critical success index)
 df.out.confusion$CSI <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-  CSI.tmp <- (df.out.confusion[i,6]) / (df.out.confusion[i,6] + df.out.confusion[i,5] + df.out.confusion[i,4])
+  CSI.tmp <- (df.out.confusion[i,"O1_P1"]) / (df.out.confusion[i,"O1_P1"] + df.out.confusion[i,"O1_P0"] + df.out.confusion[i,"O0_P1"])
   return(CSI.tmp)
 }
 
 ## POFD (Probability of false detection)
 df.out.confusion$POFD <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-    POFD.tmp <- (df.out.confusion[i,4]) / (df.out.confusion[i,9])
+    POFD.tmp <- (df.out.confusion[i,"O0_P1"]) / (df.out.confusion[i,"sum.O0"])
   return(POFD.tmp)
 }
+
+detach(df.out.confusion)
 
 ################################################################################
 

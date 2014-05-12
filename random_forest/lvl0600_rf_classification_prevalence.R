@@ -443,14 +443,14 @@ df.out.varimp.MDG <- cbind(df.species.lvl0600[1:2], df.species.lvl0600[39:68])
 ################################################################################
 
 
-## Sum measured 0
-df.out.confusion$sum.M0 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+## Sum observed 0
+df.out.confusion$sum.O0 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
   sum.tmp <- df.out.confusion[i,3] + df.out.confusion[i,4]
   return(sum.tmp)
 }
 
-## Sum measured 1
-df.out.confusion$sum.M1 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+## Sum observed 1
+df.out.confusion$sum.O1 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
   sum.tmp <- df.out.confusion[i,5] + df.out.confusion[i,6]
   return(sum.tmp)
 }

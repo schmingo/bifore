@@ -426,9 +426,9 @@ names(df.species.lvl0600) <- c("species",
                                "MDG_band36")
 
 
-## Order dataset by no.of.species (descending)
+## Order dataset by no.of.prevalence (descending)
 attach(df.species.lvl0600)
-df.species.lvl0600 <- df.species.lvl0600[order(-no.of.species),]
+df.species.lvl0600 <- df.species.lvl0600[order(-no.of.prevalence),]
 detach(df.species.lvl0600)
 
 ## Split data into 3 separate dataframes - confusion matrix & variable importance (MDA + MDG)

@@ -21,7 +21,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
 
 ## Set filenames
-file.in.confusion <- "csv/kili/lvl0600_rf_prevalence_species-cut_mean100_confusion_switch.csv"
+file.in.confusion <- "csv/kili/lvl0600_rf_prevalence_species-cut_mean100_confusion.csv"
 
 ################################################################################
 ### Import dataset #############################################################
@@ -37,7 +37,7 @@ df.confusion <- read.csv2(file.in.confusion,
 ### Subset / merge data ########################################################
 ################################################################################
 
-## Keep order by no.of.species in ggplot (x-axis)
+## Keep order by no.of.prevalence in ggplot (x-axis)
 df.confusion$species <- factor(df.confusion$species, 
                                levels=unique(df.confusion$species), 
                                ordered=TRUE)
@@ -51,6 +51,7 @@ df.confusion.variables <- cbind(df.confusion[1], df.confusion[3:6])
 df.confusion.sums <- cbind(df.confusion[1], df.confusion[9:12])
 df.PODFAR <- cbind(df.confusion[1], df.confusion[2], df.confusion[13], df.confusion[14])
 df.PODPOFD <- cbind(df.confusion[1], df.confusion[2], df.confusion[13], df.confusion[16])
+df.statTest <- cbind(df.confusion[1], df.confusion[13:16])
 
 ## Modify df.classError species column (add sum M0 & sum M1)
 df.classError$species <- foreach(i=seq(1:nrow(df.confusion)), .combine="rbind") %do% {
@@ -60,7 +61,7 @@ df.classError$species <- foreach(i=seq(1:nrow(df.confusion)), .combine="rbind") 
   return(species.tmp)
 }
 
-## Keep order by no.of.species in ggplot (x-axis)
+## Keep order by no.of.prevalence in ggplot (x-axis)
 df.classError$species <- factor(df.classError$species, 
                                 levels=unique(df.classError$species), 
                                 ordered=TRUE)
@@ -71,6 +72,7 @@ df.confusion.variables.melt <- melt(df.confusion.variables, id="species")
 df.confusion.sums.melt <- melt(df.confusion.sums, id="species")
 df.PODFAR.melt <- melt(df.PODFAR, id="species")
 df.PODPOFD.melt <- melt(df.PODPOFD, id="species")
+df.statTest.melt <- melt(df.statTest, id="species")
 
 
 ################################################################################
@@ -78,11 +80,11 @@ df.PODPOFD.melt <- melt(df.PODPOFD, id="species")
 ################################################################################
 
 ## Define output image | open image port
-# png("images/lvl0600_prevalence_confusion_classError.png", 
-#     width = 1024 * 6, 
-#     height = 1024 * 6, 
-#     units = "px", 
-#     res = 600)
+png("images/lvl0600_prevalence_confusion_classError.png", 
+    width = 1024 * 6, 
+    height = 1024 * 6, 
+    units = "px", 
+    res = 600)
 
 ggplot(data=df.classError.melt,
        aes(x=species, y=value, colour=variable, group=variable)) +
@@ -94,7 +96,7 @@ ggplot(data=df.classError.melt,
         plot.title = element_text(lineheight = .8, size = 20))
 
 ## Close image port
-# graphics.off()
+graphics.off()
 
 
 ################################################################################
@@ -102,11 +104,11 @@ ggplot(data=df.classError.melt,
 ################################################################################
 
 ## Define output image | open image port
-# png("images/lvl0600_prevalence_confusion_variables.png", 
-#     width = 1024 * 6, 
-#     height = 1024 * 6, 
-#     units = "px", 
-#     res = 600)
+png("images/lvl0600_prevalence_confusion_variables.png", 
+    width = 1024 * 6, 
+    height = 1024 * 6, 
+    units = "px", 
+    res = 600)
 
 ggplot(data=df.confusion.variables.melt,
        aes(x=species, y=value, colour=variable, group=variable)) +
@@ -118,7 +120,7 @@ ggplot(data=df.confusion.variables.melt,
         plot.title = element_text(lineheight = .8, size = 20))
 
 ## Close image port
-# graphics.off()
+graphics.off()
 
 
 ################################################################################
@@ -126,11 +128,11 @@ ggplot(data=df.confusion.variables.melt,
 ################################################################################
 
 ## Define output image | open image port
-# png("images/lvl0600_prevalence_confusion_sums.png", 
-#     width = 1024 * 6, 
-#     height = 1024 * 6, 
-#     units = "px", 
-#     res = 600)
+png("images/lvl0600_prevalence_confusion_sums.png", 
+    width = 1024 * 6, 
+    height = 1024 * 6, 
+    units = "px", 
+    res = 600)
 
 ggplot(data=df.confusion.sums.melt,
        aes(x=species, y=value, colour=variable, group=variable)) +
@@ -142,28 +144,52 @@ ggplot(data=df.confusion.sums.melt,
         plot.title = element_text(lineheight = .8, size = 20))
 
 ## Close image port
-# graphics.off()
+graphics.off()
 
+
+################################################################################
+### Plotting - Statistical Tests ###############################################
+################################################################################
+
+## Define output image | open image port
+png("images/lvl0600_prevalence_confusion_statTests.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
+
+ggplot(data=df.statTest.melt,
+       aes(x=species, y=value, colour=variable, group=variable)) +
+  geom_line() +
+  xlab(NULL) +
+  ylab("value") +
+  ylim(0,1) +
+  ggtitle("Prevalence - confusion matrix - statistical testvalues") +
+  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 11),
+        plot.title = element_text(lineheight = .8, size = 20))
+
+## Close image port
+graphics.off()
 
 ################################################################################
 ### Plotting - POD ~ FAR #######################################################
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0600_prevalence_confusion_POD-FARs.png", 
+png("images/lvl0600_prevalence_confusion_POD-FAR.png", 
     width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 
     res = 600)
 
 ggplot(data=df.PODFAR,
-       aes(x=PODs, y=FARs, size=2, colour=no.of.species)) +
+       aes(x=POD, y=FAR, size=2, colour=no.of.prevalence)) +
   geom_point() +
   ylim(0,1) +
   xlim(0,1) +
-  #   scale_colour_grey(start = .7, end = 0) +   # !!! -> colour=factor(no.of.species)
+  #   scale_colour_grey(start = .7, end = 0) +   # !!! -> colour=factor(no.of.prevalence)
   scale_colour_gradient(limits=c(10, 40)) +
-  ggtitle("Prevalence - confusion matrix - PODs~FARs") +
+  ggtitle("Prevalence - confusion matrix - POD~FAR") +
   theme_bw() +
   guides(size=FALSE) +
   theme(plot.title = element_text(lineheight = .8, size = 20))
@@ -177,23 +203,25 @@ graphics.off()
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0600_prevalence_confusion_POD-POFDs.png", 
+png("images/lvl0600_prevalence_confusion_POD-POFD.png", 
     width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 
     res = 600)
 
 ggplot(data=df.PODPOFD,
-       aes(x=PODs, y=POFDs, size=2, colour=no.of.species)) +
+       aes(x=POD, y=POFD, size=2, colour=no.of.prevalence)) +
   geom_point() +
   ylim(0,1) +
   xlim(0,1) +
-  #   scale_colour_grey(start = .7, end = 0) +   # !!! -> colour=factor(no.of.species)
+  #   scale_colour_grey(start = .7, end = 0) +   # !!! -> colour=factor(no.of.prevalence)
   scale_colour_gradient(limits=c(10, 40)) +
-  ggtitle("Prevalence - confusion matrix - PODs~POFDs") +
+  ggtitle("Prevalence - confusion matrix - POD~POFD") +
   theme_bw() +
   guides(size=FALSE) +
   theme(plot.title = element_text(lineheight = .8, size = 20))
 
 ## Close image port
 graphics.off()
+
+

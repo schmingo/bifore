@@ -21,7 +21,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set working directory
 setwd("/home/schmingo/")
 
-ncores <- detectCores()-1
+ncores <- detectCores()
 
 
 ################################################################################

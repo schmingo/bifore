@@ -14,8 +14,8 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Set working directory
-# setwd("/home/schmingo/Dropbox/Code/bifore/src/")
-setwd("D:/Dropbox/Code/bifore/src/")
+setwd("/home/schmingo/Dropbox/Code/bifore/src/")
+# setwd("D:/Dropbox/Code/bifore/src/")
 
 ## Set filepath
 path.bandnames.csv <- "csv/kili/bandnames.csv"

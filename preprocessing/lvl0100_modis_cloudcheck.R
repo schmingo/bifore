@@ -152,17 +152,18 @@ for(i in 1:nrow(fls.matching)) {
 
 ## get .tif list from swath2grid output
 tiffns <- list.files(path.tif.cloudmask, pattern=".tif", full.names=TRUE)
-tiffns
+# tiffns
 
-## Parallelization
 
-registerDoParallel(cl <- makeCluster(ncores))
                    
 ## Convert data to spatial object
 coordinates(data) <- ~ lon + lat
 # coordinates(data) <- c("lon","lat")
 proj4string(data) <- CRS("+init=epsg:4326")
-                   
+ 
+## Parallelization
+registerDoParallel(cl <- makeCluster(ncores))
+
 ## Loop through all available dates
 myd02.lst <- foreach(g = 1:nrow(data), .packages = lib, 
                      .combine = function(...) as.data.frame(rbind(...), 

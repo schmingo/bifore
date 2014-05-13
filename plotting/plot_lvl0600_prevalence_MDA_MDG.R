@@ -226,11 +226,8 @@ ggplot(data=df.varimp.MDG.melt,
   facet_wrap(~variable, as.table=TRUE, ncol = 3)
 
 
-
 ## Close image port
 # graphics.off()
-
-
 
 
 ################################################################################

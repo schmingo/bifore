@@ -8,7 +8,6 @@ cat("\014")
 ## Version: 2014-04-14                                                        ##
 ##                                                                            ##
 ################################################################################
-cat("\014")
 
 ## Clear workspace
 rm(list = ls(all = TRUE))
@@ -26,12 +25,12 @@ setwd("D:/Dropbox/Code/bifore/src/")
 ### Import dataset #############################################################
 ################################################################################
 
-data.raw.all <- read.csv2("csv/kili/lvl0400_simple_number-of-species_all.csv",
+data.raw.all <- read.csv2("csv/kili/lvl0400_strat_simple_number-of-prevalence_all.csv",
                           dec = ",",
                           header = TRUE,
                           stringsAsFactors = FALSE)
 
-data.raw.10 <- read.csv2("csv/kili/lvl0400_simple_number-of-species_10.csv",
+data.raw.10 <- read.csv2("csv/kili/lvl0400_strat_simple_number-of-prevalence_cut.csv",
                          dec = ",",
                          header = TRUE,
                          stringsAsFactors = FALSE)
@@ -42,18 +41,18 @@ data.raw.10 <- read.csv2("csv/kili/lvl0400_simple_number-of-species_10.csv",
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0400_prevalence_all_species.png", 
+png("images/lvl0400_strat_number-of-prevalence_all.png", 
     width = 2048 * 6, 
     height = 748 * 6, 
     units = "px", 
     res = 600)
 
-plot <- ggplot(data.raw.all, aes(x=species, y=number.of.species)) + 
+plot <- ggplot(data.raw.all, aes(x=species, y=number.of.prevalence)) + 
   geom_bar(stat="identity") +
   scale_fill_grey() +
   xlab("species") +
   ylab("prevalence") +
-  ggtitle("Orthoptera prevalence Mt. Kilimanjaro 2002-2012") +
+  ggtitle("Orthoptera prevalence Mt. Kilimanjaro 2002-2012 (stratified, all)") +
   theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 8),
         plot.title = element_text(lineheight = .8, size = 20))
 
@@ -68,18 +67,18 @@ graphics.off()
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0400_prevalence_10.png", 
+png("images/lvl0400_strat_number-of-prevalence_cut.png", 
     width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 
     res = 600)
 
-plot <- ggplot(data.raw.10, aes(x=species, y=number.of.species)) + 
+plot <- ggplot(data.raw.10, aes(x=species, y=number.of.prevalence)) + 
   geom_bar(stat="identity") +
   scale_fill_grey() +
   xlab("species") +
   ylab("prevalence") +
-  ggtitle("Orthoptera prevalence Mt. Kilimanjaro 2002-2012 \n Species with more than 10 observations in different plots") +
+  ggtitle("Orthoptera prevalence Mt. Kilimanjaro 2002-2012 (stratified, cut)") +
   theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5),
         plot.title = element_text(lineheight = .8, size = 20))
 

@@ -157,7 +157,7 @@ plot.deriv.reflective <- ggplot(deriv.reflective.melt, aes(x = variable, y = val
   theme(plot.title = element_text(lineheight=.8, size = 20),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 plot.deriv.reflective 
-# graphics.off()
+graphics.off()
 
 ## Define output image | open image port
 png("images/lvl0300_boxplot_derivate_emissive.png", 

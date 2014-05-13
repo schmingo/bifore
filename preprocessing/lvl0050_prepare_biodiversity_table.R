@@ -1,3 +1,4 @@
+cat("\014")
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
@@ -24,8 +25,8 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-# setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+setwd("/home/schmingo/Dropbox/Code/bifore/src/")
+# setwd("D:/Dropbox/Code/bifore/src/")
 
 ## Set filepaths
 file.hemp.csv <- "csv/kili/abundance_matrix_hemp.csv"

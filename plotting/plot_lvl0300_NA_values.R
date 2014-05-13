@@ -1,3 +1,4 @@
+cat("\014")
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
@@ -18,8 +19,8 @@ lib <- c("ggplot2", "reshape2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("/home/schmingo/Dropbox/Code/bifore/src/")
+setwd("D:/Dropbox/Code/bifore/src/")
 
 ## Set filepath
 path.lvl0300.csv <- "csv/kili/lvl0300_biodiversity_data.csv"

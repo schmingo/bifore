@@ -25,8 +25,8 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ncores <- detectCores()-1
 
 ## set working directory
-# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/csv/kili/")
+# setwd("/home/schmingo/Dropbox/Code/bifore/src/")
+setwd("D:/Dropbox/Code/bifore/src/csv/kili/")
 
 ## Set filenames
 file.in <- "lvl0400_rf_strat_prevalence_cut.csv"

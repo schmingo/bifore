@@ -1,3 +1,4 @@
+cat("\014")
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
@@ -19,16 +20,16 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set working directory
 setwd("/home/schmingo/")
 
-path.hdf.in <- "Daten/Diplomarbeit/data/myd02-03_hdf/"
-tifsdir <- "Daten/Diplomarbeit/data/myd02_tif/"
+path.hdf.in <- "Daten/Code/bifore_src/myd02-03_hdf/"
+tifsdir <- "Daten/Code/bifore_src/myd02_tif/"
 mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
 
 ## Load required modules
-source("Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_1000.R")
-source("Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_500.R")
-source("Diplomarbeit/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_250.R")
-source("Diplomarbeit/bifore/preprocessing/modules/lvl0220_runSwath2Grid.R")
-source("Diplomarbeit/bifore/preprocessing/modules/lvl0230_renameSuffix.R")
+source("Code/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_1000.R")
+source("Code/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_500.R")
+source("Code/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_250.R")
+source("Code/bifore/preprocessing/modules/lvl0220_runSwath2Grid.R")
+source("Code/bifore/preprocessing/modules/lvl0230_renameSuffix.R")
 
 ## Check actual time
 starttime <- Sys.time()

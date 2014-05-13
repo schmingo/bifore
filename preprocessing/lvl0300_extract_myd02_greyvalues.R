@@ -1,3 +1,4 @@
+cat("\014")
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
@@ -27,15 +28,15 @@ ncores <- detectCores()-1
 ### Set filepaths ##############################################################
 ################################################################################
 
-path.hdf <- "Daten/Diplomarbeit/data/myd02-03_hdf/"
-path.tif <- "Daten/Diplomarbeit/data/myd02_tif/"
-path.tif.na <- "Daten/Diplomarbeit/data/myd02_tif_na/"
-path.tif.calc <- "Daten/Diplomarbeit/data/myd02_tif_calc/"
-path.biodiversity.csv <- "Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0100_biodiversity_data.csv"
-path.biodiversity.csv.out <- "Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0300_biodiversity_data.csv"
+path.hdf <- "Daten/Code/bifore_src/myd02-03_hdf/"
+path.tif <- "Daten/Code/bifore_src/myd02_tif/"
+path.tif.na <- "Daten/Code/bifore_src/myd02_tif_na/"
+path.tif.calc <- "Daten/Code/bifore_src/myd02_tif_calc/"
+path.biodiversity.csv <- "Dropbox/Code/bifore/src/csv/kili/lvl0100_biodiversity_data.csv"
+path.biodiversity.csv.out <- "Dropbox/Code/bifore/src/csv/kili/lvl0300_biodiversity_data.csv"
 
 ## Source modules
-source("Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
+source("Code/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
 
 
 ################################################################################

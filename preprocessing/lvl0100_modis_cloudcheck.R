@@ -1,3 +1,4 @@
+cat("\014")
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
@@ -30,16 +31,16 @@ ncores <- detectCores()
 
 ## To preprocess MYD35_L2 and MYD03 files; both must be in the same directory.
 
-path.biodiversity.csv <- "Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0050_biodiversity_data.csv"
-path.nocloud.csv <- "Dropbox/Diplomarbeit/code/bifore/src/csv/kili/lvl0100_biodiversity_data.csv"
-path.hdf.in <- "Daten/Diplomarbeit/data/myd03-35_hdf/"
-path.hdf.sub <- "Daten/Diplomarbeit/data/myd03-35_hdf_daytime/"
-path.tif.cloudmask <- "Daten/Diplomarbeit/data/myd_cloudmask_tif_daytime/"
+path.biodiversity.csv <- "Dropbox/Code/bifore/src/csv/kili/lvl0050_biodiversity_data.csv"
+path.nocloud.csv <- "Dropbox/Code/bifore/src/csv/kili/lvl0100_biodiversity_data.csv"
+path.hdf.in <- "Daten/Code/bifore_src/myd03-35_hdf/"
+path.hdf.sub <- "Daten/Code/bifore_src/myd03-35_hdf_daytime/"
+path.tif.cloudmask <- "Daten/Code/bifore_src/myd_cloudmask_tif_daytime/"
 mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
 
 ## Load required modules
-source("Diplomarbeit/bifore/preprocessing/modules/lvl0110_writeMRTSwathParamFile_cloudcheck.R")
-source("Diplomarbeit/bifore/preprocessing/modules/lvl0110_runSwath2Grid.R")
+source("Code/bifore/preprocessing/modules/lvl0110_writeMRTSwathParamFile_cloudcheck.R")
+source("Code/bifore/preprocessing/modules/lvl0110_runSwath2Grid.R")
 
 ################################################################################
 ### Import biodiversity dataset ################################################

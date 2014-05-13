@@ -1,3 +1,4 @@
+cat("\014")
 ################################################################################
 ## BiFoRe Scripts                                                             ##
 ##                                                                            ##
@@ -10,7 +11,6 @@
 
 
 ## Clear workspace
-cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
@@ -18,8 +18,8 @@ lib <- c("randomForest")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("/home/schmingo/Dropbox/Code/bifore/src/")
+setwd("D:/Dropbox/Code/bifore/src/")
 
 
 ################################################################################

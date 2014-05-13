@@ -17,8 +17,8 @@ lib <- c("ggplot2", "reshape2", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-setwd("D:/Dropbox/Diplomarbeit/code/bifore/src/")
+# setwd("/home/schmingo/Dropbox/Code/bifore/src/")
+setwd("D:/Dropbox/Code/bifore/src/")
 
 ## Set filenames
 file.in.confusion <- "csv/kili/lvl0600_rf_prevalence_species-cut_mean100_confusion.csv"

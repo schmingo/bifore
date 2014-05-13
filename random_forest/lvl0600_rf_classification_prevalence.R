@@ -22,7 +22,7 @@ rm(list = ls(all = TRUE))
 lib <- c("randomForest", "foreach", "doParallel")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
-ncores <- detectCores()-1
+ncores <- detectCores()
 
 ## set working directory
 # setwd("/home/schmingo/Dropbox/Code/bifore/src/")

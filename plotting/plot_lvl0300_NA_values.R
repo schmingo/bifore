@@ -61,23 +61,6 @@ names(df.NA.melt) <- c("MODIS_bands", "NA_values", "NA_count")
 ### Plotting ###################################################################
 ################################################################################
 
-## Plot single subset (greyvalues, diff or sd)
-# qplot(y=df.NA[,1], 
-#       x=df.NA$bandnames, 
-#       geom = "bar", 
-#       binwidth = 2, 
-#       stat="identity",
-#       position="dodge")
-
-
-# ## Using barplot()
-# barplot(height = df.NA,
-#         width = length(row.names(df.NA)), 
-#         beside = TRUE,
-#         ylab = "count NA",
-#         xlab = "MODIS bands")
-
-
 ## Define output image | open image port
 png("images/lvl0300_na_values.png", 
     width = 1024 * 6, 

@@ -146,31 +146,5 @@ print(paste0((1-length(notidentical)/nrow(test.data))*100, "% of predicted class
 
 varimp <- importance(train.rf)
 
-
-## Define output image | open image port
-# png(paste0("images/rf_", species, "_classification_prevalence_varImp.png"), 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
-
 varimp.plot <- varImpPlot(train.rf, sort = TRUE, n.var = 30,
                           main = paste0(species," - Variable importance"))
-## Close image port
-# graphics.off()
-
-
-## The first measure is computed from permuting OOB data: For each tree, 
-## the prediction error on the out-of-bag portion of the data is recorded 
-## (error rate for classification, MSE for regression). Then the same is 
-## done after permuting each predictor variable. The difference between 
-## the two are then averaged over all trees, and normalized by 
-## the standard deviation of the differences. If the standard deviation 
-## of the differences is equal to 0 for a variable, the division is 
-## not done (but the average is almost always equal to 0 in that case).
-## 
-## The second measure is the total decrease in node impurities from 
-## splitting on the variable, averaged over all trees. 
-## For classification, the node impurity is measured by the Gini index. 
-## For regression, it is measured by residual sum of squares.
-

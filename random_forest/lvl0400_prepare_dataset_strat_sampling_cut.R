@@ -34,8 +34,8 @@ file.out.specno.cut <- "csv/kili/lvl0400_rf_strat_number-of-species_cut.csv"
 file.out.prevalence.all <- "csv/kili/lvl0400_rf_strat_prevalence_all.csv"
 file.out.prevalence.cut <- "csv/kili/lvl0400_rf_strat_prevalence_cut.csv"
 
-file.out.simple.noofspecies.all <- "csv/kili/lvl0400_strat_simple_number-of-species_all.csv"
-file.out.simple.noofspecies.cut <- "csv/kili/lvl0400_strat_simple_number-of-species_cut.csv"
+file.out.simple.noofprevalence.all <- "csv/kili/lvl0400_strat_simple_number-of-prevalence_all.csv"
+file.out.simple.noofprevalence.cut <- "csv/kili/lvl0400_strat_simple_number-of-prevalence_cut.csv"
 
 
 ################################################################################
@@ -306,30 +306,30 @@ write.table(data.rf.prevalence.cut,
 ################################################################################
 
 ## Calculate no.of.species for all species
-df.noofspecies.all <- data.frame(colSums(df.sub.all.species > 0, na.rm = TRUE), 
+df.noofprevalence.all <- data.frame(colSums(df.sub.all.species > 0, na.rm = TRUE), 
                                  row.names = NULL)
-df.noofspecies.cut <- data.frame(colSums(df.sub.cut.species > 0, na.rm = TRUE), 
+df.noofprevalence.cut <- data.frame(colSums(df.sub.cut.species > 0, na.rm = TRUE), 
                                 row.names = NULL)
 
 ## Combine new df
-df.noofspecies.all <- cbind(names(df.sub.all.species), df.noofspecies.all)
-df.noofspecies.cut <- cbind(names(df.sub.cut.species), df.noofspecies.cut)
+df.noofprevalence.all <- cbind(names(df.sub.all.species), df.noofprevalence.all)
+df.noofprevalence.cut <- cbind(names(df.sub.cut.species), df.noofprevalence.cut)
 
 ## Set colnames
-colnames(df.noofspecies.all) <- c("species", "number.of.species")
-colnames(df.noofspecies.cut) <- c("species", "number.of.species")
+colnames(df.noofprevalence.all) <- c("species", "number.of.prevalence")
+colnames(df.noofprevalence.cut) <- c("species", "number.of.prevalence")
 
 ## Write table
-write.table(df.noofspecies.all, 
-            file = file.out.simple.noofspecies.all,
+write.table(df.noofprevalence.all, 
+            file = file.out.simple.noofprevalence.all,
             dec = ",",
             quote = FALSE,
             col.names = TRUE,
             row.names = FALSE,
             sep = ";")
 
-write.table(df.noofspecies.cut, 
-            file = file.out.simple.noofspecies.cut,
+write.table(df.noofprevalence.cut, 
+            file = file.out.simple.noofprevalence.cut,
             dec = ",",
             quote = FALSE,
             col.names = TRUE,

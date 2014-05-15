@@ -296,17 +296,16 @@ df.varimp.MDA.princomp <- as.data.frame(t(df.varimp.MDA))
 df.varimp.MDA.princomp <- cbind(rownames(df.varimp.MDA.princomp), df.varimp.MDA.princomp)
 
 ## Remove rownames
-row.names(df.varimp.MDA.princomp) <- NULL
+# row.names(df.varimp.MDA.princomp) <- NULL
 
 ## Set new colnames
-names(df.varimp.MDA.princomp) <- c("bands", as.character(df.varimp.MDA[,1]))
+# names(df.varimp.MDA.princomp) <- c("bands", as.character(df.varimp.MDA[,1]))
+names(df.varimp.MDA.princomp) <- as.character(df.varimp.MDA[,1])
 
 ## Remove first data row (= redundant)
 df.varimp.MDA.princomp <- df.varimp.MDA.princomp[-1,]
 
 ## Remove rownames
-row.names(df.varimp.MDA.princomp) <- NULL
-
 summary(df.varimp.MDA.princomp)
 
-princomp(df.varimp.MDA.princomp[,1])
+princomp(df.varimp.MDA.princomp)

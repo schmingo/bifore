@@ -287,25 +287,28 @@ ggplot(data=df.varimp.MDG.melt,
 ################################################################################
 ### Plotting - Mean Decrease Accuracy - Principal Components Analysis ##########
 ################################################################################
-# df.varimp.MDA.princomp <- data.frame(t(df.varimp.MDA))
+# df.princomp.MDA <- data.frame(t(df.varimp.MDA))
 
 ## Transpose df
-df.varimp.MDA.princomp <- as.data.frame(t(df.varimp.MDA))
-
-## Write species into first row
-df.varimp.MDA.princomp <- cbind(rownames(df.varimp.MDA.princomp), df.varimp.MDA.princomp)
-
-## Remove rownames
-# row.names(df.varimp.MDA.princomp) <- NULL
+df.princomp.MDA <- data.frame(t(df.varimp.MDA), stringsAsFactors=FALSE)
 
 ## Set new colnames
-# names(df.varimp.MDA.princomp) <- c("bands", as.character(df.varimp.MDA[,1]))
-names(df.varimp.MDA.princomp) <- as.character(df.varimp.MDA[,1])
+names(df.princomp.MDA) <- as.character(df.varimp.MDA[,1])
 
 ## Remove first data row (= redundant)
-df.varimp.MDA.princomp <- df.varimp.MDA.princomp[-1,]
+df.princomp.MDA <- df.princomp.MDA[-1,]
 
-## Remove rownames
-summary(df.varimp.MDA.princomp)
+## Converts factors to numeric values
+df.princomp.MDA <- data.matrix(df.princomp.MDA)
 
-princomp(df.varimp.MDA.princomp)
+summary(df.princomp.MDA)
+
+## Select species for PCA
+df.princomp.MDA <- df.princomp.MDA[,1:4]
+
+princomp.MDA <- princomp(df.princomp.MDA, scores = TRUE)
+plot(princomp.MDA)
+summary(princomp.MDA)
+loadings(princomp.MDA)
+biplot(princomp.MDA)
+?biplot.princomp

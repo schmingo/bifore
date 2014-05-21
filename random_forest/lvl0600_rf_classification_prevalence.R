@@ -515,3 +515,8 @@ write.csv2(df.out.varimp.MDG,
            file = file.out.varimp.MDG,
            quote = FALSE,
            row.names = FALSE)
+
+
+
+## Get probabilities for ROC-curve 
+??predict.randomForest

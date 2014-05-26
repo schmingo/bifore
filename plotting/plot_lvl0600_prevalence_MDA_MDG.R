@@ -13,7 +13,7 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("ggplot2", "reshape2")
+lib <- c("ggplot2", "reshape2", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
@@ -287,28 +287,40 @@ ggplot(data=df.varimp.MDG.melt,
 ################################################################################
 ### Plotting - Mean Decrease Accuracy - Principal Components Analysis ##########
 ################################################################################
-# df.princomp.MDA <- data.frame(t(df.varimp.MDA))
+# df.pca.MDA <- data.frame(t(df.varimp.MDA))
 
 ## Transpose df
-df.princomp.MDA <- data.frame(t(df.varimp.MDA), stringsAsFactors=FALSE)
+df.pca.MDA <- data.frame(t(df.varimp.MDA), stringsAsFactors=FALSE)
 
 ## Set new colnames
-names(df.princomp.MDA) <- as.character(df.varimp.MDA[,1])
+names(df.pca.MDA) <- as.character(df.varimp.MDA[,1])
 
 ## Remove first data row (= redundant)
-df.princomp.MDA <- df.princomp.MDA[-1,]
+df.pca.MDA <- df.pca.MDA[-1,]
 
 ## Converts factors to numeric values
-df.princomp.MDA <- data.matrix(df.princomp.MDA)
+df.pca.MDA <- data.matrix(df.pca.MDA)
 
-summary(df.princomp.MDA)
+## Modify row.names
+# df.pca.MDA <- data.frame(df.pca.MDA)
+# b <- unlist(strsplit(row.names(df.pca.MDA)[1], "d"))
+# b[2]
+
+# 
+# foreach(i=seq(1:length(row.names(df.pca.MDA)))) %do% {
+#   r <- unlist(strsplit(row.names(df.pca.MDA)[i], "d"))
+#   row.names(df.pca.MDA[i] <- r[2])
+#   return(row.names(df.pca.MDA[i]))
+# }
+
+summary(df.pca.MDA)
 
 ## Select species for PCA
-df.princomp.MDA <- df.princomp.MDA[,1:4]
+df.pca.MDA <- df.pca.MDA[,1:4]
 
-princomp.MDA <- princomp(df.princomp.MDA, scores = TRUE)
-plot(princomp.MDA)
-summary(princomp.MDA)
-loadings(princomp.MDA)
-biplot(princomp.MDA)
+pca.MDA <- princomp(df.pca.MDA, scores = TRUE)
+plot(pca.MDA)
+summary(pca.MDA)
+loadings(pca.MDA)
+biplot(pca.MDA)
 ?biplot.princomp

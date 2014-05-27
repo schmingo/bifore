@@ -5,7 +5,7 @@ cat("\014")
 ## PLOT PREVALENCE LVL0600 CONFUSION MATRIX, MEAN DECREASE ACCURACY AND       ##
 ## MEAN DECREASE GINI                                                         ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-05-05                                                        ##
+## Version: 2014-05-27                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -282,45 +282,3 @@ ggplot(data=df.varimp.MDG.melt,
 
 ## Close image port
 # graphics.off()
-
-
-################################################################################
-### Plotting - Mean Decrease Accuracy - Principal Components Analysis ##########
-################################################################################
-# df.pca.MDA <- data.frame(t(df.varimp.MDA))
-
-## Transpose df
-df.pca.MDA <- data.frame(t(df.varimp.MDA), stringsAsFactors=FALSE)
-
-## Set new colnames
-names(df.pca.MDA) <- as.character(df.varimp.MDA[,1])
-
-## Remove first data row (= redundant)
-df.pca.MDA <- df.pca.MDA[-1,]
-
-## Converts factors to numeric values
-df.pca.MDA <- data.matrix(df.pca.MDA)
-
-## Modify row.names
-# df.pca.MDA <- data.frame(df.pca.MDA)
-# b <- unlist(strsplit(row.names(df.pca.MDA)[1], "d"))
-# b[2]
-
-# 
-# foreach(i=seq(1:length(row.names(df.pca.MDA)))) %do% {
-#   r <- unlist(strsplit(row.names(df.pca.MDA)[i], "d"))
-#   row.names(df.pca.MDA[i] <- r[2])
-#   return(row.names(df.pca.MDA[i]))
-# }
-
-summary(df.pca.MDA)
-
-## Select species for PCA
-df.pca.MDA <- df.pca.MDA[,1:4]
-
-pca.MDA <- princomp(df.pca.MDA, scores = TRUE)
-plot(pca.MDA)
-summary(pca.MDA)
-loadings(pca.MDA)
-biplot(pca.MDA)
-?biplot.princomp

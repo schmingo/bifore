@@ -44,7 +44,7 @@ df.varimp.MDG <- read.csv2(file.in.varimp.MDG,
 
 
 ################################################################################
-### Prepare MDA dataset for Principal Component Analysis #######################
+### Prepare datasets for Principal Component Analysis ##########################
 ################################################################################
 
 ## Keep ordering by no.of.species

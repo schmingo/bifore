@@ -18,8 +18,11 @@ lib <- c("ggplot2", "reshape2", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
-# setwd("/home/schmingo/Dropbox/Code/bifore/src/")
-setwd("D:/Dropbox/Code/bifore/src/")
+switch(Sys.info()[["sysname"]], 
+       "Windows" = setwd("D:/Dropbox/Code/bifore/src/"), 
+       "Linux" = setwd("/home/schmingo/Dropbox/Code/bifore/src/"))
+# # setwd("/home/schmingo/Dropbox/Code/bifore/src/")
+# setwd("D:/Dropbox/Code/bifore/src/")
 
 ## Set filenames
 file.in.varimp.MDA <- "csv/kili/lvl0600_rf_prevalence_species-cut_mean100_MDA.csv"

@@ -109,7 +109,7 @@ png("images/lvl0600_PCA_MDA.png",
     units = "px", 
     res = 600)
 
-biplot(pca.MDA)
+biplot(pca.MDA, main = "PCA - Mean Decrease Accuracy")
 # ?biplot.princomp
 
 ## Close image port
@@ -138,7 +138,7 @@ png("images/lvl0600_PCA_MDG.png",
     units = "px", 
     res = 600)
 
-biplot(pca.MDG)
+biplot(pca.MDG, main = "PCA - Mean Decrease Gini")
 # ?biplot.princomp
 
 ## Close image port

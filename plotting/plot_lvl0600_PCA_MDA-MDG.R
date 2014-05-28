@@ -58,9 +58,9 @@ df.varimp.MDG$species <- factor(df.varimp.MDG$species,
                                 ordered=TRUE)
 
 
-## select commonest species
-df.varimp.MDA <- df.varimp.MDA[1:10,]
-df.varimp.MDG <- df.varimp.MDG[1:10,]
+## Subset species
+df.varimp.MDA <- df.varimp.MDA[1:6,]
+df.varimp.MDG <- df.varimp.MDG[1:6,]
 
 ## remove no.of.prevalence
 df.varimp.MDA <- cbind(df.varimp.MDA[1],df.varimp.MDA[3:ncol(df.varimp.MDA)])

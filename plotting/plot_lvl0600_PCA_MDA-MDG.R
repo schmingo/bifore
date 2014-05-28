@@ -17,27 +17,25 @@ rm(list = ls(all = TRUE))
 lib <- c("ggplot2", "reshape2", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
-## set working directory
+## set working directory and load config_filepaths
 switch(Sys.info()[["sysname"]], 
-       "Windows" = setwd("D:/Dropbox/Code/bifore/src/"), 
-       "Linux" = setwd("/home/schmingo/Dropbox/Code/bifore/src/"))
-# # setwd("/home/schmingo/Dropbox/Code/bifore/src/")
-# setwd("D:/Dropbox/Code/bifore/src/")
+       "Windows" = source("D:/Code/bifore/config_filepaths_windows.R"),
+       "Linux" = source("D:/Code/bifore/config_filepaths_linux.R", echo=TRUE))
 
-## Set filenames
-file.in.varimp.MDA <- "csv/kili/lvl0600_rf_prevalence_species-cut_mean100_MDA.csv"
-file.in.varimp.MDG <- "csv/kili/lvl0600_rf_prevalence_species-cut_mean100_MDG.csv"
+# ## Set filenames
+# file.varimp.MDA <- paste0(path.csv,"lvl0600_rf_prevalence_species-cut_mean100_MDA.csv")
+# file.varimp.MDG <- paste0(path.csv,"lvl0600_rf_prevalence_species-cut_mean100_MDG.csv")
 
 ################################################################################
 ### Import dataset #############################################################
 ################################################################################
 
-df.varimp.MDA <- read.csv2(file.in.varimp.MDA,
+df.varimp.MDA <- read.csv2(file.varimp.MDA,
                            dec = ",",
                            header = TRUE,
                            stringsAsFactors = FALSE)
 
-df.varimp.MDG <- read.csv2(file.in.varimp.MDG,
+df.varimp.MDG <- read.csv2(file.varimp.MDG,
                            dec = ",",
                            header = TRUE,
                            stringsAsFactors = FALSE)

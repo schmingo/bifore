@@ -19,7 +19,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory and load config_filepaths
 switch(Sys.info()[["sysname"]], 
-       "Windows" = source("D:/Code/bifore/config_filepaths_windows.R"),
+       "Windows" = source("D:/Code/bifore/config_filepaths_windows.R", echo=TRUE),
        "Linux" = source("D:/Code/bifore/config_filepaths_linux.R", echo=TRUE))
 
 # ## Set filenames

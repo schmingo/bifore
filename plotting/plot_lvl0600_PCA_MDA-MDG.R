@@ -1,14 +1,33 @@
 cat("\014")
 ################################################################################
-## BiFoRe Scripts                                                             ##
-##                                                                            ##
-## PRINCIPAL COMPONENT ANALYSIS                                               ##
-## MEAN DECREASE GINI & MEAN DECREASE ACCURACY                                ##
-##                                                                            ##
-## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-05-28                                                        ##
-##                                                                            ##
+##  
+##  Principal Component Analysis
+##  Mean Decrease Gini & Mean Decrease Accuracy
+##  
+##  Version: 2014-05-28
+##  
 ################################################################################
+##
+##  Copyright (C) 2014 Simon Schlauss
+##
+##
+##  This file is part of BiFoRe.
+##  
+##  BiFoRe is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##  
+##  BiFoRe is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##  
+##  You should have received a copy of the GNU General Public License
+##  along with BiFoRe.  If not, see <http://www.gnu.org/licenses/>.
+##  
+################################################################################
+
 
 ## Clear workspace
 rm(list = ls(all = TRUE))

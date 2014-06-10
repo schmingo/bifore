@@ -2,7 +2,8 @@ cat("\014")
 ################################################################################
 ##  
 ##  Principal Component Analysis
-##  Mean Decrease Gini & Mean Decrease Accuracy
+##  of variable importance measures prduced by RandomForest
+##  (Mean Decrease Gini & Mean Decrease Accuracy)
 ##  
 ##  Version: 2014-05-28
 ##  

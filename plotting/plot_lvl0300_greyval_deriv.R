@@ -1,18 +1,37 @@
 cat("\014")
 ################################################################################
-## BiFoRe Scripts                                                             ##
-##                                                                            ##
-## PLOT EXTRACT GREYVALUES, FIRST DERIVATE                                    ##
-##                                                                            ##
-##                                                                            ##
-## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-16                                                        ##
-##                                                                            ##
+##  
+##  BiFoRe Scripts
+##
+##  Plot extracted greyvalues and first derivate, based on lvl0300 dataset.
+##  
+##  Version: 2014-03-16
+##  
 ################################################################################
+##
+##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##
+##
+##  This file is part of BiFoRe.
+##  
+##  BiFoRe is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##  
+##  BiFoRe is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##  
+##  You should have received a copy of the GNU General Public License
+##  along with BiFoRe.  If not, see <http://www.gnu.org/licenses/>.
+##  
+################################################################################
+
 
 ## Clear workspace
 rm(list = ls(all = TRUE))
-
 
 ## Required libraries
 lib <- c("ggplot2", "reshape2")
@@ -73,11 +92,12 @@ greyval.emissive.melt <- melt(data.greyval.emissive, id = "date_nocloud",
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0300_boxplot_greyvalues_reflective.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/lvl0300_boxplot_greyvalues_reflective.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
+
 plot.greyval.reflective <- ggplot(greyval.reflective.melt, aes(x = variable, y = value)) +
   geom_boxplot() +
   xlab("MYD02 reflective bands") +
@@ -86,15 +106,17 @@ plot.greyval.reflective <- ggplot(greyval.reflective.melt, aes(x = variable, y =
   theme(plot.title = element_text(lineheight=.8, size = 20),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 plot.greyval.reflective 
-graphics.off()
+
+# graphics.off()
 
 
 ## Define output image | open image port
-png("images/lvl0300_boxplot_greyvalues_emissive.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/lvl0300_boxplot_greyvalues_emissive.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
+
 plot.greyval.emissive <- ggplot(greyval.emissive.melt, aes(x = variable, y = value)) +
   geom_boxplot() +
   xlab("MYD02 emissive bands") +
@@ -103,7 +125,8 @@ plot.greyval.emissive <- ggplot(greyval.emissive.melt, aes(x = variable, y = val
   theme(plot.title = element_text(lineheight=.8, size = 20),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 plot.greyval.emissive
-graphics.off()
+
+# graphics.off()
 
 
 ################################################################################
@@ -144,11 +167,12 @@ deriv.emissive.melt <- melt(data.deriv.emissive, id = "date_nocloud",
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0300_boxplot_derivate_reflective.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/lvl0300_boxplot_derivate_reflective.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
+
 plot.deriv.reflective <- ggplot(deriv.reflective.melt, aes(x = variable, y = value)) +
   geom_boxplot() +
   xlab("MYD02 reflective bands") +
@@ -157,14 +181,16 @@ plot.deriv.reflective <- ggplot(deriv.reflective.melt, aes(x = variable, y = val
   theme(plot.title = element_text(lineheight=.8, size = 20),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 plot.deriv.reflective 
-graphics.off()
+
+# graphics.off()
 
 ## Define output image | open image port
-png("images/lvl0300_boxplot_derivate_emissive.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/lvl0300_boxplot_derivate_emissive.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
+
 plot.deriv.emissive <- ggplot(deriv.emissive.melt, aes(x = variable, y = value)) +
   geom_boxplot() +
   xlab("MYD02 emissive bands") +
@@ -173,4 +199,5 @@ plot.deriv.emissive <- ggplot(deriv.emissive.melt, aes(x = variable, y = value))
   theme(plot.title = element_text(lineheight=.8, size = 20),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 plot.deriv.emissive
-graphics.off()
+
+# graphics.off()

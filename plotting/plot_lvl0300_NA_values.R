@@ -1,18 +1,37 @@
 cat("\014")
 ################################################################################
-## BiFoRe Scripts                                                             ##
-##                                                                            ##
-## PLOT EXTRACT GREYVALUES, FIRST DERIVATE & CALCULATED SD                    ##
-##                                                                            ##
-##                                                                            ##
-## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-16                                                        ##
-##                                                                            ##
+##  
+##  BiFoRe Scripts
+##
+##  Plot NA values for each MODIS band, based on lvl0300 dataset.
+##  
+##  Version: 2014-03-16
+##  
 ################################################################################
+##
+##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##
+##
+##  This file is part of BiFoRe.
+##  
+##  BiFoRe is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##  
+##  BiFoRe is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##  
+##  You should have received a copy of the GNU General Public License
+##  along with BiFoRe.  If not, see <http://www.gnu.org/licenses/>.
+##  
+################################################################################
+
 
 ## Clear workspace
 rm(list = ls(all = TRUE))
-
 
 ## Required libraries
 lib <- c("ggplot2", "reshape2")
@@ -62,11 +81,11 @@ names(df.NA.melt) <- c("MODIS_bands", "NA_values", "NA_count")
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0300_na_values.png", 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/lvl0300_na_values.png", 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
 plot <- ggplot(df.NA.melt, aes(x=MODIS_bands, y=NA_count, fill=NA_values)) + 
   geom_bar(position="dodge", stat="identity", width=1, colour="white") +
@@ -82,4 +101,4 @@ plot <- ggplot(df.NA.melt, aes(x=MODIS_bands, y=NA_count, fill=NA_values)) +
 plot
 
 ## Close image port
-graphics.off()
+# graphics.off()

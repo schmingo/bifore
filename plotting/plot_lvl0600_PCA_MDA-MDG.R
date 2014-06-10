@@ -5,7 +5,7 @@ cat("\014")
 ##  of variable importance measures prduced by RandomForest
 ##  (Mean Decrease Gini & Mean Decrease Accuracy)
 ##  
-##  Version: 2014-05-28
+##  Version: 2014-06-10
 ##  
 ################################################################################
 ##

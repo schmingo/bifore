@@ -1,15 +1,17 @@
 cat("\014")
 ################################################################################
 ##  
-##  Principal Component Analysis
-##  of variable importance measures prduced by RandomForest
+##  BiFoRe Scripts
+##    
+##  Perform and plot Principal Component Analysis of variable importance 
+##  measures prduced by RandomForest.
 ##  (Mean Decrease Gini & Mean Decrease Accuracy)
 ##  
 ##  Version: 2014-06-10
 ##  
 ################################################################################
 ##
-##  Copyright (C) 2014 Simon Schlauss
+##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
 ##
 ##
 ##  This file is part of BiFoRe.

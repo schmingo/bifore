@@ -49,21 +49,21 @@ path.bandnames.csv <- "csv/kili/bandnames.csv"
 ## "raw bandno."
 
 number <- c()
-for(i in seq(1:9)) number[i] <- paste0("0", i)
-for(i in seq(10:12)) number[i+9] <- i+9
+for (i in seq(1:9)) number[i] <- paste0("0", i)
+for (i in seq(10:12)) number[i + 9] <- i + 9
 number[13:16] <- c("13.1",
-                  "13.2",
-                  "14.1",
-                  "14.2")
-for(i in seq(15:36)) number[i+16] <- i+14
+                   "13.2",
+                   "14.1",
+                   "14.2")
+for (i in seq(15:36)) number[i + 16] <- i + 14
 
 
 ################################################################################
 ## "band_"
 
 bands <- c()
-for(i in seq(1:9)) bands[i] <- paste0("band_0", i)
-for(i in seq(10:12)) bands[i+9] <- paste0("band_", i+9)
+for (i in seq(1:9)) bands[i] <- paste0("band_0", i)
+for (i in seq(10:12)) bands[i + 9] <- paste0("band_", i + 9)
 bands[13:16] <- c("band_13.1",
                   "band_13.2",
                   "band_14.1",
@@ -75,39 +75,39 @@ for(i in seq(15:36)) bands[i+16] <- paste0("band_", i+14)
 ## "greyvalue_band_"
 
 greyval_bands <- c()
-for(i in seq(1:9)) greyval_bands[i] <- paste0("greyvalue_band_0", i)
-for(i in seq(10:12)) greyval_bands[i+9] <- paste0("greyvalue_band_", i+9)
+for (i in seq(1:9)) greyval_bands[i] <- paste0("greyvalue_band_0", i)
+for (i in seq(10:12)) greyval_bands[i + 9] <- paste0("greyvalue_band_", i + 9)
 greyval_bands[13:16] <- c("greyvalue_band_13.1",
                           "greyvalue_band_13.2",
                           "greyvalue_band_14.1",
                           "greyvalue_band_14.2")
-for(i in seq(15:36)) greyval_bands[i+16] <- paste0("greyvalue_band_", i+14)
+for(i in seq(15:36)) greyval_bands[i + 16] <- paste0("greyvalue_band_", i + 14)
 
 
 ################################################################################
 ## "derivate_band_"
 
 diff_bands <- c()
-for(i in seq(1:9)) diff_bands[i] <- paste0("derivate_band_", i)
-for(i in seq(10:12)) diff_bands[i+9] <- paste0("derivate_band_", i+9)
+for (i in seq(1:9)) diff_bands[i] <- paste0("derivate_band_", i)
+for (i in seq(10:12)) diff_bands[i + 9] <- paste0("derivate_band_", i + 9)
 diff_bands[13:16] <- c("derivate_band_13.1",
                        "derivate_band_13.2",
                        "derivate_band_14.1",
                        "derivate_band_14.2")
-for(i in seq(15:36)) diff_bands[i+16] <- paste0("derivate_band_", i+14)
+for (i in seq(15:36)) diff_bands[i + 16] <- paste0("derivate_band_", i + 14)
 
 
 ################################################################################
 ## "sd_band_"
 
 sd_bands <- c()
-for(i in seq(1:9)) sd_bands[i] <- paste0("sd_band_", i)
-for(i in seq(10:12)) sd_bands[i+9] <- paste0("sd_band_", i+9)
+for (i in seq(1:9)) sd_bands[i] <- paste0("sd_band_", i)
+for (i in seq(10:12)) sd_bands[i + 9] <- paste0("sd_band_", i + 9)
 sd_bands[13:16] <- c("sd_band_13.1",
                      "sd_band_13.2",
                      "sd_band_14.1",
                      "sd_band_14.2")
-for(i in seq(15:36)) sd_bands[i+16] <- paste0("sd_band_", i+14)
+for (i in seq(15:36)) sd_bands[i + 16] <- paste0("sd_band_", i + 14)
 
 
 ################################################################################

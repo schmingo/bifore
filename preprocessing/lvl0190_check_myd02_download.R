@@ -1,12 +1,32 @@
 cat("\014")
 ################################################################################
-## BiFoRe Scripts                                                             ##
-##                                                                            ##
-## Compare downloaded MYD02 with nocloud dates                                ##
-##                                                                            ##
-## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-02-18                                                        ##
-##                                                                            ##
+##  
+##  BiFoRe Scripts
+##    
+## Compare downloaded MYD02 with nocloud dates
+## 
+##  Version: 2014-02-18
+##  
+################################################################################
+##
+##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##
+##
+##  This file is part of BiFoRe.
+##  
+##  BiFoRe is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##  
+##  BiFoRe is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##  
+##  You should have received a copy of the GNU General Public License
+##  along with BiFoRe.  If not, see <http://www.gnu.org/licenses/>.
+##  
 ################################################################################
 
 ## Clear workspace
@@ -19,9 +39,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("/home/schmingo/Dropbox/Code/bifore/src/")
 
 
-################################################################################
 ### Set filepaths ##############################################################
-################################################################################
 
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
@@ -29,9 +47,7 @@ path.myd02 <- "/media/schmingo/Daten/Code/bifore_src/myd02-03_hdf/"
 path.myd03 <- "/media/schmingo/Daten/Code/bifore_src/myd03-35_hdf_daytime/"
 path.myd02_03 <- "/media/schmingo/Daten/Code/bifore_src/myd02-03_hdf/"
 
-################################################################################
 ### Import biodiversity dataset ################################################
-################################################################################
 
 data <- read.csv2(path.biodiversity.csv,
                   dec = ",",
@@ -39,22 +55,20 @@ data <- read.csv2(path.biodiversity.csv,
                   stringsAsFactors = FALSE)
 
 
-################################################################################
 ### Extract MYD02 date string ##################################################
-################################################################################
 
 ## List hdf files
 lst.1km <- list.files(path.myd02,
-                      pattern="MYD021KM",
-                      full.names=TRUE)
+                      pattern = "MYD021KM",
+                      full.names = TRUE)
   
 lst.qkm <- list.files(path.myd02,
-                      pattern="MYD02QKM",
-                      full.names=TRUE)
+                      pattern = "MYD02QKM",
+                      full.names = TRUE)
 
 lst.hkm <- list.files(path.myd02,
-                      pattern="MYD02HKM",
-                      full.names=TRUE)
+                      pattern = "MYD02HKM",
+                      full.names = TRUE)
 
 
 ## Extract date string from filename
@@ -85,9 +99,7 @@ dates.qkm
 dates.hkm
 
 
-################################################################################
 ### Check if downloaded MYD02 files are complete ###############################
-################################################################################
 
 data$date_nocloud %in% dates.1km
 data$date_nocloud %in% dates.qkm
@@ -98,9 +110,7 @@ dates.qkm %in% data$date_nocloud
 dates.hkm %in% data$date_nocloud
 
 
-################################################################################
 ### Copy MYD03 files ###########################################################
-################################################################################
 
 lst.myd03 <- list.files(path.myd03, pattern="MYD03", full.names=TRUE)
 
@@ -115,9 +125,7 @@ for (i in lst.myd03)
                   to = paste0(path.myd02_03, basename(i)))
 
 
-################################################################################
 ### Copy MYD02 files ###########################################################
-################################################################################
 
 for (g in lst.1km)
   file.rename(from = g,

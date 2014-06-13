@@ -1,33 +1,59 @@
 cat("\014")
 ################################################################################
-## BiFoRe Scripts                                                             ##
-##                                                                            ##
-## CHECK COORDINATES FOR CLOUDS USING MODIS CLOUDMASK AND MODISCLOUD-PACKAGE  ##
-##                                                                            ##
-## Ref.: - http://modis-atmos.gsfc.nasa.gov/_docs/CMUSERSGUIDE.pdf            ##
-##       - MYD35 .hdf metadata                                                ##
-##                                                                            ##
-## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-04-17                                                        ##
-##                                                                            ##
+##  
+##  BiFoRe Scripts
+##    
+## Check coordinates for clouds using MODIS CLOUDMASK and MODISCLOUD-package
+## 
+## Ref.: - http://modis-atmos.gsfc.nasa.gov/_docs/CMUSERSGUIDE.pdf
+##       - MYD35 .hdf metadata
+##  
+##  Version: 2014-04-17
+##  
+################################################################################
+##
+##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##
+##
+##  This file is part of BiFoRe.
+##  
+##  BiFoRe is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##  
+##  BiFoRe is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##  
+##  You should have received a copy of the GNU General Public License
+##  along with BiFoRe.  If not, see <http://www.gnu.org/licenses/>.
+##  
 ################################################################################
 
 ## Clear workspace
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("modiscloud", "devtools", "rgdal", "raster", "foreach", "doParallel", "ggplot2")
+lib <- c("modiscloud", 
+         "devtools", 
+         "rgdal", 
+         "raster", 
+         "foreach", 
+         "doParallel", 
+         "ggplot2")
+
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
 setwd("/home/schmingo/")
 
+## Detect available CPU cores
 ncores <- detectCores()
 
 
-################################################################################
 ### Set filepaths ##############################################################
-################################################################################
 
 ## To preprocess MYD35_L2 and MYD03 files; both must be in the same directory.
 
@@ -42,9 +68,8 @@ mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
 source("Code/bifore/preprocessing/modules/lvl0110_writeMRTSwathParamFile_cloudcheck.R")
 source("Code/bifore/preprocessing/modules/lvl0110_runSwath2Grid.R")
 
-################################################################################
+
 ### Import biodiversity dataset ################################################
-################################################################################
 
 data <- read.csv2(path.biodiversity.csv,
                   dec = ",",
@@ -58,33 +83,33 @@ data.orig <- data
 
 ## Check actual time
 starttime <- Sys.time()
-################################################################################
+
+
 ### Separate day and night hdf files ###########################################
-################################################################################
 
 fls.myd03 <- list.files(path.hdf.in,
-                        pattern="MYD03",
-                        full.names=TRUE)
+                        pattern = "MYD03",
+                        full.names = TRUE)
 
 fls.myd35 <- list.files(path.hdf.in,
-                        pattern="MYD35",
-                        full.names=TRUE)
+                        pattern = "MYD35",
+                        full.names = TRUE)
 
 registerDoParallel(cl <- makeCluster(ncores))
 
-## MYD03
+## Move MYD03 *.hdf files
 foreach(a = fls.myd03, .packages = lib) %dopar% {
   
-  if (as.numeric(substr(basename(a),16,19)) < 1700)
+  if (as.numeric(substr(basename(a), 16, 19)) < 1700)
     file.rename(from = a,
                 to = paste0(path.hdf.sub, basename(a)))
 }
 
 
-## MYD35
+## Move MYD35 *.hdf files
 foreach(b = fls.myd35, .packages = lib) %dopar% {
   
-  if (as.numeric(substr(basename(b),19,22)) < 1700)
+  if (as.numeric(substr(basename(b), 19, 22)) < 1700)
     file.rename(from = b,
                 to = paste0(path.hdf.sub, basename(b)))
 }
@@ -92,9 +117,7 @@ foreach(b = fls.myd35, .packages = lib) %dopar% {
 stopCluster(cl)
 
 
-################################################################################
 ### Preprocessing MYD35_L2 and MYD03 | Run MRTSwath tool "swath2grid" ##########
-################################################################################
 
 ## List MYD-files
 list.files(path = path.hdf.sub, pattern = "MYD")
@@ -115,9 +138,7 @@ lr_lat <- -3.45
 lr_lon <- 37.76
 
 
-################################################################################
-### For-loop .hdf to .tif ######################################################
-################################################################################
+### Convert .hdf to .tif #######################################################
 
 for(i in 1:nrow(fls.matching)) {
   
@@ -126,12 +147,10 @@ for(i in 1:nrow(fls.matching)) {
                                        tifsdir = path.tif.cloudmask, 
                                        modfn = fls.matching$mod35_L2_fns[i], 
                                        geoloc_fn = fls.matching$mod03_fns[i], 
-                                       # sds = sds, 
                                        ul_lon = ul_lon, 
                                        ul_lat = ul_lat, 
                                        lr_lon = lr_lon, 
                                        lr_lat = lr_lat)
-  
   
   runSwath2Grid(mrtpath = mrtpath, 
                 prmfn = "tmpMRTparams.prm", 
@@ -146,15 +165,12 @@ for(i in 1:nrow(fls.matching)) {
 }
 
 
-################################################################################
-### Check observations from csv file for cloudiness using tiffs ################
-################################################################################
+### Check observations from *.csv file for cloudiness using tiffs ##############
 
-## get .tif list from swath2grid output
+## Get .tif list from swath2grid output
 tiffns <- list.files(path.tif.cloudmask, pattern=".tif", full.names=TRUE)
+
 # tiffns
-
-
                    
 ## Convert data to spatial object
 coordinates(data) <- ~ lon + lat
@@ -192,11 +208,11 @@ myd02.lst <- foreach(g = 1:nrow(data), .packages = lib,
       bit.avl.b0 <- rev(t(digitsBase(val.avl.b0, base = 2, 8)))
       
       ## Cloud Indicator from myd35 metadata
-      # Unobstructed FOV Quality Flag
-      # 00 = Cloudy
-      # 01 = Uncertain
-      # 10 = Probably  Clear
-      # 11 = Confident  Clear
+      ## Unobstructed FOV Quality Flag
+      ## 00 = Cloudy
+      ## 01 = Uncertain
+      ## 10 = Probably Clear
+      ## 11 = Confident Clear
       
       ## Break out of for-loop in case of cloud absence
       cloudindicator <- as.numeric(paste0(bit.avl.b0[2],bit.avl.b0[3]))
@@ -223,9 +239,9 @@ myd02.lst <- foreach(g = 1:nrow(data), .packages = lib,
 ## Deregister parallel backend
 stopCluster(cl)
 
-################################################################################
+
 ### Create new .csv with no-cloud date and diff-days ###########################
-################################################################################
+
 len <- length(names(data.orig))
 len
 
@@ -235,21 +251,19 @@ myd02.lst
 names(myd02.lst) <- "date_nocloud"
 names(data.clouddates)[2] <- "date_observation"
 
-## Create no-cloud date
+## Create no-cloud date column
 data.clouddates$date_nocloud <- myd02.lst$date_nocloud
 
-# ## Create diff-days
+## Create diff-days column
 data.clouddates$diff_days_nocloud <- as.numeric(as.Date(data.clouddates$date_nocloud, format = "%Y%j.%H%M") - as.Date(data.clouddates$date_observation, format = "%Y%j"))
 
 ## Reorder df
-# data.orig <- data.orig[c(1,2,67,68,3:66)]
 data.clouddates <- cbind(data.clouddates[1:2],
                          data.clouddates[ncol(data.clouddates)-1],
                          data.clouddates[ncol(data.clouddates)],
                          data.clouddates[3:11],
                          data.clouddates[12:len])
 names(data.clouddates)
-
 
 ## Reformat dates
 for (i in 1:nrow(data.clouddates)) {
@@ -268,9 +282,7 @@ for (i in 1:nrow(data.clouddates)) {
 }
 
 
-
-
-## write new .csv
+## Write new *.csv
 write.table(data.clouddates, 
             file = path.nocloud.csv,
             dec = ",",
@@ -279,14 +291,13 @@ write.table(data.clouddates,
             row.names = FALSE,
             sep = ";")
 
-## plot diff_days_no-cloud
-qplot(x=diff_days_nocloud,
-      data=data.clouddates,
-      geom="histogram",
-      binwidth=0.5)
+## Plot diff_days_no-cloud
+qplot(x = diff_days_nocloud,
+      data = data.clouddates,
+      geom = "histogram",
+      binwidth = 0.5)
 
-
-
+## Time calculation
 endtime <- Sys.time()
 
 time <- endtime - starttime

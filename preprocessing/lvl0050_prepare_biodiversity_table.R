@@ -1,19 +1,39 @@
 cat("\014")
 ################################################################################
-## BiFoRe Scripts                                                             ##
-##                                                                            ##
-## PREPARE BIODIVERSITY TABLE                                                 ##
-##                                                                            ##
-## - Replace 0-values with NA                                                 ##
-## - Remove observations before MODIS launch date                             ##
-## - Remove observations without coordinates                                  ##
-## - Remove species with less than 10 observations in different plots         ##
-## - Calculate number of species                                              ##
-## - Add LatLong Coordinates                                                  ##
-##                                                                            ##
-## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-03-15                                                        ##
-##                                                                            ##
+##  
+##  BiFoRe Scripts
+##    
+## Prepare biodiversity table 
+## 
+## - Replace 0-values with NA
+## - Remove observations before MODIS launch date
+## - Remove observations without coordinates
+## - Remove species with less than 10 observations in different plots
+## - Calculate number of species
+## - Add LatLong Coordinates
+##  
+##  Version: 2014-03-15
+##  
+################################################################################
+##
+##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##
+##
+##  This file is part of BiFoRe.
+##  
+##  BiFoRe is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##  
+##  BiFoRe is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##  
+##  You should have received a copy of the GNU General Public License
+##  along with BiFoRe.  If not, see <http://www.gnu.org/licenses/>.
+##  
 ################################################################################
 
 ## Clear workspace
@@ -25,7 +45,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Code/bifore/src/")
+setwd("/home/schmingo/Daten/Dropbox/Code/bifore/src/")
 # setwd("D:/Dropbox/Code/bifore/src/")
 
 ## Set filepaths
@@ -33,9 +53,7 @@ file.hemp.csv <- "csv/kili/abundance_matrix_hemp.csv"
 file.data.out <- "csv/kili/lvl0050_biodiversity_data.csv"
 
 
-################################################################################
 ### Read data ##################################################################
-################################################################################
 
 data <- read.csv2(file.hemp.csv, 
                   header = TRUE, 
@@ -45,58 +63,48 @@ data <- read.csv2(file.hemp.csv,
                   stringsAsFactors = FALSE)
 
 
-data$date <- as.Date(data$date, format="%d.%m.%Y")
+data$date <- as.Date(data$date, format = "%d.%m.%Y")
 
 
-################################################################################
 ### Replace 0-values with NA ###################################################
-################################################################################
 
 ## Subset data
-data.species <- data[,9:ncol(data)]
+data.species <- data[, 9:ncol(data)]
 
 ## Set 0-values to NA
-data.species[data.species==0] <- NA
+data.species[data.species == 0] <- NA
 
 ## Recombine data
-data[,9:ncol(data)] <- data.species
+data[, 9:ncol(data)] <- data.species
 
 
-################################################################################
 ### Remove observations before MODIS satellite launch ##########################
-################################################################################
 
-##      Note: MODIS TERRA launch: 1999-12-18
-##            MODIS AQUA launch: 2002-05-04
+## Note: MODIS TERRA launch: 1999-12-18
+## MODIS AQUA launch: 2002-05-04
 
 modis.date <- as.Date("2002-07-03")
 data <- subset(data, date > modis.date)
 
 
-################################################################################
 ### Remove observations without coordinates ####################################
-################################################################################
 
-data <- data[!is.na(data$coordN | data$coordW),]
+data <- data[!is.na(data$coordN | data$coordW), ]
 
 
-################################################################################
 ### Calculate number of species ################################################
-################################################################################
 
 data$nr.of.species <- apply(data,
-                              1,
-                              function(x) sum(!is.na(x[9:ncol(data)])))
+                            1,
+                            function(x) sum(!is.na(x[9:ncol(data)])))
 
 data <- cbind(data[1:8],
-                data$nr.of.species,
-                data[10:ncol(data)-1])
+              data$nr.of.species,
+              data[10:ncol(data)-1])
 
 colnames(data)[9] <- "nr.of.species"
 
-################################################################################
 ### Plot single species ########################################################
-################################################################################
 
 # plot(data[,9],data$date, type="p")
 # 
@@ -108,9 +116,8 @@ colnames(data)[9] <- "nr.of.species"
 #       xlab="Prävalenz",
 #       ylab="Zeit")
 
-################################################################################
+
 ### Transform UTM to LatLong coordinates #######################################
-################################################################################
 
 data.sp <- data
 
@@ -125,12 +132,12 @@ names(data.sp)[2] <- "lat"
 
 ## Recombine dataframes
 data.all.sp <- cbind(data[1:3],
-                   data[6:9],
-                   data.sp$lon,
-                   data.sp$lat,
-                   data$coordW,
-                   data$coordN,
-                   data[10:ncol(data)])
+                     data[6:9],
+                     data.sp$lon,
+                     data.sp$lat,
+                     data$coordW,
+                     data$coordN,
+                     data[10:ncol(data)])
 
 names(data.all.sp)[8] <- "lon"
 names(data.all.sp)[9] <- "lat"
@@ -138,12 +145,12 @@ names(data.all.sp)[10] <- "coordW"
 names(data.all.sp)[11] <- "coordN"
 
 data <- data.all.sp
-################################################################################
+
+
 ### Remove species with less than 1 observation ################################
-################################################################################
 
 data.list <- split(data, data$plot)
-tst.list <- do.call("rbind", lapply(seq(data.list), function(i) {
+tmp.list <- do.call("rbind", lapply(seq(data.list), function(i) {
   matrix <- as.matrix(data.list[[i]][, 12:ncol(data.list[[i]])])
   t <- apply(matrix, 2, sum, na.rm = TRUE)
   t[t == 0] <- NA
@@ -151,17 +158,15 @@ tst.list <- do.call("rbind", lapply(seq(data.list), function(i) {
   return(t)
 }))
 
-index.species0 <- which(apply(tst.list, 2, sum, na.rm = TRUE) >= 1) + 11
+index.species0 <- which(apply(tmp.list, 2, sum, na.rm = TRUE) >= 1) + 11
 data0 <- data[, c(1:11, index.species0)]
 
 
-################################################################################
 ### Write new csv ##############################################################
-################################################################################
 
 write.table(data0, file = file.data.out, 
             dec = ",", 
             quote = FALSE, 
             col.names = TRUE, 
             row.names = FALSE, 
-            sep =";")
+            sep = ";")

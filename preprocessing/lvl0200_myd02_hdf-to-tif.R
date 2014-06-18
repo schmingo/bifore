@@ -55,7 +55,7 @@ source("Code/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_250.R")
 source("Code/bifore/preprocessing/modules/lvl0220_runSwath2Grid.R")
 source("Code/bifore/preprocessing/modules/lvl0230_renameSuffix.R")
 
-## Check actual time
+## Runtime calculation
 starttime <- Sys.time()
 ################################################################################
 ### Preprocessing MYD35_L2 and MYD03 | Run MRTSwath tool "swath2grid" ##########
@@ -63,8 +63,8 @@ starttime <- Sys.time()
 
 ### List hdf files
 fls.myd <- list.files(path.hdf.in,
-                      pattern="MYD",
-                      full.names=TRUE)
+                      pattern = "MYD",
+                      full.names = TRUE)
 
 fls.myd
 
@@ -75,11 +75,9 @@ lr_lat <- -3.45
 lr_lon <- 37.76
 
 
-################################################################################
 ### For-loop .hdf to .tif 1000m per pixel ######################################
-################################################################################
 
-# Get the matching data/geolocation file pairs
+## Get the matching data/geolocation file pairs
 fls.1km.matching = check_for_matching_geolocation_files(moddir = path.hdf.in,
                                                         modtxt = "MYD021KM",
                                                         geoloctxt = "MYD03", 
@@ -88,19 +86,18 @@ fls.1km.matching = check_for_matching_geolocation_files(moddir = path.hdf.in,
 fls.1km.matching
 
 
+## Write parameterfile for MRTswath tool
 for (i in 1:nrow(fls.1km.matching)) {
-  
   prmfn = writeMRTSwathParamFile_1000(prmfn = "tmpMRTparams.prm", 
                                       tifsdir = tifsdir, 
                                       modfn = fls.1km.matching$mod35_L2_fns[i], 
                                       geoloc_fn = fls.1km.matching$mod03_fns[i], 
-                                      # sds = sds, 
                                       ul_lon = ul_lon, 
                                       ul_lat = ul_lat, 
                                       lr_lon = lr_lon, 
                                       lr_lat = lr_lat)
   
-  
+  ## Convert .hdf to .geotiff using MRTswath tool
   runSwath2Grid(mrtpath = mrtpath, 
                 prmfn = "tmpMRTparams.prm", 
                 tifsdir = tifsdir, 
@@ -113,11 +110,9 @@ for (i in 1:nrow(fls.1km.matching)) {
 }
 
 
-################################################################################
 ### For-loop .hdf to .tif 500m per pixel #######################################
-################################################################################
 
-# Get the matching data/geolocation file pairs
+## Get the matching data/geolocation file pairs
 fls.hkm.matching = check_for_matching_geolocation_files(moddir = path.hdf.in,
                                                         modtxt = "MYD02HKM",
                                                         geoloctxt = "MYD03", 
@@ -125,20 +120,18 @@ fls.hkm.matching = check_for_matching_geolocation_files(moddir = path.hdf.in,
                                                         return_product = FALSE)
 fls.hkm.matching
 
-
+## Write parameterfile for MRTswath tool
 for (i in 1:nrow(fls.hkm.matching)) {
-  
   prmfn = writeMRTSwathParamFile_500(prmfn = "tmpMRTparams.prm", 
                                      tifsdir = tifsdir, 
                                      modfn = fls.hkm.matching$mod35_L2_fns[i], 
                                      geoloc_fn = fls.hkm.matching$mod03_fns[i], 
-                                     # sds = sds, 
                                      ul_lon = ul_lon, 
                                      ul_lat = ul_lat, 
                                      lr_lon = lr_lon, 
                                      lr_lat = lr_lat)
   
-  
+  ## Convert .hdf to .geotiff using MRTswath tool
   runSwath2Grid(mrtpath = mrtpath, 
                 prmfn = "tmpMRTparams.prm", 
                 tifsdir = tifsdir, 
@@ -151,9 +144,7 @@ for (i in 1:nrow(fls.hkm.matching)) {
 }
 
 
-################################################################################
 ### For-loop .hdf to .tif 250m per pixel #######################################
-################################################################################
 
 # Get the matching data/geolocation file pairs
 fls.qkm.matching = check_for_matching_geolocation_files(moddir = path.hdf.in,
@@ -163,20 +154,18 @@ fls.qkm.matching = check_for_matching_geolocation_files(moddir = path.hdf.in,
                                                         return_product = FALSE)
 fls.qkm.matching
 
-
+## Write parameterfile for MRTswath tool
 for (i in 1:nrow(fls.qkm.matching)) {
-  
   prmfn = writeMRTSwathParamFile_250(prmfn = "tmpMRTparams.prm", 
                                      tifsdir = tifsdir, 
                                      modfn = fls.qkm.matching$mod35_L2_fns[i], 
                                      geoloc_fn = fls.qkm.matching$mod03_fns[i], 
-                                     # sds = sds, 
                                      ul_lon = ul_lon, 
                                      ul_lat = ul_lat, 
                                      lr_lon = lr_lon, 
                                      lr_lat = lr_lat)
   
-  
+  ## Convert .hdf to .geotiff using MRTswath tool
   runSwath2Grid(mrtpath = mrtpath, 
                 prmfn = "tmpMRTparams.prm", 
                 tifsdir = tifsdir, 
@@ -189,18 +178,14 @@ for (i in 1:nrow(fls.qkm.matching)) {
 }
 
 
-################################################################################
 ### Remove unnecessary tifs ####################################################
-################################################################################
 
 # do.call(file.remove,list(list.files(tifsdir, pattern="Aggr", full.names=TRUE)))
 # do.call(file.remove,list(list.files(tifsdir, pattern="Uncert", full.names=TRUE)))
 # do.call(file.remove,list(list.files(tifsdir, pattern="Band26", full.names=TRUE)))
 
 
-################################################################################
 ### Rename .tif to proper filename e.g.: *_B20.tif #############################
-################################################################################
 
 lst.tif <- list.files(tifsdir, pattern=".tif", full.names=TRUE)
 
@@ -282,6 +267,7 @@ suffixes.out <- c("B20",
                   "B06",
                   "B07")
 
+## Call renameSuffix function
 foreach(i = suffixes.in, j = suffixes.out) %do% {
   renameSuffix(files = lst.tif, 
                suffix.in = i, 
@@ -290,9 +276,7 @@ foreach(i = suffixes.in, j = suffixes.out) %do% {
 }
 
 
-################################################################################
-### Check actual time again ####################################################
-################################################################################
+### Runtime calculation ########################################################
 
 endtime <- Sys.time()
 

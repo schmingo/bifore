@@ -8,7 +8,7 @@ cat("\014")
 ## Ref.: - http://modis-atmos.gsfc.nasa.gov/_docs/CMUSERSGUIDE.pdf
 ##       - MYD35 .hdf metadata
 ##  
-##  Version: 2014-04-17
+##  Version: 2014-06-19
 ##  
 ################################################################################
 ##
@@ -67,6 +67,10 @@ mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
 ## Load required modules
 source("Code/bifore/preprocessing/modules/lvl0110_writeMRTSwathParamFile_cloudcheck.R")
 source("Code/bifore/preprocessing/modules/lvl0110_runSwath2Grid.R")
+
+## Create folders
+if (!file.exists(path.hdf.sub)) {dir.create(file.path(path.hdf.sub))}
+if (!file.exists(path.tif.cloudmask)) {dir.create(file.path(path.tif.cloudmask))}
 
 
 ### Import biodiversity dataset ################################################
@@ -181,7 +185,8 @@ proj4string(data) <- CRS("+init=epsg:4326")
 registerDoParallel(cl <- makeCluster(ncores))
 
 ## Loop through all available dates
-myd02.lst <- foreach(g = 1:nrow(data), .packages = lib, 
+myd02.lst <- foreach(g = 1:nrow(data), 
+                     .packages = lib, 
                      .combine = function(...) as.data.frame(rbind(...), 
                                                             stringsAsFactors = FALSE)) %dopar% {
   

@@ -43,9 +43,10 @@ setwd("/home/schmingo/Dropbox/Code/bifore/src/")
 
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
 
-path.myd02 <- "/media/schmingo/Daten/Code/bifore_src/myd02-03_hdf/"
-path.myd03 <- "/media/schmingo/Daten/Code/bifore_src/myd03-35_hdf_daytime/"
-path.myd02_03 <- "/media/schmingo/Daten/Code/bifore_src/myd02-03_hdf/"
+path.myd02 <- "/home/schmingo/Daten/Code/bifore_src/myd02-03_hdf/"
+path.myd03 <- "/home/schmingo/Daten/Code/bifore_src/myd03-35_hdf_daytime/"
+path.myd02_03 <- "/home/schmingo/Daten/Code/bifore_src/myd02-03_hdf/"
+
 
 ### Import biodiversity dataset ################################################
 

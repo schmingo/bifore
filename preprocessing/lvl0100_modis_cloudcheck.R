@@ -81,7 +81,7 @@ data$date <- strftime(as.POSIXct(data$date, format="%Y-%m-%d"), format = "%Y%j")
 
 data.orig <- data
 
-## Check actual time
+## Runtime calculation
 starttime <- Sys.time()
 
 
@@ -297,7 +297,7 @@ qplot(x = diff_days_nocloud,
       geom = "histogram",
       binwidth = 0.5)
 
-## Time calculation
+## Runtime calculation
 endtime <- Sys.time()
 
 time <- endtime - starttime

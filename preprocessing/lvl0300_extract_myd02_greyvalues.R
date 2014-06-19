@@ -1,13 +1,32 @@
 cat("\014")
 ################################################################################
-## BiFoRe Scripts                                                             ##
-##                                                                            ##
-## EXTRACT GREYVALUES FROM MODIS SATELLITE DATA FOR EACH CSV OBSERVATION      ##
-##                                                                            ##
-##                                                                            ##
-## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-04-17                                                        ##
-##                                                                            ##
+##  
+##  BiFoRe Scripts
+##    
+##  Extract greyvalues from MODIS .geotiff images for each observation (lvl0100).
+##  
+##  Version: 2014-04-17
+##  
+################################################################################
+##
+##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##
+##
+##  This file is part of BiFoRe.
+##  
+##  BiFoRe is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##  
+##  BiFoRe is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##  
+##  You should have received a copy of the GNU General Public License
+##  along with BiFoRe.  If not, see <http://www.gnu.org/licenses/>.
+##  
 ################################################################################
 
 ## Clear workspace
@@ -24,9 +43,7 @@ setwd("/home/schmingo/")
 ncores <- detectCores()
 
 
-################################################################################
 ### Set filepaths ##############################################################
-################################################################################
 
 path.hdf <- "Daten/Code/bifore_src/myd02-03_hdf/"
 path.tif <- "Daten/Code/bifore_src/myd02_tif/"
@@ -39,21 +56,18 @@ path.biodiversity.csv.out <- "Dropbox/Code/bifore/src/csv/kili/lvl0300_biodivers
 source("Code/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
 
 
-################################################################################
 ### Import biodiversity dataset ################################################
-################################################################################
 
 data.bio.raw <- read.csv2(path.biodiversity.csv,
                           dec = ",",
                           header = TRUE, 
                           stringsAsFactors = FALSE)
 
-## Check actual time
+## Runtime calculation
 starttime <- Sys.time()
 
-################################################################################
+
 ### Get MYD bandnames ##########################################################
-################################################################################
 
 ## Set date for extraction
 tmp.date <- data.bio.raw$date_nocloud[1]
@@ -81,22 +95,19 @@ bandnames <- hdfExtractMODScale (lst.hdf.qkm,
 bandnames <- bandnames$bands
 
 
+### List .hdf and .tif for specific date and import .tif as RasterLayer Object #
 
-################################################################################
-### List .hdf and .tif for specific date and import .tif as RasterLayer Object##
-################################################################################
-
-## List unique cloudless dates
+## List unique cloudfree dates
 lst.date <- unique(data.bio.raw$date_nocloud)
 lst.date
 
-
+## Parallelization
 registerDoParallel(cl <- makeCluster(ncores))
+
 foreach(a = lst.date, .packages = lib) %dopar% {
-# foreach(a = lst.date) %do% {  
+  
   ## Extract date from biodiversity data
   tmp.date <- a
-  #tmp.date <- data.bio.raw$date_nocloud[3]
   
   ## Reformat date
   tmp.date <- paste0(substr(tmp.date, 1, 4),
@@ -122,9 +133,7 @@ foreach(a = lst.date, .packages = lib) %dopar% {
                             full.names = TRUE)
   
   
-  ##############################################################################
   ### Check raster for NA values ###############################################
-  ##############################################################################
   
   # REFERING TO: Level 1B Product Data Dictionary V6.1.14
   # http://mcst.gsfc.nasa.gov/content/l1b-documents
@@ -153,31 +162,28 @@ foreach(a = lst.date, .packages = lib) %dopar% {
   
   print(paste0(tmp.date, " - Check raw raster files for NA values"))
   
+  ## Set all values outside valid range NA
   foreach (r = lst.tif.raster, n = lst.tif) %do% {
     values(r)[values(r) > 32767] <- NA
     writeRaster(r, filename = paste0(path.tif.na, basename(n)), overwrite = TRUE)
   }
   
   
-  ##############################################################################
   ### Extraction of radiance-, reflectance scale and offset from *.hdf #########
-  ##############################################################################
   
   print(paste0(tmp.date, " - Extract scalefactors and offset from *.hdf"))
   
+  ## Function call
   modscales <- hdfExtractMODScale (lst.hdf.qkm,
                                    lst.hdf.hkm,
                                    lst.hdf.1km)
   
-  ##############################################################################  
-  ## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster#
-  ##############################################################################
   
+  ## Calculate new greyvalues (greyvalue * scalefactor) and write to new raster
   print(paste0(tmp.date, " - Calculate new greyvalues"))
   
   lst.tif.na <- list.files(path.tif.na, pattern = tmp.date, full.names = TRUE)
   lst.tif.na.raster <- lapply(lst.tif.na, raster)
-  
   
   foreach(r = as.list(lst.tif.na.raster), 
           s = as.list(as.numeric(modscales[["scales"]])),
@@ -192,9 +198,7 @@ foreach(a = lst.date, .packages = lib) %dopar% {
 stopCluster(cl)
 
 
-################################################################################
 ### Extraction of cell values ##################################################
-################################################################################
 
 ## List cloud-free dates from biodiversity dataset
 lst.nocloud <- as.list(data.bio.raw$date_nocloud)
@@ -204,11 +208,12 @@ data.bio.sp <- data.bio.raw
 coordinates(data.bio.sp) <- c("lon", "lat")
 projection(data.bio.sp) <- "+init=epsg:4326"
 
-# Extract date from biodiversity data
-# tmp.date <- data.bio.raw$date_nocloud[1]
+## Extract date from biodiversity data
 registerDoParallel(cl <- makeCluster(ncores))
-greyvalues <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind", .packages = lib) %dopar% {
-# greyvalues <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind") %do% {
+greyvalues <- foreach(a = lst.nocloud, 
+                      b = seq(nrow(data.bio.sp)), 
+                      .combine = "rbind", 
+                      .packages = lib) %dopar% {
   
   tmp.date <- a
   
@@ -226,15 +231,17 @@ greyvalues <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "r
   ## Extract cell values from all bands
   greyvalues.calc <- foreach(r = seq(lst.tif.calc.raster), 
                              .combine = "cbind") %do% {
-                               lst.tif.calc.raster[[r]][cellFromXY(lst.tif.calc.raster[[r]], data.bio.sp[b,])]
-                             }
-  
+                               lst.tif.calc.raster[[r]][cellFromXY(lst.tif.calc.raster[[r]], 
+                                                                   data.bio.sp[b, ])]
+                             } 
 }
+
 stopCluster(cl)
 
+## Create dataframe with extracted greyvalues
 greyvalues <- data.frame(greyvalues)
 
-## Set names of greyvalues df
+## Set names of greyvalues dataframe
 names(greyvalues) <- foreach(i = bandnames, j = names(greyvalues)) %do% {
   j <- paste0("greyval_band_", i)
 }
@@ -242,9 +249,7 @@ names(greyvalues) <- foreach(i = bandnames, j = names(greyvalues)) %do% {
 names(greyvalues)
 
 
-################################################################################
 ### Calculate first derivate (diff) ############################################
-################################################################################
 
 ## Calculate diff
 diff <- as.data.frame(rowDiffs(as.matrix(greyvalues)))
@@ -259,9 +264,7 @@ names(diff) <- foreach(i = bandnames,
 names(diff)
 
 
-################################################################################
 ### Pixelraster ################################################################
-################################################################################
 
 ## List cloud-free dates from biodiversity dataset
 lst.nocloud <- as.list(data.bio.raw$date_nocloud)
@@ -273,7 +276,6 @@ projection(data.bio.sp) <- "+init=epsg:4326"
 
 registerDoParallel(cl <- makeCluster(ncores))
 matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind", .packages = lib) %dopar% {
-# matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind") %do% {
   
   tmp.date <- a
   
@@ -296,14 +298,14 @@ matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rb
   
   
   ## Get pixel matrix indices for 1km resolution
-  cells.1km <- cellFromXY(lst.rst.1km[[1]], data.bio.sp[b,])
+  cells.1km <- cellFromXY(lst.rst.1km[[1]], data.bio.sp[b, ])
   cells.adj.1km <- adjacent(lst.rst.1km[[1]], cells.1km, 
                             directions = 8, 
                             pairs = FALSE, 
                             sorted = TRUE)
   
   ## Get pixel matrix indices for 500m resolution
-  cells.hkm <- cellFromXY(lst.rst.hkm[[1]], data.bio.sp[b,])
+  cells.hkm <- cellFromXY(lst.rst.hkm[[1]], data.bio.sp[b, ])
   cells.adj.hkm <- adjacent(lst.rst.hkm[[1]], cells.hkm, 
                             directions = matrix(c(1,1,1,1,1,
                                                   1,1,1,1,1,
@@ -315,7 +317,7 @@ matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rb
                             sorted = TRUE)
   
   ## Get pixel matrix indices for 250m resolution
-  cells.qkm <- cellFromXY(lst.rst.qkm[[1]], data.bio.sp[b,])
+  cells.qkm <- cellFromXY(lst.rst.qkm[[1]], data.bio.sp[b, ])
   cells.adj.qkm <- adjacent(lst.rst.qkm[[1]], cells.qkm, 
                             directions = matrix(c(1,1,1,1,1,1,1,1,1,1,1,
                                                   1,1,1,1,1,1,1,1,1,1,1,
@@ -333,34 +335,34 @@ matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rb
                             sorted = TRUE)
   
   
-  ## Calculate matrix sd for each 1km raster image
+  ## Calculate matrix standard deviation for each 1km raster image
   pxl.rst.1km <- foreach(r = seq(lst.rst.1km), .combine = "cbind") %do% {
     cells.1km.sd <- sd(lst.rst.1km[[r]][cells.adj.1km], na.rm = TRUE)
     return(cells.1km.sd)
   }
   
-  ## Calculate matrix sd for each 500m raster image
+  ## Calculate matrix standard deviation for each 500m raster image
   pxl.rst.hkm <- foreach(r = seq(lst.rst.hkm), .combine = "cbind") %do% {
     cells.hkm.sd <- sd(lst.rst.hkm[[r]][cells.adj.hkm], na.rm = TRUE)
     return(cells.hkm.sd)
   }
   
-  ## Calculate matrix sd for each 250m raster image
+  ## Calculate matrix standard deviation for each 250m raster image
   pxl.rst.qkm <- foreach(r = seq(lst.rst.qkm), .combine = "cbind") %do% {
     cells.qkm.sd <- sd(lst.rst.qkm[[r]][cells.adj.qkm], na.rm = TRUE)
     return(cells.qkm.sd)
   }
   
-  ## Combine calculated sd in a single row
+  ## Combine calculated standard deviation in a single row
   row.sd <- cbind(pxl.rst.qkm, pxl.rst.hkm, pxl.rst.1km)
   return(row.sd)
 }
 stopCluster(cl)
 
-## Write calculated values to new df
+## Write calculated values to new dataframe
 matrix.sd <- data.frame(matrix.sd)
 
-## Set names of matrix.sd df
+## Set names of matrix.sd dataframe
 names(matrix.sd) <- foreach(i = bandnames, j = names(matrix.sd)) %do% {
   j <- paste0("sd_band_", i)
 }
@@ -368,9 +370,7 @@ names(matrix.sd) <- foreach(i = bandnames, j = names(matrix.sd)) %do% {
 names(matrix.sd)
 
 
-################################################################################
 ### Combine dataframes #########################################################
-################################################################################
 
 greyvalues.diff.sd <- data.frame(cbind(data.bio.raw, 
                                        greyvalues, 
@@ -386,11 +386,8 @@ write.table(greyvalues.diff.sd,
             row.names = FALSE,
             sep = ";")
 
-################################################################################
-### Check actual time again ####################################################
-################################################################################
 
+## Runtime calculation
 endtime <- Sys.time()
-
 time <- endtime - starttime
 time

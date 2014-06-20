@@ -55,6 +55,10 @@ path.biodiversity.csv.out <- "Dropbox/Code/bifore/src/csv/kili/lvl0300_biodivers
 ## Source modules
 source("Code/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
 
+## Create folders
+if (!file.exists(path.tif)) {dir.create(file.path(path.tif))}
+if (!file.exists(path.tif.na)) {dir.create(file.path(path.tif.na))}
+if (!file.exists(path.tif.calc)) {dir.create(file.path(path.tif.calc))}
 
 ### Import biodiversity dataset ################################################
 

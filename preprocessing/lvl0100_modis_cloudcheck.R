@@ -3,10 +3,10 @@ cat("\014")
 ##  
 ##  BiFoRe Scripts
 ##    
-## Check coordinates for clouds using MODIS CLOUDMASK and MODISCLOUD-package
+##  Check coordinates for clouds using MODIS CLOUDMASK and MODISCLOUD-package
 ## 
-## Ref.: - http://modis-atmos.gsfc.nasa.gov/_docs/CMUSERSGUIDE.pdf
-##       - MYD35 .hdf metadata
+##  Ref.: - http://modis-atmos.gsfc.nasa.gov/_docs/CMUSERSGUIDE.pdf
+##        - MYD35 .hdf metadata
 ##  
 ##  Version: 2014-06-20
 ##  
@@ -84,7 +84,9 @@ data <- read.csv2(path.biodiversity.csv,
                   stringsAsFactors = TRUE)
 
 ## Read date column as a date
-data$date <- strftime(as.POSIXct(data$date, format="%Y-%m-%d"), format = "%Y%j")
+data$date <- strftime(as.POSIXct(data$date, 
+                                 format = "%Y-%m-%d"), 
+                      format = "%Y%j")
 
 data.orig <- data
 
@@ -199,7 +201,6 @@ for(i in 1:nrow(fls.matching)) {
                 ul_lat = ul_lat, 
                 lr_lon = lr_lon, 
                 lr_lat = lr_lat)
-  
 }
 
 
@@ -238,7 +239,7 @@ myd02.lst <- foreach(g = 1:nrow(data),
     ## Import raster images
     rst.avl.b0 <- lapply(fls.avl.b0, raster)
     
-    for (h in rst.avl.b0) {
+    for(h in rst.avl.b0) {
       
       ## Extract corresponding cell values from raster images
       val.avl.b0 <- extract(h, data[g, ])
@@ -305,19 +306,18 @@ data.clouddates <- cbind(data.clouddates[1:2],
 names(data.clouddates)
 
 ## Reformat dates
-for (i in 1:nrow(data.clouddates)) {
+for(i in 1:nrow(data.clouddates)) {
   data.clouddates$date_nocloud[i] <- paste0(substr(data.clouddates$date_nocloud[i], 1, 4), 
                                       "-", 
                                       substr(data.clouddates$date_nocloud[i], 5, 7), 
                                       "_", 
                                       substr(data.clouddates$date_nocloud[i], 9, 13))
-  
 }
 
-for (i in 1:nrow(data.clouddates)) {
+for(i in 1:nrow(data.clouddates)) {
   data.clouddates$date_observation[i] <- paste0(substr(data.clouddates$date_observation[i], 1, 4), 
                                           "-", 
-                                          substr(data.clouddates$date_observation[i], 5, 7))                                         
+                                          substr(data.clouddates$date_observation[i], 5, 7))
 }
 
 
@@ -336,7 +336,7 @@ qplot(x = diff_days_nocloud,
       geom = "histogram",
       binwidth = 0.5)
 
-## Runtime calculation
+### Runtime calculation ########################################################
 endtime <- Sys.time()
 time <- endtime - starttime
 time

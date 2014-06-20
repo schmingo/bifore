@@ -52,6 +52,7 @@ path.myd02_03 <- "/home/schmingo/Daten/Code/bifore_src/myd02-03_hdf/"
 ## Create folders
 if (!file.exists(path.myd02_03)) {dir.create(file.path(path.myd02_03))}
 
+
 ### Copy MYD02 #################################################################
 
 list.rawpath.myd02 <- list.files(path.myd02, 
@@ -67,7 +68,6 @@ if (length(list.rawpath.myd02)  > 0) {
   }
   stopCluster(cl)
 }
-
 
 
 ### Import biodiversity dataset ################################################

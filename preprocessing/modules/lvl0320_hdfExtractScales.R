@@ -1,89 +1,32 @@
 ################################################################################
-## BiFoRe Scripts                                                             ##
-##                                                                            ##
-## EXTRACT RADIANCE-/ REFLECTANCE SCALES FOR EACH MODIS-BAND FROM HDF FILES   ##
-##                                                                            ##
-##                                                                            ##
-## Important Note: This script will only work under Linux!                    ##
-##                                                                            ##
-##                                                                            ##
-## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-02-12                                                        ##
-##                                                                            ##
+##  
+##  BiFoRe Scripts
+##    
+##  Extract Radiance-/ Reflectance scales for each MODIS band from *.hdf files 
+##  
+##  Version: 2014-06-20
+##  
 ################################################################################
-# ## Clear workspace
-# rm(list = ls(all = TRUE))
-# 
-# 
-# ## Required libraries
-# lib <- c("rgdal", "doParallel", "raster", "matrixStats")
-# lapply(lib, function(...) require(..., character.only = TRUE))
-# 
-# ## Set working directory
-# setwd("/home/schmingo/Dropbox/Diplomarbeit/code/bifore/src/")
-# 
-# ################################################################################
-# ### Set filepaths ##############################################################
-# 
-# path.hdf <- "/home/schmingo/Diplomarbeit/sample_myd02_hdf/"
-# path.tif <- "/home/schmingo/Diplomarbeit/sample_myd02_tif/"
-# path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
-# 
-# ## Source modules
-# source("/home/schmingo/Diplomarbeit/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
-# 
-# ################################################################################
-# ### Import biodiversity dataset ################################################
-# 
-# data.bio.raw <- read.csv2(path.biodiversity.csv,
-#                           dec = ".",
-#                           header = TRUE, 
-#                           stringsAsFactors = FALSE)
-# 
-# 
-# ################################################################################
-# ### List .hdf and .tif for specific date and import .tif as RasterLayer Object##
-# 
-# ## List unique cloudless dates
-# lst.date <- unique(data.bio.raw$date_nocloud)
-# lst.date
-# 
-# # foreach(a = lst.date) %do% {
-#   
-#   ## Extract date from biodiversity data
-# #   tmp.date <- a
-#   tmp.date <- data.bio.raw$date_nocloud[1]
-#   
-#   ## Reformat date
-#   tmp.date <- paste0(substr(tmp.date, 1, 4),
-#                      substr(tmp.date, 6, 8),
-#                      ".",
-#                      substr(tmp.date, 10, 13))
-#   
-#   ## List .tif files
-#   lst.tif <- list.files(path.tif, pattern = tmp.date, full.names = TRUE)
-#   
-#   ## Import .tif files as RasterLayer objects
-#   lst.tif.raster <- lapply(lst.tif, raster)
-#   
-#   ### List .hdf files
-#   lst.hdf.1km <- list.files(path.hdf, 
-#                             pattern = paste("1KM", tmp.date, sep = ".*"), 
-#                             full.names = TRUE)
-#   lst.hdf.hkm <- list.files(path.hdf, 
-#                             pattern = paste("HKM", tmp.date, sep = ".*"), 
-#                             full.names = TRUE)
-#   lst.hdf.qkm <- list.files(path.hdf, 
-#                             pattern = paste("QKM", tmp.date, sep = ".*"), 
-#                             full.names = TRUE)
-  
-  
-################################################################
-################################################################
-################################################################
-################################################################
-################################################################
-
+##
+##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##
+##
+##  This file is part of BiFoRe.
+##  
+##  BiFoRe is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##  
+##  BiFoRe is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##  
+##  You should have received a copy of the GNU General Public License
+##  along with BiFoRe.  If not, see <http://www.gnu.org/licenses/>.
+##  
+################################################################################
 
 hdfExtractMODScale <- function(lst.hdf.qkm,
                                lst.hdf.hkm,
@@ -103,9 +46,9 @@ hdfExtractMODScale <- function(lst.hdf.qkm,
   
   ## HDF attributes
   #attributes(info.250.hdf) # display attributes
-  subds.250 <- attr(info.250.hdf, "subdsmdata") # display subdatasets
-  subds.500 <- attr(info.500.hdf, "subdsmdata") # display subdatasets
-  subds.1km <- attr(info.1km.hdf, "subdsmdata") # display subdatasets
+  subds.250 <- attr(info.250.hdf, "subdsmdata")  # display subdatasets
+  subds.500 <- attr(info.500.hdf, "subdsmdata")  # display subdatasets
+  subds.1km <- attr(info.1km.hdf, "subdsmdata")  # display subdatasets
   
   
   ## Identify relevant SubDS via regular expression
@@ -180,8 +123,7 @@ hdfExtractMODScale <- function(lst.hdf.qkm,
   sapply(strsplit(offset.refsb.1km, ", "), as.numeric)
   sapply(strsplit(offset.emiss.1km, ", "), as.numeric)
   
-  ##############################################################################
-  ## Write Modis bandnames and radiance scales to a single dataframe ###########
+  ### Write Modis bandnames and radiance scales to a single dataframe ##########
   
   ## paste bandnames and radiance scale
   bandnames <- paste(bands.refsb.250, 

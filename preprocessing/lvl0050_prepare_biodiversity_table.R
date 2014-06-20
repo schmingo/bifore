@@ -12,7 +12,7 @@ cat("\014")
 ## - Calculate number of species
 ## - Add LatLong Coordinates
 ##  
-##  Version: 2014-03-15
+##  Version: 2014-06-20
 ##  
 ################################################################################
 ##
@@ -45,7 +45,7 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 
 ## Set working directory
-setwd("/home/schmingo/Daten/Dropbox/Code/bifore/src/")
+setwd("/home/schmingo/Dropbox/Code/bifore/src/")
 # setwd("D:/Dropbox/Code/bifore/src/")
 
 ## Set filepaths

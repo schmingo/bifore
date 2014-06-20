@@ -5,7 +5,7 @@ cat("\014")
 ##    
 ##  Convert MYD02 .hdf files to .geotiff
 ##  
-##  Version: 2014-04-17
+##  Version: 2014-06-20
 ##  
 ################################################################################
 ##
@@ -41,9 +41,16 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 ## Set working directory
 setwd("/home/schmingo/")
 
+
+### Set filepaths ##############################################################
+
 path.hdf.in <- "Daten/Code/bifore_src/myd02-03_hdf/"
 tifsdir <- "Daten/Code/bifore_src/myd02_tif/"
-mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
+mrtpath <- "apps/MRTswath/bin/swath2grid"
+
+## Create folders
+if (!file.exists(path.hdf.in)) {dir.create(file.path(path.hdf.in))}
+if (!file.exists(tifsdir)) {dir.create(file.path(tifsdir))}
 
 ## Load required modules
 source("Code/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_1000.R")
@@ -54,9 +61,13 @@ source("Code/bifore/preprocessing/modules/lvl0230_renameSuffix.R")
 
 ## Runtime calculation
 starttime <- Sys.time()
-################################################################################
+
+
+### ToDo: Copy files (myd02 & myd03 -> myd02-03_hdf)
+
+
+
 ### Preprocessing MYD35_L2 and MYD03 | Run MRTSwath tool "swath2grid" ##########
-################################################################################
 
 ### List hdf files
 fls.myd <- list.files(path.hdf.in,
@@ -276,6 +287,5 @@ foreach(i = suffixes.in, j = suffixes.out) %do% {
 ### Runtime calculation ########################################################
 
 endtime <- Sys.time()
-
 time <- endtime - starttime
 time

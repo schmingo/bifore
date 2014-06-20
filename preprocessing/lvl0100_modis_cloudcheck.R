@@ -8,7 +8,7 @@ cat("\014")
 ## Ref.: - http://modis-atmos.gsfc.nasa.gov/_docs/CMUSERSGUIDE.pdf
 ##       - MYD35 .hdf metadata
 ##  
-##  Version: 2014-06-19
+##  Version: 2014-06-20
 ##  
 ################################################################################
 ##
@@ -69,6 +69,7 @@ source("Code/bifore/preprocessing/modules/lvl0110_writeMRTSwathParamFile_cloudch
 source("Code/bifore/preprocessing/modules/lvl0110_runSwath2Grid.R")
 
 ## Create folders
+if (!file.exists(path.hdf.in)) {dir.create(file.path(path.hdf.in))}
 if (!file.exists(path.hdf.sub)) {dir.create(file.path(path.hdf.sub))}
 if (!file.exists(path.tif.cloudmask)) {dir.create(file.path(path.tif.cloudmask))}
 
@@ -87,6 +88,9 @@ data.orig <- data
 
 ## Runtime calculation
 starttime <- Sys.time()
+
+
+### ToDo: Copy files (myd03 & myd35 -> myd03-35_hdf)
 
 
 ### Separate day and night hdf files ###########################################

@@ -5,7 +5,7 @@ cat("\014")
 ##    
 ##  Extract greyvalues from MODIS .geotiff images for each observation (lvl0100).
 ##  
-##  Version: 2014-04-17
+##  Version: 2014-06-20
 ##  
 ################################################################################
 ##
@@ -387,7 +387,8 @@ write.table(greyvalues.diff.sd,
             sep = ";")
 
 
-## Runtime calculation
+### Runtime calculation ########################################################
+
 endtime <- Sys.time()
 time <- endtime - starttime
 time

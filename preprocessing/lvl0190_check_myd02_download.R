@@ -5,7 +5,7 @@ cat("\014")
 ##    
 ## Compare downloaded MYD02 with nocloud dates
 ## 
-##  Version: 2014-02-18
+##  Version: 2014-06-20
 ##  
 ################################################################################
 ##
@@ -114,10 +114,6 @@ dates.hkm %in% data$date_nocloud
 ### Copy MYD03 files ###########################################################
 
 lst.myd03 <- list.files(path.myd03, pattern="MYD03", full.names=TRUE)
-
-# substr(basename(lst.myd03[1]), 8, 19)
-# substr(basename(lst.1km[1]), 11, 22)
-
 
 for (i in lst.myd03)
   for (h in lst.1km)

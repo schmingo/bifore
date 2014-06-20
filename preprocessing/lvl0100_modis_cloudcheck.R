@@ -338,6 +338,5 @@ qplot(x = diff_days_nocloud,
 
 ## Runtime calculation
 endtime <- Sys.time()
-
 time <- endtime - starttime
 time

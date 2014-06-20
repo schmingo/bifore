@@ -3,7 +3,7 @@ cat("\014")
 ##  
 ##  BiFoRe Scripts
 ##    
-## Compare downloaded MYD02 with nocloud dates
+## Compare downloaded MYD02 with nocloud dates (.csv)
 ## 
 ##  Version: 2014-06-20
 ##  
@@ -32,20 +32,42 @@ cat("\014")
 ## Clear workspace
 rm(list = ls(all = TRUE))
 
-lib <- c()
+lib <- c("foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
 setwd("/home/schmingo/Dropbox/Code/bifore/src/")
 
+## Detect available CPU cores
+ncores <- detectCores()
+
 
 ### Set filepaths ##############################################################
 
 path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
-
-path.myd02 <- "/home/schmingo/Daten/Code/bifore_src/myd02-03_hdf/"
+path.myd02 <- "/home/schmingo/Daten/Code/bifore_src/myd02/"
 path.myd03 <- "/home/schmingo/Daten/Code/bifore_src/myd03-35_hdf_daytime/"
 path.myd02_03 <- "/home/schmingo/Daten/Code/bifore_src/myd02-03_hdf/"
+
+## Create folders
+if (!file.exists(path.myd02_03)) {dir.create(file.path(path.myd02_03))}
+
+### Copy MYD02 #################################################################
+
+list.rawpath.myd02 <- list.files(path.myd02, 
+                                 pattern = "MYD02", 
+                                 full.names = TRUE)
+
+## Copy MYD02 files
+if (length(list.rawpath.myd02)  > 0) {
+  registerDoParallel(cl <- makeCluster(ncores))
+  foreach (m = list.rawpath.myd02, .packages = lib) %dopar% {
+    file.rename (from = m,
+                 to = paste0(path.myd02_03, basename(m)))
+  }
+  stopCluster(cl)
+}
+
 
 
 ### Import biodiversity dataset ################################################
@@ -59,15 +81,15 @@ data <- read.csv2(path.biodiversity.csv,
 ### Extract MYD02 date string ##################################################
 
 ## List hdf files
-lst.1km <- list.files(path.myd02,
+lst.1km <- list.files(path.myd02_03,
                       pattern = "MYD021KM",
                       full.names = TRUE)
   
-lst.qkm <- list.files(path.myd02,
+lst.qkm <- list.files(path.myd02_03,
                       pattern = "MYD02QKM",
                       full.names = TRUE)
 
-lst.hkm <- list.files(path.myd02,
+lst.hkm <- list.files(path.myd02_03,
                       pattern = "MYD02HKM",
                       full.names = TRUE)
 
@@ -113,7 +135,9 @@ dates.hkm %in% data$date_nocloud
 
 ### Copy MYD03 files ###########################################################
 
-lst.myd03 <- list.files(path.myd03, pattern="MYD03", full.names=TRUE)
+lst.myd03 <- list.files(path.myd03, 
+                        pattern = "MYD03", 
+                        full.names = TRUE)
 
 for (i in lst.myd03)
   for (h in lst.1km)

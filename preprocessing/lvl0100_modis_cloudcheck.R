@@ -61,6 +61,8 @@ path.biodiversity.csv <- "Dropbox/Code/bifore/src/csv/kili/lvl0050_biodiversity_
 path.nocloud.csv <- "Dropbox/Code/bifore/src/csv/kili/lvl0100_biodiversity_data.csv"
 path.hdf.in <- "Daten/Code/bifore_src/myd03-35_hdf/"
 path.hdf.sub <- "Daten/Code/bifore_src/myd03-35_hdf_daytime/"
+path.hdf.myd03 <- "Daten/Code/bifore_src/myd03/"
+path.hdf.myd35 <- "Daten/Code/bifore_src/myd35/"
 path.tif.cloudmask <- "Daten/Code/bifore_src/myd_cloudmask_tif_daytime/"
 mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
 
@@ -90,7 +92,35 @@ data.orig <- data
 starttime <- Sys.time()
 
 
-### ToDo: Copy files (myd03 & myd35 -> myd03-35_hdf)
+### Copy MYD03 & MYD35 HDF files into the same folder ##########################
+
+list.rawpath.myd03 <- list.files(path.hdf.myd03, 
+                                 pattern = "MYD03", 
+                                 full.names = TRUE)
+
+list.rawpath.myd35 <- list.files(path.hdf.myd35, 
+                                 pattern = "MYD35", 
+                                 full.names = TRUE)
+
+## Copy MYD03 files
+if (length(list.rawpath.myd03)  > 0) {
+  registerDoParallel(cl <- makeCluster(ncores))
+  foreach (m = list.rawpath.myd03, .packages = lib) %dopar% {
+    file.rename (from = m,
+                 to = paste0(path.hdf.in, basename(m)))
+  }
+  stopCluster(cl)
+}
+
+## Copy MYD35 files
+if (length(list.rawpath.myd35)  > 0) {
+  registerDoParallel(cl <- makeCluster(ncores))
+  foreach (n = list.rawpath.myd35, .packages = lib) %dopar% {
+    file.rename (from = n,
+                 to = paste0(path.hdf.in, basename(n)))
+  }
+  stopCluster(cl)
+}
 
 
 ### Separate day and night hdf files ###########################################

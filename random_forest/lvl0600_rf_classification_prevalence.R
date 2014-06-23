@@ -1,19 +1,46 @@
 cat("\014")
 ################################################################################
-## BiFoRe Scripts                                                             ##
-##                                                                            ##
-## RANDOM FOREST FOR MODIS DATA                                               ##
-##                                                                            ##
-## FURTHER PREVALENCE CALCULATIONS FOR ALL SPECIES                            ##
-## EXECUTE RANDOM FOREST 100 TIMES AND CALCULATE MEAN VALUES FOR              ##
-## CONFUSION MATRIX AND VARIABLE IMPORTANCE                                   ##
-##                                                                            ##
-##                                                                            ##
-## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-06-23                                                        ##
-##                                                                            ##
+##  
+##  BiFoRe Scripts
+##
+##  Perform RandomForest Classification for Orthoptera prevalence
+##  Incoming dataset is based on level0400 (stratified sampling)
+##
+##  - Write RF confusion matrix with further calculations
+##    - POFD (Probability of false detection)
+##    - POD (Probability of detection)
+##    - FAR (False alarm ratio)
+##    - CSI (Critical success index)
+##    - Accuracy
+##    - Kappa
+##
+##  - Write variable importance
+##    - Mean Decrease Accuracy
+##    - Mean Decrease Gini
+##  
+##  Version: 2014-06-23
+##  
 ################################################################################
-
+##
+##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##
+##
+##  This file is part of BiFoRe.
+##  
+##  BiFoRe is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##  
+##  BiFoRe is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##  
+##  You should have received a copy of the GNU General Public License
+##  along with BiFoRe.  If not, see <http://www.gnu.org/licenses/>.
+##  
+################################################################################
 
 ## Clear workspace
 rm(list = ls(all = TRUE))
@@ -26,8 +53,8 @@ ncores <- detectCores()
 # options(scipen = 10)
 
 ## set working directory
-setwd("/home/schmingo/Dropbox/Code/bifore/src/csv/kili/")
-# setwd("D:/Dropbox/Code/bifore/src/csv/kili/")
+# setwd("/home/schmingo/Dropbox/Code/bifore/src/csv/kili/")
+setwd("D:/Dropbox/Code/bifore/src/csv/kili/")
 
 ## Set filenames
 file.in <- "lvl0400_rf_strat_prevalence_cut.csv"
@@ -46,7 +73,7 @@ data.raw <- read.csv2(file.in,
                       header = TRUE,
                       stringsAsFactors = FALSE)
 
-## Note: 1. Species with less than x observations in different plots removed
+## Note: 1. Species with less than 15 observations in different plots removed
 ##       2. Stratified sampling (only 1 random observation per plot)
 
 
@@ -64,9 +91,9 @@ index <- which(colSums(data.raw[, lst.species]) > 0) +
   grep("coordN", names(data.raw))
 
 data.raw <- data.frame(data.raw[, 1:grep("coordN", names(data.raw))], 
-           data.raw[, index], 
-           data.raw[, grep("greyval_band_1", 
-                           names(data.raw))[1]:ncol(data.raw)])
+                       data.raw[, index], 
+                       data.raw[, grep("greyval_band_1", 
+                                       names(data.raw))[1]:ncol(data.raw)])
 
 lst.species <- names(data.raw[(which(names(data.raw)=="coordN")+1):(which(names(data.raw)=="greyval_band_1")-1)])
 
@@ -79,8 +106,7 @@ registerDoParallel(cl <- makeCluster(ncores))
 df.species.lvl0600 <- foreach(s = lst.species, 
                               .combine = "cbind", .packages = lib) %dopar% {
   
-  
-#   s <- lst.species[3]
+  #   s <- lst.species[3]
   set.seed(50)
   ## Select species data
   df.species <- data.frame(data.raw[,names(data.raw) %in% c(s)])
@@ -262,7 +288,7 @@ df.species.lvl0600 <- foreach(s = lst.species,
     vi_MDG_36[i] <- variableImportance[30,4]
     
   }
-
+  
   ## Save mean confusion matrix and variable importance values into a dataframe
   df.species.lvl0600 <- as.data.frame(c(colSums(tmp.species),
                                         mean(conf.1.1), 
@@ -331,7 +357,6 @@ df.species.lvl0600 <- foreach(s = lst.species,
                                         mean(vi_MDG_34),
                                         mean(vi_MDG_35),
                                         mean(vi_MDG_36)))
-  
   
   ## Set colnames (species)
   names(df.species.lvl0600) <- s
@@ -442,94 +467,89 @@ attach(df.out.confusion)
 ## Sum observed 0
 df.out.confusion$sum.O0 <- foreach(i=seq(1:nrow(df.out.confusion)), 
                                    .combine="rbind") %do% {
-  sum.tmp <- df.out.confusion[i,"O0_P0"] + df.out.confusion[i,"O0_P1"]
-  return(sum.tmp)
-}
+                                     sum.tmp <- df.out.confusion[i,"O0_P0"] + df.out.confusion[i,"O0_P1"]
+                                     return(sum.tmp)
+                                   }
 
 ## Sum observed 1
 df.out.confusion$sum.O1 <- foreach(i=seq(1:nrow(df.out.confusion)), 
                                    .combine="rbind") %do% {
-  sum.tmp <- df.out.confusion[i,"O1_P0"] + df.out.confusion[i,"O1_P1"]
-  return(sum.tmp)
-}
+                                     sum.tmp <- df.out.confusion[i,"O1_P0"] + df.out.confusion[i,"O1_P1"]
+                                     return(sum.tmp)
+                                   }
 
 ## Sum predicted 0
 df.out.confusion$sum.P0 <- foreach(i=seq(1:nrow(df.out.confusion)), 
                                    .combine="rbind") %do% {
-  sum.tmp <- df.out.confusion[i,"O0_P0"] + df.out.confusion[i,"O1_P0"]
-  return(sum.tmp)
-}
+                                     sum.tmp <- df.out.confusion[i,"O0_P0"] + df.out.confusion[i,"O1_P0"]
+                                     return(sum.tmp)
+                                   }
 
 ## Sum predicted 1
 df.out.confusion$sum.P1 <- foreach(i=seq(1:nrow(df.out.confusion)), 
                                    .combine="rbind") %do% {
-  sum.tmp <- df.out.confusion[i,"O0_P1"] + 
-    df.out.confusion[i,"O1_P1"]
-  return(sum.tmp)
-}
+                                     sum.tmp <- df.out.confusion[i,"O0_P1"] + 
+                                       df.out.confusion[i,"O1_P1"]
+                                     return(sum.tmp)
+                                   }
 
 ## POD (Probability of detection)
 df.out.confusion$POD <- foreach(i=seq(1:nrow(df.out.confusion)), 
                                 .combine="rbind") %do% {
-  POD.tmp <- (df.out.confusion[i,"O1_P1"]) / 
-    (df.out.confusion[i,"sum.P1"])
-  return(POD.tmp)
-}
+                                  POD.tmp <- (df.out.confusion[i,"O1_P1"]) / 
+                                    (df.out.confusion[i,"sum.P1"])
+                                  return(POD.tmp)
+                                }
 
 ## FAR (False alarm ratio)
 df.out.confusion$FAR <- foreach(i=seq(1:nrow(df.out.confusion)), 
                                 .combine="rbind") %do% {
-  FAR.tmp <- (df.out.confusion[i,"O0_P1"]) / 
-    (df.out.confusion[i,"sum.P1"])
-  return(FAR.tmp)
-}
+                                  FAR.tmp <- (df.out.confusion[i,"O0_P1"]) / 
+                                    (df.out.confusion[i,"sum.P1"])
+                                  return(FAR.tmp)
+                                }
 
 ## CSI (Critical success index)
 df.out.confusion$CSI <- foreach(i=seq(1:nrow(df.out.confusion)), 
                                 .combine="rbind") %do% {
-  CSI.tmp <- (df.out.confusion[i,"O1_P1"]) / 
-    (df.out.confusion[i,"O1_P1"] + 
-       df.out.confusion[i,"O1_P0"] + 
-       df.out.confusion[i,"O0_P1"])
-  return(CSI.tmp)
-}
+                                  CSI.tmp <- (df.out.confusion[i,"O1_P1"]) / 
+                                    (df.out.confusion[i,"O1_P1"] + 
+                                       df.out.confusion[i,"O1_P0"] + 
+                                       df.out.confusion[i,"O0_P1"])
+                                  return(CSI.tmp)
+                                }
 
 ## POFD (Probability of false detection)
 df.out.confusion$POFD <- foreach(i=seq(1:nrow(df.out.confusion)), 
                                  .combine="rbind") %do% {
-    POFD.tmp <- (df.out.confusion[i,"O0_P1"]) / 
-      (df.out.confusion[i,"sum.O0"])
-  return(POFD.tmp)
-}
+                                   POFD.tmp <- (df.out.confusion[i,"O0_P1"]) / 
+                                     (df.out.confusion[i,"sum.O0"])
+                                   return(POFD.tmp)
+                                 }
 
 ## Kappa
 df.out.confusion$kappa <- foreach(i=seq(1:nrow(df.out.confusion)), 
                                   .combine="rbind") %do% {
-  kappa.tmp <- ((df.out.confusion[i, "sum.P1"]) *
-                  (df.out.confusion[i, "sum.O1"]) + 
-                  (df.out.confusion[i, "sum.O0"]) *
-                  (df.out.confusion[i, "sum.P0"])) /
-    ((df.out.confusion[i, "sum.P0"]) + 
-       (df.out.confusion[i, "sum.P1"]))^2
-  return(kappa.tmp)
-}
+                                    kappa.tmp <- ((df.out.confusion[i, "sum.P1"]) *
+                                                    (df.out.confusion[i, "sum.O1"]) + 
+                                                    (df.out.confusion[i, "sum.O0"]) *
+                                                    (df.out.confusion[i, "sum.P0"])) /
+                                      ((df.out.confusion[i, "sum.P0"]) + 
+                                         (df.out.confusion[i, "sum.P1"]))^2
+                                    return(kappa.tmp)
+                                  }
 
 
 ## Accuracy
 df.out.confusion$accuracy <- foreach(i=seq(1:nrow(df.out.confusion)), 
                                      .combine="rbind") %do% {
                                        acc.tmp <- ((df.out.confusion[i,"O1_P1"]) +
-                                         (df.out.confusion[i,"O0_P0"])) /
+                                                     (df.out.confusion[i,"O0_P0"])) /
                                          ((df.out.confusion[i, "sum.P0"]) + 
                                             (df.out.confusion[i, "sum.P1"]))
-                                         
+                                       
                                        return(acc.tmp)
                                      }
-
-
-
-
-
 detach(df.out.confusion)
 
 

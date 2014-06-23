@@ -30,10 +30,10 @@ setwd("/home/schmingo/Dropbox/Code/bifore/src/csv/kili/")
 # setwd("D:/Dropbox/Code/bifore/src/csv/kili/")
 
 ## Set filenames
-file.in <- "lvl0400_rf_strat_prevalence_all.csv"
-file.out.confusion <- "lvl0600_rf_prevalence_species-all_mean100_confusion.csv"
-file.out.varimp.MDA <- "lvl0600_rf_prevalence_species-all_mean100_MDA.csv"
-file.out.varimp.MDG <- "lvl0600_rf_prevalence_species-all_mean100_MDG.csv"
+file.in <- "lvl0400_rf_strat_prevalence_cut.csv"
+file.out.confusion <- "lvl0600_rf_prevalence_species-cut_mean100_confusion.csv"
+file.out.varimp.MDA <- "lvl0600_rf_prevalence_species-cut_mean100_MDA.csv"
+file.out.varimp.MDG <- "lvl0600_rf_prevalence_species-cut_mean100_MDG.csv"
 
 ## Runtime calculation
 starttime <- Sys.time()
@@ -80,7 +80,7 @@ df.species.lvl0600 <- foreach(s = lst.species,
                               .combine = "cbind", .packages = lib) %dopar% {
   
   
-  s <- lst.species[3]
+#   s <- lst.species[3]
   set.seed(50)
   ## Select species data
   df.species <- data.frame(data.raw[,names(data.raw) %in% c(s)])
@@ -507,12 +507,28 @@ df.out.confusion$kappa <- foreach(i=seq(1:nrow(df.out.confusion)),
                                   .combine="rbind") %do% {
   kappa.tmp <- ((df.out.confusion[i, "sum.P1"]) *
                   (df.out.confusion[i, "sum.O1"]) + 
-                  (df.out.confusion[i, "sum.O0"]) +
+                  (df.out.confusion[i, "sum.O0"]) *
                   (df.out.confusion[i, "sum.P0"])) /
     ((df.out.confusion[i, "sum.P0"]) + 
        (df.out.confusion[i, "sum.P1"]))^2
   return(kappa.tmp)
 }
+
+
+## Accuracy
+df.out.confusion$accuracy <- foreach(i=seq(1:nrow(df.out.confusion)), 
+                                     .combine="rbind") %do% {
+                                       acc.tmp <- ((df.out.confusion[i,"O1_P1"]) +
+                                         (df.out.confusion[i,"O0_P0"])) /
+                                         ((df.out.confusion[i, "sum.P0"]) + 
+                                            (df.out.confusion[i, "sum.P1"]))
+                                         
+                                       return(acc.tmp)
+                                     }
+
+
+
+
 
 detach(df.out.confusion)
 

@@ -62,18 +62,24 @@ data.raw <- read.csv2("lvl0600_rf_prevalence_species-cut_mean100_confusion.csv",
 ################################################################################
 
 ## Define output image | open image port
-png("images/lvl0600_rf_prevalence_cut_confusionmatrix.png", 
-    width = 2048 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
+# png("images/lvl0600_rf_prevalence_cut_confusionmatrix.png", 
+#     width = 2048 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
 
 
 # Line-plot
 # alle im header genannten confusion matrix Berechnungen
 
 
-plot <- ggplot(data.raw, aes(y=species, y=number.of.prevalence)) + 
+plot <- ggplot(data.raw, aes(x=accuracy, y=value)) +
+  geom_line(colour = accuracy)
+  
+plot  
+  
+
+aes(y=species, y=number.of.prevalence)) + 
   geom_bar(stat="identity") +
   scale_fill_grey() +
   xlab("value") +

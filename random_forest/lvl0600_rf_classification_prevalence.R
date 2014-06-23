@@ -23,16 +23,17 @@ lib <- c("randomForest", "foreach", "doParallel")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ncores <- detectCores()
+# options(scipen = 10)
 
 ## set working directory
 # setwd("/home/schmingo/Dropbox/Code/bifore/src/")
 setwd("D:/Dropbox/Code/bifore/src/csv/kili/")
 
 ## Set filenames
-file.in <- "lvl0400_rf_strat_prevalence_cut.csv"
-file.out.confusion <- "lvl0600_rf_prevalence_species-cut_mean100_confusion.csv"
-file.out.varimp.MDA <- "lvl0600_rf_prevalence_species-cut_mean100_MDA.csv"
-file.out.varimp.MDG <- "lvl0600_rf_prevalence_species-cut_mean100_MDG.csv"
+file.in <- "lvl0400_rf_strat_prevalence_all.csv"
+file.out.confusion <- "lvl0600_rf_prevalence_species-all_mean100_confusion.csv"
+file.out.varimp.MDA <- "lvl0600_rf_prevalence_species-all_mean100_MDA.csv"
+file.out.varimp.MDG <- "lvl0600_rf_prevalence_species-all_mean100_MDG.csv"
 
 ## Timekeeping
 starttime <- Sys.time()
@@ -62,6 +63,16 @@ names(data.raw)
 lst.species <- names(data.raw[(which(names(data.raw)=="coordN")+1):(which(names(data.raw)=="greyval_band_1")-1)])
 lst.species
 
+## Remove species without any observations
+index <- which(colSums(data.raw[, lst.species]) > 0) + 
+  grep("coordN", names(data.raw))
+
+data.raw <- data.frame(data.raw[, 1:grep("coordN", names(data.raw))], 
+           data.raw[, index], 
+           data.raw[, grep("greyval_band_1", names(data.raw))[1]:ncol(data.raw)])
+
+lst.species <- names(data.raw[(which(names(data.raw)=="coordN")+1):(which(names(data.raw)=="greyval_band_1")-1)])
+
 ## Split incoming dataset
 df.greyval <- data.raw[(which(names(data.raw)=="greyval_band_1")):(which(names(data.raw)=="greyval_band_36"))]
 
@@ -70,7 +81,8 @@ registerDoParallel(cl <- makeCluster(ncores))
 
 df.species.lvl0600 <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %dopar% {
   
-  # species <- lst.species[47]
+  
+  s <- lst.species[3]
   set.seed(50)
   ## Select species data
   df.species <- data.frame(data.raw[,names(data.raw) %in% c(s)])
@@ -167,7 +179,7 @@ df.species.lvl0600 <- foreach(s = lst.species, .combine = "cbind", .packages = l
   
   ## Function ##################################################################
   set.seed(50)
-  foreach(i = seq(1:100)) %do% {
+  foreach(i = seq(1)) %do% {
     
     train.rf <- randomForest(x = predictor_modisVAL,
                              y = response_speciesCLASS,
@@ -177,6 +189,10 @@ df.species.lvl0600 <- foreach(s = lst.species, .combine = "cbind", .packages = l
                              nodesize = 2,
                              type="classification",
                              do.trace = FALSE)
+    
+    train.rf$confusion
+    train.rf
+    plot(train.rf)
     
     variableImportance <- importance(train.rf)
     
@@ -489,6 +505,16 @@ df.out.confusion$CSI <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind
 df.out.confusion$POFD <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
     POFD.tmp <- (df.out.confusion[i,"O0_P1"]) / (df.out.confusion[i,"sum.O0"])
   return(POFD.tmp)
+}
+
+## Kappa
+df.out.confusion$kappa <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+  kappa.tmp <- ((df.out.confusion[i, "sum.P1"]) *
+                  (df.out.confusion[i, "sum.O1"]) + 
+                  (df.out.confusion[i, "sum.O0"]) +
+                  (df.out.confusion[i, "sum.P0"])) /
+    ((df.out.confusion[i, "sum.P0"]) + (df.out.confusion[i, "sum.P1"]))^2
+  return(kappa.tmp)
 }
 
 detach(df.out.confusion)

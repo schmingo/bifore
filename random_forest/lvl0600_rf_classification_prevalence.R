@@ -10,7 +10,7 @@ cat("\014")
 ##                                                                            ##
 ##                                                                            ##
 ## Author: Simon Schlauss (sschlauss@gmail.com)                               ##
-## Version: 2014-05-08                                                        ##
+## Version: 2014-06-23                                                        ##
 ##                                                                            ##
 ################################################################################
 
@@ -35,13 +35,11 @@ file.out.confusion <- "lvl0600_rf_prevalence_species-all_mean100_confusion.csv"
 file.out.varimp.MDA <- "lvl0600_rf_prevalence_species-all_mean100_MDA.csv"
 file.out.varimp.MDG <- "lvl0600_rf_prevalence_species-all_mean100_MDG.csv"
 
-## Timekeeping
+## Runtime calculation
 starttime <- Sys.time()
 
 
-################################################################################
 ### Import dataset #############################################################
-################################################################################
 
 data.raw <- read.csv2(file.in,
                       dec = ",",
@@ -52,9 +50,7 @@ data.raw <- read.csv2(file.in,
 ##       2. Stratified sampling (only 1 random observation per plot)
 
 
-################################################################################
 ### Combining data for randomForest ############################################
-################################################################################
 set.seed(50)
 
 ## List species
@@ -69,7 +65,8 @@ index <- which(colSums(data.raw[, lst.species]) > 0) +
 
 data.raw <- data.frame(data.raw[, 1:grep("coordN", names(data.raw))], 
            data.raw[, index], 
-           data.raw[, grep("greyval_band_1", names(data.raw))[1]:ncol(data.raw)])
+           data.raw[, grep("greyval_band_1", 
+                           names(data.raw))[1]:ncol(data.raw)])
 
 lst.species <- names(data.raw[(which(names(data.raw)=="coordN")+1):(which(names(data.raw)=="greyval_band_1")-1)])
 
@@ -79,7 +76,8 @@ df.greyval <- data.raw[(which(names(data.raw)=="greyval_band_1")):(which(names(d
 ## Calculate randomForest for all Species
 registerDoParallel(cl <- makeCluster(ncores))
 
-df.species.lvl0600 <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %dopar% {
+df.species.lvl0600 <- foreach(s = lst.species, 
+                              .combine = "cbind", .packages = lib) %dopar% {
   
   
   s <- lst.species[3]
@@ -90,21 +88,16 @@ df.species.lvl0600 <- foreach(s = lst.species, .combine = "cbind", .packages = l
   
   tmp.species <- df.species
   
-  # summary(tmp.species)
-  
   ## Create dataframe with single species as predictor dataset
   df.spec.greyval <- cbind(df.greyval, tmp.species)
-  
   
   
   ## Define Random Forest input data ###########################################
   train.data <- df.spec.greyval
   
   
-  ##############################################################################
   ### Random Forest function ###################################################
   ### Classification - single species ##########################################
-  ##############################################################################
   
   predictor_modisVAL <- train.data[,1:ncol(train.data)-1]
   response_speciesCLASS <- as.factor(train.data[,ncol(train.data)])
@@ -205,7 +198,6 @@ df.species.lvl0600 <- foreach(s = lst.species, .combine = "cbind", .packages = l
     conf.2.3[i] = train.rf$confusion[2,3]
     
     ### Variable Importance - Mean Decrease Accuracy ###########################
-    # vi_MeanDecreaseAccuracy <- variableImportance[,3]
     vi_MDA_01[i] <- variableImportance[1,3]
     vi_MDA_02[i] <- variableImportance[2,3]
     vi_MDA_03[i] <- variableImportance[3,3]
@@ -238,7 +230,6 @@ df.species.lvl0600 <- foreach(s = lst.species, .combine = "cbind", .packages = l
     vi_MDA_36[i] <- variableImportance[30,3]
     
     ### Variable Importance - Mean Decrease Gini ###############################
-    # vi_MeanDecreaseGini <- variableImportance[,4]
     vi_MDG_01[i] <- variableImportance[1,4]
     vi_MDG_02[i] <- variableImportance[2,4]
     vi_MDG_03[i] <- variableImportance[3,4]
@@ -271,15 +262,7 @@ df.species.lvl0600 <- foreach(s = lst.species, .combine = "cbind", .packages = l
     vi_MDG_36[i] <- variableImportance[30,4]
     
   }
-  
-  #   ## Get mean values
-  #   mean(conf.1.1)
-  #   mean(conf.1.2)
-  #   mean(conf.1.3)
-  #   mean(conf.2.1)
-  #   mean(conf.2.2)
-  #   mean(conf.2.3)
-  
+
   ## Save mean confusion matrix and variable importance values into a dataframe
   df.species.lvl0600 <- as.data.frame(c(colSums(tmp.species),
                                         mean(conf.1.1), 
@@ -350,17 +333,14 @@ df.species.lvl0600 <- foreach(s = lst.species, .combine = "cbind", .packages = l
                                         mean(vi_MDG_36)))
   
   
-  
   ## Set colnames (species)
   names(df.species.lvl0600) <- s
   return(df.species.lvl0600)
   
 }
 
-
 ## Close parallel backend
 stopCluster(cl)
-
 
 ## Transpose df
 df.species.lvl0600 <- as.data.frame(t(df.species.lvl0600))
@@ -447,85 +427,97 @@ attach(df.species.lvl0600)
 df.species.lvl0600 <- df.species.lvl0600[order(-no.of.prevalence),]
 detach(df.species.lvl0600)
 
-## Split data into 3 separate dataframes - confusion matrix & variable importance (MDA + MDG)
+## Split data into 3 separate dataframes
+## Confusion matrix & variable importance (MDA + MDG)
 
 df.out.confusion <- df.species.lvl0600[1:8]
 df.out.varimp.MDA <- cbind(df.species.lvl0600[1:2], df.species.lvl0600[9:38])
 df.out.varimp.MDG <- cbind(df.species.lvl0600[1:2], df.species.lvl0600[39:68])
 
 
-################################################################################
 ### Further Confusion Matrix calculations ######################################
-################################################################################
+
 attach(df.out.confusion)
 
 ## Sum observed 0
-df.out.confusion$sum.O0 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+df.out.confusion$sum.O0 <- foreach(i=seq(1:nrow(df.out.confusion)), 
+                                   .combine="rbind") %do% {
   sum.tmp <- df.out.confusion[i,"O0_P0"] + df.out.confusion[i,"O0_P1"]
   return(sum.tmp)
 }
 
 ## Sum observed 1
-df.out.confusion$sum.O1 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+df.out.confusion$sum.O1 <- foreach(i=seq(1:nrow(df.out.confusion)), 
+                                   .combine="rbind") %do% {
   sum.tmp <- df.out.confusion[i,"O1_P0"] + df.out.confusion[i,"O1_P1"]
   return(sum.tmp)
 }
 
 ## Sum predicted 0
-df.out.confusion$sum.P0 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+df.out.confusion$sum.P0 <- foreach(i=seq(1:nrow(df.out.confusion)), 
+                                   .combine="rbind") %do% {
   sum.tmp <- df.out.confusion[i,"O0_P0"] + df.out.confusion[i,"O1_P0"]
   return(sum.tmp)
 }
 
 ## Sum predicted 1
-df.out.confusion$sum.P1 <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-  sum.tmp <- df.out.confusion[i,"O0_P1"] + df.out.confusion[i,"O1_P1"]
+df.out.confusion$sum.P1 <- foreach(i=seq(1:nrow(df.out.confusion)), 
+                                   .combine="rbind") %do% {
+  sum.tmp <- df.out.confusion[i,"O0_P1"] + 
+    df.out.confusion[i,"O1_P1"]
   return(sum.tmp)
 }
 
 ## POD (Probability of detection)
-df.out.confusion$POD <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-  POD.tmp <- (df.out.confusion[i,"O1_P1"]) / (df.out.confusion[i,"sum.P1"])
+df.out.confusion$POD <- foreach(i=seq(1:nrow(df.out.confusion)), 
+                                .combine="rbind") %do% {
+  POD.tmp <- (df.out.confusion[i,"O1_P1"]) / 
+    (df.out.confusion[i,"sum.P1"])
   return(POD.tmp)
 }
 
 ## FAR (False alarm ratio)
-df.out.confusion$FAR <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-  FAR.tmp <- (df.out.confusion[i,"O0_P1"]) / (df.out.confusion[i,"sum.P1"])
+df.out.confusion$FAR <- foreach(i=seq(1:nrow(df.out.confusion)), 
+                                .combine="rbind") %do% {
+  FAR.tmp <- (df.out.confusion[i,"O0_P1"]) / 
+    (df.out.confusion[i,"sum.P1"])
   return(FAR.tmp)
 }
 
 ## CSI (Critical success index)
-df.out.confusion$CSI <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-  CSI.tmp <- (df.out.confusion[i,"O1_P1"]) / (df.out.confusion[i,"O1_P1"] + df.out.confusion[i,"O1_P0"] + df.out.confusion[i,"O0_P1"])
+df.out.confusion$CSI <- foreach(i=seq(1:nrow(df.out.confusion)), 
+                                .combine="rbind") %do% {
+  CSI.tmp <- (df.out.confusion[i,"O1_P1"]) / 
+    (df.out.confusion[i,"O1_P1"] + 
+       df.out.confusion[i,"O1_P0"] + 
+       df.out.confusion[i,"O0_P1"])
   return(CSI.tmp)
 }
 
 ## POFD (Probability of false detection)
-df.out.confusion$POFD <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
-    POFD.tmp <- (df.out.confusion[i,"O0_P1"]) / (df.out.confusion[i,"sum.O0"])
+df.out.confusion$POFD <- foreach(i=seq(1:nrow(df.out.confusion)), 
+                                 .combine="rbind") %do% {
+    POFD.tmp <- (df.out.confusion[i,"O0_P1"]) / 
+      (df.out.confusion[i,"sum.O0"])
   return(POFD.tmp)
 }
 
 ## Kappa
-df.out.confusion$kappa <- foreach(i=seq(1:nrow(df.out.confusion)), .combine="rbind") %do% {
+df.out.confusion$kappa <- foreach(i=seq(1:nrow(df.out.confusion)), 
+                                  .combine="rbind") %do% {
   kappa.tmp <- ((df.out.confusion[i, "sum.P1"]) *
                   (df.out.confusion[i, "sum.O1"]) + 
                   (df.out.confusion[i, "sum.O0"]) +
                   (df.out.confusion[i, "sum.P0"])) /
-    ((df.out.confusion[i, "sum.P0"]) + (df.out.confusion[i, "sum.P1"]))^2
+    ((df.out.confusion[i, "sum.P0"]) + 
+       (df.out.confusion[i, "sum.P1"]))^2
   return(kappa.tmp)
 }
 
 detach(df.out.confusion)
 
-################################################################################
 
-## Timekeeping
-endtime <- Sys.time()
-time <- endtime - starttime
-time
-
+#### Write tables ##############################################################
 
 write.csv2(df.out.confusion, 
            file = file.out.confusion,
@@ -543,6 +535,10 @@ write.csv2(df.out.varimp.MDG,
            row.names = FALSE)
 
 
+## Runtime calulation
+endtime <- Sys.time()
+time <- endtime - starttime
+time
 
 ## Get probabilities for ROC-curve 
-??predict.randomForest
+# ??predict.randomForest

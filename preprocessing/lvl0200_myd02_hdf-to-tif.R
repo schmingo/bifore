@@ -61,10 +61,6 @@ source("Code/bifore/preprocessing/modules/lvl0230_renameSuffix.R")
 starttime <- Sys.time()
 
 
-### ToDo: Copy files (myd02 & myd03 -> myd02-03_hdf)
-
-
-
 ### Preprocessing MYD35_L2 and MYD03 | Run MRTSwath tool "swath2grid" ##########
 
 ### List hdf files

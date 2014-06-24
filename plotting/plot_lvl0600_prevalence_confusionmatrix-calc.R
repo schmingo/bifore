@@ -40,55 +40,84 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("ggplot2")
+lib <- c("ggplot2", "reshape2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## set working directory
 # setwd("/home/schmingo/Dropbox/Code/bifore/src/")
-setwd("D:/Dropbox/Code/bifore/src/csv/kili/")
+setwd("D:/Dropbox/Code/bifore/src/")
+
+## Set filenames/-paths
+file.in <- "csv/kili/lvl0600_rf_prevalence_species-cut_mean100_confusion.csv"
+image.out <- "images/lvl0600_rf_prevalence_cut_confusionmatrix.png"
 
 
 ### Import dataset #############################################################
 
 ## Sorted by no.of.prevalence
-data.raw <- read.csv2("lvl0600_rf_prevalence_species-cut_mean100_confusion.csv",
-                         dec = ",",
-                         header = TRUE,
-                         stringsAsFactors = FALSE)
+df.confusion <- read.csv2(file.in,
+                          dec = ",",
+                          header = TRUE,
+                          stringsAsFactors = FALSE)
+
+## Keep order by no.of.prevalence in ggplot (just to make sure)
+df.confusion$species <- factor(df.confusion$species, 
+                               levels=unique(df.confusion$species), 
+                               ordered=TRUE)
 
 
-################################################################################
-### Plotting - prevalence - all species ########################################
-################################################################################
+### Subset / merge data ########################################################
+
+## Select 10 species with highest no.of.prevalence
+df.confusion <- df.confusion[1:10, ]
+
+## Select varables to plot
+attach(df.confusion)
+
+df.confusion.sub <- data.frame(species, 
+                               Accuracy,
+                               Kappa,
+                               POFD
+#                                CSI,
+#                                FAR,
+#                                POD
+                               )
+
+detach(df.confusion)
+
+
+## Melt dataframe
+df.confusion.sub.melt <- melt(df.confusion.sub, id = "species")
+
+# names(df.confusion.sub.melt)
+# max(df.confusion.sub.melt$value)
+# min(df.confusion.sub.melt$value)
+
+
+### Plotting ###################################################################
 
 ## Define output image | open image port
-# png("images/lvl0600_rf_prevalence_cut_confusionmatrix.png", 
-#     width = 2048 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png(image.out, 
+    width = 2048 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
-
-# Line-plot
-# alle im header genannten confusion matrix Berechnungen
-
-
-plot <- ggplot(data.raw, aes(x=accuracy, y=value)) +
-  geom_line(colour = accuracy)
-  
-plot  
-  
-
-aes(y=species, y=number.of.prevalence)) + 
-  geom_bar(stat="identity") +
-  scale_fill_grey() +
+ggplot(data = df.confusion.sub.melt,
+       aes(y = species, x = value, colour = variable, group = variable)) +
+  geom_line() +
   xlab("value") +
   ylab("species") +
-  ggtitle("Orthoptera prevalence - RandomForest confusion matrix") +
-  theme(axis.text.x = element_text(angle = 270, hjust = 0, vjust = .5, size = 8),
-        plot.title = element_text(lineheight = .8, size = 20))
-
-plot
+  xlim(0, 1) +
+  ggtitle("Orthoptera prevalence - RandomForest") +
+  theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = 0, size = 11),
+        plot.title = element_text(lineheight = .8, size = 20),
+        legend.title=element_blank())
 
 ## Close image port
 graphics.off()
+
+
+
+
+

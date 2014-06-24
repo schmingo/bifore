@@ -528,7 +528,7 @@ df.out.confusion$POFD <- foreach(i=seq(1:nrow(df.out.confusion)),
                                  }
 
 ## Kappa
-df.out.confusion$kappa <- foreach(i=seq(1:nrow(df.out.confusion)), 
+df.out.confusion$Kappa <- foreach(i=seq(1:nrow(df.out.confusion)), 
                                   .combine="rbind") %do% {
                                     kappa.tmp <- ((df.out.confusion[i, "sum.P1"]) *
                                                     (df.out.confusion[i, "sum.O1"]) + 
@@ -541,7 +541,7 @@ df.out.confusion$kappa <- foreach(i=seq(1:nrow(df.out.confusion)),
 
 
 ## Accuracy
-df.out.confusion$accuracy <- foreach(i=seq(1:nrow(df.out.confusion)), 
+df.out.confusion$Accuracy <- foreach(i=seq(1:nrow(df.out.confusion)), 
                                      .combine="rbind") %do% {
                                        acc.tmp <- ((df.out.confusion[i,"O1_P1"]) +
                                                      (df.out.confusion[i,"O0_P0"])) /
@@ -575,6 +575,3 @@ write.csv2(df.out.varimp.MDG,
 endtime <- Sys.time()
 time <- endtime - starttime
 time
-
-## Get probabilities for ROC-curve 
-# ??predict.randomForest

@@ -63,6 +63,7 @@ file.out.MDG <- "lvl0400_rf_prevalence_varimp_MDG.csv"
 
 
 ### Import data ################################################################
+
 data.raw <- read.csv2(file.in.0300,
                       dec = ",",
                       header = TRUE,
@@ -77,16 +78,17 @@ data.raw <- cbind(data.raw[1:8],  # basics
                   data.raw[9],  # no.of.species
                   data.raw[14:178],  # species
                   data.raw[179:188],  # greyvalues
-                  data.raw[197:215],  # greyvalues
-                  data.raw[216:226],  # diff
-                  data.raw[236:254],  # diff
-                  data.raw[255:264],  # sd
-                  data.raw[273:292])  # sd
+                  data.raw[197:216]  # greyvalues
+#                   data.raw[217:226],  # diff
+#                   data.raw[236:254],  # diff
+#                   data.raw[255:264],  # sd
+#                   data.raw[273:292]   # sd
+                  )
 
-names(data.raw[179:267])
+names(data.raw[179:ncol(data.raw)])
 
 ## Check greyvalues, diff and sd colums for NA values
-anyNA(data.raw[179:267])
+anyNA(data.raw[179:ncol(data.raw)])
 
 
 ### Remove species with less than x observations in different plots ############
@@ -95,20 +97,20 @@ anyNA(data.raw[179:267])
 ## Set minimum observations in different plots
 obs <- 15
 
-data.cut.list <- split(data.raw, data.raw$plot)
-data.cut.tmp.list <- do.call("rbind", lapply(seq(data.cut.list), function(i) {
-  matrix <- as.matrix(data.cut.list[[i]][, 14:178])
+data.list <- split(data.raw, data.raw$plot)
+data.tmp.list <- do.call("rbind", lapply(seq(data.list), function(i) {
+  matrix <- as.matrix(data.list[[i]][, 14:178])
   t <- apply(matrix, 2, sum, na.rm = TRUE)
   t[t == 0] <- NA
   t[t > 0] <- 1
   return(t)
 }))
 
-data.cut.species.index <- which(apply(data.cut.tmp.list, 
+data.species.index <- which(apply(data.tmp.list, 
                                       2, 
                                       sum, 
                                       na.rm = TRUE) >= obs) + 13
 
-data.cut <- data.raw[, c(1:13, data.cut.species.index, 179:ncol(data.raw))]
+data <- data.raw[, c(1:13, data.species.index, 179:ncol(data.raw))]
 
-names(data.cut)
+names(data)

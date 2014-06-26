@@ -46,7 +46,7 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("sampling")
+lib <- c("sampling", "foreach", "doParallel")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
@@ -113,4 +113,28 @@ data.species.index <- which(apply(data.tmp.list,
 
 data <- data.raw[, c(1:13, data.species.index, 179:ncol(data.raw))]
 
-names(data)
+# names(data)
+
+
+### Stratified sampling ########################################################
+
+set.seed(20)
+s <- sample(1:1000, 100)
+s
+
+# for (i in s) {print(i)}
+foreach (i = s) %do% {return(i)}
+
+
+foreach (i = s) %do% {
+
+  set.seed(i)
+  print(i)
+  data <- data[strata(data, 
+                      stratanames = "plot", 
+                      size = rep(1,length(unique(data$plot))),
+                      method = "srswor")$ID_unit, ]
+  return(data$nr.of.species[1])
+}
+# nrow(data)
+# ncol(data)

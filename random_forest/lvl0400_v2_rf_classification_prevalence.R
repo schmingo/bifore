@@ -51,15 +51,18 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
 # setwd("/home/schmingo/Dropbox/Code/bifore/src/csv/kili/")
-setwd("D:/Dropbox/Code/bifore/src/csv/kili/")
+setwd("D:/")
+
 
 
 ### Set filepaths ##############################################################
 
-file.in.0300 <- "lvl0300_biodiversity_data.csv"
-file.out.conf <- "lvl0400_rf_prevalence_confmatrix.csv"
-file.out.MDA <- "lvl0400_rf_prevalence_varimp_MDA.csv"
-file.out.MDG <- "lvl0400_rf_prevalence_varimp_MDG.csv"
+path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
+
+file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
+file.out.conf <- paste0(path.csv,"lvl0400_rf_prevalence_confmatrix.csv")
+file.out.MDA <- paste0(path.csv,"lvl0400_rf_prevalence_varimp_MDA.csv")
+file.out.MDG <- paste0(path.csv,"lvl0400_rf_prevalence_varimp_MDG.csv")
 
 
 ### Import data ################################################################
@@ -117,24 +120,34 @@ data <- data.raw[, c(1:13, data.species.index, 179:ncol(data.raw))]
 
 
 ### Stratified sampling ########################################################
+# stratified(df, id, group, size, seed="NULL", ...)
+unique(data$plot)
 
 set.seed(20)
-s <- sample(1:1000, 100)
-s
 
-# for (i in s) {print(i)}
-foreach (i = s) %do% {return(i)}
-
-
-foreach (i = s) %do% {
-
-  set.seed(i)
-  print(i)
-  data <- data[strata(data, 
+foreach (i = seq(1:100)) %do% {
+  set.seed(20)
+  s <- sample(1:1000, 100)
+  set.seed(s)
+  data2 <- data[strata(data, 
                       stratanames = "plot", 
                       size = rep(1,length(unique(data$plot))),
                       method = "srswor")$ID_unit, ]
-  return(data$nr.of.species[1])
+  return(data$nr.of.species[2])
 }
 # nrow(data)
 # ncol(data)
+
+
+
+# Tim Appelhans: for (i in 1:iters) {
+#   cat("\n\nRUNNING", mthd, ": ITERATION", i, "\n")
+#   set.seed(i)
+#   
+#   ind.eval <- sample(nrow(plots.ta.monthly.rug), 
+#                      nrow(plots.ta.monthly.rug) * train.size)
+#   ta.pred <- plots.ta.monthly.rug[ind.eval, ]
+#   
+#   
+#   train.size = 0.8
+#   plots.ta.monthly.rug = meinem data

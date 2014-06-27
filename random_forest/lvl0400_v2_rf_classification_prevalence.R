@@ -85,7 +85,7 @@ data.raw <- cbind(data.raw[1:8],  # basics
                   data.raw[14:178],  # species
                   data.raw[179:188],  # greyvalues
                   data.raw[197:216])  # greyvalues
-                  
+
 # names(data.raw[179:ncol(data.raw)])
 
 ## Check greyvalues, diff and sd colums for NA values
@@ -127,8 +127,8 @@ data.cut.greyval <- data.cut[, which(colnames(data.cut) == "greyval_band_1"):whi
 ### calculate new no.of.prevalence (cut sophisticates old no.of.species) #######
 
 data.cut.specno <- data.frame(apply(data.cut.species,
-                                      1,
-                                      function(x) sum(!is.na(x[1:ncol(data.cut.species)]))))
+                                    1,
+                                    function(x) sum(!is.na(x[1:ncol(data.cut.species)]))))
 names(data.cut.specno) <- "no.of.prevalence"
 
 data.cut <- cbind(data.cut.basics, 
@@ -199,7 +199,7 @@ foreach (i = 1) %do% {
               col.names = TRUE,
               row.names = FALSE,
               sep = ";")
-
+  
   
   return(i)
 }

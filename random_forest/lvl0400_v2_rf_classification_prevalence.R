@@ -58,11 +58,14 @@ setwd("D:/")
 ### Set filepaths ##############################################################
 
 path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
+path.testing <- paste0(path.csv, "testing/")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
 file.out.conf <- paste0(path.csv,"lvl0400_rf_prevalence_confmatrix.csv")
 file.out.MDA <- paste0(path.csv,"lvl0400_rf_prevalence_varimp_MDA.csv")
 file.out.MDG <- paste0(path.csv,"lvl0400_rf_prevalence_varimp_MDG.csv")
+
+if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
 
 
 ### Import data ################################################################
@@ -186,6 +189,16 @@ foreach (i = 1) %do% {
                                data.str[, 1:(ncol(data.str)-4)])
   detach(data.str)
   
+  
+  ### Write testing dataframe ##################################################
+  cat("\n\nWRITE TESTING DATAFRAME ", i, "\n")
+  write.table(data.str,
+              file = paste0(path.testing, "lvl_0400_df", i, ".csv"),
+              dec = ",",
+              quote = FALSE,
+              col.names = TRUE,
+              row.names = FALSE,
+              sep = ";")
 
   
   return(i)

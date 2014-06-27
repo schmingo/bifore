@@ -111,17 +111,18 @@ data.species.index <- which(apply(data.tmp.list,
 
 data.cut <- data.raw[, c(1:13, data.species.index, 179:ncol(data.raw))]
 
-names(data.cut)
+# names(data.cut)
 
 ### Subsetting data ############################################################
 
-data.cut.basics <- data.cut[1:12]
-data.cut.specno <- data.cut[13]
-data.cut.species <- data.cut[14:47]
-data.cut.greyval <- data.cut[48:77]
+data.cut.basics <- data.cut[, which(colnames(data.cut) == "plot"):which(colnames(data.cut) == "coordN")]
+data.cut.specno <- data.cut[length(names(data.cut.basics))+1]
+data.cut.species <- data.cut[, (which(colnames(data.cut) == "coordN")+2):(which(colnames(data.cut) == "greyval_band_1")-1)]
+data.cut.greyval <- data.cut[, which(colnames(data.cut) == "greyval_band_1"):which(colnames(data.cut) == "greyval_band_36")]
 
 
 ### calculate new no.of.prevalence (cut sophisticates old no.of.species) #######
+
 data.cut.specno <- data.frame(apply(data.cut.species,
                                       1,
                                       function(x) sum(!is.na(x[1:ncol(data.cut.species)]))))

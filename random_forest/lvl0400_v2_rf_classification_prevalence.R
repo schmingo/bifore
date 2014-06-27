@@ -81,14 +81,9 @@ data.raw <- cbind(data.raw[1:8],  # basics
                   data.raw[9],  # no.of.species
                   data.raw[14:178],  # species
                   data.raw[179:188],  # greyvalues
-                  data.raw[197:216]  # greyvalues
-#                   data.raw[217:226],  # diff
-#                   data.raw[236:254],  # diff
-#                   data.raw[255:264],  # sd
-#                   data.raw[273:292]   # sd
-                  )
-
-names(data.raw[179:ncol(data.raw)])
+                  data.raw[197:216])  # greyvalues
+                  
+# names(data.raw[179:ncol(data.raw)])
 
 ## Check greyvalues, diff and sd colums for NA values
 anyNA(data.raw[179:ncol(data.raw)])
@@ -110,21 +105,57 @@ data.tmp.list <- do.call("rbind", lapply(seq(data.list), function(i) {
 }))
 
 data.species.index <- which(apply(data.tmp.list, 
-                                      2, 
-                                      sum, 
-                                      na.rm = TRUE) >= obs) + 13
+                                  2, 
+                                  sum, 
+                                  na.rm = TRUE) >= obs) + 13
 
 data.cut <- data.raw[, c(1:13, data.species.index, 179:ncol(data.raw))]
 
-# names(data)
+names(data.cut)
 
+### Subsetting data ############################################################
+
+data.cut.basics <- data.cut[1:12]
+data.cut.specno <- data.cut[13]
+data.cut.species <- data.cut[14:47]
+data.cut.greyval <- data.cut[48:77]
+
+
+### calculate new no.of.prevalence (cut sophisticates old no.of.species) #######
+data.cut.specno <- data.frame(apply(data.cut.species,
+                                      1,
+                                      function(x) sum(!is.na(x[1:ncol(data.cut.species)]))))
+names(data.cut.specno) <- "no.of.prevalence"
+
+data.cut <- cbind(data.cut.basics, 
+                  data.cut.specno,
+                  data.cut.species,
+                  data.cut.greyval)
+
+
+### Calculate prevalence #######################################################
+
+## Read as matrix
+matrix.prevalence <- as.matrix(data.cut.species)
+
+## Replace NA with 0
+matrix.prevalence[is.na(matrix.prevalence)] <- 0
+
+## Replace values >=1 with 1
+matrix.prevalence <- ifelse(matrix.prevalence >= 1,1,0)
+
+## Combine dataframes
+data.cut <- cbind(data.cut.basics,
+                  data.cut.specno,
+                  as.data.frame(matrix.prevalence),
+                  data.cut.greyval)
 
 ### Stratified sampling ########################################################
 
 ## Function
-  #  df = data frame
-  #  class = column number of stratification variables
-  #  size = class size
+#  df = data frame
+#  class = column number of stratification variables
+#  size = class size
 
 stratified = function(df, class, size) {
   require(sampling)
@@ -140,12 +171,21 @@ stratified = function(df, class, size) {
 }
 
 ## Loop stratified-function 100 times
-foreach (i = seq(1:100)) %do% {
+# foreach (i = seq(1:100)) %do% {
+foreach (i = 1) %do% {
   cat("\n\nRUNNING STRATIFIED DATAFRAME ", i, "\n")
   set.seed(i)
   
   ## Function call
   data.str <- stratified(data.cut, 1, 1)
+  
+  ## Reorder data frame
+  attach(data.str)
+  data.str <- cbind.data.frame(plot,
+                               data.str[, 1:(ncol(data.str)-4)])
+  detach(data.str)
+  
+
   
   return(i)
 }

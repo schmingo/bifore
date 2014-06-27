@@ -114,7 +114,7 @@ data.species.index <- which(apply(data.tmp.list,
                                       sum, 
                                       na.rm = TRUE) >= obs) + 13
 
-data <- data.raw[, c(1:13, data.species.index, 179:ncol(data.raw))]
+data.cut <- data.raw[, c(1:13, data.species.index, 179:ncol(data.raw))]
 
 # names(data)
 
@@ -141,11 +141,11 @@ stratified = function(df, class, size) {
 
 ## Loop stratified-function 100 times
 foreach (i = seq(1:100)) %do% {
-  
+  cat("\n\nRUNNING STRATIFIED DATAFRAME ", i, "\n")
   set.seed(i)
   
   ## Function call
-  data.str <- stratified(data, 1, 1)
+  data.str <- stratified(data.cut, 1, 1)
   
   return(i)
 }

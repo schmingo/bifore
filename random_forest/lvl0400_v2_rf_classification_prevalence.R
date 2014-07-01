@@ -175,8 +175,9 @@ stratified = function(df, class, size) {
 }
 
 ## Loop stratified-function 100 times
-# foreach (i = seq(1:100)) %do% {
-foreach (i = 1) %do% {
+for(i in seq(1:10)) {
+  # foreach (i = seq(1:100)) %do% {
+  # foreach (i = 1) %do% {
   cat("\n\nRUNNING STRATIFIED DATAFRAME ", i, "\n")
   set.seed(i)
   
@@ -190,16 +191,48 @@ foreach (i = 1) %do% {
   detach(data.str)
   
   
-  ### Write testing dataframe ##################################################
-  cat("\n\nWRITE TESTING DATAFRAME ", i, "\n")
-  write.table(data.str,
-              file = paste0(path.testing, "lvl_0400_df", i, ".csv"),
-              dec = ",",
-              quote = FALSE,
-              col.names = TRUE,
-              row.names = FALSE,
-              sep = ";")
+  ##############################################################################
+  ##############################################################################
+  
+  ## List species
+  #   names(data.str)
+  #   
+  lst.species <- names(data.str[(which(names(data.str) == "no.of.prevalence")+1):(which(names(data.str) == "greyval_band_1")-1)])
+  lst.species
+  
+  ## Remove species without any observations (just to be sure ;) )
+  index <- which(colSums(data.str[, lst.species]) > 0) + 
+    grep("coordN", names(data.str))
+  
+  data.str <- data.frame(data.str[, 1:grep("no.of.prevalence", names(data.str))], 
+                         data.str[, index], 
+                         data.str[, grep("greyval_band_1", 
+                                         names(data.str))[1]:ncol(data.str)])
+  
+  ## Update species list
+  lst.species <- names(data.str[(which(names(data.str) == "no.of.prevalence")+1):(which(names(data.str) == "greyval_band_1")-1)])
+  
+  ## Split incoming dataset
+  df.greyval <- data.str[(which(names(data.str) == "greyval_band_1")):(which(names(data.str) == "greyval_band_36"))]
   
   
-  return(i)
+  ##############################################################################
+  ##############################################################################
+  
+  
+  
+  
+  
+  #   ### Write testing dataframe ##################################################
+  #   cat("\n\nWRITE TESTING DATAFRAME ", i, "\n")
+  #   write.table(data.str,
+  #               file = paste0(path.testing, "lvl_0400_df", i, ".csv"),
+  #               dec = ",",
+  #               quote = FALSE,
+  #               col.names = TRUE,
+  #               row.names = FALSE,
+  #               sep = ";")
+  
+  
+  #   return(i)
 }

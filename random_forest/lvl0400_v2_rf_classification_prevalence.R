@@ -139,7 +139,7 @@ data.cut <- cbind(data.cut.basics,
 
 ### Calculate prevalence #######################################################
 
-## Read as matrix
+## Read species dataframe as matrix
 matrix.prevalence <- as.matrix(data.cut.species)
 
 ## Replace NA with 0
@@ -148,11 +148,12 @@ matrix.prevalence[is.na(matrix.prevalence)] <- 0
 ## Replace values >=1 with 1
 matrix.prevalence <- ifelse(matrix.prevalence >= 1,1,0)
 
-## Combine dataframes
+## Recombine dataframes
 data.cut <- cbind(data.cut.basics,
-                  data.cut.specno,
+#                   data.cut.specno,
                   as.data.frame(matrix.prevalence),
                   data.cut.greyval)
+
 
 ### Stratified sampling ########################################################
 
@@ -175,7 +176,7 @@ stratified = function(df, class, size) {
 }
 
 ## Loop stratified-function 100 times
-for(i in seq(1:10)) {
+for (i in seq(1:10)) {
   # foreach (i = seq(1:100)) %do% {
   # foreach (i = 1) %do% {
   cat("\n\nRUNNING STRATIFIED DATAFRAME ", i, "\n")
@@ -185,32 +186,28 @@ for(i in seq(1:10)) {
   data.str <- stratified(data.cut, 1, 1)
   
   ## Reorder data frame
-  attach(data.str)
-  data.str <- cbind.data.frame(plot,
-                               data.str[, 1:(ncol(data.str)-4)])
-  detach(data.str)
+  data.str <- data.frame(cbind(data.str[, ncol(data.str)-3],
+                               data.str[, 1:(ncol(data.str)-4)]))
+  names(data.str) <- names(data.cut)
   
   
-  ##############################################################################
-  ##############################################################################
+  ### Prepare Data for Random
   
-  ## List species
-  #   names(data.str)
-  #   
-  lst.species <- names(data.str[(which(names(data.str) == "no.of.prevalence")+1):(which(names(data.str) == "greyval_band_1")-1)])
+  ## Get species list for RandomForest 
+  lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
   lst.species
   
   ## Remove species without any observations (just to be sure ;) )
   index <- which(colSums(data.str[, lst.species]) > 0) + 
     grep("coordN", names(data.str))
   
-  data.str <- data.frame(data.str[, 1:grep("no.of.prevalence", names(data.str))], 
+  data.str <- data.frame(data.str[, 1:grep("coordN", names(data.str))], 
                          data.str[, index], 
                          data.str[, grep("greyval_band_1", 
                                          names(data.str))[1]:ncol(data.str)])
   
   ## Update species list
-  lst.species <- names(data.str[(which(names(data.str) == "no.of.prevalence")+1):(which(names(data.str) == "greyval_band_1")-1)])
+  lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
   
   ## Split incoming dataset
   df.greyval <- data.str[(which(names(data.str) == "greyval_band_1")):(which(names(data.str) == "greyval_band_36"))]

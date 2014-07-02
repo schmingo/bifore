@@ -46,7 +46,7 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("sampling", "foreach", "doParallel")
+lib <- c("sampling", "foreach", "doParallel", "randomForest")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
@@ -180,7 +180,7 @@ stratified = function(df, class, size) {
 }
 
 ## Loop stratified-function 100 times
-for (i in seq(1:10)) {
+for (i in seq(1:3)) {
   # foreach (i = seq(1:100)) %do% {
   # foreach (i = 1) %do% {
   cat("\n\nRUNNING STRATIFIED DATAFRAME ", i, "\n")
@@ -221,17 +221,12 @@ for (i in seq(1:10)) {
   ##############################################################################
   
   
-  
   registerDoParallel(cl <- makeCluster(ncores))
   
-  df.species.lvl0600 <- foreach(s = lst.species,.combine = "cbind", .packages = lib) %dopar% {
-    
-    #   s <- lst.species[3]
-    
-    #   set.seed(50)
+  df.species.lvl0600 <- foreach(s = lst.species,.combine = "cbind", .packages = lib) %do% {
     
     ## Select species data
-    df.species <- data.frame(data.raw[,names(data.raw) %in% c(s)])
+    df.species <- data.frame(data.str[,names(data.str) %in% c(s)])
     names(df.species) <- s
     
     tmp.species <- df.species
@@ -252,7 +247,21 @@ for (i in seq(1:10)) {
     response_speciesCLASS <- as.factor(train.data[,ncol(train.data)])
     
     
+    train.rf <- randomForest(x = predictor_modisVAL,
+                             y = response_speciesCLASS,
+                             importance = TRUE,
+                             ntree = 500,
+                             # mtry = 5,
+                             nodesize = 2,
+                             type="classification",
+                             do.trace = FALSE)
+    
+    return(train.rf$confusion)
+    
   }
+  
+  ## Close parallel backend
+  stopCluster(cl)
   
   
   

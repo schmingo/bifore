@@ -53,7 +53,11 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 # setwd("/home/schmingo/Dropbox/Code/bifore/src/csv/kili/")
 setwd("D:/")
 
+## Set number of CPU cores
+ncores <- detectCores()-1
 
+## Runtime calculation
+starttime <- Sys.time()
 
 ### Set filepaths ##############################################################
 
@@ -150,7 +154,7 @@ matrix.prevalence <- ifelse(matrix.prevalence >= 1,1,0)
 
 ## Recombine dataframes
 data.cut <- cbind(data.cut.basics,
-#                   data.cut.specno,
+                  #                   data.cut.specno,
                   as.data.frame(matrix.prevalence),
                   data.cut.greyval)
 
@@ -218,6 +222,38 @@ for (i in seq(1:10)) {
   
   
   
+  registerDoParallel(cl <- makeCluster(ncores))
+  
+  df.species.lvl0600 <- foreach(s = lst.species,.combine = "cbind", .packages = lib) %dopar% {
+    
+    #   s <- lst.species[3]
+    
+    #   set.seed(50)
+    
+    ## Select species data
+    df.species <- data.frame(data.raw[,names(data.raw) %in% c(s)])
+    names(df.species) <- s
+    
+    tmp.species <- df.species
+    
+    ## Create dataframe with single species as predictor dataset
+    df.spec.greyval <- cbind(df.greyval, tmp.species)
+    
+    
+    ## Define Random Forest input data ###########################################
+    
+    train.data <- df.spec.greyval
+    
+    
+    ### Random Forest function ###################################################
+    ### Classification for single species ##########################################
+    
+    predictor_modisVAL <- train.data[,1:ncol(train.data)-1]
+    response_speciesCLASS <- as.factor(train.data[,ncol(train.data)])
+    
+    
+  }
+  
   
   
   #   ### Write testing dataframe ##################################################
@@ -233,3 +269,8 @@ for (i in seq(1:10)) {
   
   #   return(i)
 }
+
+## Runtime calulation
+endtime <- Sys.time()
+time <- endtime - starttime
+cat("\n\nRUNTIME ", time, "seconds", "\n")

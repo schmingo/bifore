@@ -180,7 +180,7 @@ stratified = function(df, class, size) {
 }
 
 ## Loop stratified-function 100 times
-for (i in seq(1:3)) {
+for (i in seq(1:1)) {
   # foreach (i = seq(1:100)) %do% {
   # foreach (i = 1) %do% {
   cat("\n\nRUNNING STRATIFIED DATAFRAME ", i, "\n")
@@ -221,27 +221,27 @@ for (i in seq(1:3)) {
   ##############################################################################
   
   
-  registerDoParallel(cl <- makeCluster(ncores))
+  #   registerDoParallel(cl <- makeCluster(ncores))
   
-  df.species.lvl0600 <- foreach(s = lst.species,.combine = "cbind", .packages = lib) %do% {
+  df.rf.allspecies <- foreach(s = lst.species,.combine = "cbind", .packages = lib) %do% {
     
     ## Select species data
-    df.species <- data.frame(data.str[,names(data.str) %in% c(s)])
-    names(df.species) <- s
+    df.singlespecies <- data.frame(data.str[,names(data.str) %in% c(s)])
+    names(df.singlespecies) <- s
     
-    tmp.species <- df.species
+    tmp.species <- df.singlespecies
     
     ## Create dataframe with single species as predictor dataset
     df.spec.greyval <- cbind(df.greyval, tmp.species)
     
     
-    ## Define Random Forest input data ###########################################
+    ## Define Random Forest input data #########################################
     
     train.data <- df.spec.greyval
     
     
-    ### Random Forest function ###################################################
-    ### Classification for single species ##########################################
+    ### Random Forest function #################################################
+    ### Classification for single species ######################################
     
     predictor_modisVAL <- train.data[,1:ncol(train.data)-1]
     response_speciesCLASS <- as.factor(train.data[,ncol(train.data)])
@@ -256,24 +256,56 @@ for (i in seq(1:3)) {
                              type="classification",
                              do.trace = FALSE)
     
-    return(train.rf$confusion)
+    ## Variable Importance
+    variableImportance <- importance(train.rf)
+    
+    
+    ## Create a dataframe for a single species
+    df.rf.singlespecies <- data.frame(c(
+      train.rf$confusion[1,1],
+      train.rf$confusion[1,2],
+      train.rf$confusion[2,1],
+      train.rf$confusion[2,2],
+      train.rf$confusion[1,3],
+      train.rf$confusion[2,3]))
+    
+    ## Set names for single species dataframe
+    names(df.rf.singlespecies) <- s
+    
+    
+    
+    return(df.rf.singlespecies)
     
   }
   
-  ## Close parallel backend
-  stopCluster(cl)
+  #   ## Close parallel backend
+  #   stopCluster(cl)
+  #   
+  
+  ## Set rownames for RandomForest dataframe
+  df.rf.allspecies$names <- c("O0_P0",
+                              "O0_P1",
+                              "O1_P0",
+                              "O1_P1",
+                              "Class.error 0",
+                              "Class.error 1")
+  
+  ## Reposition rownames at the beginning of RandomForest dataframe
+  df.rf.allspecies <- cbind(df.rf.allspecies[, ncol(df.rf.allspecies)],
+                            df.rf.allspecies[, 2:ncol(df.rf.allspecies)-1])
+  names(df.rf.allspecies)[1] <- "RandomForest.values"
   
   
   
-  #   ### Write testing dataframe ##################################################
-  #   cat("\n\nWRITE TESTING DATAFRAME ", i, "\n")
-  #   write.table(data.str,
-  #               file = paste0(path.testing, "lvl_0400_df", i, ".csv"),
-  #               dec = ",",
-  #               quote = FALSE,
-  #               col.names = TRUE,
-  #               row.names = FALSE,
-  #               sep = ";")
+  ### Write testing dataframe ##################################################
+  cat("\n\nWRITE TESTING DATAFRAME ", i, "\n")
+  write.table(df.rf.allspecies,
+              file = paste0(path.testing, "lvl_0400_df", i, ".csv"),
+              dec = ",",
+              quote = FALSE,
+              col.names = TRUE,
+              row.names = FALSE,
+              sep = ";")
   
   
   #   return(i)

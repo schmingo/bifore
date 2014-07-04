@@ -181,7 +181,7 @@ stratified = function(df, class, size) {
 
 ## Loop stratified-function 100 times
 for (i in seq(1:1)) {
-  # foreach (i = seq(1:100)) %do% {
+  # foreach (i = seq(1:10)) %do% {
   # foreach (i = 1) %do% {
   cat("\n\nRUNNING STRATIFIED DATAFRAME ", i, "\n")
   set.seed(i)
@@ -221,9 +221,7 @@ for (i in seq(1:1)) {
   ##############################################################################
   
   
-  #   registerDoParallel(cl <- makeCluster(ncores))
-  
-  df.rf.allspecies <- foreach(s = lst.species,.combine = "cbind", .packages = lib) %do% {
+  df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     
     ## Select species data
     df.singlespecies <- data.frame(data.str[,names(data.str) %in% c(s)])
@@ -278,10 +276,6 @@ for (i in seq(1:1)) {
     
   }
   
-  #   ## Close parallel backend
-  #   stopCluster(cl)
-  #   
-  
   ## Set rownames for RandomForest dataframe
   df.rf.allspecies$names <- c("O0_P0",
                               "O0_P1",
@@ -295,6 +289,9 @@ for (i in seq(1:1)) {
                             df.rf.allspecies[, 2:ncol(df.rf.allspecies)-1])
   names(df.rf.allspecies)[1] <- "RandomForest.values"
   
+  #   write.csv(df.filename.csv, header = FALSE, append = TRUE)
+  #   Jeder durchgang wird hinten angefügt. Header kann nicht gesetzt werden,
+  #   es muss zusätzlich eine spalte mit i (index des loops) hinzugefügt werden.
   
   
   ### Write testing dataframe ##################################################
@@ -307,8 +304,6 @@ for (i in seq(1:1)) {
               row.names = FALSE,
               sep = ";")
   
-  
-  #   return(i)
 }
 
 ## Runtime calulation

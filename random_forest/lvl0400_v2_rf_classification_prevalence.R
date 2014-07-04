@@ -41,7 +41,7 @@ cat("\014")
 ##  along with BiFoRe.  If not, see <http://www.gnu.org/licenses/>.
 ##  
 ################################################################################
-
+Sys.setenv(LANG = "en")
 ## Clear workspace
 rm(list = ls(all = TRUE))
 
@@ -55,6 +55,9 @@ setwd("D:/")
 
 ## Set number of CPU cores
 ncores <- detectCores()-1
+
+## Set number of RandomForest runs
+rf.runs <- 100
 
 ## Runtime calculation
 starttime <- Sys.time()
@@ -180,7 +183,7 @@ stratified = function(df, class, size) {
 }
 
 ## Loop stratified-function 100 times
-for (i in seq(1:1)) {
+for (i in seq(1:rf.runs)) {
   # foreach (i = seq(1:10)) %do% {
   # foreach (i = 1) %do% {
   cat("\n\nRUNNING STRATIFIED DATAFRAME ", i, "\n")
@@ -287,22 +290,31 @@ for (i in seq(1:1)) {
   ## Reposition rownames at the beginning of RandomForest dataframe
   df.rf.allspecies <- cbind(df.rf.allspecies[, ncol(df.rf.allspecies)],
                             df.rf.allspecies[, 2:ncol(df.rf.allspecies)-1])
-  names(df.rf.allspecies)[1] <- "RandomForest.values"
+  names(df.rf.allspecies)[1] <- paste0("rf_", i)
   
   #   write.csv(df.filename.csv, header = FALSE, append = TRUE)
   #   Jeder durchgang wird hinten angefügt. Header kann nicht gesetzt werden,
   #   es muss zusätzlich eine spalte mit i (index des loops) hinzugefügt werden.
   
-  
-  ### Write testing dataframe ##################################################
-  cat("\n\nWRITE TESTING DATAFRAME ", i, "\n")
   write.table(df.rf.allspecies,
-              file = paste0(path.testing, "lvl_0400_df", i, ".csv"),
-              dec = ",",
-              quote = FALSE,
-              col.names = TRUE,
-              row.names = FALSE,
-              sep = ";")
+            file = paste0(path.testing, "lvl_0400_df.csv"),
+#             header = FALSE,
+            append = TRUE,
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            dec = ",",
+            sep = ";",
+            )
+  ### Write testing dataframe ##################################################
+#   cat("\n\nWRITE TESTING DATAFRAME ", i, "\n")
+#   write.table(df.rf.allspecies,
+#               file = paste0(path.testing, "lvl_0400_df", i, ".csv"),
+#               dec = ",",
+#               quote = FALSE,
+#               col.names = TRUE,
+#               row.names = FALSE,
+#               sep = ";")
   
 }
 

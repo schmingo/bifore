@@ -41,7 +41,7 @@ cat("\014")
 ##  along with BiFoRe.  If not, see <http://www.gnu.org/licenses/>.
 ##  
 ################################################################################
-Sys.setenv(LANG = "en")
+
 ## Clear workspace
 rm(list = ls(all = TRUE))
 
@@ -57,7 +57,7 @@ setwd("D:/")
 ncores <- detectCores()-1
 
 ## Set number of RandomForest runs
-rf.runs <- 100
+rf.runs <- 10
 
 ## Runtime calculation
 starttime <- Sys.time()
@@ -186,7 +186,7 @@ stratified = function(df, class, size) {
 for (i in seq(1:rf.runs)) {
   # foreach (i = seq(1:10)) %do% {
   # foreach (i = 1) %do% {
-  cat("\n\nRUNNING STRATIFIED DATAFRAME ", i, "\n")
+  cat("\n\nPERFORM RANDOMFOREST FOR STRATIFIED DATAFRAME ", i, "OF ", rf.runs,"\n")
   set.seed(i)
   
   ## Function call
@@ -263,12 +263,72 @@ for (i in seq(1:rf.runs)) {
     
     ## Create a dataframe for a single species
     df.rf.singlespecies <- data.frame(c(
-      train.rf$confusion[1,1],
-      train.rf$confusion[1,2],
-      train.rf$confusion[2,1],
-      train.rf$confusion[2,2],
-      train.rf$confusion[1,3],
-      train.rf$confusion[2,3]))
+      train.rf$confusion[1,1], #  Confusion Matrix Observed 0, Predicted 0
+      train.rf$confusion[1,2], #  Confusion Matrix Observed 0, Predicted 1
+      train.rf$confusion[2,1], #  Confusion Matrix Observed 1, Predicted 0
+      train.rf$confusion[2,2], #  Confusion Matrix Observed 1, Predicted 1
+      train.rf$confusion[1,3], #  Classification Error 0
+      train.rf$confusion[2,3], #  Classification Error 1
+      variableImportance[1,3], #  MeanDecreaseAccuracy band 01
+      variableImportance[2,3], #  MeanDecreaseAccuracy band 02
+      variableImportance[3,3], #  MeanDecreaseAccuracy band 03
+      variableImportance[4,3], #  MeanDecreaseAccuracy band 04
+      variableImportance[5,3], #  MeanDecreaseAccuracy band 05
+      variableImportance[6,3], #  MeanDecreaseAccuracy band 06
+      variableImportance[7,3], #  MeanDecreaseAccuracy band 07
+      variableImportance[8,3], #  MeanDecreaseAccuracy band 08
+      variableImportance[9,3], #  MeanDecreaseAccuracy band 09
+      variableImportance[10,3], #  MeanDecreaseAccuracy band 10
+      variableImportance[11,3], #  MeanDecreaseAccuracy band 17
+      variableImportance[12,3], #  MeanDecreaseAccuracy band 18
+      variableImportance[13,3], #  MeanDecreaseAccuracy band 19
+      variableImportance[14,3], #  MeanDecreaseAccuracy band 20
+      variableImportance[15,3], #  MeanDecreaseAccuracy band 21
+      variableImportance[16,3], #  MeanDecreaseAccuracy band 22
+      variableImportance[17,3], #  MeanDecreaseAccuracy band 23
+      variableImportance[18,3], #  MeanDecreaseAccuracy band 24
+      variableImportance[19,3], #  MeanDecreaseAccuracy band 25
+      variableImportance[20,3], #  MeanDecreaseAccuracy band 26
+      variableImportance[21,3], #  MeanDecreaseAccuracy band 27
+      variableImportance[22,3], #  MeanDecreaseAccuracy band 28
+      variableImportance[23,3], #  MeanDecreaseAccuracy band 29
+      variableImportance[24,3], #  MeanDecreaseAccuracy band 30
+      variableImportance[25,3], #  MeanDecreaseAccuracy band 31
+      variableImportance[26,3], #  MeanDecreaseAccuracy band 32
+      variableImportance[27,3], #  MeanDecreaseAccuracy band 33
+      variableImportance[28,3], #  MeanDecreaseAccuracy band 34
+      variableImportance[29,3], #  MeanDecreaseAccuracy band 35
+      variableImportance[30,3], #  MeanDecreaseAccuracy band 36
+      variableImportance[1,4], #  MeanDecreaseGini band 01
+      variableImportance[2,4], #  MeanDecreaseGini band 02
+      variableImportance[3,4], #  MeanDecreaseGini band 03
+      variableImportance[4,4], #  MeanDecreaseGini band 04
+      variableImportance[5,4], #  MeanDecreaseGini band 05
+      variableImportance[6,4], #  MeanDecreaseGini band 06
+      variableImportance[7,4], #  MeanDecreaseGini band 07
+      variableImportance[8,4], #  MeanDecreaseGini band 08
+      variableImportance[9,4], #  MeanDecreaseGini band 09
+      variableImportance[10,4], #  MeanDecreaseGini band 10
+      variableImportance[11,4], #  MeanDecreaseGini band 17
+      variableImportance[12,4], #  MeanDecreaseGini band 18
+      variableImportance[13,4], #  MeanDecreaseGini band 19
+      variableImportance[14,4], #  MeanDecreaseGini band 20
+      variableImportance[15,4], #  MeanDecreaseGini band 21
+      variableImportance[16,4], #  MeanDecreaseGini band 22
+      variableImportance[17,4], #  MeanDecreaseGini band 23
+      variableImportance[18,4], #  MeanDecreaseGini band 24
+      variableImportance[19,4], #  MeanDecreaseGini band 25
+      variableImportance[20,4], #  MeanDecreaseGini band 26
+      variableImportance[21,4], #  MeanDecreaseGini band 27
+      variableImportance[22,4], #  MeanDecreaseGini band 28
+      variableImportance[23,4], #  MeanDecreaseGini band 29
+      variableImportance[24,4], #  MeanDecreaseGini band 30
+      variableImportance[25,4], #  MeanDecreaseGini band 31
+      variableImportance[26,4], #  MeanDecreaseGini band 32
+      variableImportance[27,4], #  MeanDecreaseGini band 33
+      variableImportance[28,4], #  MeanDecreaseGini band 34
+      variableImportance[29,4], #  MeanDecreaseGini band 35
+      variableImportance[30,4])) #  MeanDecreaseGini band 36
     
     ## Set names for single species dataframe
     names(df.rf.singlespecies) <- s
@@ -285,7 +345,67 @@ for (i in seq(1:rf.runs)) {
                               "O1_P0",
                               "O1_P1",
                               "Class.error 0",
-                              "Class.error 1")
+                              "Class.error 1",
+                              "MDA_band01",
+                              "MDA_band02",
+                              "MDA_band03",
+                              "MDA_band04",
+                              "MDA_band05",
+                              "MDA_band06",
+                              "MDA_band07",
+                              "MDA_band08",
+                              "MDA_band09",
+                              "MDA_band10",
+                              "MDA_band17",
+                              "MDA_band18",
+                              "MDA_band19",
+                              "MDA_band20",
+                              "MDA_band21",
+                              "MDA_band22",
+                              "MDA_band23",
+                              "MDA_band24",
+                              "MDA_band25",
+                              "MDA_band26",
+                              "MDA_band27",
+                              "MDA_band28",
+                              "MDA_band29",
+                              "MDA_band30",
+                              "MDA_band31",
+                              "MDA_band32",
+                              "MDA_band33",
+                              "MDA_band34",
+                              "MDA_band35",
+                              "MDA_band36",
+                              "MDG_band01",
+                              "MDG_band02",
+                              "MDG_band03",
+                              "MDG_band04",
+                              "MDG_band05",
+                              "MDG_band06",
+                              "MDG_band07",
+                              "MDG_band08",
+                              "MDG_band09",
+                              "MDG_band10",
+                              "MDG_band17",
+                              "MDG_band18",
+                              "MDG_band19",
+                              "MDG_band20",
+                              "MDG_band21",
+                              "MDG_band22",
+                              "MDG_band23",
+                              "MDG_band24",
+                              "MDG_band25",
+                              "MDG_band26",
+                              "MDG_band27",
+                              "MDG_band28",
+                              "MDG_band29",
+                              "MDG_band30",
+                              "MDG_band31",
+                              "MDG_band32",
+                              "MDG_band33",
+                              "MDG_band34",
+                              "MDG_band35",
+                              "MDG_band36")
   
   ## Reposition rownames at the beginning of RandomForest dataframe
   df.rf.allspecies <- cbind(df.rf.allspecies[, ncol(df.rf.allspecies)],
@@ -321,4 +441,4 @@ for (i in seq(1:rf.runs)) {
 ## Runtime calulation
 endtime <- Sys.time()
 time <- endtime - starttime
-cat("\n\nRUNTIME ", time, "seconds", "\n")
+cat("\n\nRUNTIME ", time, "\n")

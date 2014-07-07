@@ -59,6 +59,9 @@ ncores <- detectCores()-1
 ## Set number of Random Forest runs
 rf.runs <- 5
 
+## Set size of training data (percentage) eg.: .75
+train.part <- 1
+
 ## Runtime calculation
 starttime <- Sys.time()
 
@@ -229,7 +232,17 @@ for (i in seq(1:rf.runs)) {
     names(df.rf.response) <- s
     
     ## Create training data for Random Forest
-    train.data <- cbind(df.rf.predictor, df.rf.response)
+    train.data.all <- cbind(df.rf.predictor, df.rf.response)
+    
+    
+    
+    ## Split dataset in training and test data     
+    set.seed(50)
+    
+    index <- sample(1:nrow(train.data.all), nrow(train.data.all)*train.part)
+    
+    train.data <- train.data.all[index, ]
+    test.data <- train.data.all[-index, ]
     
         
     ### Random Forest function #################################################
@@ -252,7 +265,7 @@ for (i in seq(1:rf.runs)) {
     variableImportance <- importance(train.rf)
     
     
-    ## Create a dataframe for a single species
+    ## Create a Random Forest outcome dataframe for a single species
     df.rf.singlespecies <- data.frame(c(
       train.rf$confusion[1,1], #  Confusion Matrix Observed 0, Predicted 0
       train.rf$confusion[1,2], #  Confusion Matrix Observed 0, Predicted 1
@@ -412,6 +425,7 @@ for (i in seq(1:rf.runs)) {
               dec = ",",
               sep = ";",
   )
+
   
   ### Write testing dataframe ##################################################
   #   cat("\n\nWRITE TESTING DATAFRAME ", i, "\n")

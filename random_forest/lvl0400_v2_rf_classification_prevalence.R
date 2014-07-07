@@ -188,6 +188,9 @@ stratified = function(df, class, size) {
   (dsample = getdata(df.tmp, strat))
 }
 
+## Initiate dataframe for all Random Forest runs
+df.rf.outcome <- data.frame()
+
 ## Loop stratified-function 100 times
 for (i in seq(1:rf.runs)) {
   # foreach (i = seq(1:10)) %do% {
@@ -247,7 +250,7 @@ for (i in seq(1:rf.runs)) {
     train.data <- train.data.all[index, ]
     test.data <- train.data.all[-index, ]
     
-        
+    
     ### Random Forest function #################################################
     ### Classification for single species ######################################
     
@@ -346,6 +349,7 @@ for (i in seq(1:rf.runs)) {
     
   }
   
+  
   ## Set rownames for Random Forest dataframe
   df.rf.allspecies$names <- c("O0_P0",
                               "O0_P1",
@@ -414,33 +418,29 @@ for (i in seq(1:rf.runs)) {
                               "MDG_band35",
                               "MDG_band36")
   
-  ## Reposition rownames at the beginning of Random Forest dataframe
+  ## Write Random Forest run # into a column
+  df.rf.allspecies$rf_run <- i
+  
+  ## Reorder Random Forest dataframe
   df.rf.allspecies <- cbind(df.rf.allspecies[, ncol(df.rf.allspecies)],
-                            df.rf.allspecies[, 2:ncol(df.rf.allspecies)-1])
-  names(df.rf.allspecies)[1] <- paste0("rf_", i)
+                            df.rf.allspecies[, ncol(df.rf.allspecies)-1],
+                            df.rf.allspecies[, 2:ncol(df.rf.allspecies)-2])
+  names(df.rf.allspecies)[1:2] <- c("rf.run", "rf.names")
   
-  write.table(df.rf.allspecies,
-              file = paste0(path.testing, "lvl_0400_df.csv"),
-              append = TRUE,
-              quote = FALSE,
-              col.names = TRUE,
-              row.names = FALSE,
-              dec = ",",
-              sep = ";",
-  )
-
-  
-  ### Write testing dataframe ##################################################
-  #   cat("\n\nWRITE TESTING DATAFRAME ", i, "\n")
-  #   write.table(df.rf.allspecies,
-  #               file = paste0(path.testing, "lvl_0400_df", i, ".csv"),
-  #               dec = ",",
-  #               quote = FALSE,
-  #               col.names = TRUE,
-  #               row.names = FALSE,
-  #               sep = ";")
-  
+  ## Append Random Forest outcome in a single dataframe
+  df.rf.outcome <- rbind(df.rf.outcome, df.rf.allspecies)
+    
 }
+
+### Write testing dataframe ####################################################
+cat("\n\nWRITE TESTING DATAFRAME\n")
+write.table(df.rf.outcome,
+            file = paste0(path.testing, "lvl_0400_df.csv"),
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";",
+            dec = ",")
 
 ## Runtime calulation
 endtime <- Sys.time()

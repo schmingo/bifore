@@ -62,6 +62,9 @@ rf.runs <- 5
 ## Set size of training data (percentage) eg.: .75
 train.part <- 1
 
+## Set number of Random Forest trees to grow
+trees <- 500
+
 ## Runtime calculation
 starttime <- Sys.time()
 
@@ -255,7 +258,7 @@ for (i in seq(1:rf.runs)) {
     train.rf <- randomForest(x = predictor_modisVAL,
                              y = response_speciesCLASS,
                              importance = TRUE,
-                             ntree = 500,
+                             ntree = trees,
                              # mtry = 5,
                              nodesize = 2,
                              type="classification",

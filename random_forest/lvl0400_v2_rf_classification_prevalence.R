@@ -46,7 +46,7 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("sampling", "foreach", "doParallel", "randomForest")
+lib <- c("sampling", "foreach", "doParallel", "randomForest", "miscTools")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
@@ -74,9 +74,8 @@ path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
 path.testing <- paste0(path.csv, "testing/")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
-file.out.conf <- paste0(path.csv,"lvl0400_rf_prevalence_confmatrix.csv")
-file.out.MDA <- paste0(path.csv,"lvl0400_rf_prevalence_varimp_MDA.csv")
-file.out.MDG <- paste0(path.csv,"lvl0400_rf_prevalence_varimp_MDG.csv")
+file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all.csv")
+file.out.rf.means <- paste0(path.testing, "lvl_0400_rf_means.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
 
@@ -432,15 +431,53 @@ for (i in seq(1:rf.runs)) {
     
 }
 
-### Write testing dataframe ####################################################
-cat("\n\nWRITE TESTING DATAFRAME\n")
+
+### Write Random Forest dataframe ##############################################
+cat("\n\nWRITE RANDOM FOREST DATAFRAME\n")
 write.table(df.rf.outcome,
-            file = paste0(path.testing, "lvl_0400_df.csv"),
+            file = file.out.rf.all,
             quote = FALSE,
             col.names = TRUE,
             row.names = FALSE,
             sep = ";",
             dec = ",")
+
+
+### Get average Random Forest outcome for each species #########################
+
+## Initialize dataframe
+df.rf.means <- data.frame(names(df.rf.outcome[3:ncol(df.rf.outcome)]))
+names(df.rf.means) <- "species"
+
+## Mean for Confusion Matrix
+tmp.names <- df.rf.outcome[1:6, 2]
+for(i in tmp.names) {
+  tmp.df.sub <- subset(df.rf.outcome, rf.names == i)
+  tmp.means <- data.frame(colMeans(tmp.df.sub[, 3:ncol(tmp.df.sub)]))
+  names(tmp.means) <- i
+  df.rf.means <- cbind(df.rf.means, tmp.means)
+}
+
+## Median for Variable Importance
+tmp.names <- df.rf.outcome[7:ncol(df.rf.outcome), 2]
+for(i in tmp.names) {
+  tmp.df.sub <- subset(df.rf.outcome, rf.names == i)
+  tmp.medians <- data.frame(colMedians(tmp.df.sub[, 3:ncol(tmp.df.sub)]))
+  names(tmp.medians) <- i
+  df.rf.means <- cbind(df.rf.means, tmp.medians)
+}
+
+
+### Write Random Forest means dataframe ########################################
+cat("\n\nWRITE RANDOM FOREST MEANS DATAFRAME\n")
+write.table(df.rf.means,
+            file = file.out.rf.means,
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";",
+            dec = ",")
+
 
 ## Runtime calulation
 endtime <- Sys.time()

@@ -75,7 +75,7 @@ path.testing <- paste0(path.csv, "testing/")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
 file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all.csv")
-file.out.rf.means <- paste0(path.testing, "lvl_0400_rf_means.csv")
+file.out.rf.averaged <- paste0(path.testing, "lvl_0400_rf_averaged.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
 
@@ -446,8 +446,8 @@ write.table(df.rf.outcome,
 ### Get average Random Forest outcome for each species #########################
 
 ## Initialize dataframe
-df.rf.means <- data.frame(names(df.rf.outcome[3:ncol(df.rf.outcome)]))
-names(df.rf.means) <- "species"
+df.rf.averaged <- data.frame(names(df.rf.outcome[3:ncol(df.rf.outcome)]))
+names(df.rf.averaged) <- "species"
 
 ## Mean for Confusion Matrix
 tmp.names <- df.rf.outcome[1:6, 2]
@@ -455,7 +455,7 @@ for(i in tmp.names) {
   tmp.df.sub <- subset(df.rf.outcome, rf.names == i)
   tmp.means <- data.frame(colMeans(tmp.df.sub[, 3:ncol(tmp.df.sub)]))
   names(tmp.means) <- i
-  df.rf.means <- cbind(df.rf.means, tmp.means)
+  df.rf.averaged <- cbind(df.rf.averaged, tmp.means)
 }
 
 ## Median for Variable Importance
@@ -464,14 +464,14 @@ for(i in tmp.names) {
   tmp.df.sub <- subset(df.rf.outcome, rf.names == i)
   tmp.medians <- data.frame(colMedians(tmp.df.sub[, 3:ncol(tmp.df.sub)]))
   names(tmp.medians) <- i
-  df.rf.means <- cbind(df.rf.means, tmp.medians)
+  df.rf.averaged <- cbind(df.rf.averaged, tmp.medians)
 }
 
 
 ### Write Random Forest means dataframe ########################################
-cat("\n\nWRITE RANDOM FOREST MEANS DATAFRAME\n")
-write.table(df.rf.means,
-            file = file.out.rf.means,
+cat("\n\nWRITE RANDOM FOREST AVERAGED DATAFRAME\n")
+write.table(df.rf.averaged,
+            file = file.out.rf.averaged,
             quote = FALSE,
             col.names = TRUE,
             row.names = FALSE,

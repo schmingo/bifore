@@ -3,11 +3,11 @@ cat("\014")
 ##  
 ##  BiFoRe Scripts
 ##
-##  Perform RandomForest classification for Orthoptera prevalence 
+##  Perform Random Forest classification for Orthoptera prevalence 
 ##  with lvl0300 dataset
 ##
 ##  1. 100 times Stratified sampling of plots 
-##  2. Perform RandomForest Classification
+##  2. Perform Random Forest Classification
 ##  3. Extract confusion matrix & variable importance for all 100 samples and
 ##     average values
 ##  4. Perform further calculations
@@ -56,7 +56,7 @@ setwd("D:/")
 ## Set number of CPU cores
 ncores <- detectCores()-1
 
-## Set number of RandomForest runs
+## Set number of Random Forest runs
 rf.runs <- 5
 
 ## Runtime calculation
@@ -186,7 +186,7 @@ stratified = function(df, class, size) {
 for (i in seq(1:rf.runs)) {
   # foreach (i = seq(1:10)) %do% {
   # foreach (i = 1) %do% {
-  cat("\n\nPERFORM RANDOMFOREST FOR STRATIFIED DATAFRAME ", i, "OF ", rf.runs,"\n")
+  cat("\n\nPERFORM RANDOM FOREST FOR STRATIFIED DATAFRAME ", i, "OF ", rf.runs,"\n")
   set.seed(i)
   
   ## Function call
@@ -198,9 +198,9 @@ for (i in seq(1:rf.runs)) {
   names(data.str) <- names(data.cut)
   
   
-  ### Prepare Data for Random
+  ### Prepare Data for Random Forest ############################################
   
-  ## Get species list for RandomForest 
+  ## Get species list for Random Forest 
   lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
   lst.species
   
@@ -216,31 +216,22 @@ for (i in seq(1:rf.runs)) {
   ## Update species list
   lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
   
-  ## Split incoming dataset
-  df.greyval <- data.str[(which(names(data.str) == "greyval_band_1")):(which(names(data.str) == "greyval_band_36"))]
+  ## Subset predictor variables
+  df.rf.predictor <- data.str[(which(names(data.str) == "greyval_band_1")):(which(names(data.str) == "greyval_band_36"))]
   
   
-  ##############################################################################
-  ##############################################################################
-  
+  ### Loop over all species (perform Random Forest)##############################
   
   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     
-    ## Select species data
-    df.singlespecies <- data.frame(data.str[,names(data.str) %in% c(s)])
-    names(df.singlespecies) <- s
+    ## Subset response variable for each species
+    df.rf.response <- data.frame(data.str[,names(data.str) %in% c(s)])
+    names(df.rf.response) <- s
     
-    tmp.species <- df.singlespecies
+    ## Create training data for Random Forest
+    train.data <- cbind(df.rf.predictor, df.rf.response)
     
-    ## Create dataframe with single species as predictor dataset
-    df.spec.greyval <- cbind(df.greyval, tmp.species)
-    
-    
-    ## Define Random Forest input data #########################################
-    
-    train.data <- df.spec.greyval
-    
-    
+        
     ### Random Forest function #################################################
     ### Classification for single species ######################################
     
@@ -339,7 +330,7 @@ for (i in seq(1:rf.runs)) {
     
   }
   
-  ## Set rownames for RandomForest dataframe
+  ## Set rownames for Random Forest dataframe
   df.rf.allspecies$names <- c("O0_P0",
                               "O0_P1",
                               "O1_P0",
@@ -407,30 +398,30 @@ for (i in seq(1:rf.runs)) {
                               "MDG_band35",
                               "MDG_band36")
   
-  ## Reposition rownames at the beginning of RandomForest dataframe
+  ## Reposition rownames at the beginning of Random Forest dataframe
   df.rf.allspecies <- cbind(df.rf.allspecies[, ncol(df.rf.allspecies)],
                             df.rf.allspecies[, 2:ncol(df.rf.allspecies)-1])
   names(df.rf.allspecies)[1] <- paste0("rf_", i)
   
   write.table(df.rf.allspecies,
-            file = paste0(path.testing, "lvl_0400_df.csv"),
-            append = TRUE,
-            quote = FALSE,
-            col.names = TRUE,
-            row.names = FALSE,
-            dec = ",",
-            sep = ";",
-            )
+              file = paste0(path.testing, "lvl_0400_df.csv"),
+              append = TRUE,
+              quote = FALSE,
+              col.names = TRUE,
+              row.names = FALSE,
+              dec = ",",
+              sep = ";",
+  )
   
   ### Write testing dataframe ##################################################
-#   cat("\n\nWRITE TESTING DATAFRAME ", i, "\n")
-#   write.table(df.rf.allspecies,
-#               file = paste0(path.testing, "lvl_0400_df", i, ".csv"),
-#               dec = ",",
-#               quote = FALSE,
-#               col.names = TRUE,
-#               row.names = FALSE,
-#               sep = ";")
+  #   cat("\n\nWRITE TESTING DATAFRAME ", i, "\n")
+  #   write.table(df.rf.allspecies,
+  #               file = paste0(path.testing, "lvl_0400_df", i, ".csv"),
+  #               dec = ",",
+  #               quote = FALSE,
+  #               col.names = TRUE,
+  #               row.names = FALSE,
+  #               sep = ";")
   
 }
 

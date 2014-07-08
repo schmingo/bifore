@@ -188,7 +188,7 @@ stratified = function(df, class, size) {
 }
 
 ## Initiate dataframe for all Random Forest runs
-df.rf.outcome <- data.frame()
+df.predict.allspecies <- data.frame()
 
 ## Loop stratified-function 100 times
 for (i in seq(1:rf.runs)) {
@@ -224,16 +224,16 @@ for (i in seq(1:rf.runs)) {
   ## Update species list
   lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
   
-  lst.species <- lst.species[1]
+  lst.species <- lst.species[1:3]
   
   ## Subset predictor variables
   df.rf.predictor <- data.str[(which(names(data.str) == "greyval_band_1")):(which(names(data.str) == "greyval_band_36"))]
   
   
-  ### Loop over all species (perform Random Forest)#############################
+  ### Loop over all species (perform Random Forest) ############################
   
   ## Parallelization
-#   registerDoParallel(cl <- makeCluster(ncores))
+  #   registerDoParallel(cl <- makeCluster(ncores))
   
   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     
@@ -244,14 +244,12 @@ for (i in seq(1:rf.runs)) {
     ## Create training data for Random Forest
     train.data.all <- cbind(df.rf.predictor, df.rf.response)
     
-    
-    
     ## Split dataset in training and test data     
     set.seed(50)
     
     index <- sample(1:nrow(train.data.all), nrow(train.data.all)*train.part)
     
-    train.data <- train.data.all[index, ]
+    train.data <- train.data.all[index, ] #  Todo: position data splitting outside rf-loop
     test.data <- train.data.all[-index, ]
     test.data.predict <- test.data[, 1:ncol(test.data)-1]
     test.data.response <- test.data[, ncol(test.data)]
@@ -273,12 +271,20 @@ for (i in seq(1:rf.runs)) {
     predict.rf <- predict(train.rf, 
                           newdata = test.data.predict)
     
+    df.predict <- data.frame(predict.rf)
     
-    df.predict <- cbind(test.data.predict, predict.rf, test.data.response)
+    df.predict <- cbind(df.predict, test.data.response)
+    
+    names(df.predict) <- c(paste0("predict_", s), paste0("observed_", s))
+    
+    return(df.predict)
     
   }
   
-#   stopCluster(cl)
+  #   stopCluster(cl)
+  
+  ## Append Random Forest outcome in a single dataframe
+  df.predict.allspecies <- rbind(data.str[, 1:3], df.predict.allspecies, df.rf.allspecies)
   
 }
 

@@ -46,7 +46,7 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("sampling", "foreach", "doParallel", "caret", "miscTools")
+lib <- c("sampling", "foreach", "doParallel", "caret", "e1071", "miscTools")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
@@ -62,8 +62,9 @@ rf.runs <- 2
 ## Set size of training data (percentage) eg.: .75 for 75 %
 train.part <- .8
 
-## Set number of Random Forest trees to grow
-trees <- 500
+## Set Random Forest tuning parameter "mtry"
+tune.grid <- c(1,2,3,4,5,6)
+# tune.grid <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
 
 ## Runtime calculation
 starttime <- Sys.time()
@@ -188,13 +189,14 @@ stratified = function(df, class, size) {
 }
 
 ## Initiate dataframe for all Random Forest runs
-df.predict.allspecies <- data.frame()
+df.rf.output.all <- data.frame()
 
 ## Loop stratified-function 100 times
 for (i in seq(1:rf.runs)) {
   # foreach (i = seq(1:10)) %do% {
   # foreach (i = 1) %do% {
   cat("\n\nPERFORM RANDOM FOREST FOR STRATIFIED DATAFRAME ", i, "OF ", rf.runs,"\n")
+#   i = 1
   set.seed(i)
   
   ## Function call
@@ -224,67 +226,82 @@ for (i in seq(1:rf.runs)) {
   ## Update species list
   lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
   
-  lst.species <- lst.species[1:3]
   
-  ## Subset predictor variables
-  df.rf.predictor <- data.str[(which(names(data.str) == "greyval_band_1")):(which(names(data.str) == "greyval_band_36"))]
+  ## Create dataframe for Random Forest
+  ## (Plot, observation date, MODIS image date, greyvalues & prevalence)
+  df.randomForest <- cbind(data.str[, 1:3],
+                           data.str[(which(names(data.str) == "greyval_band_1")):(which(names(data.str) == "greyval_band_36"))],
+                           data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
+  
+  ## Prepare tuning parameters for Random Forest function
+  tune.grid <- data.frame(tune.grid)
+  names(tune.grid) <- "mtry"
+  
+  
+  ### Split dataset in training and test data ##################################
+    
+  set.seed(50)  # Todo: Check if this seed always needs to be the same - if not, plot selection is always different
+  
+  index <- sample(1:nrow(df.randomForest), nrow(df.randomForest)*train.part)
+  
+  df.rf.train <- df.randomForest[index, ]
+  df.rf.test <- df.randomForest[-index, ]
+  
+  ## Subset training dataset
+  df.rf.train.basics <- data.frame(df.rf.train[, 1:3])
+  df.rf.train.predict <- df.rf.train[(which(names(df.rf.train) == "greyval_band_1")):(which(names(df.rf.train) == "greyval_band_36"))]
+  df.rf.train.response <- df.rf.train[(which(names(df.rf.train) == "greyval_band_36")+1):ncol(df.rf.train)]
+
+  ## Subset test dataset
+  df.rf.test.basics <- data.frame(df.rf.test[, 1:3])
+  df.rf.test.predict <- df.rf.test[(which(names(df.rf.test) == "greyval_band_1")):(which(names(df.rf.test) == "greyval_band_36"))]
+  df.rf.test.response <- df.rf.test[(which(names(df.rf.test) == "greyval_band_36")+1):ncol(df.rf.test)]
   
   
   ### Loop over all species (perform Random Forest) ############################
   
   ## Parallelization
   #   registerDoParallel(cl <- makeCluster(ncores))
-  
-  df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
+  lst.species <- lst.species[1:2]
+  df.rf.output <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     
-    ## Subset response variable for each species
-    df.rf.response <- data.frame(data.str[,names(data.str) %in% c(s)])
-    names(df.rf.response) <- s
     
-    ## Create training data for Random Forest
-    train.data.all <- cbind(df.rf.predictor, df.rf.response)
-    
-    ## Split dataset in training and test data     
-    set.seed(50)
-    
-    index <- sample(1:nrow(train.data.all), nrow(train.data.all)*train.part)
-    
-    train.data <- train.data.all[index, ] #  Todo: position data splitting outside rf-loop
-    test.data <- train.data.all[-index, ]
-    test.data.predict <- test.data[, 1:ncol(test.data)-1]
-    test.data.response <- test.data[, ncol(test.data)]
+    ## Get response variable as factor
+    tmp.rf.train.response <- as.factor(df.rf.train.response[, names(df.rf.train.response) %in% c(s)])
+    tmp.rf.test.response <- data.frame(df.rf.test.response[, names(df.rf.test.response) %in% c(s)])
     
     
     ### Random Forest function #################################################
     ### Classification for single species ######################################
     
-    predictor_modisVAL <- train.data[,1:ncol(train.data)-1]
-    response_speciesCLASS <- as.factor(train.data[,ncol(train.data)])
-    
-    
-    train.rf <- train(x = predictor_modisVAL,
-                      y = response_speciesCLASS,
+    tmp.train.rf <- train(x = df.rf.train.predict,
+                      y = tmp.rf.train.response,
                       method = "rf",
-                      trControl = trainControl(method = "cv"),
-                      tuneLength = 6)
+#                       trControl = trainControl(method = "cv"),
+                      tuneGrid = tune.grid)
     
-    predict.rf <- predict(train.rf, 
-                          newdata = test.data.predict)
+    tmp.predict.rf <- predict.train(tmp.train.rf, 
+                                    newdata = df.rf.test.predict)
     
-    df.predict <- data.frame(predict.rf)
+    tmp.df.predict <- data.frame(tmp.predict.rf)
     
-    df.predict <- cbind(df.predict, test.data.response)
+    tmp.df.predict <- cbind(tmp.df.predict, tmp.rf.test.response)
     
-    names(df.predict) <- c(paste0("predict_", s), paste0("observed_", s))
+    names(tmp.df.predict) <- c(paste0("predict_", s), paste0("observed_", s))
     
-    return(df.predict)
+    return(tmp.df.predict)
     
   }
   
   #   stopCluster(cl)
   
-  ## Append Random Forest outcome in a single dataframe
-  df.predict.allspecies <- rbind(data.str[, 1:3], df.predict.allspecies, df.rf.allspecies)
+  df.rf.run <- data.frame(rep.int(i, times = (nrow(df.rf.test))))
+  names(df.rf.run) <- "rf_run"
+  
+  df.rf.output <- cbind(df.rf.run, df.rf.test.basics, df.rf.output)
+  
+  ## Append Random Forest output in a single dataframe
+  df.rf.output.all <- rbind(df.rf.output.all, df.rf.output)
   
 }
 

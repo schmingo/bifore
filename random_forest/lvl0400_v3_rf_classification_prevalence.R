@@ -6,11 +6,12 @@ cat("\014")
 ##  Perform Random Forest classification for Orthoptera prevalence 
 ##  with lvl0300 dataset
 ##
-##  1. 100 times Stratified sampling of plots 
-##  2. Perform Random Forest Classification
-##  3. Extract confusion matrix & variable importance for all 100 samples and
+##  1. 100 times Stratified sampling of plots
+##  2. Split dataset into training and testing data
+##  3. Perform Random Forest Classification
+##  4. Extract confusion matrix & variable importance for all 100 samples and
 ##     average values
-##  4. Perform further calculations
+##  5. Calculations:
 ##     - Accuracy
 ##     - Kappa
 ##     - POFD (Probability of false detection)
@@ -18,7 +19,7 @@ cat("\014")
 ##     - FAR (False alarm ratio)
 ##     - CSI (Critical success index)
 ##  
-##  Version: 2014-06-23
+##  Version: 2014-07-10
 ##  
 ################################################################################
 ##
@@ -63,8 +64,8 @@ rf.runs <- 2
 train.part <- .8
 
 ## Set Random Forest tuning parameter "mtry"
-# tune.grid <- c(1,2,3,4,5,6)
-tune.grid <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
+tune.grid <- c(1,2,3,4,5,6)
+# tune.grid <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
 
 ## Runtime calculation
 starttime <- Sys.time()
@@ -196,7 +197,7 @@ for (i in seq(1:rf.runs)) {
   # foreach (i = seq(1:10)) %do% {
   # foreach (i = 1) %do% {
   cat("\n\nPERFORM RANDOM FOREST FOR STRATIFIED DATAFRAME ", i, "OF ", rf.runs,"\n")
-#   i = 1
+  #   i = 1
   set.seed(i)
   
   ## Function call
@@ -239,7 +240,7 @@ for (i in seq(1:rf.runs)) {
   
   
   ### Split dataset in training and test data ##################################
-    
+  
   set.seed(50)  # Todo: Check if this seed always needs to be the same - if not, plot selection is always different
   
   index <- sample(1:nrow(df.randomForest), nrow(df.randomForest)*train.part)
@@ -251,7 +252,7 @@ for (i in seq(1:rf.runs)) {
   df.rf.train.basics <- data.frame(df.rf.train[, 1:3])
   df.rf.train.predict <- df.rf.train[(which(names(df.rf.train) == "greyval_band_1")):(which(names(df.rf.train) == "greyval_band_36"))]
   df.rf.train.response <- df.rf.train[(which(names(df.rf.train) == "greyval_band_36")+1):ncol(df.rf.train)]
-
+  
   ## Subset test dataset
   df.rf.test.basics <- data.frame(df.rf.test[, 1:3])
   df.rf.test.predict <- df.rf.test[(which(names(df.rf.test) == "greyval_band_1")):(which(names(df.rf.test) == "greyval_band_36"))]
@@ -275,33 +276,53 @@ for (i in seq(1:rf.runs)) {
     ### Classification for single species ######################################
     
     tmp.train.rf <- train(x = df.rf.train.predict,
-                      y = tmp.rf.train.response,
-                      method = "rf",
-#                       trControl = trainControl(method = "cv"),
-                      tuneGrid = tune.grid)
+                          y = tmp.rf.train.response,
+                          method = "rf",
+                          #                       trControl = trainControl(method = "cv"),  # Causes warning message
+                          tuneGrid = tune.grid)
+    
+    tmp.train.rf
     
     tmp.predict.rf <- predict.train(tmp.train.rf, 
                                     newdata = df.rf.test.predict)
+    tmp.predict.rf
     
-    tmp.df.predict <- data.frame(tmp.predict.rf)
+    tmp.test.confMatrix <- confusionMatrix(data = tmp.predict.rf,
+                                           reference = tmp.rf.test.response,
+                                           dnn = c("Predicted", "Observed"))
     
-    tmp.df.predict <- cbind(tmp.df.predict, tmp.rf.test.response)
+    #     tmp.train.confMatrix <- confusionMatrix(data = tmp.train.rf)
     
-    names(tmp.df.predict) <- c(paste0("predict_", s), paste0("observed_", s))
+    print(tmp.test.confMatrix)
+    tmp.test.confMatrix$table
+    test.O0_P0 <- tmp.test.confMatrix$table[1]
+    test.O0_P1 <- tmp.test.confMatrix$table[2]
+    test.O1_P0 <- tmp.test.confMatrix$table[3]
+    test.O1_P1 <- tmp.test.confMatrix$table[4]
+    tmp.test.confMatrix$positive
+    tmp.test.confMatrix$overall
+    tmp.test.confMatrix$byClass
     
-    return(tmp.df.predict)
+    
+    #     tmp.df.predict <- data.frame(tmp.predict.rf)
+    #     
+    #     tmp.df.predict <- cbind(tmp.df.predict, tmp.rf.test.response)
+    #     
+    #     names(tmp.df.predict) <- c(paste0("predict_", s), paste0("observed_", s))
+    #     
+    #     return(tmp.df.predict)
     
   }
   
   #   stopCluster(cl)
   
-  df.rf.run <- data.frame(rep.int(i, times = (nrow(df.rf.test))))
-  names(df.rf.run) <- "rf_run"
-  
-  df.rf.output <- cbind(df.rf.run, df.rf.test.basics, df.rf.output)
-  
-  ## Append Random Forest output in a single dataframe
-  df.rf.output.all <- rbind(df.rf.output.all, df.rf.output)
+  #   df.rf.run <- data.frame(rep.int(i, times = (nrow(df.rf.test))))
+  #   names(df.rf.run) <- "rf_run"
+  #   
+  #   df.rf.output <- cbind(df.rf.run, df.rf.test.basics, df.rf.output)
+  #   
+  #   ## Append Random Forest output in a single dataframe
+  #   df.rf.output.all <- rbind(df.rf.output.all, df.rf.output)
   
 }
 

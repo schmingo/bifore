@@ -47,7 +47,14 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("sampling", "foreach", "doParallel", "caret", "e1071", "miscTools")
+lib <- c("sampling", 
+         "foreach", 
+         "doParallel", 
+         "caret", 
+         "e1071", 
+         "randomForest",
+         "miscTools")
+
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory

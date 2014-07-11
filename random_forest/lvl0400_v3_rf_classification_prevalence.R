@@ -288,53 +288,60 @@ for (i in seq(1:rf.runs)) {
                           #                       trControl = trainControl(method = "cv"),  # Causes warning message
                           tuneGrid = tune.grid)
     
-#     tmp.train.rf
+    tmp.train.rf$finalModel
+    tmp.train.rf$trainingData
+    tmp.train.rf$resample
     
     tmp.test.predict.rf <- predict.train(tmp.train.rf, 
-                                    newdata = df.rf.test.predict)
-#     tmp.test.predict.rf
+                                         newdata = df.rf.test.predict)
+    #     tmp.test.predict.rf
+    
+    #     tmp.train.predict.rf <- predict.train(tmp.train.rf,
+    #                                           newdata = df.rf.train.response)
     
     tmp.test.confMatrix <- confusionMatrix(data = tmp.test.predict.rf,
                                            reference = tmp.rf.test.response,
                                            dnn = c("Predicted", "Observed"))
     
+    tmp.test.O0_P0 <- tmp.test.confMatrix$table[1]
+    tmp.test.O0_P1 <- tmp.test.confMatrix$table[2]
+    tmp.test.O1_P0 <- tmp.test.confMatrix$table[3]
+    tmp.test.O1_P1 <- tmp.test.confMatrix$table[4]
+    tmp.test.sum_obs <- sum(tmp.test.O0_P0, 
+                            tmp.test.O0_P1, 
+                            tmp.test.O1_P0, 
+                            tmp.test.O1_P1)
+    tmp.test.class.error0 <- tmp.test.O1_P0/sum(tmp.test.O0_P0, 
+                                                tmp.test.O1_P0)
+    tmp.test.class.error1 <- tmp.test.O1_P1/sum(tmp.test.O1_P1, 
+                                                tmp.test.O0_P1)
     
-#     tmp.train.confMatrix <- confusionMatrix(data = tmp.train.predict.rf,
-#                                            reference = tmp.rf.train.response,
-#                                            dnn = c("Predicted", "Observed"))
+    tmp.df.singlespecies <- data.frame(rbind(tmp.test.O0_P0,
+                                             tmp.test.O0_P1,
+                                             tmp.test.O1_P0,
+                                             tmp.test.O1_P1,
+                                             tmp.test.sum_obs,
+                                             tmp.test.class.error0,
+                                             tmp.test.class.error1))
     
-    
-    
-    
-    #     tmp.train.confMatrix <- confusionMatrix(data = tmp.train.rf)
-    
-    print(tmp.test.confMatrix)
-    tmp.test.confMatrix$table
-    test.O0_P0 <- tmp.test.confMatrix$table[1]
-    test.O0_P1 <- tmp.test.confMatrix$table[2]
-    test.O1_P0 <- tmp.test.confMatrix$table[3]
-    test.O1_P1 <- tmp.test.confMatrix$table[4]
-    tmp.test.confMatrix$positive
-    tmp.test.confMatrix$overall
-    tmp.test.confMatrix$byClass
-    
+    names(tmp.df.singlespecies) <- s
     
     #     tmp.df.predict <- data.frame(tmp.predict.rf)
     #     
-    #     tmp.df.predict <- cbind(tmp.df.predict, tmp.rf.test.response)
+    #     df.rf.out <- cbind(df.rf.out, tmp.df.singlespecies)
     #     
     #     names(tmp.df.predict) <- c(paste0("predict_", s), paste0("observed_", s))
     #     
-    #     return(tmp.df.predict)
+    return(tmp.df.singlespecies)
     
   }
   
   #   stopCluster(cl)
-  
-  #   df.rf.run <- data.frame(rep.int(i, times = (nrow(df.rf.test))))
+  df.rf.output
+  #   df.rf.run <- data.frame(rep.int(i, times = (nrow(rf.out.singlespecies))))
   #   names(df.rf.run) <- "rf_run"
-  #   
-  #   df.rf.output <- cbind(df.rf.run, df.rf.test.basics, df.rf.output)
+  #     
+  #   df.rf.output <- cbind(df.rf.run, rf.out.singlespecies)
   #   
   #   ## Append Random Forest output in a single dataframe
   #   df.rf.output.all <- rbind(df.rf.output.all, df.rf.output)

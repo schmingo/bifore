@@ -288,15 +288,23 @@ for (i in seq(1:rf.runs)) {
                           #                       trControl = trainControl(method = "cv"),  # Causes warning message
                           tuneGrid = tune.grid)
     
-    tmp.train.rf
+#     tmp.train.rf
     
-    tmp.predict.rf <- predict.train(tmp.train.rf, 
+    tmp.test.predict.rf <- predict.train(tmp.train.rf, 
                                     newdata = df.rf.test.predict)
-    tmp.predict.rf
+#     tmp.test.predict.rf
     
-    tmp.test.confMatrix <- confusionMatrix(data = tmp.predict.rf,
+    tmp.test.confMatrix <- confusionMatrix(data = tmp.test.predict.rf,
                                            reference = tmp.rf.test.response,
                                            dnn = c("Predicted", "Observed"))
+    
+    
+#     tmp.train.confMatrix <- confusionMatrix(data = tmp.train.predict.rf,
+#                                            reference = tmp.rf.train.response,
+#                                            dnn = c("Predicted", "Observed"))
+    
+    
+    
     
     #     tmp.train.confMatrix <- confusionMatrix(data = tmp.train.rf)
     

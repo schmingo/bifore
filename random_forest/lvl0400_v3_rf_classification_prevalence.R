@@ -276,7 +276,7 @@ for (i in seq(1:rf.runs)) {
     
     ## Get response variable as factor
     tmp.rf.train.response <- as.factor(df.rf.train.response[, names(df.rf.train.response) %in% c(s)])
-    tmp.rf.test.response <- data.frame(df.rf.test.response[, names(df.rf.test.response) %in% c(s)])
+    tmp.rf.test.response <- as.factor(df.rf.test.response[, names(df.rf.test.response) %in% c(s)])
     
     
     ### Random Forest function #################################################

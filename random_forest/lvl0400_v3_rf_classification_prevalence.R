@@ -62,10 +62,10 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("D:/")
 
 ## Set number of CPU cores
-ncores <- detectCores()-1
+ncores <- detectCores()
 
 ## Set number of Random Forest runs
-rf.runs <- 3
+rf.runs <- 50
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
 train.part <- .8
@@ -85,8 +85,8 @@ path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
 path.testing <- paste0(path.csv, "testing/")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
-file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all.csv")
-file.out.rf.averaged <- paste0(path.testing, "lvl_0400_rf_averaged.csv")
+file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all_8core.csv")
+file.out.rf.averaged <- paste0(path.testing, "lvl_0400_rf_averaged_8core.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
 
@@ -271,9 +271,11 @@ for (i in seq(1:rf.runs)) {
   ### Loop over all species (perform Random Forest) ############################
   
   ## Parallelization
-  #   registerDoParallel(cl <- makeCluster(ncores))
-  lst.species <- lst.species[1:5]
-  df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
+  cl <- makeCluster(ncores)
+  registerDoParallel(cl)
+#   lst.species <- lst.species[1:5]
+  df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %dopar% {
+    tmp.df.singlespecies <- data.frame()
     
     
     ## Get response variable as factor
@@ -334,24 +336,26 @@ for (i in seq(1:rf.runs)) {
     return(tmp.df.singlespecies)
   }
   
-  #   stopCluster(cl)
+    stopCluster(cl)
   
   ## write Random Forest run into a dataframe
-  df.rf.run <- data.frame(rep.int(i, times = (nrow(tmp.df.singlespecies))))
-  names(df.rf.run) <- "rf_run"
+#   df.rf.run <- data.frame(rep.int(i, times = (nrow(tmp.df.singlespecies))))
+#   names(df.rf.run) <- "rf_run"
+  
+  df.rf.allspecies$rf_run <- i
   
   ## Write rownames to single column
   df.rf.allspecies$parameters <- rownames(df.rf.allspecies)
   
   
   ## Write dataframe for all species
-  df.rf.allspecies <- cbind(df.rf.run,
+  df.rf.allspecies2 <- cbind(df.rf.allspecies$rf_run,
                             df.rf.allspecies$parameters,
-                            df.rf.allspecies[1:ncol(df.rf.allspecies)-1]) 
+                            df.rf.allspecies[1:(ncol(df.rf.allspecies)-2)]) 
   
 
   ## Append Random Forest output in a single dataframe
-  df.rf.output <- rbind(df.rf.output, df.rf.allspecies)
+  df.rf.output <- rbind(df.rf.output, df.rf.allspecies2)
 #   return(df.rf.output)
 }
 
@@ -389,18 +393,9 @@ write.table(df.rf.averaged,
             sep = ";",
             dec = ",")
 
-
-
-
-
-
-
-
-
-
-
-
 ## Runtime calulation
 endtime <- Sys.time()
 time <- endtime - starttime
 cat("\n\nRUNTIME ", time, "\n")
+
+

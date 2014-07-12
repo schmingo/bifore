@@ -70,9 +70,11 @@ rf.runs <- 2
 ## Set size of training data (percentage) eg.: .75 for 75 %
 train.part <- .8
 
-## Set Random Forest tuning parameter "mtry"
+## Set Random Forest tuning parameter "mtry" and "ntree"
 tune.grid <- c(1,2,3,4,5,6)
 # tune.grid <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
+trees <- 500
+
 
 ## Runtime calculation
 starttime <- Sys.time()
@@ -197,7 +199,7 @@ stratified = function(df, class, size) {
 }
 
 ## Initiate dataframe for all Random Forest runs
-df.rf.output.all <- data.frame()
+df.rf.output <- data.frame()
 
 ## Loop stratified-function 100 times
 for (i in seq(1:rf.runs)) {
@@ -241,14 +243,14 @@ for (i in seq(1:rf.runs)) {
                            data.str[(which(names(data.str) == "greyval_band_1")):(which(names(data.str) == "greyval_band_36"))],
                            data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
   
-  ## Prepare tuning parameters for Random Forest function
+  ## Prepare tuning parameters for Random Forest function call
   tune.grid <- data.frame(tune.grid)
   names(tune.grid) <- "mtry"
   
   
   ### Split dataset in training and test data ##################################
   
-  set.seed(50)  # Todo: Check if this seed always needs to be the same - if not, plot selection is always different
+  set.seed(50)  # Todo: Check if this seed always needs to be the same - if not, plot selection is always different -> set.seed(i)
   
   index <- sample(1:nrow(df.randomForest), nrow(df.randomForest)*train.part)
   
@@ -270,8 +272,8 @@ for (i in seq(1:rf.runs)) {
   
   ## Parallelization
   #   registerDoParallel(cl <- makeCluster(ncores))
-  lst.species <- lst.species[1:2]
-  df.rf.output <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
+#   lst.species <- lst.species[1:2]
+  df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     
     
     ## Get response variable as factor
@@ -286,23 +288,23 @@ for (i in seq(1:rf.runs)) {
                           y = tmp.rf.train.response,
                           method = "rf",
                           #                       trControl = trainControl(method = "cv"),  # Causes warning message
-                          tuneGrid = tune.grid)
+                          tuneGrid = tune.grid,
+                          ntree = trees)
     
     tmp.train.rf$finalModel
     tmp.train.rf$trainingData
     tmp.train.rf$resample
     
+    ## Predict
     tmp.test.predict.rf <- predict.train(tmp.train.rf, 
                                          newdata = df.rf.test.predict)
-    #     tmp.test.predict.rf
     
-    #     tmp.train.predict.rf <- predict.train(tmp.train.rf,
-    #                                           newdata = df.rf.train.response)
-    
+    ## Calculate Confusion Matrix
     tmp.test.confMatrix <- confusionMatrix(data = tmp.test.predict.rf,
                                            reference = tmp.rf.test.response,
                                            dnn = c("Predicted", "Observed"))
     
+    ## Extract Confusion Matrix values
     tmp.test.O0_P0 <- tmp.test.confMatrix$table[1]
     tmp.test.O0_P1 <- tmp.test.confMatrix$table[2]
     tmp.test.O1_P0 <- tmp.test.confMatrix$table[3]
@@ -316,6 +318,8 @@ for (i in seq(1:rf.runs)) {
     tmp.test.class.error1 <- tmp.test.O1_P1/sum(tmp.test.O1_P1, 
                                                 tmp.test.O0_P1)
     
+    
+    ## Write extracted values into a dataframe
     tmp.df.singlespecies <- data.frame(rbind(tmp.test.O0_P0,
                                              tmp.test.O0_P1,
                                              tmp.test.O1_P0,
@@ -324,29 +328,45 @@ for (i in seq(1:rf.runs)) {
                                              tmp.test.class.error0,
                                              tmp.test.class.error1))
     
+    ## Set colnames (species name)
     names(tmp.df.singlespecies) <- s
     
-    #     tmp.df.predict <- data.frame(tmp.predict.rf)
-    #     
-    #     df.rf.out <- cbind(df.rf.out, tmp.df.singlespecies)
-    #     
-    #     names(tmp.df.predict) <- c(paste0("predict_", s), paste0("observed_", s))
-    #     
     return(tmp.df.singlespecies)
-    
   }
   
   #   stopCluster(cl)
-  df.rf.output
-  #   df.rf.run <- data.frame(rep.int(i, times = (nrow(rf.out.singlespecies))))
-  #   names(df.rf.run) <- "rf_run"
-  #     
-  #   df.rf.output <- cbind(df.rf.run, rf.out.singlespecies)
-  #   
-  #   ## Append Random Forest output in a single dataframe
-  #   df.rf.output.all <- rbind(df.rf.output.all, df.rf.output)
   
+  ## write Random Forest run into a dataframe
+  df.rf.run <- data.frame(rep.int(i, times = (nrow(tmp.df.singlespecies))))
+  names(df.rf.run) <- "rf_run"
+  
+  ## Write rownames to single column
+  df.rf.allspecies$parameters <- rownames(df.rf.allspecies)
+  
+  
+  ## Write dataframe for all species
+  df.rf.allspecies <- cbind(df.rf.run,
+                            df.rf.allspecies$parameters,
+                            df.rf.allspecies[1:ncol(df.rf.allspecies)-1]) 
+  
+
+  ## Append Random Forest output in a single dataframe
+  df.rf.output <- rbind(df.rf.output, df.rf.allspecies)
+#   return(df.rf.output)
 }
+
+
+### Write Random Forest means dataframe ########################################
+cat("\n\nWRITE RANDOM FOREST OUTPUT DATAFRAME (ALL RF RUNS)\n")
+write.table(df.rf.output,
+            file = file.out.rf.all,
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";",
+            dec = ",")
+
+
 
 ## Runtime calulation
 endtime <- Sys.time()

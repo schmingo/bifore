@@ -344,6 +344,13 @@ for (i in seq(1:rf.runs)) {
                                       tmp.O1_P0)
     tmp.class.error1 <- tmp.O0_P1/sum(tmp.O1_P1, 
                                       tmp.O0_P1)
+    tmp.Accuracy <- tmp.confMatrix$overall[1]
+    tmp.Kappa <- tmp.confMatrix$overall[2]
+    tmp.AccuracyLower <- tmp.confMatrix$overall[3]
+    tmp.AccuracyUpper <- tmp.confMatrix$overall[4]
+    tmp.AccuracyNull <- tmp.confMatrix$overall[5]
+    tmp.AccuracyPValue <- tmp.confMatrix$overall[6]
+    tmp.McnemarPValue <- tmp.confMatrix$overall[7]
     
     ## Write extracted values into a dataframe
     tmp.df.singlespecies <- data.frame(rbind(tmp.O0_P0,
@@ -352,7 +359,14 @@ for (i in seq(1:rf.runs)) {
                                              tmp.O1_P1,
                                              tmp.sum_obs,
                                              tmp.class.error0,
-                                             tmp.class.error1))
+                                             tmp.class.error1,
+                                             tmp.Accuracy,
+                                             tmp.Kappa,
+                                             tmp.AccuracyLower,
+                                             tmp.AccuracyUpper,
+                                             tmp.AccuracyNull,
+                                             tmp.AccuracyPValue,
+                                             tmp.McnemarPValue))
     
     ## Set colnames (species name)
     names(tmp.df.singlespecies) <- s

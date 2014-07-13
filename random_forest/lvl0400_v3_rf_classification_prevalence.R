@@ -65,10 +65,10 @@ setwd("D:/")
 ncores <- detectCores()
 
 ## Set number of Random Forest runs
-rf.runs <- 50
+rf.runs <- 3
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
-train.part <- .8
+train.part <- 1
 
 ## Set Random Forest tuning parameter "mtry" and "ntree"
 tune.grid <- c(1,2,3,4,5,6)
@@ -271,10 +271,11 @@ for (i in seq(1:rf.runs)) {
   ### Loop over all species (perform Random Forest) ############################
   
   ## Parallelization
-  cl <- makeCluster(ncores)
-  registerDoParallel(cl)
-#   lst.species <- lst.species[1:5]
-  df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %dopar% {
+#   cl <- makeCluster(ncores)
+#   registerDoParallel(cl)
+  lst.species <- lst.species[1:5]
+#   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %dopar% {
+    df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     tmp.df.singlespecies <- data.frame()
     
     
@@ -293,42 +294,65 @@ for (i in seq(1:rf.runs)) {
                           tuneGrid = tune.grid,
                           ntree = trees)
     
-    tmp.train.rf$finalModel
-    tmp.train.rf$trainingData
-    tmp.train.rf$resample
+#     tmp.train.rf$finalModel[5]
+#     tmp.train.rf$finalModel$confusion
+#     tmp.train.rf$finalModel$confusion[1]
+#     tmp.train.rf$finalModel$confusion[2]
+#     tmp.train.rf$finalModel$confusion[3]
+#     tmp.train.rf$finalModel$confusion[4]
+#     tmp.train.rf$trainingData
+#     tmp.train.rf$resample
+        
+    if (train.part != 1) {
+      
+      ## Predict
+      tmp.test.predict.rf <- predict.train(tmp.train.rf, 
+                                           newdata = df.rf.test.predict)
+      
+      ## Calculate Confusion Matrix
+      tmp.test.confMatrix <- confusionMatrix(data = tmp.test.predict.rf,
+                                             reference = tmp.rf.test.response,
+                                             dnn = c("Predicted", "Observed"))
+      
+      ## Extract Confusion Matrix values
+      tmp.O0_P0 <- tmp.test.confMatrix$table[1]
+      tmp.O0_P1 <- tmp.test.confMatrix$table[2]
+      tmp.O1_P0 <- tmp.test.confMatrix$table[3]
+      tmp.O1_P1 <- tmp.test.confMatrix$table[4]
+      tmp.sum_obs <- sum(tmp.O0_P0, 
+                         tmp.O0_P1, 
+                         tmp.O1_P0, 
+                         tmp.O1_P1)
+      tmp.class.error0 <- tmp.O1_P0/sum(tmp.O0_P0, 
+                                        tmp.O1_P0)
+      tmp.class.error1 <- tmp.O0_P1/sum(tmp.O1_P1, 
+                                        tmp.O0_P1)
+      
+    } else {
+      # Extract Confusion Matrix from train data
+      tmp.O0_P0 <- tmp.train.rf$finalModel$confusion[1]
+      tmp.O0_P1 <- tmp.train.rf$finalModel$confusion[2]
+      tmp.O1_P0 <- tmp.train.rf$finalModel$confusion[3]
+      tmp.O1_P1 <- tmp.train.rf$finalModel$confusion[4]
+      tmp.sum_obs <- sum(tmp.O0_P0, 
+                         tmp.O0_P1, 
+                         tmp.O1_P0, 
+                         tmp.O1_P1)
+      tmp.class.error0 <- tmp.O1_P0/sum(tmp.O0_P0, 
+                                        tmp.O1_P0)
+      tmp.class.error1 <- tmp.O0_P1/sum(tmp.O1_P1, 
+                                        tmp.O0_P1)
+    }
     
-    ## Predict
-    tmp.test.predict.rf <- predict.train(tmp.train.rf, 
-                                         newdata = df.rf.test.predict)
-    
-    ## Calculate Confusion Matrix
-    tmp.test.confMatrix <- confusionMatrix(data = tmp.test.predict.rf,
-                                           reference = tmp.rf.test.response,
-                                           dnn = c("Predicted", "Observed"))
-    
-    ## Extract Confusion Matrix values
-    tmp.test.O0_P0 <- tmp.test.confMatrix$table[1]
-    tmp.test.O0_P1 <- tmp.test.confMatrix$table[2]
-    tmp.test.O1_P0 <- tmp.test.confMatrix$table[3]
-    tmp.test.O1_P1 <- tmp.test.confMatrix$table[4]
-    tmp.test.sum_obs <- sum(tmp.test.O0_P0, 
-                            tmp.test.O0_P1, 
-                            tmp.test.O1_P0, 
-                            tmp.test.O1_P1)
-    tmp.test.class.error0 <- tmp.test.O1_P0/sum(tmp.test.O0_P0, 
-                                                tmp.test.O1_P0)
-    tmp.test.class.error1 <- tmp.test.O1_P1/sum(tmp.test.O1_P1, 
-                                                tmp.test.O0_P1)
-    
-    
+
     ## Write extracted values into a dataframe
-    tmp.df.singlespecies <- data.frame(rbind(tmp.test.O0_P0,
-                                             tmp.test.O0_P1,
-                                             tmp.test.O1_P0,
-                                             tmp.test.O1_P1,
-                                             tmp.test.sum_obs,
-                                             tmp.test.class.error0,
-                                             tmp.test.class.error1))
+    tmp.df.singlespecies <- data.frame(rbind(tmp.O0_P0,
+                                             tmp.O0_P1,
+                                             tmp.O1_P0,
+                                             tmp.O1_P1,
+                                             tmp.sum_obs,
+                                             tmp.class.error0,
+                                             tmp.class.error1))
     
     ## Set colnames (species name)
     names(tmp.df.singlespecies) <- s
@@ -336,11 +360,7 @@ for (i in seq(1:rf.runs)) {
     return(tmp.df.singlespecies)
   }
   
-    stopCluster(cl)
-  
-  ## write Random Forest run into a dataframe
-#   df.rf.run <- data.frame(rep.int(i, times = (nrow(tmp.df.singlespecies))))
-#   names(df.rf.run) <- "rf_run"
+#     stopCluster(cl)
   
   df.rf.allspecies$rf_run <- i
   
@@ -356,7 +376,7 @@ for (i in seq(1:rf.runs)) {
 
   ## Append Random Forest output in a single dataframe
   df.rf.output <- rbind(df.rf.output, df.rf.allspecies2)
-#   return(df.rf.output)
+
 }
 
 ### Write Random Forest output dataframe #######################################

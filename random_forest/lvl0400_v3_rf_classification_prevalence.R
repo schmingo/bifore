@@ -403,6 +403,11 @@ for(i in tmp.names) {
   df.rf.averaged <- cbind(df.rf.averaged, tmp.means)
 }
 
+for(i in seq(2, (length(names(df.rf.averaged))), 1)) {
+  new.name <- strsplit(names(df.rf.averaged)[i], "tmp.")
+  names(df.rf.averaged)[i] <- new.name[[1]][2]
+}
+
 ### Write Random Forest means dataframe ########################################
 cat("\n\nWRITE RANDOM FOREST AVERAGED DATAFRAME\n")
 write.table(df.rf.averaged,

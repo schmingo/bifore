@@ -65,7 +65,7 @@ setwd("D:/")
 ncores <- detectCores()
 
 ## Set number of Random Forest runs
-rf.runs <- 100
+rf.runs <- 2
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
 train.part <- 1
@@ -273,7 +273,7 @@ for (i in seq(1:rf.runs)) {
   ## Parallelization
     cl <- makeCluster(ncores)
     registerDoParallel(cl)
-#   lst.species <- lst.species[1:5]
+  lst.species <- lst.species[1:5]
     df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %dopar% {
 #   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     tmp.df.singlespecies <- data.frame()
@@ -351,6 +351,7 @@ for (i in seq(1:rf.runs)) {
     tmp.AccuracyNull <- tmp.confMatrix$overall[5]
     tmp.AccuracyPValue <- tmp.confMatrix$overall[6]
     tmp.McnemarPValue <- tmp.confMatrix$overall[7]
+    tmp.Rsquared <- (sum(tmp.O0_P0, tmp.O1_P1))/tmp.sum_obs
     
     ## Write extracted values into a dataframe
     tmp.df.singlespecies <- data.frame(rbind(tmp.O0_P0,
@@ -362,11 +363,12 @@ for (i in seq(1:rf.runs)) {
                                              tmp.class.error1,
                                              tmp.Accuracy,
                                              tmp.Kappa,
-                                             tmp.AccuracyLower,
-                                             tmp.AccuracyUpper,
-                                             tmp.AccuracyNull,
-                                             tmp.AccuracyPValue,
-                                             tmp.McnemarPValue))
+#                                              tmp.AccuracyLower,
+#                                              tmp.AccuracyUpper,
+#                                              tmp.AccuracyNull,
+#                                              tmp.AccuracyPValue,
+#                                              tmp.McnemarPValue,
+                                             tmp.Rsquared))
     
     ## Set colnames (species name)
     names(tmp.df.singlespecies) <- s

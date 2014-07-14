@@ -65,7 +65,7 @@ setwd("D:/")
 ncores <- detectCores()
 
 ## Set number of Random Forest runs
-rf.runs <- 3
+rf.runs <- 100
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
 train.part <- 1
@@ -85,8 +85,8 @@ path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
 path.testing <- paste0(path.csv, "testing/")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
-file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all_8core.csv")
-file.out.rf.averaged <- paste0(path.testing, "lvl_0400_rf_averaged_8core.csv")
+file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all_traindata.csv")
+file.out.rf.averaged <- paste0(path.testing, "lvl_0400_rf_averaged_traindata.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
 
@@ -271,11 +271,11 @@ for (i in seq(1:rf.runs)) {
   ### Loop over all species (perform Random Forest) ############################
   
   ## Parallelization
-  #   cl <- makeCluster(ncores)
-  #   registerDoParallel(cl)
-  lst.species <- lst.species[1:5]
-  #   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %dopar% {
-  df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
+    cl <- makeCluster(ncores)
+    registerDoParallel(cl)
+#   lst.species <- lst.species[1:5]
+    df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %dopar% {
+#   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     tmp.df.singlespecies <- data.frame()
     
     
@@ -374,7 +374,7 @@ for (i in seq(1:rf.runs)) {
     return(tmp.df.singlespecies)
   }
   
-  #     stopCluster(cl)
+      stopCluster(cl)
   
   df.rf.allspecies$rf_run <- i
   
@@ -404,11 +404,12 @@ write.table(df.rf.output,
             dec = ",")
 
 ### Create averaged Random Forest output dataframe #############################
+
 ## Initialize averaged dataframe
 df.rf.averaged <- data.frame(names(df.rf.output[3:ncol(df.rf.output)]))
 names(df.rf.averaged) <- "species"
 
-## Mean for Confusion Matrix
+## Average Confusion Matrix
 tmp.names <- df.rf.output[1:nrow(df.rf.allspecies), 2]
 for(i in tmp.names) {
   tmp.df.sub <- subset(df.rf.output, tmp.names == i)
@@ -417,12 +418,14 @@ for(i in tmp.names) {
   df.rf.averaged <- cbind(df.rf.averaged, tmp.means)
 }
 
+## Upate column names (remove "tmp.")
 for(i in seq(2, (length(names(df.rf.averaged))), 1)) {
   new.name <- strsplit(names(df.rf.averaged)[i], "tmp.")
   names(df.rf.averaged)[i] <- new.name[[1]][2]
 }
 
-### Write Random Forest means dataframe ########################################
+
+## Write averaged Random Forest dataframe
 cat("\n\nWRITE RANDOM FOREST AVERAGED DATAFRAME\n")
 write.table(df.rf.averaged,
             file = file.out.rf.averaged,

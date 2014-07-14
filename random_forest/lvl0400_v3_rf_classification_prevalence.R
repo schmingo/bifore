@@ -65,12 +65,12 @@ setwd("D:/")
 ncores <- detectCores()
 
 ## Set number of Random Forest runs
-rf.runs <- 2
+rf.runs <- 3
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
 ## Note: If "1" is used, prediction and confusion matrix will be
 ##       taken from train function!
-train.part <- .75
+train.part <- .8
 
 ## Set Random Forest tuning parameter "mtry" and "ntree"
 mtrys <- c(1,2,3,4,5,6)
@@ -87,8 +87,8 @@ path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
 path.testing <- paste0(path.csv, "testing/")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
-file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all_traindata.csv")
-file.out.rf.averaged <- paste0(path.testing, "lvl_0400_rf_averaged_traindata.csv")
+file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all_80test.csv")
+file.out.rf.averaged <- paste0(path.testing, "lvl_0400_rf_averaged_80test.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
 
@@ -296,6 +296,10 @@ for (i in seq(1:rf.runs)) {
                           tuneGrid = mtrys,
                           metric = "Kappa",
                           ntree = trees)
+    
+    ## Variable Importance
+    tmp.varimp <- varImp(tmp.train.rf)
+    df.tmp.varimp <- data.frame(tmp.varimp$importance)
     
     
     #     tmp.train.rf$finalModel$confusion

@@ -68,11 +68,13 @@ ncores <- detectCores()
 rf.runs <- 2
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
-train.part <- 1
+## Note: If "1" is used, prediction and confusion matrix will be
+##       taken from train function!
+train.part <- .75
 
 ## Set Random Forest tuning parameter "mtry" and "ntree"
-tune.grid <- c(1,2,3,4,5,6)
-# tune.grid <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
+mtrys <- c(1,2,3,4,5,6)
+# mtrys <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
 trees <- 500
 
 
@@ -244,8 +246,8 @@ for (i in seq(1:rf.runs)) {
                            data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
   
   ## Prepare tuning parameters for Random Forest function call
-  tune.grid <- data.frame(tune.grid)
-  names(tune.grid) <- "mtry"
+  mtrys <- data.frame(mtrys)
+  names(mtrys) <- "mtry"
   
   
   ### Split dataset in training and test data ##################################
@@ -271,11 +273,11 @@ for (i in seq(1:rf.runs)) {
   ### Loop over all species (perform Random Forest) ############################
   
   ## Parallelization
-    cl <- makeCluster(ncores)
-    registerDoParallel(cl)
+#   cl <- makeCluster(ncores)
+#   registerDoParallel(cl)
   lst.species <- lst.species[1:5]
-    df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %dopar% {
-#   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
+  df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
+    #   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     tmp.df.singlespecies <- data.frame()
     
     
@@ -290,8 +292,9 @@ for (i in seq(1:rf.runs)) {
     tmp.train.rf <- train(x = df.rf.train.predict,
                           y = tmp.rf.train.response,
                           method = "rf",
-                          #                       trControl = trainControl(method = "cv"),  # Causes warning message
-                          tuneGrid = tune.grid,
+                          trControl = trainControl(method = "cv"),
+                          tuneGrid = mtrys,
+                          metric = "Kappa",
                           ntree = trees)
     
     
@@ -318,7 +321,6 @@ for (i in seq(1:rf.runs)) {
                                         reference = tmp.rf.test.response,
                                         dnn = c("Predicted", "Observed"))
       
-      
     } else {
       ## Extract Prediction values from train data
       tmp.train.predict.rf <- data.frame(tmp.train.rf$finalModel[3])
@@ -336,6 +338,10 @@ for (i in seq(1:rf.runs)) {
     tmp.O0_P1 <- tmp.confMatrix$table[2]
     tmp.O1_P0 <- tmp.confMatrix$table[3]
     tmp.O1_P1 <- tmp.confMatrix$table[4]
+    tmp.sum_P1 <- sum(tmp.O0_P1, tmp.O1_P1)
+    tmp.sum_P0 <- sum(tmp.O0_P0, tmp.O1_P0)
+    tmp.sum.O0 <- sum(tmp.O0_P0, tmp.O0_P1)
+    tmp.sum.O1 <- sum(tmp.O1_P0, tmp.O1_P1)
     tmp.sum_obs <- sum(tmp.O0_P0, 
                        tmp.O0_P1, 
                        tmp.O1_P0, 
@@ -352,6 +358,13 @@ for (i in seq(1:rf.runs)) {
     tmp.AccuracyPValue <- tmp.confMatrix$overall[6]
     tmp.McnemarPValue <- tmp.confMatrix$overall[7]
     tmp.Rsquared <- (sum(tmp.O0_P0, tmp.O1_P1))/tmp.sum_obs
+    tmp.Sensitivity <- tmp.confMatrix$byClass[1]
+    tmp.Specificity <- tmp.confMatrix$byClass[1]
+    tmp.DetectionRate <- tmp.confMatrix$byClass[6]
+    tmp.POD <- tmp.O1_P1/tmp.sum_P1
+    tmp.FAR <- tmp.O0_P1/tmp.sum_P1
+    tmp.CSI <- tmp.O1_P1/sum(tmp.O1_P1, tmp.O1_P0, tmp.O0_P1)
+    tmp.POFD <- tmp.O0_P1/tmp.sum.O0
     
     ## Write extracted values into a dataframe
     tmp.df.singlespecies <- data.frame(rbind(tmp.O0_P0,
@@ -363,12 +376,19 @@ for (i in seq(1:rf.runs)) {
                                              tmp.class.error1,
                                              tmp.Accuracy,
                                              tmp.Kappa,
-#                                              tmp.AccuracyLower,
-#                                              tmp.AccuracyUpper,
-#                                              tmp.AccuracyNull,
-#                                              tmp.AccuracyPValue,
-#                                              tmp.McnemarPValue,
-                                             tmp.Rsquared))
+                                             # tmp.AccuracyLower,
+                                             # tmp.AccuracyUpper,
+                                             # tmp.AccuracyNull,
+                                             # tmp.AccuracyPValue,
+                                             # tmp.McnemarPValue,
+                                             tmp.Sensitivity,
+                                             tmp.Specificity,
+                                             tmp.DetectionRate,
+                                             tmp.Rsquared,
+                                             tmp.POD,
+                                             tmp.FAR,
+                                             tmp.CSI,
+                                             tmp.POFD))
     
     ## Set colnames (species name)
     names(tmp.df.singlespecies) <- s
@@ -376,7 +396,7 @@ for (i in seq(1:rf.runs)) {
     return(tmp.df.singlespecies)
   }
   
-      stopCluster(cl)
+#   stopCluster(cl)
   
   df.rf.allspecies$rf_run <- i
   

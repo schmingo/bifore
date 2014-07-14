@@ -58,7 +58,7 @@ lib <- c("sampling",
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-# setwd("/home/schmingo/Dropbox/Code/bifore/src/csv/kili/")
+# setwd("/home/schmingo/Daten/")
 setwd("D:/")
 
 ## Set number of CPU cores

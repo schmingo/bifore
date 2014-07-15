@@ -11,7 +11,7 @@ cat("\014")
 ##  3. Perform Random Forest Classification
 ##  4. Extract confusion matrix & variable importance for all 100 samples and
 ##     average values
-##  5. Calculations:
+##  5. Model validation:
 ##     - Accuracy
 ##     - Kappa
 ##     - POFD (Probability of false detection)
@@ -19,7 +19,7 @@ cat("\014")
 ##     - FAR (False alarm ratio)
 ##     - CSI (Critical success index)
 ##  
-##  Version: 2014-07-10
+##  Version: 2014-07-15
 ##  
 ################################################################################
 ##
@@ -65,7 +65,7 @@ setwd("D:/")
 ncores <- detectCores()
 
 ## Set number of Random Forest runs
-rf.runs <- 50
+rf.runs <- 3
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
 ## Note: If "1" is used, prediction and confusion matrix will be
@@ -87,8 +87,8 @@ path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
 path.testing <- paste0(path.csv, "testing/")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
-file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all_100train.csv")
-file.out.rf.averaged <- paste0(path.testing, "lvl_0400_rf_averaged_100train.csv")
+# file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all_100train.csv")
+# file.out.rf.averaged <- paste0(path.testing, "lvl_0400_rf_averaged_100train.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
 
@@ -208,7 +208,6 @@ for (i in seq(1:rf.runs)) {
   # foreach (i = seq(1:10)) %do% {
   # foreach (i = 1) %do% {
   cat("\n\nPERFORM RANDOM FOREST FOR STRATIFIED DATAFRAME ", i, "OF ", rf.runs,"\n")
-  #   i = 1
   set.seed(i)
   
   ## Function call
@@ -273,13 +272,13 @@ for (i in seq(1:rf.runs)) {
   ### Loop over all species (perform Random Forest) ############################
   
   ## Parallelization
-  cl <- makeCluster(ncores)
-  registerDoParallel(cl)
-#   lst.species <- lst.species[1:5]
+#   cl <- makeCluster(ncores)
+#   registerDoParallel(cl)
+  lst.species <- lst.species[1:5]
   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
-    #   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
-    tmp.df.singlespecies <- data.frame()
     
+    ## Initialize dataframe
+    tmp.df.singlespecies <- data.frame()
     
     ## Get response variable as factor
     tmp.rf.train.response <- as.factor(df.rf.train.response[, names(df.rf.train.response) %in% c(s)])
@@ -400,7 +399,7 @@ for (i in seq(1:rf.runs)) {
     return(tmp.df.singlespecies)
   }
   
-  stopCluster(cl)
+#   stopCluster(cl)
   
   df.rf.allspecies$rf_run <- i
   

@@ -415,6 +415,7 @@ for (i in seq(1:rf.runs)) {
   
   ## Append Random Forest output in a single dataframe
   df.rf.output <- rbind(df.rf.output, df.rf.allspecies2)
+  names(df.rf.output)[1:2] <- c("rf_run", "parameters")
   
 }
 
@@ -430,28 +431,64 @@ write.table(df.rf.output,
 
 ### Create averaged Random Forest output dataframe #############################
 
-## Initialize averaged dataframe
-df.rf.averaged <- data.frame(names(df.rf.output[3:ncol(df.rf.output)]))
-names(df.rf.averaged) <- "species"
 
-## Average Confusion Matrix
-tmp.names <- df.rf.output[1:nrow(df.rf.allspecies), 2]
+
+
+
+
+
+
+
+
+
+
+
+## Initialize averaged dataframe
+df.rf.validation <- data.frame(names(df.rf.output[3:ncol(df.rf.output)]))
+names(df.rf.validation) <- "species"
+
+## Confusion Matrix sums
+tmp.names <- as.character(df.rf.output[1:5, 2])
 for(i in tmp.names) {
-  tmp.df.sub <- subset(df.rf.output, tmp.names == i)
-  tmp.means <- data.frame(colMeans(tmp.df.sub[, 3:ncol(tmp.df.sub)]))
-  names(tmp.means) <- i
-  df.rf.averaged <- cbind(df.rf.averaged, tmp.means)
+  
+  
+  
+  
+  tmp.df.sub <- subset(df.rf.output,  parameters == i)
+  tmp.df.sub2 <- df.rf.output[which(df.rf.output$parameters == i), ]
+  
+  data.cut.basics <- data.cut[, which(colnames(data.cut) == "plot"):which(colnames(data.cut) == "coordN")]
+  
+  
+  
+  
+  
+  
+  
+  tmp.sums <- data.frame(colSums(tmp.df.sub[, 3:ncol(tmp.df.sub)]))  # wrong!!!
+  names(tmp.sums) <- i
+  df.rf.validation <- cbind(df.rf.validation, tmp.sums)
 }
 
 ## Upate column names (remove "tmp.")
-for(i in seq(2, (length(names(df.rf.averaged))), 1)) {
-  new.name <- strsplit(names(df.rf.averaged)[i], "tmp.")
-  names(df.rf.averaged)[i] <- new.name[[1]][2]
+for(i in seq(2, (length(names(df.rf.validation))), 1)) {
+  new.name <- strsplit(names(df.rf.validation)[i], "tmp.")
+  names(df.rf.validation)[i] <- new.name[[1]][2]
 }
+
+
+
+
+
+
+
+
+
+
 
 ## Write averaged Random Forest dataframe
 cat("\n\nWRITE RANDOM FOREST AVERAGED DATAFRAME\n")
-write.table(df.rf.averaged,
+write.table(df.rf.validation,
             file = file.out.rf.averaged,
             quote = FALSE,
             col.names = TRUE,

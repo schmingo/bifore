@@ -343,8 +343,8 @@ for (i in seq(1:rf.runs)) {
     tmp.O1_P1 <- tmp.confMatrix$table[4]
     tmp.sum_P1 <- sum(tmp.O0_P1, tmp.O1_P1)
     tmp.sum_P0 <- sum(tmp.O0_P0, tmp.O1_P0)
-    tmp.sum.O0 <- sum(tmp.O0_P0, tmp.O0_P1)
-    tmp.sum.O1 <- sum(tmp.O1_P0, tmp.O1_P1)
+    tmp.sum_O0 <- sum(tmp.O0_P0, tmp.O0_P1)
+    tmp.sum_O1 <- sum(tmp.O1_P0, tmp.O1_P1)
     tmp.sum_obs <- sum(tmp.O0_P0, 
                        tmp.O0_P1, 
                        tmp.O1_P0, 
@@ -367,13 +367,17 @@ for (i in seq(1:rf.runs)) {
     tmp.POD <- tmp.O1_P1/tmp.sum_P1
     tmp.FAR <- tmp.O0_P1/tmp.sum_P1
     tmp.CSI <- tmp.O1_P1/sum(tmp.O1_P1, tmp.O1_P0, tmp.O0_P1)
-    tmp.POFD <- tmp.O0_P1/tmp.sum.O0
+    tmp.POFD <- tmp.O0_P1/tmp.sum_O0
     
     ## Write extracted values into a dataframe
     tmp.df.singlespecies <- data.frame(rbind(tmp.O0_P0,
                                              tmp.O0_P1,
                                              tmp.O1_P0,
                                              tmp.O1_P1,
+                                             tmp.sum_P0,
+                                             tmp.sum_P1,
+                                             tmp.sum_O0,
+                                             tmp.sum_O1,
                                              tmp.sum_obs,
                                              tmp.class.error0,
                                              tmp.class.error1,

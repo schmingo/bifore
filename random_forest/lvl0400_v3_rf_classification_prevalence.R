@@ -12,6 +12,7 @@ cat("\014")
 ##  4. Extract confusion matrix & variable importance for all 100 samples and
 ##     average values
 ##  5. Model validation:
+##     - R squared
 ##     - Accuracy
 ##     - Kappa
 ##     - POFD (Probability of false detection)
@@ -19,7 +20,7 @@ cat("\014")
 ##     - FAR (False alarm ratio)
 ##     - CSI (Critical success index)
 ##  
-##  Version: 2014-07-15
+##  Version: 2014-07-16
 ##  
 ################################################################################
 ##
@@ -65,7 +66,7 @@ setwd("D:/")
 ncores <- detectCores()
 
 ## Set number of Random Forest runs
-rf.runs <- 20
+rf.runs <- 100
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
 ## Note: If "1" is used, prediction and confusion matrix will be
@@ -73,7 +74,7 @@ rf.runs <- 20
 train.part <- .8
 
 ## Set Random Forest tuning parameter "mtry" and "ntree"
-mtrys <- c(1,2,3,4,5,6)
+mtrys <- c(1,2,3,4,5,6,7,8,9,10)
 # mtrys <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
 trees <- 500
 
@@ -87,8 +88,8 @@ path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
 path.testing <- paste0(path.csv, "testing/")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
-# file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all_100train.csv")
-# file.out.rf.validation <- paste0(path.testing, "lvl_0400_rf_validation_100train.csv")
+file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all_80test.csv")
+file.out.rf.validation <- paste0(path.testing, "lvl_0400_rf_validation_80test.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
 
@@ -422,7 +423,7 @@ for (i in seq(1:rf.runs)) {
   
 }
 
-### Write Random Forest output dataframe #######################################
+## Write Random Forest output dataframe
 cat("\n\nWRITE RANDOM FOREST OUTPUT DATAFRAME (ALL RF RUNS)\n")
 write.table(df.rf.output,
             file = file.out.rf.all,
@@ -432,7 +433,8 @@ write.table(df.rf.output,
             sep = ";",
             dec = ",")
 
-### Create final model validation dataframe ####################################
+
+### Create final model validation statistics dataframe #########################
 
 ## Initialize dataframe for model validataion (Get species names)
 df.rf.validation <- data.frame(names(df.rf.output[3:ncol(df.rf.output)]))
@@ -445,7 +447,7 @@ names(df.rf.validation) <- "species"
 tmp.names <- as.character(df.rf.output[1:9, 2])
 
 for(i in tmp.names) {
-  ## Select rows containing specific parameter (i)
+  ## Subset rows containing specific parameter (i)
   tmp.parameter <- df.rf.output[which(df.rf.output$parameters == i), ]
   
   ## Sum parameter for each species
@@ -460,19 +462,87 @@ for(i in tmp.names) {
   
 }
 
+## Calculate model validation statistics
+
+## Rsquared
+df.rf.validation$Rsquared <- foreach(i = seq(1:nrow(df.rf.validation)), 
+                                     .combine = "rbind") %do% {
+                                       rsquared.tmp <- ((df.rf.validation[i, "O1_P1"]) +
+                                                          (df.rf.validation[i, "O0_P0"])) /
+                                         (df.rf.validation[i, "sum_obs"])
+                                       
+                                       return(rsquared.tmp)
+                                     }
 
 
-# ## Write averaged Random Forest dataframe
-# cat("\n\nWRITE RANDOM FOREST AVERAGED DATAFRAME\n")
-# write.table(df.rf.validation,
-#             file = file.out.rf.validation,
-#             quote = FALSE,
-#             col.names = TRUE,
-#             row.names = FALSE,
-#             sep = ";",
-#             dec = ",")
-# 
-# ## Runtime calulation
-# endtime <- Sys.time()
-# time <- endtime - starttime
-# cat("\n\nRUNTIME ", time, "\n")
+## Accuracy
+df.rf.validation$Accuracy <- foreach(i = seq(1:nrow(df.rf.validation)), 
+                                 .combine = "rbind") %do% {
+                                   acc.tmp <- ((df.rf.validation[i, "O1_P1"]) +
+                                                 (df.rf.validation[i, "O0_P0"])) /
+                                     ((df.rf.validation[i, "sum_P0"]) + 
+                                        (df.rf.validation[i, "sum_P1"]))
+                                   
+                                   return(acc.tmp)
+                                 }
+
+## Kappa
+df.rf.validation$Kappa <- foreach(i = seq(1:nrow(df.rf.validation)), 
+                              .combine = "rbind") %do% {
+                                kappa.tmp <- ((df.rf.validation[i, "sum_P1"]) *
+                                                (df.rf.validation[i, "sum_O1"]) + 
+                                                (df.rf.validation[i, "sum_O0"]) *
+                                                (df.rf.validation[i, "sum_P0"])) /
+                                  ((df.rf.validation[i, "sum_P0"]) + 
+                                     (df.rf.validation[i, "sum_P1"]))^2
+                                return(kappa.tmp)
+                              }
+
+## Probability of detection (POD)
+df.rf.validation$POD <- foreach(i = seq(1:nrow(df.rf.validation)), 
+                            .combine = "rbind") %do% {
+                              POD.tmp <- (df.rf.validation[i,"O1_P1"]) / 
+                                (df.rf.validation[i,"sum_P1"])
+                              return(POD.tmp)
+                            }
+
+## False alarm ratio (FAR)
+df.rf.validation$FAR <- foreach(i = seq(1:nrow(df.rf.validation)), 
+                            .combine = "rbind") %do% {
+                              FAR.tmp <- (df.rf.validation[i,"O0_P1"]) / 
+                                (df.rf.validation[i,"sum_P1"])
+                              return(FAR.tmp)
+                            }
+
+## Critical success index (CSI)
+df.rf.validation$CSI <- foreach(i = seq(1:nrow(df.rf.validation)), 
+                            .combine = "rbind") %do% {
+                              CSI.tmp <- (df.rf.validation[i,"O1_P1"]) / 
+                                (df.rf.validation[i,"O1_P1"] + 
+                                   df.rf.validation[i,"O1_P0"] + 
+                                   df.rf.validation[i,"O0_P1"])
+                              return(CSI.tmp)
+                            }
+
+## Probability of false detection (POFD)
+df.rf.validation$POFD <- foreach(i = seq(1:nrow(df.rf.validation)), 
+                             .combine = "rbind") %do% {
+                               POFD.tmp <- (df.rf.validation[i,"O0_P1"]) / 
+                                 (df.rf.validation[i,"sum_O0"])
+                               return(POFD.tmp)
+                             }
+
+## Write final Random Forest model validation statistics dataframe
+cat("\n\nWRITE FINAL RANDOM FOREST MODEL STATISTICS DATAFRAME\n")
+write.table(df.rf.validation,
+            file = file.out.rf.validation,
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";",
+            dec = ",")
+
+## Runtime calulation
+endtime <- Sys.time()
+time <- endtime - starttime
+cat("\n\nRUNTIME ", time, "\n")

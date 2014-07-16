@@ -65,12 +65,12 @@ setwd("D:/")
 ncores <- detectCores()
 
 ## Set number of Random Forest runs
-rf.runs <- 3
+rf.runs <- 20
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
 ## Note: If "1" is used, prediction and confusion matrix will be
 ##       taken from train function!
-train.part <- 1
+train.part <- .8
 
 ## Set Random Forest tuning parameter "mtry" and "ntree"
 mtrys <- c(1,2,3,4,5,6)
@@ -88,7 +88,7 @@ path.testing <- paste0(path.csv, "testing/")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
 # file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all_100train.csv")
-# file.out.rf.averaged <- paste0(path.testing, "lvl_0400_rf_averaged_100train.csv")
+# file.out.rf.validation <- paste0(path.testing, "lvl_0400_rf_validation_100train.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
 
@@ -272,9 +272,9 @@ for (i in seq(1:rf.runs)) {
   ### Loop over all species (perform Random Forest) ############################
   
   ## Parallelization
-#   cl <- makeCluster(ncores)
-#   registerDoParallel(cl)
-  lst.species <- lst.species[1:5]
+  cl <- makeCluster(ncores)
+  registerDoParallel(cl)
+#   lst.species <- lst.species[1:5]
   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     
     ## Initialize dataframe
@@ -374,10 +374,10 @@ for (i in seq(1:rf.runs)) {
                                              tmp.O0_P1,
                                              tmp.O1_P0,
                                              tmp.O1_P1,
-                                             tmp.sum_P0,
-                                             tmp.sum_P1,
                                              tmp.sum_O0,
                                              tmp.sum_O1,
+                                             tmp.sum_P0,
+                                             tmp.sum_P1,
                                              tmp.sum_obs,
                                              tmp.class.error0,
                                              tmp.class.error1,
@@ -403,7 +403,7 @@ for (i in seq(1:rf.runs)) {
     return(tmp.df.singlespecies)
   }
   
-#   stopCluster(cl)
+  stopCluster(cl)
   
   df.rf.allspecies$rf_run <- i
   
@@ -432,74 +432,47 @@ write.table(df.rf.output,
             sep = ";",
             dec = ",")
 
-### Create averaged Random Forest output dataframe #############################
+### Create final model validation dataframe ####################################
+
+## Initialize dataframe for model validataion (Get species names)
+df.rf.validation <- data.frame(names(df.rf.output[3:ncol(df.rf.output)]))
+names(df.rf.validation) <- "species"
+
+
+## Get confusion matrix sums
+
+## Select parameters for model validation (get sums from confusion matrix)
+tmp.names <- as.character(df.rf.output[1:9, 2])
+
+for(i in tmp.names) {
+  ## Select rows containing specific parameter (i)
+  tmp.parameter <- df.rf.output[which(df.rf.output$parameters == i), ]
+  
+  ## Sum parameter for each species
+  tmp.sums <- data.frame(colSums(tmp.parameter[, 3:ncol(tmp.parameter)]))
+  
+  ## Rename parameter
+  i <- strsplit(i, "tmp.")
+  names(tmp.sums) <- i[[1]][2]
+  
+  ## Bind calculated sums
+  df.rf.validation <- cbind(df.rf.validation, tmp.sums)
+  
+}
 
 
 
-
-
-
-
-
-
-
-
-
-
-# ## Initialize averaged dataframe
-# df.rf.validation <- data.frame(names(df.rf.output[3:ncol(df.rf.output)]))
-# names(df.rf.validation) <- "species"
+# ## Write averaged Random Forest dataframe
+# cat("\n\nWRITE RANDOM FOREST AVERAGED DATAFRAME\n")
+# write.table(df.rf.validation,
+#             file = file.out.rf.validation,
+#             quote = FALSE,
+#             col.names = TRUE,
+#             row.names = FALSE,
+#             sep = ";",
+#             dec = ",")
 # 
-# ## Confusion Matrix sums
-# tmp.names <- as.character(df.rf.output[1:5, 2])
-# for(i in tmp.names) {
-#   
-#   
-#   
-#   
-#   tmp.df.sub <- subset(df.rf.output,  parameters == i)
-#   tmp.df.sub2 <- df.rf.output[which(df.rf.output$parameters == i), ]
-#   
-#   data.cut.basics <- data.cut[, which(colnames(data.cut) == "plot"):which(colnames(data.cut) == "coordN")]
-#   
-#   
-#   
-#   
-#   
-#   
-#   
-#   tmp.sums <- data.frame(colSums(tmp.df.sub[, 3:ncol(tmp.df.sub)]))  # wrong!!!
-#   names(tmp.sums) <- i
-#   df.rf.validation <- cbind(df.rf.validation, tmp.sums)
-# }
-# 
-# ## Upate column names (remove "tmp.")
-# for(i in seq(2, (length(names(df.rf.validation))), 1)) {
-#   new.name <- strsplit(names(df.rf.validation)[i], "tmp.")
-#   names(df.rf.validation)[i] <- new.name[[1]][2]
-# }
-
-
-
-
-
-
-
-
-
-
-
-## Write averaged Random Forest dataframe
-cat("\n\nWRITE RANDOM FOREST AVERAGED DATAFRAME\n")
-write.table(df.rf.validation,
-            file = file.out.rf.averaged,
-            quote = FALSE,
-            col.names = TRUE,
-            row.names = FALSE,
-            sep = ";",
-            dec = ",")
-
-## Runtime calulation
-endtime <- Sys.time()
-time <- endtime - starttime
-cat("\n\nRUNTIME ", time, "\n")
+# ## Runtime calulation
+# endtime <- Sys.time()
+# time <- endtime - starttime
+# cat("\n\nRUNTIME ", time, "\n")

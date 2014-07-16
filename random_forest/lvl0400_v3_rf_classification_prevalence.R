@@ -408,14 +408,13 @@ for (i in seq(1:rf.runs)) {
   
   
   ## Write dataframe for all species
-  df.rf.allspecies2 <- cbind(df.rf.allspecies$rf_run,
-                             df.rf.allspecies$parameters,
+  df.rf.allspecies2 <- cbind(df.rf.allspecies[ncol(df.rf.allspecies)-1],
+                             df.rf.allspecies[ncol(df.rf.allspecies)],
                              df.rf.allspecies[1:(ncol(df.rf.allspecies)-2)]) 
   
   
   ## Append Random Forest output in a single dataframe
   df.rf.output <- rbind(df.rf.output, df.rf.allspecies2)
-  names(df.rf.output)[1:2] <- c("rf_run", "parameters")
   
 }
 
@@ -443,38 +442,38 @@ write.table(df.rf.output,
 
 
 
-## Initialize averaged dataframe
-df.rf.validation <- data.frame(names(df.rf.output[3:ncol(df.rf.output)]))
-names(df.rf.validation) <- "species"
-
-## Confusion Matrix sums
-tmp.names <- as.character(df.rf.output[1:5, 2])
-for(i in tmp.names) {
-  
-  
-  
-  
-  tmp.df.sub <- subset(df.rf.output,  parameters == i)
-  tmp.df.sub2 <- df.rf.output[which(df.rf.output$parameters == i), ]
-  
-  data.cut.basics <- data.cut[, which(colnames(data.cut) == "plot"):which(colnames(data.cut) == "coordN")]
-  
-  
-  
-  
-  
-  
-  
-  tmp.sums <- data.frame(colSums(tmp.df.sub[, 3:ncol(tmp.df.sub)]))  # wrong!!!
-  names(tmp.sums) <- i
-  df.rf.validation <- cbind(df.rf.validation, tmp.sums)
-}
-
-## Upate column names (remove "tmp.")
-for(i in seq(2, (length(names(df.rf.validation))), 1)) {
-  new.name <- strsplit(names(df.rf.validation)[i], "tmp.")
-  names(df.rf.validation)[i] <- new.name[[1]][2]
-}
+# ## Initialize averaged dataframe
+# df.rf.validation <- data.frame(names(df.rf.output[3:ncol(df.rf.output)]))
+# names(df.rf.validation) <- "species"
+# 
+# ## Confusion Matrix sums
+# tmp.names <- as.character(df.rf.output[1:5, 2])
+# for(i in tmp.names) {
+#   
+#   
+#   
+#   
+#   tmp.df.sub <- subset(df.rf.output,  parameters == i)
+#   tmp.df.sub2 <- df.rf.output[which(df.rf.output$parameters == i), ]
+#   
+#   data.cut.basics <- data.cut[, which(colnames(data.cut) == "plot"):which(colnames(data.cut) == "coordN")]
+#   
+#   
+#   
+#   
+#   
+#   
+#   
+#   tmp.sums <- data.frame(colSums(tmp.df.sub[, 3:ncol(tmp.df.sub)]))  # wrong!!!
+#   names(tmp.sums) <- i
+#   df.rf.validation <- cbind(df.rf.validation, tmp.sums)
+# }
+# 
+# ## Upate column names (remove "tmp.")
+# for(i in seq(2, (length(names(df.rf.validation))), 1)) {
+#   new.name <- strsplit(names(df.rf.validation)[i], "tmp.")
+#   names(df.rf.validation)[i] <- new.name[[1]][2]
+# }
 
 
 

@@ -88,8 +88,8 @@ path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
 path.testing <- paste0(path.csv, "testing/")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
-file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all_100train.csv")
-file.out.rf.validation <- paste0(path.testing, "lvl_0400_rf_validation_100train.csv")
+file.out.rf.all <- paste0(path.csv, "lvl_0400rf_all_100train.csv")
+file.out.rf.validation <- paste0(path.csv, "lvl0400_rf_validation_100train.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
 

@@ -66,15 +66,16 @@ setwd("D:/")
 ncores <- detectCores()
 
 ## Set number of Random Forest runs
-rf.runs <- 100
+rf.runs <- 3
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
 ## Note: If "1" is used, prediction and confusion matrix will be
 ##       taken from train function!
-train.part <- 1
+train.part <- .8
 
 ## Set Random Forest tuning parameter "mtry" and "ntree"
-mtrys <- c(1,2,3,4,5,6,7,8,9,10)
+mtrys <- c(1,2,3)
+# mtrys <- c(1,2,3,4,5,6,7,8,9,10)
 # mtrys <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
 trees <- 500
 
@@ -88,8 +89,8 @@ path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
 path.testing <- paste0(path.csv, "testing/")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
-file.out.rf.all <- paste0(path.csv, "lvl_0400rf_all_100train.csv")
-file.out.rf.validation <- paste0(path.csv, "lvl0400_rf_validation_100train.csv")
+file.out.rf.all <- paste0(path.testing, "lvl_0400rf_all_20test.csv")
+file.out.rf.validation <- paste0(path.testing, "lvl0400_rf_validation_20test.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
 
@@ -275,7 +276,7 @@ for (i in seq(1:rf.runs)) {
   ## Parallelization
   cl <- makeCluster(ncores)
   registerDoParallel(cl)
-#   lst.species <- lst.species[1:5]
+  lst.species <- lst.species[1:5]
   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     
     ## Initialize dataframe
@@ -292,14 +293,12 @@ for (i in seq(1:rf.runs)) {
     tmp.train.rf <- train(x = df.rf.train.predict,
                           y = tmp.rf.train.response,
                           method = "rf",
-                          trControl = trainControl(method = "cv"),
+#                           trControl = trainControl(method = "cv"),
                           tuneGrid = mtrys,
-                          metric = "Kappa",
+                          metric = "Accuracy",
                           ntree = trees)
     
-    ## Variable Importance
-    tmp.varimp <- varImp(tmp.train.rf)
-    df.tmp.varimp <- data.frame(tmp.varimp$importance)
+    
     
     
     #     tmp.train.rf$finalModel$confusion
@@ -370,6 +369,40 @@ for (i in seq(1:rf.runs)) {
     tmp.CSI <- tmp.O1_P1/sum(tmp.O1_P1, tmp.O1_P0, tmp.O0_P1)
     tmp.POFD <- tmp.O0_P1/tmp.sum_O0
     
+    
+    ## Get Variable Importance from Random Forest function call
+    tmp.varimp <- varImp(tmp.train.rf, scale = TRUE)
+    tmp.df.varimp <- data.frame(tmp.varimp$importance)
+    
+    ## Set speciesname as column name
+    names(tmp.df.varimp) <- s
+    
+    ## Modify rownames in variable importance dataframe
+    for (v in seq(1:nrow(tmp.df.varimp))) {
+      tmp.rowname <- strsplit(rownames(tmp.df.varimp)[v], "greyval_")
+      tmp.rowname <- paste0("varImp_", tmp.rowname[[1]][2])
+      rownames(tmp.df.varimp)[v] <- tmp.rowname
+    }
+    
+    ## Create dataframe for variable importance ranking (1 = "most important")
+    tmp.df.varimp_rank <- data.frame(rank(-tmp.df.varimp[,1], na.last = TRUE))
+    
+    ## Create rownames for ranking dataframe
+    rownames(tmp.df.varimp_rank) <- rownames(tmp.df.varimp)
+    for (v in seq(1:nrow(tmp.df.varimp_rank))) {
+      tmp.rowname <- strsplit(rownames(tmp.df.varimp_rank)[v], "_")
+      tmp.rowname <- paste(tmp.rowname[[1]][1],
+                           "rank",
+                           tmp.rowname[[1]][2],
+                           tmp.rowname[[1]][3],
+                           sep = "_")
+      rownames(tmp.df.varimp_rank)[v] <- tmp.rowname
+    }
+    
+    ## Set speciesname as column name
+    names(tmp.df.varimp_rank) <- s
+    
+    
     ## Write extracted values into a dataframe
     tmp.df.singlespecies <- data.frame(rbind(tmp.O0_P0,
                                              tmp.O0_P1,
@@ -397,9 +430,14 @@ for (i in seq(1:rf.runs)) {
                                              tmp.FAR,
                                              tmp.CSI,
                                              tmp.POFD))
-    
+
     ## Set colnames (species name)
     names(tmp.df.singlespecies) <- s
+
+    tmp.df.singlespecies <- rbind(tmp.df.singlespecies, 
+#                                   tmp.df.varimp, 
+                                  tmp.df.varimp_rank)
+
     
     return(tmp.df.singlespecies)
   }

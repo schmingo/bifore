@@ -74,7 +74,7 @@ rf.runs <- 100
 train.part <- .8
 
 ## Set Random Forest tuning parameter "mtry" and "ntree"
-# mtrys <- c(5)
+# mtrys <- c(1,2,3,4,5)
 mtrys <- c(1,2,3,4,5,6,7,8,9,10)
 # mtrys <- c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
 trees <- 500
@@ -372,6 +372,7 @@ for (i in seq(1:rf.runs)) {
                                       tmp.O1_P0)
     tmp.class.error1 <- tmp.O0_P1/sum(tmp.O1_P1, 
                                       tmp.O0_P1)
+    tmp.mtry <- tmp.train.rf$bestTune[1,1]
     tmp.Accuracy <- tmp.confMatrix$overall[1]
     tmp.Kappa <- tmp.confMatrix$overall[2]
     tmp.AccuracyLower <- tmp.confMatrix$overall[3]
@@ -434,6 +435,7 @@ for (i in seq(1:rf.runs)) {
                                              tmp.sum_obs,
                                              tmp.class.error0,
                                              tmp.class.error1,
+                                             tmp.mtry,
                                              tmp.Accuracy,
                                              tmp.Kappa,
                                              # tmp.AccuracyLower,

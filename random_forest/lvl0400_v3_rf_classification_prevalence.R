@@ -184,14 +184,14 @@ data.cut <- cbind(data.cut.basics,
                   as.data.frame(matrix.prevalence),
                   data.cut.greyval)
 
-cat("\n\nWRITE data.cut\n")
-write.table(data.cut,
-            file = file.out.data.cut,
-            quote = FALSE,
-            col.names = TRUE,
-            row.names = FALSE,
-            sep = ";",
-            dec = ",")
+# cat("\n\nWRITE data.cut\n")
+# write.table(data.cut,
+#             file = file.out.data.cut,
+#             quote = FALSE,
+#             col.names = TRUE,
+#             row.names = FALSE,
+#             sep = ";",
+#             dec = ",")
 
 
 ### Stratified sampling ########################################################
@@ -258,14 +258,14 @@ for (i in seq(1:rf.runs)) {
                            data.str[(which(names(data.str) == "greyval_band_1")):(which(names(data.str) == "greyval_band_36"))],
                            data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
   
-  cat("\n\nWRITE data.RF\n")
-  write.table(df.randomForest,
-              file = file.out.data.RF,
-              quote = FALSE,
-              col.names = TRUE,
-              row.names = FALSE,
-              sep = ";",
-              dec = ",")
+#   cat("\n\nWRITE data.RF\n")
+#   write.table(df.randomForest,
+#               file = file.out.data.RF,
+#               quote = FALSE,
+#               col.names = TRUE,
+#               row.names = FALSE,
+#               sep = ";",
+#               dec = ",")
   
   
   
@@ -284,14 +284,14 @@ for (i in seq(1:rf.runs)) {
   df.rf.train <- df.randomForest[index, ]
   df.rf.test <- df.randomForest[-index, ]
   
-  cat("\n\nWRITE data.RF.test\n")
-  write.table(df.rf.test,
-              file = file.out.data.RF.test,
-              quote = FALSE,
-              col.names = TRUE,
-              row.names = FALSE,
-              sep = ";",
-              dec = ",")
+#   cat("\n\nWRITE data.RF.test\n")
+#   write.table(df.rf.test,
+#               file = file.out.data.RF.test,
+#               quote = FALSE,
+#               col.names = TRUE,
+#               row.names = FALSE,
+#               sep = ";",
+#               dec = ",")
   
   
   ## Subset training dataset

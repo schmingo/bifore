@@ -92,9 +92,9 @@ path.testing <- paste0(path.csv, "testing/")
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
 file.out.rf.all <- paste0(path.testing, "lvl_0400_rf_all_20test.csv")
 file.out.rf.validation <- paste0(path.testing, "lvl0400_rf_validation_20test.csv")
-# file.out.data.cut <- paste0(path.testing, "lvl0400_data_cut.csv")
-# file.out.data.RF <- paste0(path.testing, "lvl0400_data_RandomForest.csv")
-# file.out.data.RF.test <- paste0(path.testing, "lvl0400_data_RandomForest_test.csv")
+file.out.data.cut <- paste0(path.testing, "lvl0400_data_cut.csv")
+file.out.data.RF <- paste0(path.testing, "lvl0400_data_RandomForest.csv")
+file.out.data.RF.test <- paste0(path.testing, "lvl0400_data_RandomForest_test.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
 
@@ -221,8 +221,6 @@ df.rf.output <- data.frame()
 
 ## Loop stratified-function 100 times
 for (i in seq(1:rf.runs)) {
-  # foreach (i = seq(1:10)) %do% {
-  # foreach (i = 1) %do% {
   cat("\n\nPERFORM RANDOM FOREST FOR STRATIFIED DATAFRAME ", i, "OF ", rf.runs,"\n")
   set.seed(i)
   
@@ -241,17 +239,17 @@ for (i in seq(1:rf.runs)) {
   lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
   lst.species
   
-  ## Remove species without any observations (just to be sure ;) )
-  index <- which(colSums(data.str[, lst.species]) > 0) + 
-    grep("coordN", names(data.str))
-  
-  data.str <- data.frame(data.str[, 1:grep("coordN", names(data.str))], 
-                         data.str[, index], 
-                         data.str[, grep("greyval_band_1", 
-                                         names(data.str))[1]:ncol(data.str)])
-  
-  ## Update species list
-  lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
+#   ## Remove species without any observations (just to be sure ;) )
+#   index <- which(colSums(data.str[, lst.species]) > 0) + 
+#     grep("coordN", names(data.str))
+#   
+#   data.str <- data.frame(data.str[, 1:grep("coordN", names(data.str))], 
+#                          data.str[, index], 
+#                          data.str[, grep("greyval_band_1", 
+#                                          names(data.str))[1]:ncol(data.str)])
+#   
+#   ## Update species list
+#   lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
   
   
   ## Create dataframe for Random Forest
@@ -312,8 +310,8 @@ for (i in seq(1:rf.runs)) {
   ## Parallelization
   cl <- makeCluster(ncores)
   registerDoParallel(cl)
-  #   lst.species <- lst.species[1:5]
-  df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
+#     lst.species <- lst.species[1:3]
+  df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %dopar% {
     
     ## Initialize dataframe
     tmp.df.singlespecies <- data.frame()
@@ -329,9 +327,9 @@ for (i in seq(1:rf.runs)) {
     tmp.train.rf <- train(x = df.rf.train.predict,
                           y = tmp.rf.train.response,
                           method = "rf",
-                          #                           trControl = trainControl(method = "cv"),  # Causes warning message
+                          # trControl = trainControl(method = "cv"),  # Causes warning message
                           tuneGrid = mtrys,
-                          metric = "Accuracy",
+                          metric = "Kappa",
                           ntree = trees)
     
     if (train.part != 1) {
@@ -487,7 +485,7 @@ for (i in seq(1:rf.runs)) {
 }
 
 ## Write Random Forest output dataframe
-cat("\n\nWRITE RANDOM FOREST OUTPUT DATAFRAME (ALL RF RUNS)\n")
+cat("\n\nWRITE RANDOM FOREST OUTCOME DATAFRAME (ALL RF RUNS)\n")
 write.table(df.rf.output,
             file = file.out.rf.all,
             quote = FALSE,

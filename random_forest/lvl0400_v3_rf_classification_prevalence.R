@@ -54,7 +54,8 @@ lib <- c("sampling",
          "caret", 
          "e1071", 
          "randomForest",
-         "miscTools")
+         "miscTools",
+         "modeest")
 
 lapply(lib, function(...) require(..., character.only = TRUE))
 

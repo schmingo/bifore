@@ -55,7 +55,8 @@ lib <- c("sampling",
          "e1071", 
          "randomForest",
          "miscTools",
-         "modeest")
+         "modeest",
+         "ROCR")
 
 lapply(lib, function(...) require(..., character.only = TRUE))
 
@@ -339,11 +340,6 @@ for (i in seq(1:rf.runs)) {
       ## Predict
       tmp.test.predict.rf <- predict.train(tmp.train.rf, 
                                            newdata = df.rf.test.predict)
-      
-      ## Prediction probabilities
-      tmp.test.predict.prob <- predict.train(tmp.train.rf,
-                                             newdata = df.rf.test.predict,
-                                             type = "prob")
       
       ## Calculate Confusion Matrix from test data
       tmp.confMatrix <- confusionMatrix(data = tmp.test.predict.rf,

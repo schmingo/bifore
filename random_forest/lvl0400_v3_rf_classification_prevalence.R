@@ -407,20 +407,14 @@ for (i in seq(1:rf.runs)) {
                                              tmp.sum_Pno,
                                              tmp.sum_Pyes,
                                              tmp.sum_obs,
-                                             tmp.class.error0,
-                                             tmp.class.error1,
+                                             tmp.class.error.no,
+                                             tmp.class.error.yes,
                                              tmp.mtry,
                                              tmp.Accuracy,
                                              tmp.Kappa,
-                                             # tmp.AccuracyLower,
-                                             # tmp.AccuracyUpper,
-                                             # tmp.AccuracyNull,
-                                             # tmp.AccuracyPValue,
-                                             # tmp.McnemarPValue,
                                              tmp.Sensitivity,
                                              tmp.Specificity,
                                              tmp.DetectionRate,
-                                             tmp.Rsquared,
                                              tmp.POD,
                                              tmp.FAR,
                                              tmp.CSI,
@@ -497,36 +491,25 @@ for(i in tmp.names) {
 
 ## Calculate model validation statistics
 
-## Classification Error 0
-df.rf.validation$class.error0 <- foreach(i = seq(1:nrow(df.rf.validation)), 
-                                         .combine = "rbind") %do% {
-                                           err.0.tmp <- (df.rf.validation[i, "Oyes_Pno"]) /
-                                             sum((df.rf.validation[i, "Ono_Pno"]),
-                                                 (df.rf.validation[i, "Oyes_Pno"]))
-                                           
-                                           return(err.0.tmp)
-                                         }
+## Classification Error "no"
+df.rf.validation$class.error.no <- foreach(i = seq(1:nrow(df.rf.validation)), 
+                                           .combine = "rbind") %do% {
+                                             err.n.tmp <- (df.rf.validation[i, "Oyes_Pno"]) /
+                                               sum((df.rf.validation[i, "Ono_Pno"]),
+                                                   (df.rf.validation[i, "Oyes_Pno"]))
+                                             
+                                             return(err.n.tmp)
+                                           }
 
-## Classification Error 1
-df.rf.validation$class.error1 <- foreach(i = seq(1:nrow(df.rf.validation)), 
-                                         .combine = "rbind") %do% {
-                                           err.1.tmp <- (df.rf.validation[i, "Ono_Pyes"]) /
-                                             sum((df.rf.validation[i, "Ono_Pyes"]),
-                                                 (df.rf.validation[i, "Oyes_Pyes"]))
-                                           
-                                           return(err.1.tmp)
-                                         }
-
-## Rsquared
-df.rf.validation$Rsquared <- foreach(i = seq(1:nrow(df.rf.validation)), 
-                                     .combine = "rbind") %do% {
-                                       rsquared.tmp <- ((df.rf.validation[i, "Oyes_Pyes"]) +
-                                                          (df.rf.validation[i, "Ono_Pno"])) /
-                                         (df.rf.validation[i, "sum_obs"])
-                                       
-                                       return(rsquared.tmp)
-                                     }
-
+## Classification Error "yes"
+df.rf.validation$class.error.yes <- foreach(i = seq(1:nrow(df.rf.validation)), 
+                                            .combine = "rbind") %do% {
+                                              err.y.tmp <- (df.rf.validation[i, "Ono_Pyes"]) /
+                                                sum((df.rf.validation[i, "Ono_Pyes"]),
+                                                    (df.rf.validation[i, "Oyes_Pyes"]))
+                                              
+                                              return(err.y.tmp)
+                                            }
 
 ## Observed Accuracy
 df.rf.validation$observedAccuracy <- foreach(i = seq(1:nrow(df.rf.validation)), 

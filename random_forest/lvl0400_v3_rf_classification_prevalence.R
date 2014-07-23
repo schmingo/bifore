@@ -128,7 +128,7 @@ anyNA(data.raw[179:ncol(data.raw)])
 ### Most abundant species ######################################################
 
 ## Set minimum observations in different plots
-obs <- 15
+obs <- 20
 
 data.list <- split(data.raw, data.raw$plot)
 data.tmp.list <- do.call("rbind", lapply(seq(data.list), function(i) {

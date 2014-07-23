@@ -231,17 +231,17 @@ for (i in seq(1:rf.runs)) {
   lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
   lst.species
   
-#   ## Remove species without any observations (just to be sure ;) )
-#   index <- which(colSums(data.str[, lst.species]) > 0) + 
-#     grep("coordN", names(data.str))
-#   
-#   data.str <- data.frame(data.str[, 1:grep("coordN", names(data.str))], 
-#                          data.str[, index], 
-#                          data.str[, grep("greyval_band_1", 
-#                                          names(data.str))[1]:ncol(data.str)])
-#   
-#   ## Update species list
-#   lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
+  #   ## Remove species without any observations (just to be sure ;) )
+  #   index <- which(colSums(data.str[, lst.species]) > 0) + 
+  #     grep("coordN", names(data.str))
+  #   
+  #   data.str <- data.frame(data.str[, 1:grep("coordN", names(data.str))], 
+  #                          data.str[, index], 
+  #                          data.str[, grep("greyval_band_1", 
+  #                                          names(data.str))[1]:ncol(data.str)])
+  #   
+  #   ## Update species list
+  #   lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
   
   
   ## Create dataframe for Random Forest

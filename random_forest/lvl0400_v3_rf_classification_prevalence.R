@@ -279,9 +279,9 @@ for (i in seq(1:rf.runs)) {
   ### Loop over all species (perform Random Forest) ############################
   
   ## Parallelization
-#   cl <- makeCluster(ncores)
-#   registerDoParallel(cl)
-    lst.species <- lst.species[1:3]
+  #   cl <- makeCluster(ncores)
+  #   registerDoParallel(cl)
+  lst.species <- lst.species[1:3]
   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     
     ## Initialize dataframe
@@ -438,7 +438,7 @@ for (i in seq(1:rf.runs)) {
     return(tmp.df.singlespecies)
   }
   
-#   stopCluster(cl)
+  #   stopCluster(cl)
   
   df.rf.allspecies$rf_run <- i
   
@@ -477,7 +477,7 @@ names(df.rf.validation) <- "species"
 
 ## Get confusion matrix sums
 
-## Select parameters for model validation (get sums from confusion matrix)
+## Select parameters for final model validation (get sums from confusion matrix)
 tmp.names <- as.character(df.rf.output[1:9, 2])
 
 for(i in tmp.names) {
@@ -543,35 +543,24 @@ df.rf.validation$observedAccuracy <- foreach(i = seq(1:nrow(df.rf.validation)),
 df.rf.validation$expectedAccuracy <- foreach(i = seq(1:nrow(df.rf.validation)), 
                                              .combine = "rbind") %do% {
                                                acc.ex.tmp <- ((df.rf.validation[i, "sum_Oyes"] * df.rf.validation[i, "sum_Pyes"] / df.rf.validation[i, "sum_obs"]) +
-                                                                (df.rf.validation[i, "sum_Ono"] * df.rf.validation[i, "sum_Pno"] / df.rf.validation[i, "sum_obs"])) / df.rf.validation[i, "sum_obs"]
+                                                                (df.rf.validation[i, "sum_Ono"] * df.rf.validation[i, "sum_Pno"] / df.rf.validation[i, "sum_obs"])) / 
+                                                                df.rf.validation[i, "sum_obs"]
                                                return(acc.ex.tmp)
                                              }
 
-# ## Kappa_old
-# df.rf.validation$Kappa <- foreach(i = seq(1:nrow(df.rf.validation)), 
-#                                   .combine = "rbind") %do% {
-#                                     kappa.tmp <- ((df.rf.validation[i, "sum_Pyes"]) *
-#                                                     (df.rf.validation[i, "sum_Oyes"]) + 
-#                                                     (df.rf.validation[i, "sum_Ono"]) *
-#                                                     (df.rf.validation[i, "sum_Pno"])) /
-#                                       ((df.rf.validation[i, "sum_Pno"]) + 
-#                                          (df.rf.validation[i, "sum_Pyes"]))^2
-#                                     return(kappa.tmp)
-#                                   }
-
-## Kappa_new
+## Kappa
 df.rf.validation$Kappa <- foreach(i = seq(1:nrow(df.rf.validation)), 
-                                      .combine = "rbind") %do% {
-                                        kappa.tmp <- (df.rf.validation[i, "observedAccuracy"] - df.rf.validation[i, "expectedAccuracy"]) /
-                                          (1 - df.rf.validation[i, "expectedAccuracy"])
-                                        return(kappa.tmp)
-                                      }
+                                  .combine = "rbind") %do% {
+                                    kappa.tmp <- (df.rf.validation[i, "observedAccuracy"] - df.rf.validation[i, "expectedAccuracy"]) /
+                                      (1 - df.rf.validation[i, "expectedAccuracy"])
+                                    return(kappa.tmp)
+                                  }
 
 ## Probability of detection (POD)
 df.rf.validation$POD <- foreach(i = seq(1:nrow(df.rf.validation)), 
                                 .combine = "rbind") %do% {
                                   POD.tmp <- (df.rf.validation[i,"Oyes_Pyes"]) / 
-                                    (df.rf.validation[i,"sum_Pyes"])
+                                    (df.rf.validation[i,"sum_Oyes"])
                                   return(POD.tmp)
                                 }
 

@@ -331,10 +331,10 @@ for (i in seq(1:rf.runs)) {
     }
     
     ## Extract Confusion Matrix values
-    tmp.Ono_Pno <- tmp.confMatrix$table[1]
-    tmp.Ono_Pyes <- tmp.confMatrix$table[2]
-    tmp.Oyes_Pno <- tmp.confMatrix$table[3]
-    tmp.Oyes_Pyes <- tmp.confMatrix$table[4]
+    tmp.Oyes_Pyes <- tmp.confMatrix$table[1]
+    tmp.Oyes_Pno <- tmp.confMatrix$table[2]
+    tmp.Ono_Pyes <- tmp.confMatrix$table[3]
+    tmp.Ono_Pno <- tmp.confMatrix$table[4]
     tmp.sum_Pyes <- sum(tmp.Ono_Pyes, tmp.Oyes_Pyes)
     tmp.sum_Pno <- sum(tmp.Ono_Pno, tmp.Oyes_Pno)
     tmp.sum_Ono <- sum(tmp.Ono_Pno, tmp.Ono_Pyes)
@@ -343,10 +343,10 @@ for (i in seq(1:rf.runs)) {
                        tmp.Ono_Pyes, 
                        tmp.Oyes_Pno, 
                        tmp.Oyes_Pyes)
-    tmp.class.error0 <- tmp.Oyes_Pno/sum(tmp.Ono_Pno, 
-                                      tmp.Oyes_Pno)
-    tmp.class.error1 <- tmp.Ono_Pyes/sum(tmp.Oyes_Pyes, 
-                                      tmp.Ono_Pyes)
+    tmp.class.error.no <- tmp.Oyes_Pno/sum(tmp.Ono_Pno, 
+                                           tmp.Oyes_Pno)
+    tmp.class.error.yes <- tmp.Ono_Pyes/sum(tmp.Oyes_Pyes, 
+                                            tmp.Ono_Pyes)
     tmp.mtry <- tmp.train.rf$bestTune[1,1]
     tmp.Accuracy <- tmp.confMatrix$overall[1]
     tmp.Kappa <- tmp.confMatrix$overall[2]
@@ -355,7 +355,6 @@ for (i in seq(1:rf.runs)) {
     tmp.AccuracyNull <- tmp.confMatrix$overall[5]
     tmp.AccuracyPValue <- tmp.confMatrix$overall[6]
     tmp.McnemarPValue <- tmp.confMatrix$overall[7]
-    tmp.Rsquared <- (sum(tmp.Ono_Pno, tmp.Oyes_Pyes))/tmp.sum_obs
     tmp.Sensitivity <- tmp.confMatrix$byClass[1]
     tmp.Specificity <- tmp.confMatrix$byClass[1]
     tmp.DetectionRate <- tmp.confMatrix$byClass[6]

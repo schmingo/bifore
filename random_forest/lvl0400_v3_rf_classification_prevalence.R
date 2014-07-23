@@ -306,23 +306,26 @@ for (i in seq(1:rf.runs)) {
     
     if (train.part != 1) {
       
-      ## Predict
+      ### Predict ##############################################################
       tmp.test.predict <- predict.train(tmp.train.rf, 
                                            newdata = df.rf.test.predict)
       
-      ## Write raw prediction classes into a character 
-      tmp.predict_raw <- as.character(list(tmp.test.predict))
+      ## Write raw prediction classes into a numeric vector 
+      tmp.predict_raw <- as.vector(tmp.test.predict)
+      tmp.predict_raw <- ifelse(tmp.predict_raw == "yes",1,0)
+      # tmp.predict_raw
       
       ## Predict - get class probabilities
       tmp.test.predict.prob <- predict.train(tmp.train.rf, 
                                              newdata = df.rf.test.predict,
                                              type = "prob")
       
-      tmp.predict_probabilities <- as.character(list(tmp.test.predict.prob$yes))
+      tmp.predict_prob <- as.vector(tmp.test.predict.prob$yes)
+      tmp.df.predict <- data.frame(append(tmp.predict_raw, tmp.predict_prob))
+      names(tmp.df.predict) <- s
+      # tmp.predict2
       
-      
-      
-      ## Calculate Confusion Matrix from test data
+      ### Calculate Confusion Matrix from test data ############################
       tmp.confMatrix <- confusionMatrix(data = tmp.test.predict,
                                         reference = tmp.rf.test.response,
                                         dnn = c("Predicted", "Observed"),
@@ -334,9 +337,9 @@ for (i in seq(1:rf.runs)) {
       tmp.train.predict <- as.factor(tmp.train.predict[, 1])
       
       ## Write raw prediction classes into a character
-      tmp.predict_raw <- as.character(list(tmp.train.predict))
+      # tmp.predict_raw <- as.character(list(tmp.train.predict))
       
-      ## Calculate Confusion Matrix from train data
+      ### Calculate Confusion Matrix from train data ###########################
       tmp.confMatrix <- confusionMatrix(data = tmp.train.predict,
                                         reference = tmp.rf.train.response,
                                         dnn = c("Predicted", "Observed"),
@@ -407,12 +410,8 @@ for (i in seq(1:rf.runs)) {
       rownames(tmp.df.varimp_rank)[v] <- tmp.rowname
     }
     
-    tmp.df.predict <- data.frame(rbind(tmp.predict_raw,
-                                 tmp.predict_probabilities))
-    
     ## Set speciesname as column name
     names(tmp.df.varimp_rank) <- s
-    names(tmp.df.predict) <- s
     
     
     ## Write extracted values into a dataframe
@@ -437,12 +436,11 @@ for (i in seq(1:rf.runs)) {
     ## Set colnames (species name)
     names(tmp.df.singlespecies) <- s
     
-    tmp.df.singlespecies.combined <- rbind(tmp.df.singlespecies)
-#                                            tmp.df.predict, 
+    tmp.df.singlespecies.combined <- rbind(tmp.df.singlespecies,
+                                           tmp.df.predict) 
                                            # tmp.df.varimp, 
 #                                            tmp.df.varimp_rank)
     
-#     tmp.df.singlespecies.combined[1:nrow(tmp.df.singlespecies), ] <- is.numeric(tmp.df.singlespecies.combined[1:nrow(tmp.df.singlespecies), ])
     
     return(tmp.df.singlespecies.combined)
   }

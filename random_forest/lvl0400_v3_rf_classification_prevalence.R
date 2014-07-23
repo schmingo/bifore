@@ -64,10 +64,10 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 setwd("D:/")
 
 ## Set number of CPU cores
-ncores <- detectCores()
+ncores <- detectCores()-1
 
 ## Set number of Random Forest runs
-rf.runs <- 100
+rf.runs <- 5
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
 ## Note: If "1" is used, prediction and confusion matrix will be
@@ -75,8 +75,8 @@ rf.runs <- 100
 train.part <- .8
 
 ## Set Random Forest tuning parameter "mtry" and "ntree"
-# mtrys <- c(1,2,3)
-mtrys <- c(1,2,3,4,5,6,7,8,9,10)
+mtrys <- c(1,2,3)
+# mtrys <- c(1,2,3,4,5,6,7,8,9,10)
 
 trees <- 500
 
@@ -278,9 +278,9 @@ for (i in seq(1:rf.runs)) {
   ### Loop over all species (perform Random Forest) ############################
   
   ## Parallelization
-  cl <- makeCluster(ncores)
-  registerDoParallel(cl)
-  #   lst.species <- lst.species[1:3]
+#   cl <- makeCluster(ncores)
+#   registerDoParallel(cl)
+    lst.species <- lst.species[1:3]
   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     
     ## Initialize dataframe
@@ -307,22 +307,37 @@ for (i in seq(1:rf.runs)) {
     if (train.part != 1) {
       
       ## Predict
-      tmp.test.predict.rf <- predict.train(tmp.train.rf, 
+      tmp.test.predict <- predict.train(tmp.train.rf, 
                                            newdata = df.rf.test.predict)
       
+      ## Write raw prediction classes into a character 
+      tmp.predict_raw <- as.character(list(tmp.test.predict))
+      
+      ## Predict - get class probabilities
+      tmp.test.predict.prob <- predict.train(tmp.train.rf, 
+                                             newdata = df.rf.test.predict,
+                                             type = "prob")
+      
+      tmp.predict_probabilities <- as.character(list(tmp.test.predict.prob$yes))
+      
+      
+      
       ## Calculate Confusion Matrix from test data
-      tmp.confMatrix <- confusionMatrix(data = tmp.test.predict.rf,
+      tmp.confMatrix <- confusionMatrix(data = tmp.test.predict,
                                         reference = tmp.rf.test.response,
                                         dnn = c("Predicted", "Observed"),
                                         positive = "yes")
       
     } else {
       ## Extract Prediction values from train data
-      tmp.train.predict.rf <- data.frame(tmp.train.rf$finalModel[3])
-      tmp.train.predict.rf <- as.factor(tmp.train.predict.rf[, 1])
+      tmp.train.predict <- data.frame(tmp.train.rf$finalModel[3])
+      tmp.train.predict <- as.factor(tmp.train.predict[, 1])
+      
+      ## Write raw prediction classes into a character
+      tmp.predict_raw <- as.character(list(tmp.train.predict))
       
       ## Calculate Confusion Matrix from train data
-      tmp.confMatrix <- confusionMatrix(data = tmp.train.predict.rf,
+      tmp.confMatrix <- confusionMatrix(data = tmp.train.predict,
                                         reference = tmp.rf.train.response,
                                         dnn = c("Predicted", "Observed"),
                                         positive = "yes")
@@ -392,8 +407,12 @@ for (i in seq(1:rf.runs)) {
       rownames(tmp.df.varimp_rank)[v] <- tmp.rowname
     }
     
+    tmp.df.predict <- data.frame(rbind(tmp.predict_raw,
+                                 tmp.predict_probabilities))
+    
     ## Set speciesname as column name
     names(tmp.df.varimp_rank) <- s
+    names(tmp.df.predict) <- s
     
     
     ## Write extracted values into a dataframe
@@ -413,24 +432,23 @@ for (i in seq(1:rf.runs)) {
                                              tmp.Kappa,
                                              tmp.Sensitivity,
                                              tmp.Specificity,
-                                             tmp.DetectionRate,
-                                             tmp.POD,
-                                             tmp.FAR,
-                                             tmp.CSI,
-                                             tmp.POFD))
+                                             tmp.DetectionRate))
     
     ## Set colnames (species name)
     names(tmp.df.singlespecies) <- s
     
-    tmp.df.singlespecies <- rbind(tmp.df.singlespecies, 
-                                  # tmp.df.varimp, 
-                                  tmp.df.varimp_rank)
+    tmp.df.singlespecies.combined <- rbind(tmp.df.singlespecies)
+#                                            tmp.df.predict, 
+                                           # tmp.df.varimp, 
+#                                            tmp.df.varimp_rank)
     
+#     tmp.df.singlespecies.combined[1:nrow(tmp.df.singlespecies), ] <- is.numeric(tmp.df.singlespecies.combined[1:nrow(tmp.df.singlespecies), ])
     
-    return(tmp.df.singlespecies)
+    return(tmp.df.singlespecies.combined)
   }
-  
-  stopCluster(cl)
+
+
+#   stopCluster(cl)
   
   df.rf.allspecies$rf_run <- i
   
@@ -537,39 +555,39 @@ df.rf.validation$Kappa <- foreach(i = seq(1:nrow(df.rf.validation)),
                                     return(kappa.tmp)
                                   }
 
-## Probability of detection (POD)
-df.rf.validation$POD <- foreach(i = seq(1:nrow(df.rf.validation)), 
-                                .combine = "rbind") %do% {
-                                  POD.tmp <- (df.rf.validation[i,"Oyes_Pyes"]) / 
-                                    (df.rf.validation[i,"sum_Oyes"])
-                                  return(POD.tmp)
-                                }
-
-## False alarm ratio (FAR)
-df.rf.validation$FAR <- foreach(i = seq(1:nrow(df.rf.validation)), 
-                                .combine = "rbind") %do% {
-                                  FAR.tmp <- (df.rf.validation[i,"Ono_Pyes"]) / 
-                                    (df.rf.validation[i,"sum_Pyes"])
-                                  return(FAR.tmp)
-                                }
-
-## Critical success index (CSI)
-df.rf.validation$CSI <- foreach(i = seq(1:nrow(df.rf.validation)), 
-                                .combine = "rbind") %do% {
-                                  CSI.tmp <- (df.rf.validation[i,"Oyes_Pyes"]) / 
-                                    (df.rf.validation[i,"Oyes_Pyes"] + 
-                                       df.rf.validation[i,"Oyes_Pno"] + 
-                                       df.rf.validation[i,"Ono_Pyes"])
-                                  return(CSI.tmp)
-                                }
-
-## Probability of false detection (POFD)
-df.rf.validation$POFD <- foreach(i = seq(1:nrow(df.rf.validation)), 
-                                 .combine = "rbind") %do% {
-                                   POFD.tmp <- (df.rf.validation[i,"Ono_Pyes"]) / 
-                                     (df.rf.validation[i,"sum_Ono"])
-                                   return(POFD.tmp)
-                                 }
+# ## Probability of detection (POD)
+# df.rf.validation$POD <- foreach(i = seq(1:nrow(df.rf.validation)), 
+#                                 .combine = "rbind") %do% {
+#                                   POD.tmp <- (df.rf.validation[i,"Oyes_Pyes"]) / 
+#                                     (df.rf.validation[i,"sum_Oyes"])
+#                                   return(POD.tmp)
+#                                 }
+# 
+# ## False alarm ratio (FAR)
+# df.rf.validation$FAR <- foreach(i = seq(1:nrow(df.rf.validation)), 
+#                                 .combine = "rbind") %do% {
+#                                   FAR.tmp <- (df.rf.validation[i,"Ono_Pyes"]) / 
+#                                     (df.rf.validation[i,"sum_Pyes"])
+#                                   return(FAR.tmp)
+#                                 }
+# 
+# ## Critical success index (CSI)
+# df.rf.validation$CSI <- foreach(i = seq(1:nrow(df.rf.validation)), 
+#                                 .combine = "rbind") %do% {
+#                                   CSI.tmp <- (df.rf.validation[i,"Oyes_Pyes"]) / 
+#                                     (df.rf.validation[i,"Oyes_Pyes"] + 
+#                                        df.rf.validation[i,"Oyes_Pno"] + 
+#                                        df.rf.validation[i,"Ono_Pyes"])
+#                                   return(CSI.tmp)
+#                                 }
+# 
+# ## Probability of false detection (POFD)
+# df.rf.validation$POFD <- foreach(i = seq(1:nrow(df.rf.validation)), 
+#                                  .combine = "rbind") %do% {
+#                                    POFD.tmp <- (df.rf.validation[i,"Ono_Pyes"]) / 
+#                                      (df.rf.validation[i,"sum_Ono"])
+#                                    return(POFD.tmp)
+#                                  }
 
 
 ## Variable Importance (Mode)

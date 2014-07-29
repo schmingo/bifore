@@ -231,7 +231,7 @@ for (i in seq(1:rf.runs)) {
   
   ## Get species list for Random Forest 
   lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
-  # lst.species
+  lst.species
   
   #   ## Remove species without any observations (just to be sure ;) )
   #   index <- which(colSums(data.str[, lst.species]) > 0) + 

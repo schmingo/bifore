@@ -67,7 +67,7 @@ setwd("D:/")
 ncores <- detectCores()-1
 
 ## Set number of Random Forest runs
-rf.runs <- 100
+rf.runs <- 5
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
 ## Note: If "1" is used, prediction and confusion matrix will be
@@ -75,8 +75,8 @@ rf.runs <- 100
 train.part <- .8
 
 ## Set Random Forest tuning parameter "mtry" and "ntree"
-# mtrys <- c(1,2,3)
-mtrys <- c(1,2,3,4,5,6,7,8,9,10)
+mtrys <- c(1,2,3)
+# mtrys <- c(1,2,3,4,5,6,7,8,9,10)
 
 trees <- 500
 
@@ -281,9 +281,9 @@ for (i in seq(1:rf.runs)) {
   ### Loop over all species (perform Random Forest) ############################
   
   ## Parallelization
-  cl <- makeCluster(ncores)
-  registerDoParallel(cl)
-  # lst.species <- lst.species[1:3]
+#   cl <- makeCluster(ncores)
+#   registerDoParallel(cl)
+  lst.species <- lst.species[1:10]
   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     
     ## Initialize dataframe
@@ -473,7 +473,7 @@ for (i in seq(1:rf.runs)) {
   }
   
   
-  stopCluster(cl)
+#   stopCluster(cl)
   
   df.rf.allspecies$rf_run <- i
   

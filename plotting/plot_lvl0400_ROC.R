@@ -3,23 +3,9 @@ cat("\014")
 ##  
 ##  BiFoRe Scripts
 ##
-##  Perform Random Forest classification for Orthoptera prevalence 
-##  with lvl0300 dataset
-##
-##  1. 100 times Stratified sampling of plots
-##  2. Split dataset into training and testing data
-##  3. Perform Random Forest Classification
-##  4. Extract confusion matrix & variable importance for all 100 samples and
-##     average values
-##  5. Model validation:
-##     - Accuracy
-##     - Kappa
-##     - POFD (Probability of false detection)
-##     - POD (Probability of detection)
-##     - FAR (False alarm ratio)
-##     - CSI (Critical success index)
+##  Construct a ROC curve with lvl0400 predictions
 ##  
-##  Version: 2014-07-23
+##  Version: 2014-07-31
 ##  
 ################################################################################
 ##
@@ -74,6 +60,16 @@ data.raw <- read.csv2(file.in.prediction,
 
 ### Subset data ################################################################
 
-predict.class <- 
+## Subset prediction classes
+df.predict.class <- data.raw[grep("class", data.raw$parameters), ]
 
-predict.prob <- NULL
+# ## Reconstruct factors
+# df.predict.class2 <- as.factor(ifelse(df.predict.class >= 1,"yes","no")) 
+# df.predict.class2 <- factor(df.predict.class2, levels = c("yes", "no"))
+
+
+## Subset prediction probabilities
+df.predict.prob <- data.raw[grep("prob", data.raw$parameters), ]
+
+
+

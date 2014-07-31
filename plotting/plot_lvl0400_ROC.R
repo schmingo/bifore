@@ -63,13 +63,16 @@ data.raw <- read.csv2(file.in.prediction,
 ## Subset prediction classes
 df.predict.class <- data.raw[grep("class", data.raw$parameters), ]
 
-# ## Reconstruct factors
-# df.predict.class2 <- as.factor(ifelse(df.predict.class >= 1,"yes","no")) 
-# df.predict.class2 <- factor(df.predict.class2, levels = c("yes", "no"))
-
-
 ## Subset prediction probabilities
 df.predict.prob <- data.raw[grep("prob", data.raw$parameters), ]
 
+
+
+
+
+
+# ## Reconstruct factors
+# df.predict.class2 <- as.factor(ifelse(df.predict.class >= 1,"yes","no")) 
+# df.predict.class2 <- factor(df.predict.class2, levels = c("yes", "no"))
 
 

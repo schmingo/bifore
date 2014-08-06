@@ -65,46 +65,49 @@ data.raw <- read.csv2(file.in.prediction,
 df.predict.prob <- data.raw[grep("prob", data.raw$parameters), ]
 
 ## Subset prediction classes
-df.predict.class <- data.raw[grep("class", data.raw$parameters), ]
+df.predict.class <- data.raw[grep("class", data.raw$parameters), ] ## should be observed classes from test dataset!! not predicted classes....
 
 ## Reconstruct prediciton class factor levels
-for(i in 3:ncol(df.predict.class)) {
-  df.predict.class[, i] <- as.factor(ifelse(df.predict.class[, i] >= 1,
-                                            "yes","no"))
-  
-  df.predict.class[, i] <- factor(df.predict.class[, i], 
-                                  levels = c("yes", "no"))
-  
-}
+# for(i in 3:ncol(df.predict.class)) {
+#   df.predict.class[, i] <- as.factor(ifelse(df.predict.class[, i] >= 1,
+#                                             "yes","no"))
+#   
+#   df.predict.class[, i] <- factor(df.predict.class[, i], 
+#                                   levels = c("yes", "no"))
+#   
+# }
 
 
 
 
 ### ROCR predcition ############################################################
 
-pred <- prediction(predictions = df.predict.prob[, 4],
-                   labels = df.predict.class[, 4])
+pred <- prediction(predictions = df.predict.prob[, 3],
+                   labels = df.predict.class[, 3])
 
 
 ### ROCR performance ###########################################################
 
-# perf <- performance(pred,"tpr","fpr")
+perf <- performance(pred,"tpr","fpr") ## <-!!!!!
 # perf <- performance(pred, "prec", "rec")
-perf <- performance(pred, "tpr")  # True positive rate. P(Yhat = + | Y = +). Estimated as: TP/P.
-perf <- performance(pred, "tnr")  # True negative rate. P(Yhat = - | Y = -).
-perf <- performance(pred, "fpr")  # False positive rate. P(Yhat = + | Y = -). Estimated as: FP/N.
-perf <- performance(pred, "fnr")  # False negative rate. P(Yhat = - | Y = +). Estimated as: FN/P.
-perf <- performance(pred, "acc")  # Accuracy. P(Yhat = Y). Estimated as: (TP+TN)/(P+N).
-perf <- performance(pred, "prec") # Precision. P(Y = + | Yhat = +). Estimated as: TP/(TP+FP).
-perf <- performance(pred, "err")  # Error rate. P(Yhat != Y). Estimated as: (FP+FN)/(P+N).
-perf <- performance(pred, "ppv")  # Positive predictive value. P(Y = + | Yhat = +). Estimated as: TP/(TP+FP).
-perf <- performance(pred, "phi")  # Phi correlation coefficient. (TP*TN - FP*FN)/(sqrt((TP+FN)*(TN+FP)*(TP+FP)*(TN+FN))). Yields a number between -1 and 1, with 1 indicating a perfect prediction, 0 indicating a random prediction. Values below 0 indicate a worse than random prediction.
-perf <- performance(pred, "cal")  # Calibration error. The calibration error is the absolute difference between predicted confidence and actual reliability. This error is estimated at all cutoffs by sliding a window across the range of possible cutoffs. The default window size of 100 can be adjusted by passing the optional parameter window.size=200 to performance. E.g., if for several positive samples the output of the classifier is around 0.75, you might expect from a well-calibrated classifier that the fraction of them which is correctly predicted as positive is also around 0.75. In a well-calibrated classifier, the probabilistic confidence estimates are realistic. Only for use with probabilistic output (i.e. scores between 0 and 1).
-perf <- performance(pred, "auc")  # Area under the ROC curve. This is equal to the value of the Wilcoxon-Mann-Whitney test statistic and also the probability that the classifier will score are randomly drawn positive sample higher than a randomly drawn negative sample. Since the output of auc is cutoff-independent, this measure cannot be combined with other measures into a parametric curve. The partial area under the ROC curve up to a given false positive rate can be calculated by passing the optional parameter fpr.stop=0.5 (or any other value between 0 and 1) to performance.
+# perf <- performance(pred, "tpr")  # True positive rate. P(Yhat = + | Y = +). Estimated as: TP/P.
+# perf <- performance(pred, "tnr")  # True negative rate. P(Yhat = - | Y = -).
+# perf <- performance(pred, "fpr")  # False positive rate. P(Yhat = + | Y = -). Estimated as: FP/N.
+# perf <- performance(pred, "fnr")  # False negative rate. P(Yhat = - | Y = +). Estimated as: FN/P.
+# perf <- performance(pred, "acc")  # Accuracy. P(Yhat = Y). Estimated as: (TP+TN)/(P+N).
+# perf <- performance(pred, "prec") # Precision. P(Y = + | Yhat = +). Estimated as: TP/(TP+FP).
+# perf <- performance(pred, "err")  # Error rate. P(Yhat != Y). Estimated as: (FP+FN)/(P+N).
+# perf <- performance(pred, "ppv")  # Positive predictive value. P(Y = + | Yhat = +). Estimated as: TP/(TP+FP).
+# perf <- performance(pred, "phi")  # Phi correlation coefficient. (TP*TN - FP*FN)/(sqrt((TP+FN)*(TN+FP)*(TP+FP)*(TN+FN))). Yields a number between -1 and 1, with 1 indicating a perfect prediction, 0 indicating a random prediction. Values below 0 indicate a worse than random prediction.
+# perf <- performance(pred, "cal")  # Calibration error. The calibration error is the absolute difference between predicted confidence and actual reliability. This error is estimated at all cutoffs by sliding a window across the range of possible cutoffs. The default window size of 100 can be adjusted by passing the optional parameter window.size=200 to performance. E.g., if for several positive samples the output of the classifier is around 0.75, you might expect from a well-calibrated classifier that the fraction of them which is correctly predicted as positive is also around 0.75. In a well-calibrated classifier, the probabilistic confidence estimates are realistic. Only for use with probabilistic output (i.e. scores between 0 and 1).
+# perf <- performance(pred, "auc")  # Area under the ROC curve. This is equal to the value of the Wilcoxon-Mann-Whitney test statistic and also the probability that the classifier will score are randomly drawn positive sample higher than a randomly drawn negative sample. Since the output of auc is cutoff-independent, this measure cannot be combined with other measures into a parametric curve. The partial area under the ROC curve up to a given false positive rate can be calculated by passing the optional parameter fpr.stop=0.5 (or any other value between 0 and 1) to performance.
 
 
-perf <- performance(pred, "tnr")
-perf <- performance(pred, "auc")
+# perf <- performance(pred, "tnr")
+# perf <- performance(pred, "auc")
+
+
+unlist(perf)@y.values
 
 
 ## Define output image | open image port
@@ -114,7 +117,7 @@ perf <- performance(pred, "auc")
 #     units = "px", 
 #     res = 600)
 # 
-# plot(perf)
+plot(perf)
 # 
 # ## Close image port
 # graphics.off()

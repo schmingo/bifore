@@ -19,7 +19,7 @@ cat("\014")
 ##     - FAR (False alarm ratio)
 ##     - CSI (Critical success index)
 ##  
-##  Version: 2014-07-23
+##  Version: 2014-08-08
 ##  
 ################################################################################
 ##
@@ -53,9 +53,7 @@ lib <- c("sampling",
          "caret", 
          "e1071", 
          "randomForest",
-         "miscTools",
-         "modeest",
-         "ROCR")
+         "miscTools")
 
 lapply(lib, function(...) require(..., character.only = TRUE))
 
@@ -67,16 +65,14 @@ setwd("D:/")
 ncores <- detectCores()-1
 
 ## Set number of Random Forest runs
-rf.runs <- 5
+rf.runs <- 2
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
-## Note: If "1" is used, prediction and confusion matrix will be
-##       taken from train function!
-train.part <- .8
+train.part <- .8  # train.part > 0 && < 1
 
 ## Set Random Forest tuning parameter "mtry" and "ntree"
-mtrys <- c(1,2,3)
-# mtrys <- c(1,2,3,4,5,6,7,8,9,10)
+# mtrys <- c(1,2,3)
+mtrys <- c(1,2,3,4,5,6,7,8,9,10)
 
 trees <- 500
 
@@ -125,7 +121,7 @@ anyNA(data.raw[179:ncol(data.raw)])
 ### Most abundant species ######################################################
 
 ## Set minimum observations in different plots
-obs <- 20
+obs <- 15
 
 data.list <- split(data.raw, data.raw$plot)
 data.tmp.list <- do.call("rbind", lapply(seq(data.list), function(i) {
@@ -281,9 +277,9 @@ for (i in seq(1:rf.runs)) {
   ### Loop over all species (perform Random Forest) ############################
   
   ## Parallelization
-#   cl <- makeCluster(ncores)
-#   registerDoParallel(cl)
-  lst.species <- lst.species[1:10]
+  cl <- makeCluster(ncores)
+  registerDoParallel(cl)
+  # lst.species <- lst.species[1:3]
   df.rf.allspecies <- foreach(s = lst.species, .combine = "cbind", .packages = lib) %do% {
     
     ## Initialize dataframe
@@ -308,10 +304,9 @@ for (i in seq(1:rf.runs)) {
                           ntree = trees)
     
     
-    if (train.part != 1) {
       
       
-      ### Predict ##############################################################
+      ### Predict & dataframe for ROC curve ####################################
       tmp.test.predict <- predict.train(tmp.train.rf, 
                                         newdata = df.rf.test.predict)
       
@@ -343,8 +338,23 @@ for (i in seq(1:rf.runs)) {
                                                 rownames(df.rf.test.predict)[p])
       }
       
-      ## Combine prediction classes and probabilities in a single dataframe
-      tmp.df.predict <- rbind(tmp.predict.classes, 
+      
+      ## Write response variables of test dataset into a dataframe (ROC curve)
+      tmp.observed.classes <- data.frame(tmp.rf.test.response)
+      tmp.observed.classes <- data.frame(ifelse(tmp.observed.classes == "yes",
+                                                1,
+                                                0))
+      ## Set columnnames and rownames for response classes dataframe
+      names(tmp.observed.classes) <- s
+      for (r in 1:nrow(tmp.observed.classes)) {
+        rownames(tmp.observed.classes)[r] <- paste0("observed.class.plot.", 
+                                                    rownames(df.rf.test.predict)[r])
+      }
+      
+      ## Combine observed classes, prediction classes and 
+      ## prediction probabilities in a single dataframe
+      tmp.df.predict <- rbind(tmp.observed.classes,
+                              tmp.predict.classes, 
                               tmp.predict.prob)
       
       
@@ -354,19 +364,6 @@ for (i in seq(1:rf.runs)) {
                                         dnn = c("Predicted", "Observed"),
                                         positive = "yes")
       
-    } else {
-      ## Extract Prediction values from train data
-      tmp.train.predict <- data.frame(tmp.train.rf$finalModel[3])
-      tmp.train.predict <- as.factor(tmp.train.predict[, 1])
-      
-      
-      ### Calculate Confusion Matrix from train data ###########################
-      tmp.confMatrix <- confusionMatrix(data = tmp.train.predict,
-                                        reference = tmp.rf.train.response,
-                                        dnn = c("Predicted", "Observed"),
-                                        positive = "yes")
-      
-    }
     
     ## Extract Confusion Matrix values
     tmp.Oyes_Pyes <- tmp.confMatrix$table[1]
@@ -473,7 +470,7 @@ for (i in seq(1:rf.runs)) {
   }
   
   
-#   stopCluster(cl)
+  stopCluster(cl)
   
   df.rf.allspecies$rf_run <- i
   

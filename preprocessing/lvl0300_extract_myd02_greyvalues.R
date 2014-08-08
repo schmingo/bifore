@@ -5,7 +5,7 @@ cat("\014")
 ##    
 ##  Extract greyvalues from MODIS .geotiff images for each observation (lvl0100).
 ##  
-##  Version: 2014-06-20
+##  Version: 2014-08-08
 ##  
 ################################################################################
 ##
@@ -253,136 +253,134 @@ names(greyvalues) <- foreach(i = bandnames, j = names(greyvalues)) %do% {
 names(greyvalues)
 
 
-### Calculate first derivate (diff) ############################################
-
-## Calculate diff
-diff <- as.data.frame(rowDiffs(as.matrix(greyvalues)))
-diff <- cbind(0,diff)
-
-## Set names for diffs
-names(diff) <- foreach(i = bandnames, 
-                       j = names(diff)) %do% {
-                         j <- paste0("deriv_band_", i)
-                       }
-
-names(diff)
-
-
-### Pixelraster ################################################################
-
-## List cloud-free dates from biodiversity dataset
-lst.nocloud <- as.list(data.bio.raw$date_nocloud)
-
-## Import biodiversity dataset as SpatialPointsDataframe objects
-data.bio.sp <- data.bio.raw
-coordinates(data.bio.sp) <- c("lon", "lat")
-projection(data.bio.sp) <- "+init=epsg:4326"
-
-registerDoParallel(cl <- makeCluster(ncores))
-matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind", .packages = lib) %dopar% {
-  
-  tmp.date <- a
-  
-  ## Reformat date
-  tmp.date <- paste0(substr(tmp.date, 1, 4),
-                     substr(tmp.date, 6, 8),
-                     ".",
-                     substr(tmp.date, 10, 13)) 
-  
-  
-  ## List calculated tifs
-  lst.tif.calc.1km <- list.files(path.tif.calc, pattern = paste("1KM", tmp.date, sep = ".*"), full.names = TRUE)
-  lst.tif.calc.hkm <- list.files(path.tif.calc, pattern = paste("HKM", tmp.date, sep = ".*"), full.names = TRUE)
-  lst.tif.calc.qkm <- list.files(path.tif.calc, pattern = paste("QKM", tmp.date, sep = ".*"), full.names = TRUE)
-  
-  ## Import listed tifs as raster images
-  lst.rst.1km <- lapply(lst.tif.calc.1km, raster)
-  lst.rst.hkm <- lapply(lst.tif.calc.hkm, raster)
-  lst.rst.qkm <- lapply(lst.tif.calc.qkm, raster)
-  
-  
-  ## Get pixel matrix indices for 1km resolution
-  cells.1km <- cellFromXY(lst.rst.1km[[1]], data.bio.sp[b, ])
-  cells.adj.1km <- adjacent(lst.rst.1km[[1]], cells.1km, 
-                            directions = 8, 
-                            pairs = FALSE, 
-                            sorted = TRUE)
-  
-  ## Get pixel matrix indices for 500m resolution
-  cells.hkm <- cellFromXY(lst.rst.hkm[[1]], data.bio.sp[b, ])
-  cells.adj.hkm <- adjacent(lst.rst.hkm[[1]], cells.hkm, 
-                            directions = matrix(c(1,1,1,1,1,
-                                                  1,1,1,1,1,
-                                                  1,1,0,1,1,
-                                                  1,1,1,1,1,
-                                                  1,1,1,1,1), 
-                                                ncol = 5), 
-                            pairs = FALSE, 
-                            sorted = TRUE)
-  
-  ## Get pixel matrix indices for 250m resolution
-  cells.qkm <- cellFromXY(lst.rst.qkm[[1]], data.bio.sp[b, ])
-  cells.adj.qkm <- adjacent(lst.rst.qkm[[1]], cells.qkm, 
-                            directions = matrix(c(1,1,1,1,1,1,1,1,1,1,1,
-                                                  1,1,1,1,1,1,1,1,1,1,1,
-                                                  1,1,1,1,1,1,1,1,1,1,1,
-                                                  1,1,1,1,1,1,1,1,1,1,1,
-                                                  1,1,1,1,1,1,1,1,1,1,1,
-                                                  1,1,1,1,1,0,1,1,1,1,1,
-                                                  1,1,1,1,1,1,1,1,1,1,1,
-                                                  1,1,1,1,1,1,1,1,1,1,1,
-                                                  1,1,1,1,1,1,1,1,1,1,1,
-                                                  1,1,1,1,1,1,1,1,1,1,1,
-                                                  1,1,1,1,1,1,1,1,1,1,1), 
-                                                ncol = 11),  
-                            pairs = FALSE, 
-                            sorted = TRUE)
-  
-  
-  ## Calculate matrix standard deviation for each 1km raster image
-  pxl.rst.1km <- foreach(r = seq(lst.rst.1km), .combine = "cbind") %do% {
-    cells.1km.sd <- sd(lst.rst.1km[[r]][cells.adj.1km], na.rm = TRUE)
-    return(cells.1km.sd)
-  }
-  
-  ## Calculate matrix standard deviation for each 500m raster image
-  pxl.rst.hkm <- foreach(r = seq(lst.rst.hkm), .combine = "cbind") %do% {
-    cells.hkm.sd <- sd(lst.rst.hkm[[r]][cells.adj.hkm], na.rm = TRUE)
-    return(cells.hkm.sd)
-  }
-  
-  ## Calculate matrix standard deviation for each 250m raster image
-  pxl.rst.qkm <- foreach(r = seq(lst.rst.qkm), .combine = "cbind") %do% {
-    cells.qkm.sd <- sd(lst.rst.qkm[[r]][cells.adj.qkm], na.rm = TRUE)
-    return(cells.qkm.sd)
-  }
-  
-  ## Combine calculated standard deviation in a single row
-  row.sd <- cbind(pxl.rst.qkm, pxl.rst.hkm, pxl.rst.1km)
-  return(row.sd)
-}
-stopCluster(cl)
-
-## Write calculated values to new dataframe
-matrix.sd <- data.frame(matrix.sd)
-
-## Set names of matrix.sd dataframe
-names(matrix.sd) <- foreach(i = bandnames, j = names(matrix.sd)) %do% {
-  j <- paste0("sd_band_", i)
-}
-
-names(matrix.sd)
+# ### Calculate first derivate (diff) ############################################
+# 
+# ## Calculate diff
+# diff <- as.data.frame(rowDiffs(as.matrix(greyvalues)))
+# diff <- cbind(0,diff)
+# 
+# ## Set names for diffs
+# names(diff) <- foreach(i = bandnames, 
+#                        j = names(diff)) %do% {
+#                          j <- paste0("deriv_band_", i)
+#                        }
+# 
+# names(diff)
+# 
+# 
+# ### Pixelraster ################################################################
+# 
+# ## List cloud-free dates from biodiversity dataset
+# lst.nocloud <- as.list(data.bio.raw$date_nocloud)
+# 
+# ## Import biodiversity dataset as SpatialPointsDataframe objects
+# data.bio.sp <- data.bio.raw
+# coordinates(data.bio.sp) <- c("lon", "lat")
+# projection(data.bio.sp) <- "+init=epsg:4326"
+# 
+# registerDoParallel(cl <- makeCluster(ncores))
+# matrix.sd <- foreach(a = lst.nocloud, b = seq(nrow(data.bio.sp)), .combine = "rbind", .packages = lib) %dopar% {
+#   
+#   tmp.date <- a
+#   
+#   ## Reformat date
+#   tmp.date <- paste0(substr(tmp.date, 1, 4),
+#                      substr(tmp.date, 6, 8),
+#                      ".",
+#                      substr(tmp.date, 10, 13)) 
+#   
+#   
+#   ## List calculated tifs
+#   lst.tif.calc.1km <- list.files(path.tif.calc, pattern = paste("1KM", tmp.date, sep = ".*"), full.names = TRUE)
+#   lst.tif.calc.hkm <- list.files(path.tif.calc, pattern = paste("HKM", tmp.date, sep = ".*"), full.names = TRUE)
+#   lst.tif.calc.qkm <- list.files(path.tif.calc, pattern = paste("QKM", tmp.date, sep = ".*"), full.names = TRUE)
+#   
+#   ## Import listed tifs as raster images
+#   lst.rst.1km <- lapply(lst.tif.calc.1km, raster)
+#   lst.rst.hkm <- lapply(lst.tif.calc.hkm, raster)
+#   lst.rst.qkm <- lapply(lst.tif.calc.qkm, raster)
+#   
+#   
+#   ## Get pixel matrix indices for 1km resolution
+#   cells.1km <- cellFromXY(lst.rst.1km[[1]], data.bio.sp[b, ])
+#   cells.adj.1km <- adjacent(lst.rst.1km[[1]], cells.1km, 
+#                             directions = 8, 
+#                             pairs = FALSE, 
+#                             sorted = TRUE)
+#   
+#   ## Get pixel matrix indices for 500m resolution
+#   cells.hkm <- cellFromXY(lst.rst.hkm[[1]], data.bio.sp[b, ])
+#   cells.adj.hkm <- adjacent(lst.rst.hkm[[1]], cells.hkm, 
+#                             directions = matrix(c(1,1,1,1,1,
+#                                                   1,1,1,1,1,
+#                                                   1,1,0,1,1,
+#                                                   1,1,1,1,1,
+#                                                   1,1,1,1,1), 
+#                                                 ncol = 5), 
+#                             pairs = FALSE, 
+#                             sorted = TRUE)
+#   
+#   ## Get pixel matrix indices for 250m resolution
+#   cells.qkm <- cellFromXY(lst.rst.qkm[[1]], data.bio.sp[b, ])
+#   cells.adj.qkm <- adjacent(lst.rst.qkm[[1]], cells.qkm, 
+#                             directions = matrix(c(1,1,1,1,1,1,1,1,1,1,1,
+#                                                   1,1,1,1,1,1,1,1,1,1,1,
+#                                                   1,1,1,1,1,1,1,1,1,1,1,
+#                                                   1,1,1,1,1,1,1,1,1,1,1,
+#                                                   1,1,1,1,1,1,1,1,1,1,1,
+#                                                   1,1,1,1,1,0,1,1,1,1,1,
+#                                                   1,1,1,1,1,1,1,1,1,1,1,
+#                                                   1,1,1,1,1,1,1,1,1,1,1,
+#                                                   1,1,1,1,1,1,1,1,1,1,1,
+#                                                   1,1,1,1,1,1,1,1,1,1,1,
+#                                                   1,1,1,1,1,1,1,1,1,1,1), 
+#                                                 ncol = 11),  
+#                             pairs = FALSE, 
+#                             sorted = TRUE)
+#   
+#   
+#   ## Calculate matrix standard deviation for each 1km raster image
+#   pxl.rst.1km <- foreach(r = seq(lst.rst.1km), .combine = "cbind") %do% {
+#     cells.1km.sd <- sd(lst.rst.1km[[r]][cells.adj.1km], na.rm = TRUE)
+#     return(cells.1km.sd)
+#   }
+#   
+#   ## Calculate matrix standard deviation for each 500m raster image
+#   pxl.rst.hkm <- foreach(r = seq(lst.rst.hkm), .combine = "cbind") %do% {
+#     cells.hkm.sd <- sd(lst.rst.hkm[[r]][cells.adj.hkm], na.rm = TRUE)
+#     return(cells.hkm.sd)
+#   }
+#   
+#   ## Calculate matrix standard deviation for each 250m raster image
+#   pxl.rst.qkm <- foreach(r = seq(lst.rst.qkm), .combine = "cbind") %do% {
+#     cells.qkm.sd <- sd(lst.rst.qkm[[r]][cells.adj.qkm], na.rm = TRUE)
+#     return(cells.qkm.sd)
+#   }
+#   
+#   ## Combine calculated standard deviation in a single row
+#   row.sd <- cbind(pxl.rst.qkm, pxl.rst.hkm, pxl.rst.1km)
+#   return(row.sd)
+# }
+# stopCluster(cl)
+# 
+# ## Write calculated values to new dataframe
+# matrix.sd <- data.frame(matrix.sd)
+# 
+# ## Set names of matrix.sd dataframe
+# names(matrix.sd) <- foreach(i = bandnames, j = names(matrix.sd)) %do% {
+#   j <- paste0("sd_band_", i)
+# }
+# 
+# names(matrix.sd)
 
 
 ### Combine dataframes #########################################################
 
-greyvalues.diff.sd <- data.frame(cbind(data.bio.raw, 
-                                       greyvalues, 
-                                       diff, 
-                                       matrix.sd), 
+df.greyvalues <- data.frame(cbind(data.bio.raw, 
+                                       greyvalues), 
                                  stringsAsFactors = FALSE)
 
-write.table(greyvalues.diff.sd, 
+write.table(df.greyvalues, 
             file = path.biodiversity.csv.out,
             dec = ",",
             quote = FALSE,

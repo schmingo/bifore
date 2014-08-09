@@ -65,7 +65,7 @@ setwd("D:/")
 ncores <- detectCores()-1
 
 ## Set number of Random Forest runs
-rf.runs <- 2
+rf.runs <- 100
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
 train.part <- .8  # train.part > 0 && < 1
@@ -86,10 +86,10 @@ path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
 path.testing <- paste0(path.csv, "testing_100_test20/")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
-file.out.rf.output <- paste0(path.testing, "lvl_0400_rf_all_20test.csv")
-file.out.validation <- paste0(path.testing, "lvl_0400_validation_20test.csv")
-file.out.prediction <- paste0(path.testing, "lvl_0400_prediction_20test.csv")
-file.out.importance <- paste0(path.testing, "lvl_0400_importance_20test.csv")
+file.out.rf.output <- paste0(path.testing, "lvl0400_rf_all_20test.csv")
+file.out.validation <- paste0(path.testing, "lvl0400_validation_20test.csv")
+file.out.prediction <- paste0(path.testing, "lvl0400_prediction_20test.csv")
+file.out.importance <- paste0(path.testing, "lvl0400_importance_20test.csv")
 file.out.validation.final <- paste0(path.testing, "lvl0400_final_validation_20test.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
@@ -177,7 +177,6 @@ matrix.prevalence <- ifelse(matrix.prevalence >= 1,"yes","no")
 
 ## Recombine dataframes
 data.cut <- cbind(data.cut.basics,
-                  # data.cut.specno,
                   as.data.frame(matrix.prevalence),
                   data.cut.greyval)
 
@@ -616,40 +615,6 @@ df.rf.validation_final$Kappa <- foreach(i = seq(1:nrow(df.rf.validation_final)),
                                             (1 - df.rf.validation_final[i, "expectedAccuracy"])
                                           return(kappa.tmp)
                                         }
-
-# ## Probability of detection (POD)
-# df.rf.validation_final$POD <- foreach(i = seq(1:nrow(df.rf.validation_final)), 
-#                                 .combine = "rbind") %do% {
-#                                   POD.tmp <- (df.rf.validation_final[i,"Oyes_Pyes"]) / 
-#                                     (df.rf.validation_final[i,"sum_Oyes"])
-#                                   return(POD.tmp)
-#                                 }
-# 
-# ## False alarm ratio (FAR)
-# df.rf.validation_final$FAR <- foreach(i = seq(1:nrow(df.rf.validation_final)), 
-#                                 .combine = "rbind") %do% {
-#                                   FAR.tmp <- (df.rf.validation_final[i,"Ono_Pyes"]) / 
-#                                     (df.rf.validation_final[i,"sum_Pyes"])
-#                                   return(FAR.tmp)
-#                                 }
-# 
-# ## Critical success index (CSI)
-# df.rf.validation_final$CSI <- foreach(i = seq(1:nrow(df.rf.validation_final)), 
-#                                 .combine = "rbind") %do% {
-#                                   CSI.tmp <- (df.rf.validation_final[i,"Oyes_Pyes"]) / 
-#                                     (df.rf.validation_final[i,"Oyes_Pyes"] + 
-#                                        df.rf.validation_final[i,"Oyes_Pno"] + 
-#                                        df.rf.validation_final[i,"Ono_Pyes"])
-#                                   return(CSI.tmp)
-#                                 }
-# 
-# ## Probability of false detection (POFD)
-# df.rf.validation_final$POFD <- foreach(i = seq(1:nrow(df.rf.validation_final)), 
-#                                  .combine = "rbind") %do% {
-#                                    POFD.tmp <- (df.rf.validation_final[i,"Ono_Pyes"]) / 
-#                                      (df.rf.validation_final[i,"sum_Ono"])
-#                                    return(POFD.tmp)
-#                                  }
 
 
 ## Variable Importance (Mode)

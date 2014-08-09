@@ -83,7 +83,7 @@ starttime <- Sys.time()
 ### Set filepaths ##############################################################
 
 path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
-path.testing <- paste0(path.csv, "testing_100_test20/")
+path.testing <- paste0(path.csv, "")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
 file.out.rf.output <- paste0(path.testing, "lvl0400_rf_all_20test.csv")

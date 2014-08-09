@@ -38,16 +38,16 @@ lib <- c("ROCR")
 lapply(lib, function(...) library(..., character.only = TRUE))
 
 ## Set working directory
-# setwd("/home/schmingo/Daten/")
-setwd("D:/")
+setwd("/home/schmingo/Daten/")
+# setwd("D:/")
 
 
 ### Set filepaths ##############################################################
 
 path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
-path.testing <- paste0(path.csv, "testing_100_test20_2014-07-28/")
+path.testing <- paste0(path.csv, "")
 path.image <- paste0("Dropbox/Code/bifore/src/images/")
-file.in.prediction <- paste0(path.testing,"lvl_0400_prediction_20test.csv")
+file.in.prediction <- paste0(path.testing,"lvl0400_prediction_20test.csv")
 
 
 
@@ -62,33 +62,31 @@ data.raw <- read.csv2(file.in.prediction,
 ### Subset & reconstruct prediction data #######################################
 
 ## Subset prediction probabilities
-df.predict.prob <- data.raw[grep("prob", data.raw$parameters), ]
+df.predict.prob <- data.raw[grep("prob", data.raw$parameters), ]  # prediction probabilities (test data)
 
 ## Subset prediction classes
-df.predict.class <- data.raw[grep("class", data.raw$parameters), ] ## should be observed classes from test dataset!! not predicted classes....
+df.observed.class <- data.raw[grep("observed", data.raw$parameters), ]  # observed classes (test data)
 
 ## Reconstruct prediciton class factor levels
-# for(i in 3:ncol(df.predict.class)) {
-#   df.predict.class[, i] <- as.factor(ifelse(df.predict.class[, i] >= 1,
-#                                             "yes","no"))
-#   
-#   df.predict.class[, i] <- factor(df.predict.class[, i], 
-#                                   levels = c("yes", "no"))
-#   
-# }
-
-
+for(i in 3:ncol(df.observed.class)) {
+  df.observed.class[, i] <- as.factor(ifelse(df.observed.class[, i] >= 1,
+                                             "yes","no"))
+  
+  df.observed.class[, i] <- factor(df.observed.class[, i], 
+                                   levels = c("yes", "no"))
+  
+}
 
 
 ### ROCR predcition ############################################################
 
 pred <- prediction(predictions = df.predict.prob[, 3],
-                   labels = df.predict.class[, 3])
+                   labels = df.observed.class[, 3])
 
 
 ### ROCR performance ###########################################################
 
-perf <- performance(pred,"tpr","fpr") ## <-!!!!!
+perf <- performance(pred,"tpr","fpr") ## most important plot
 # perf <- performance(pred, "prec", "rec")
 # perf <- performance(pred, "tpr")  # True positive rate. P(Yhat = + | Y = +). Estimated as: TP/P.
 # perf <- performance(pred, "tnr")  # True negative rate. P(Yhat = - | Y = -).
@@ -111,13 +109,13 @@ unlist(perf)@y.values
 
 
 ## Define output image | open image port
-# png(paste0(path.image, "lvl0400_ROC.png"), 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png(paste0(path.image, "lvl0400_ROC_tpr-fpr.png"), 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 # 
 plot(perf)
 # 
 # ## Close image port
-# graphics.off()
+graphics.off()

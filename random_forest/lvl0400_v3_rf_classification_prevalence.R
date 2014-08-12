@@ -12,14 +12,15 @@ cat("\014")
 ##  4. Extract confusion matrix & variable importance for all 100 samples and
 ##     average values
 ##  5. Model validation:
+##     - Confusion Matrix
+##     - Classification Errors
 ##     - Accuracy
 ##     - Kappa
-##     - POFD (Probability of false detection)
-##     - POD (Probability of detection)
-##     - FAR (False alarm ratio)
-##     - CSI (Critical success index)
+##     - Sensitivity
+##     - Specificity
+##     - DetectionRate
 ##  
-##  Version: 2014-08-08
+##  Version: 2014-08-12
 ##  
 ################################################################################
 ##
@@ -471,7 +472,7 @@ for (i in seq(1:rf.runs)) {
   
   stopCluster(cl)
   
-  df.rf.allspecies$rf_run <- i
+  df.rf.allspecies$RandomForest_run <- i
   
   ## Write rownames to single column
   df.rf.allspecies$parameters <- rownames(df.rf.allspecies)

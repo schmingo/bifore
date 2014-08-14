@@ -38,14 +38,14 @@ lib <- c("ROCR")
 lapply(lib, function(...) library(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Daten/")
-# setwd("D:/")
+# setwd("/home/schmingo/Daten/")
+setwd("D:/")
 
 
 ### Set filepaths ##############################################################
 
 path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
-path.testing <- paste0(path.csv, "")
+path.testing <- paste0(path.csv, "tst_2014-08-12_1/")
 path.image <- paste0("Dropbox/Code/bifore/src/images/")
 file.in.prediction <- paste0(path.testing,"lvl0400_prediction_20test.csv")
 
@@ -86,36 +86,25 @@ pred <- prediction(predictions = df.predict.prob[, 3],
 
 ### ROCR performance ###########################################################
 
-perf <- performance(pred,"tpr","fpr") ## most important plot
-# perf <- performance(pred, "prec", "rec")
-# perf <- performance(pred, "tpr")  # True positive rate. P(Yhat = + | Y = +). Estimated as: TP/P.
-# perf <- performance(pred, "tnr")  # True negative rate. P(Yhat = - | Y = -).
-# perf <- performance(pred, "fpr")  # False positive rate. P(Yhat = + | Y = -). Estimated as: FP/N.
-# perf <- performance(pred, "fnr")  # False negative rate. P(Yhat = - | Y = +). Estimated as: FN/P.
-# perf <- performance(pred, "acc")  # Accuracy. P(Yhat = Y). Estimated as: (TP+TN)/(P+N).
-# perf <- performance(pred, "prec") # Precision. P(Y = + | Yhat = +). Estimated as: TP/(TP+FP).
-# perf <- performance(pred, "err")  # Error rate. P(Yhat != Y). Estimated as: (FP+FN)/(P+N).
-# perf <- performance(pred, "ppv")  # Positive predictive value. P(Y = + | Yhat = +). Estimated as: TP/(TP+FP).
-# perf <- performance(pred, "phi")  # Phi correlation coefficient. (TP*TN - FP*FN)/(sqrt((TP+FN)*(TN+FP)*(TP+FP)*(TN+FN))). Yields a number between -1 and 1, with 1 indicating a perfect prediction, 0 indicating a random prediction. Values below 0 indicate a worse than random prediction.
-# perf <- performance(pred, "cal")  # Calibration error. The calibration error is the absolute difference between predicted confidence and actual reliability. This error is estimated at all cutoffs by sliding a window across the range of possible cutoffs. The default window size of 100 can be adjusted by passing the optional parameter window.size=200 to performance. E.g., if for several positive samples the output of the classifier is around 0.75, you might expect from a well-calibrated classifier that the fraction of them which is correctly predicted as positive is also around 0.75. In a well-calibrated classifier, the probabilistic confidence estimates are realistic. Only for use with probabilistic output (i.e. scores between 0 and 1).
-# perf <- performance(pred, "auc")  # Area under the ROC curve. This is equal to the value of the Wilcoxon-Mann-Whitney test statistic and also the probability that the classifier will score are randomly drawn positive sample higher than a randomly drawn negative sample. Since the output of auc is cutoff-independent, this measure cannot be combined with other measures into a parametric curve. The partial area under the ROC curve up to a given false positive rate can be calculated by passing the optional parameter fpr.stop=0.5 (or any other value between 0 and 1) to performance.
+perf.tpr.fnr <- performance(pred,"tpr","fpr")  # TruePositiveRate ~ FalsePositiveRate
+
+## Extract Area under curve value
+perf_auc <- performance(pred, "auc")  # Area under curve
+perf_auc@y.values[[1]]
 
 
-# perf <- performance(pred, "tnr")
-# perf <- performance(pred, "auc")
-
-
-unlist(perf)@y.values
-
+### Plot #######################################################################
 
 ## Define output image | open image port
-png(paste0(path.image, "lvl0400_ROC_tpr-fpr.png"), 
-    width = 1024 * 6, 
-    height = 748 * 6, 
-    units = "px", 
-    res = 600)
-# 
-plot(perf)
-# 
-# ## Close image port
-graphics.off()
+# png(paste0(path.image, "lvl0400_ROC_tpr-fpr.png"), 
+#     width = 1024 * 6, 
+#     height = 748 * 6, 
+#     units = "px", 
+#     res = 600)
+
+plot(perf.tpr.fnr)
+lines(c(0,1),c(0,1), col = "grey")
+legend("bottomright", lwd = 1, legend = c(round(perf_auc@y.values[[1]], 2)), bty = "n")
+
+## Close image port
+# graphics.off()

@@ -69,7 +69,7 @@ ncores <- detectCores()-1
 rf.runs <- 100
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
-train.part <- .8  # train.part > 0 && < 1
+train.part <- .75  # train.part > 0 && < 1
 
 ## Set Random Forest tuning parameter "mtry" and "ntree"
 # mtrys <- c(1,2,3)
@@ -300,7 +300,7 @@ for (i in seq(1:rf.runs)) {
                           method = "rf",
                           # trControl = trainControl(method = "cv"),  # Causes warning message
                           tuneGrid = mtrys,
-                          metric = "Kappa",
+                          metric = "Kappa", # "Kappa" or "Accuracy
                           ntree = trees)
     
     

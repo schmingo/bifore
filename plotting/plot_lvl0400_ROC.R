@@ -80,8 +80,8 @@ for(i in 3:ncol(df.observed.class)) {
 
 ### ROCR predcition ############################################################
 
-pred <- prediction(predictions = df.predict.prob[, 3],
-                   labels = df.observed.class[, 3])
+pred <- prediction(predictions = df.predict.prob[, 28],
+                   labels = df.observed.class[, 28])
 
 
 ### ROCR performance ###########################################################

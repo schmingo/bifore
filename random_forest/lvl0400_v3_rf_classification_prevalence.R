@@ -69,7 +69,7 @@ ncores <- detectCores()-1
 rf.runs <- 100
 
 ## Set size of training data (percentage) eg.: .75 for 75 %
-train.part <- .75  # train.part > 0 && < 1
+train.part <- .70  # train.part > 0 && < 1
 
 ## Set Random Forest tuning parameter "mtry" and "ntree"
 # mtrys <- c(1,2,3)
@@ -84,14 +84,14 @@ starttime <- Sys.time()
 ### Set filepaths ##############################################################
 
 path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
-path.testing <- paste0(path.csv, "tst_2014-08-15_25test")
+path.testing <- paste0(path.csv, "tst_2014-08-15_30test/")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
-file.out.rf.output <- paste0(path.testing, "lvl0400_rf_all_25test.csv")
-file.out.validation <- paste0(path.testing, "lvl0400_validation_25test.csv")
-file.out.prediction <- paste0(path.testing, "lvl0400_prediction_25test.csv")
+file.out.rf.output <- paste0(path.testing, "lvl0400_rf_all_30test.csv")
+file.out.validation <- paste0(path.testing, "lvl0400_validation_30test.csv")
+file.out.prediction <- paste0(path.testing, "lvl0400_prediction_30test.csv")
 file.out.importance <- paste0(path.testing, "lvl0400_importance_25test.csv")
-file.out.validation.final <- paste0(path.testing, "lvl0400_final_validation_25test.csv")
+file.out.validation.final <- paste0(path.testing, "lvl0400_final_validation_30test.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
 

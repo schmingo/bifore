@@ -45,8 +45,8 @@ setwd("D:/")
 ### Set filepaths ##############################################################
 
 path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
-path.testing <- paste0(path.csv, "")
-file.in.validation <- paste0(path.testing,"lvl0400_validation_20test.csv")
+path.testing <- paste0(path.csv, "tst_2014-08-15_30test/")
+file.in.validation <- paste0(path.testing,"lvl0400_validation_30test.csv")
 
 file.out.accuracy <- paste0(path.testing, "lvl0410_accuracy.csv")
 file.out.kappa <- paste0(path.testing, "lvl0410_kappa.csv")

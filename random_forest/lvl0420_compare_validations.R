@@ -1,0 +1,167 @@
+cat("\014")
+################################################################################
+##  
+##  Compares validation parameter from multiple RandomForest outcomes with 
+##  different setup parameters
+##    eg.: Different training data set sizes
+##  
+##  Version: 2014-08-18
+##  
+################################################################################
+##
+##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##
+##
+##  This file is part of BiFoRe.
+##  
+##  BiFoRe is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##  
+##  BiFoRe is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##  
+##  You should have received a copy of the GNU General Public License
+##  along with BiFoRe.  If not, see <http://www.gnu.org/licenses/>.
+##  
+################################################################################
+
+## Clear workspace
+rm(list = ls(all = TRUE))
+
+## Required libraries
+lib <- c("reshape")
+
+lapply(lib, function(...) library(..., character.only = TRUE))
+
+## Set working directory
+# setwd("/home/schmingo/Daten/")
+setwd("D:/")
+
+
+### Set filepaths ##############################################################
+
+path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
+
+file.out.comparison <- paste0(path.csv, "lvl0420_compare_validations.csv")
+
+
+### Import data ################################################################
+
+## List files
+files <- list.files(pattern = "kappa.csv",
+                    recursive = TRUE,
+                    full.names = FALSE,
+                    include.dirs = FALSE)
+
+files  # data_<year>-<month>-<day>_<size of training data set(%)>test-<cross validation>
+
+## Initialize new data frame
+df.Parameter <- data.frame()
+
+## Import and rename each data frame
+for(i in 1:length(files)) {
+  ## Import csv
+  data.raw <- read.csv2(files[i],
+                        dec = ",",
+                        header = TRUE,
+                        stringsAsFactors = FALSE)
+  
+  ## Set/fetch temporary name and rowname
+  tmp.name <- paste0("df", i)
+  tmp.rowname <- strsplit(files[i], split = "_")
+  
+  ## Calculate variance for each species
+  tmp.variance <- data.frame()
+  for(v in 3:ncol(data.raw)) {
+    tmp.variance <- rbind(tmp.variance, diff(range(data.raw[,v])))
+    tmp.variance <- round(tmp.variance, digits = 4)
+  }
+  tmp.variance <- data.frame(t(tmp.variance))
+  names(tmp.variance) <- names(data.raw[3:ncol(data.raw)])
+  rownames(tmp.variance)[1] <- paste(tmp.rowname[[1]][2], 
+                                      tmp.rowname[[1]][3], 
+                                      "variance", sep = "_")
+  
+  
+  ## Calculate mean parameter for each species 
+  tmp.mean <- colMeans(data.raw[3:ncol(data.raw)])
+  tmp.mean <- round(tmp.mean, digits = 4)
+  tmp.mean <- data.frame(t(tmp.mean))
+  names(tmp.mean) <- names(data.raw[3:ncol(data.raw)])
+  rownames(tmp.mean)[1] <- paste(tmp.rowname[[1]][2], 
+                                  tmp.rowname[[1]][3], 
+                                  "mean", sep = "_")
+  
+  
+  ## Combine mean parameter and variance in a single data frame
+  df.Parameter <- rbind(df.Parameter, tmp.mean, tmp.variance)
+  
+  
+  ## Assign new data frame name
+  assign(tmp.name, data.frame(data.raw))
+  
+  
+  ## Remove old data frame
+  remove(data.raw, tmp.mean, tmp.variance)
+  
+}
+
+### Prepare comparison table ###################################################
+
+## Subset comparison table
+df.mean <- df.Parameter[grep("_mean", rownames(df.Parameter)), ]
+df.variance <- df.Parameter[grep("_variance", rownames(df.Parameter)), ]
+
+
+## Get best RandomForest validation name in a single row  (maximal mean)
+df.mean.max <- data.frame(t(apply(df.mean[1:ncol(df.mean)], 
+                                  2, 
+                                  which.max)))
+rownames(df.mean.max)[1] <- "highest_mean"
+
+for(y in 1:ncol(df.mean.max)) {
+  df.mean.max[, y] <- rownames(df.mean)[df.mean.max[, y]]
+}
+
+
+## Get best RandomForest validation name in a single row  (minimum variance)
+df.variance.min <- data.frame(t(apply(df.variance[1:ncol(df.variance)], 
+                                      2, 
+                                      which.min)))
+rownames(df.variance.min)[1] <- "lowest_variance"
+
+for(k in 1:ncol(df.variance.min)) {
+  df.variance.min[, k] <- rownames(df.variance)[df.variance.min[, k]]
+}
+
+
+
+
+### Combine mean and variance tables ###########################################
+
+df.comparison <- rbind(df.mean, df.variance)
+
+summary(df.comparison)
+
+df.comparison2 <- rbind.data.frame(df.comparison, 
+                             df.mean.max, 
+                             df.variance.min)
+
+df.comparison2$validation <- rownames(df.comparison2)
+df.comparison2 <- data.frame(df.comparison2[ncol(df.comparison2)], 
+                             df.comparison2[1:(ncol(df.comparison2)-1)])
+
+
+### Write csv ##################################################################
+
+write.table(df.comparison2,
+            file = file.out.comparison,
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";",
+            dec = ",")

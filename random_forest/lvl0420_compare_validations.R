@@ -33,7 +33,7 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("reshape")
+lib <- c("reshape", "ggplot2")
 
 lapply(lib, function(...) library(..., character.only = TRUE))
 
@@ -45,8 +45,12 @@ setwd("D:/")
 ### Set filepaths ##############################################################
 
 path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
+path.img <- "Dropbox/Code/bifore/src/images/"
 
 file.out.comparison <- paste0(path.csv, "lvl0420_compare_validations.csv")
+
+image.out.mean.kappa <- paste0(path.img, "lvl0420_highest-mean-Kappa.png")
+image.out.low.variance <- paste0(path.img, "lvl0420_lowest-variance-Kappa.png")
 
 
 ### Import data ################################################################
@@ -165,3 +169,54 @@ write.table(df.comparison2,
             row.names = FALSE,
             sep = ";",
             dec = ",")
+
+
+### Create histograms ##########################################################
+
+## Prepare data for histogram
+df.mean.max.2 <- data.frame(t(df.mean.max))
+df.variance.min.2 <- data.frame(t(df.variance.min))
+
+
+### Histogram for highest mean kappa ###########################################
+hist.mean.max <- ggplot(df.mean.max.2, aes(x = highest_mean)) +
+  geom_histogram(binwidth = .5) +
+  xlab("RandomForest run") +
+  ggtitle("Highest Mean Kappa") +
+  theme(plot.title = element_text(lineheight=.8, size = 20),
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+
+hist.mean.max
+
+## Define output image | open image port
+png(image.out.mean.kappa, 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
+
+hist.mean.max
+
+graphics.off()
+
+
+### Histogram for lowest variance in kappa #####################################
+hist.variance.min <- ggplot(df.variance.min.2, aes(x = lowest_variance)) +
+  geom_histogram(binwidth = .5) +
+  xlab("RandomForest run") +
+  ggtitle("Lowest variance in Kappa") +
+  theme(plot.title = element_text(lineheight=.8, size = 20),
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+
+hist.variance.min
+
+## Define output image | open image port
+png(image.out.low.variance, 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
+
+hist.variance.min
+
+graphics.off()

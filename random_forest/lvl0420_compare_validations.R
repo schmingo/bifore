@@ -33,7 +33,7 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c("reshape", "ggplot2")
+lib <- c("reshape", "ggplot2", "reshape2")
 
 lapply(lib, function(...) library(..., character.only = TRUE))
 
@@ -49,8 +49,17 @@ path.img <- "Dropbox/Code/bifore/src/images/"
 
 file.out.comparison <- paste0(path.csv, "lvl0420_compare_validations.csv")
 
-image.out.mean.kappa <- paste0(path.img, "lvl0420_highest-mean-Kappa.png")
-image.out.low.variance <- paste0(path.img, "lvl0420_lowest-variance-Kappa.png")
+image.out.hist.mean.kappa <- paste0(path.img, 
+                                    "lvl0420_histogram-mean-Kappa.png")
+
+image.out.hist.low.variance <- paste0(path.img, 
+                                      "lvl0420_histogram-lowest-variance-Kappa.png")
+
+image.out.line.mean.kappa <- paste0(path.img, 
+                                    "lvl0420_lineplot-mean-Kappa.png")
+
+image.out.line.variance.kappa <- paste0(path.img, 
+                                        "lvl0420_lineplot-variance-Kappa.png")
 
 
 ### Import data ################################################################
@@ -87,8 +96,8 @@ for(i in 1:length(files)) {
   tmp.variance <- data.frame(t(tmp.variance))
   names(tmp.variance) <- names(data.raw[3:ncol(data.raw)])
   rownames(tmp.variance)[1] <- paste(tmp.rowname[[1]][2], 
-                                      tmp.rowname[[1]][3], 
-                                      "variance", sep = "_")
+                                     tmp.rowname[[1]][3], 
+                                     "variance", sep = "_")
   
   
   ## Calculate mean parameter for each species 
@@ -97,8 +106,8 @@ for(i in 1:length(files)) {
   tmp.mean <- data.frame(t(tmp.mean))
   names(tmp.mean) <- names(data.raw[3:ncol(data.raw)])
   rownames(tmp.mean)[1] <- paste(tmp.rowname[[1]][2], 
-                                  tmp.rowname[[1]][3], 
-                                  "mean", sep = "_")
+                                 tmp.rowname[[1]][3], 
+                                 "mean", sep = "_")
   
   
   ## Combine mean parameter and variance in a single data frame
@@ -152,8 +161,8 @@ df.comparison <- rbind(df.mean, df.variance)
 summary(df.comparison)
 
 df.comparison2 <- rbind.data.frame(df.comparison, 
-                             df.mean.max, 
-                             df.variance.min)
+                                   df.mean.max, 
+                                   df.variance.min)
 
 df.comparison2$validation <- rownames(df.comparison2)
 df.comparison2 <- data.frame(df.comparison2[ncol(df.comparison2)], 
@@ -179,44 +188,125 @@ df.variance.min.2 <- data.frame(t(df.variance.min))
 
 
 ### Histogram for highest mean kappa ###########################################
-hist.mean.max <- ggplot(df.mean.max.2, aes(x = highest_mean)) +
+plot.hist.mean.max <- ggplot(df.mean.max.2, 
+                             aes(x = highest_mean)) +
   geom_histogram(binwidth = .5) +
   xlab("RandomForest run") +
-  ggtitle("Highest Mean Kappa") +
-  theme(plot.title = element_text(lineheight=.8, size = 20),
-        axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+  ggtitle("lvl420 compare validations - Highest mean Kappa") +
+  theme(plot.title = element_text(lineheight=.8, 
+                                  size = 20),
+        axis.text.x = element_text(angle = 90, 
+                                   hjust = 1, 
+                                   vjust = .5))
 
-hist.mean.max
 
-## Define output image | open image port
-png(image.out.mean.kappa, 
+png(image.out.hist.mean.kappa, 
     width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 
     res = 600)
 
-hist.mean.max
+plot.hist.mean.max
 
 graphics.off()
 
 
 ### Histogram for lowest variance in kappa #####################################
-hist.variance.min <- ggplot(df.variance.min.2, aes(x = lowest_variance)) +
+plot.hist.variance.min <- ggplot(df.variance.min.2, 
+                                 aes(x = lowest_variance)) +
   geom_histogram(binwidth = .5) +
   xlab("RandomForest run") +
-  ggtitle("Lowest variance in Kappa") +
-  theme(plot.title = element_text(lineheight=.8, size = 20),
-        axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+  ggtitle("lvl420 compare validations - Lowest variance in Kappa") +
+  theme(plot.title = element_text(lineheight=.8, 
+                                  size = 20),
+        axis.text.x = element_text(angle = 90, 
+                                   hjust = 1, 
+                                   vjust = .5))
 
-hist.variance.min
 
-## Define output image | open image port
-png(image.out.low.variance, 
+png(image.out.hist.low.variance, 
     width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 
     res = 600)
 
-hist.variance.min
+plot.hist.variance.min
+
+graphics.off()
+
+### Lineplot for mean Kappa ####################################################
+
+df.mean3 <- data.frame(t(df.mean))
+names(df.mean3) <- rownames(df.mean)
+df.mean3$species <- rownames(df.mean3)
+
+## Melt dataframe
+df.mean.melt <- melt(df.mean3, id = "species")
+
+
+plot.line.mean <- ggplot(data = df.mean.melt,
+                         aes(x = species, 
+                             y = value, 
+                             colour = variable, 
+                             group = variable)) +
+  geom_line() +
+  xlab("species") +
+  ylab("Mean Kappa") +
+  ggtitle("lvl0420 compare validations - Mean Kappa") +
+  theme(axis.text.x = element_text(angle = 90, 
+                                   hjust = .5, 
+                                   vjust = 0, 
+                                   size = 11),
+        plot.title = element_text(lineheight = .8, 
+                                  size = 20),
+        legend.title=element_blank())
+
+
+png(image.out.line.mean.kappa, 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
+
+plot.line.mean
+
+graphics.off()
+
+
+### Lineplot for variance in Kappa #############################################
+
+df.variance3 <- data.frame(t(df.variance))
+names(df.variance3) <- rownames(df.variance)
+df.variance3$species <- rownames(df.variance3)
+
+## Melt dataframe
+df.variance.melt <- melt(df.variance3, id = "species")
+
+
+plot.line.variance <- ggplot(data = df.variance.melt,
+                             aes(x = species, 
+                                 y = value, 
+                                 colour = variable, 
+                                 group = variable)) +
+  geom_line() +
+  xlab("species") +
+  ylab("variance") +
+  ggtitle("lvl0420 compare validations - Variance in Kappa") +
+  theme(axis.text.x = element_text(angle = 90, 
+                                   hjust = .5, 
+                                   vjust = 0, 
+                                   size = 11),
+        plot.title = element_text(lineheight = .8, 
+                                  size = 20),
+        legend.title=element_blank())
+
+
+png(image.out.line.variance.kappa, 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
+
+plot.line.variance
 
 graphics.off()

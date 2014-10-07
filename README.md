@@ -1,6 +1,5 @@
 BiFoRe scripts
 =========
-> Diplomarbeit
 
 #### Fernerkundliche Vorhersage ausgewählter zoologischer Biodiversitätsparameter. 
 

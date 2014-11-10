@@ -103,9 +103,21 @@ plot.greyval.reflective <- ggplot(greyval.reflective.melt, aes(x = variable, y =
   xlab("MYD02 reflective bands") +
   ylab("value") +
   ggtitle("MYD02 greyvalues reflective bands") +
+  theme_bw() +
   theme(plot.title = element_text(lineheight=.8, size = 20),
-        axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5),
+        panel.grid = element_blank(),
+        strip.text = element_text(size = 6, lineheight = .01))
+
 plot.greyval.reflective 
+
+
+
+theme_bw() +
+  theme(axis.text = element_text(size = 8), 
+        panel.grid = element_blank(),
+        strip.text = element_text(size = 6, lineheight = .01))
+
 
 # graphics.off()
 

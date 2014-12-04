@@ -109,7 +109,7 @@ style.plot1 <- theme(legend.background = element_rect(colour = "black"),
 
 labeling.plot1 <- labs(title = "Orthoptera observations 2002 - 2012")
 
-kilimap + orthoptera.obs1 + colourscale + labeling.plot1 + style.plot1
+kilimap + orthoptera.obs1 + colourscale + labeling.plot1 + style.plot1 + theme_bw()
 
 
 ## Close image port

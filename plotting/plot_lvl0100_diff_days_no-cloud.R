@@ -67,21 +67,22 @@ names(data) <- "diff_days_no_cloud"
 ################################################################################
 
 ## Define output image | open image port
-# png("images/lvl0100_diff_days_no-cloud_all_spec.png", 
-#     width = 1024 * 6, 
-#     height = 748 * 6, 
-#     units = "px", 
-#     res = 600)
+png("images/lvl0100_diff_days_no-cloud_all_spec_paper.png", 
+    width = 1024 * 6, 
+    height = 748 * 6, 
+    units = "px", 
+    res = 600)
 
 hist <- ggplot(data, aes(x = diff_days_no_cloud)) +
   geom_histogram(binwidth = .5) +
   xlab("days") +
 #   ylab("count") +
-  ggtitle("Gap between observations and cloud-free days") +
-  theme(plot.title = element_text(lineheight=.8, size = 20))
+#   ggtitle("Gap between observations and cloud-free days") +
+  theme(plot.title = element_text(lineheight=.8, size = 20)) +
+  theme_bw()
 
 hist
 
 
 ## Close image port
-# graphics.off()
+graphics.off()

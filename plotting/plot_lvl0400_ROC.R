@@ -3,9 +3,9 @@ cat("\014")
 ##  
 ##  BiFoRe Scripts
 ##
-##  Construct a ROC curve with lvl0400 predictions
+##  ROC curve for single species lvl0400 predictions
 ##  
-##  Version: 2014-07-31
+##  Version: 2015-01-24
 ##  
 ################################################################################
 ##
@@ -45,9 +45,9 @@ setwd("D:/")
 ### Set filepaths ##############################################################
 
 path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
-path.testing <- paste0(path.csv, "tst_2014-08-12_1/")
+path.testing <- paste0(path.csv, "lvl0400_2015-01-24/")
 path.image <- paste0("Dropbox/Code/bifore/src/images/")
-file.in.prediction <- paste0(path.testing,"lvl0400_prediction_20test.csv")
+file.in.prediction <- paste0(path.testing,"lvl0400_prediction_25test.csv")
 
 
 
@@ -78,10 +78,16 @@ for(i in 3:ncol(df.observed.class)) {
 }
 
 
-### ROCR predcition ############################################################
+### Select species for ROC Curve ###############################################
 
-pred <- prediction(predictions = df.predict.prob[, 28],
-                   labels = df.observed.class[, 28])
+names(df.predict.prob)
+names(df.predict.prob[29])  # replace no. of column
+
+
+### ROCR prediction ############################################################
+
+pred <- prediction(predictions = df.predict.prob[, 29],  # replace no. of column
+                   labels = df.observed.class[, 29])     # replace no. of column
 
 
 ### ROCR performance ###########################################################
@@ -90,7 +96,7 @@ perf.tpr.fnr <- performance(pred,"tpr","fpr")  # TruePositiveRate ~ FalsePositiv
 
 ## Extract Area under curve value
 perf_auc <- performance(pred, "auc")  # Area under curve
-perf_auc@y.values[[1]]
+perf_auc@y.values[[1]]  # print AUC value
 
 
 ### Plot #######################################################################

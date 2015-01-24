@@ -44,9 +44,9 @@ setwd("D:/")
 
 ### Set filepaths ##############################################################
 
-path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
+path.csv <- "Dropbox/Code/bifore/src/csv/kili/lvl0400_2015-01-24/"
 path.image <- "Dropbox/Code/bifore/src/images/"
-file.in <- paste0(path.csv,"lvl0410_2014-08-15_25test_kappa.csv")
+file.in <- paste0(path.csv,"lvl0410_kappa.csv")
 
 
 ### Import data ################################################################
@@ -56,29 +56,24 @@ data <- read.csv2(file.in, header = TRUE)
 
 ### Prepare plot ###############################################################
 
-# data<-read.csv2("kappa.csv", header=T)
 ## Subset data
 data.spec <- data[,-c(1,2)]
 
-## Sort data
+## Calculation of mean, standard deviation and range
 mean.kappa <- sort(colMeans(data.spec), decreasing = FALSE)
+sd.kappa <- apply(data.spec, 2, sd)
+min.kappa <- apply(data.spec, 2, min)
+max.kappa <- apply(data.spec, 2, max)
 
-## Extract and sort species names
-names.plot <- vector(mode = "character", length = length(mean.kappa))
-names.split <- strsplit(as.character(names(mean.kappa)), split="[.]")
+## Generating short names; for genera the first two letters to distingusih 
+## genera which start with thesame letter
 
-min.kappa <- vector(mode = "numeric", length = length(mean.kappa)) -> max.kappa
-names(min.kappa) <- names(data.spec) -> names(max.kappa)
-
-for (i in (1: length(mean.kappa))) {
-  min.kappa[i]<-min(data.spec[,i])
-  max.kappa[i]<-max(data.spec[,i])
-}
-
+names.plot <- vector(mode = "character",length = length(mean.kappa))
+names.split <- strsplit(as.character(names(mean.kappa)), split = "[.]")
 
 for (i in (1: length(mean.kappa))) {
-  names.plot[i] <- paste(substr(names.split[[i]][1], 1, 1),
-                         ". ", names.split[[i]][2], sep = "")
+  names.plot[i] <- paste(substr(names.split[[i]][1], 1, 2),
+                   ". ", names.split[[i]][2], sep = "")
 }
 
 ### Plot #######################################################################
@@ -91,16 +86,14 @@ png(paste0(path.image, "lvl0410_meanKappa.png"),
     res = 600)
 
 user <- par(no.readonly = TRUE)
-par(mar = c(4, 12, 1, 1), lwd = 2, las = 1, cex = 0.9)
-
-plot(mean.kappa,
-     1:length(mean.kappa),
+par(mar = c(4, 12, 1, 1), lwd = 2,las = 1, cex = 0.9)
+plot(mean.kappa, 1:length(mean.kappa),
      type = "n",
-     axes = FALSE,
+     axes = F,
      xlab = " Mean Kappa", 
      ylab = "",
      cex.lab = 1.5,
-     xlim = c(min(min.kappa), 
+     xlim = c(min(min.kappa),
               max(max.kappa)))
 
 #lines(min.kappa[names(mean.kappa)],1:length(mean.kappa),col="blue")
@@ -109,8 +102,15 @@ plot(mean.kappa,
 polygon(c(max.kappa[names(mean.kappa)], rev(min.kappa[names(mean.kappa)])),
         c(1:length(mean.kappa), rev(1:length(mean.kappa))),
         col = "grey", border = NA)
+polygon(c(mean.kappa+sd.kappa[names(mean.kappa)], 
+        rev(mean.kappa-sd.kappa[names(mean.kappa)])),
+        c(1:length(mean.kappa), rev(1:length(mean.kappa))),
+        col = "darkgrey", 
+        border = NA)
 
-points(mean.kappa, 1:length(mean.kappa), pch = 21, bg = "blue", cex = 2)
+points(mean.kappa, 1:length(mean.kappa), pch = 21, bg = "black",cex = 2)
+
+abline (v = 0.4, lwd = 1, col = "red")
 
 axis(1,cex.axis = 1.5)
 axis(2,at = 1:length(mean.kappa), labels = names.plot, font = 3)

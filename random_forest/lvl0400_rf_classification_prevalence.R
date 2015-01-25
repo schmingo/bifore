@@ -84,13 +84,14 @@ starttime <- Sys.time()
 ### Set filepaths ##############################################################
 
 path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
-path.testing <- paste0(path.csv, "lvl0400_2015-01-24")
+path.testing <- paste0(path.csv, "lvl0400_2015-01-24/")
 
 file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
 file.out.rf.output <- paste0(path.testing, "lvl0400_rf_all_25test.csv")
 file.out.validation <- paste0(path.testing, "lvl0400_validation_25test.csv")
 file.out.prediction <- paste0(path.testing, "lvl0400_prediction_25test.csv")
 file.out.importance <- paste0(path.testing, "lvl0400_importance_25test.csv")
+file.out.prevalence <- paste0(path.testing, "lvl0400_prevalence.csv")
 file.out.validation.final <- paste0(path.testing, "lvl0400_final_validation_25test.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
@@ -172,6 +173,20 @@ matrix.prevalence[is.na(matrix.prevalence)] <- 0
 
 ## Replace values >=1 with 1
 matrix.prevalence <- ifelse(matrix.prevalence >= 1,1,0)
+
+## Write prevalence into separate csv 
+data.prevalence <- data.frame(matrix.prevalence)
+df.prevalence <- cbind(data.cut.basics[1],
+                       data.cut.basics[2],
+                       data.prevalence)
+
+write.table(df.prevalence,
+            file = file.out.prevalence,
+            quote = FALSE,
+            col.names = TRUE,
+            row.names = FALSE,
+            sep = ";",
+            dec = ",")
 
 ## Replace values "1" with "yes" and "0" with "no"
 matrix.prevalence <- ifelse(matrix.prevalence >= 1,"yes","no")

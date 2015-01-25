@@ -86,13 +86,14 @@ png(paste0(path.image, "lvl0410_meanKappa.png"),
     res = 600)
 
 user <- par(no.readonly = TRUE)
-par(mar = c(4, 12, 1, 1), lwd = 2,las = 1, cex = 0.9)
+par(mar = c(4, 12, 1, 1), lwd = 1,las = 1, cex = .8)
 plot(mean.kappa, 1:length(mean.kappa),
      type = "n",
-     axes = F,
+     axes = T,
+     yaxt="n",
      xlab = " Mean Kappa", 
      ylab = "",
-     cex.lab = 1.5,
+     cex.lab = 1.2,
      xlim = c(min(min.kappa),
               max(max.kappa)))
 
@@ -108,11 +109,11 @@ polygon(c(mean.kappa+sd.kappa[names(mean.kappa)],
         col = "darkgrey", 
         border = NA)
 
-points(mean.kappa, 1:length(mean.kappa), pch = 21, bg = "black",cex = 2)
+points(mean.kappa, 1:length(mean.kappa), pch = 21, bg = "black",cex = 1.7)
 
 abline (v = 0.4, lwd = 1, col = "red")
 
-axis(1,cex.axis = 1.5)
+axis(1,cex.axis = 1)
 axis(2,at = 1:length(mean.kappa), labels = names.plot, font = 3)
 
 par(user)

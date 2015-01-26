@@ -111,7 +111,11 @@ polygon(c(mean.kappa+sd.kappa[names(mean.kappa)],
 
 points(mean.kappa, 1:length(mean.kappa), pch = 21, bg = "black",cex = 1.7)
 
+abline (v = 0.0, lwd = 2, col = "red")
+abline (v = 0.2, lwd = .5, col = "black")
 abline (v = 0.4, lwd = 1, col = "red")
+abline (v = 0.6, lwd = .5, col = "black")
+abline (v = 0.8, lwd = .5, col = "black")
 
 axis(1,cex.axis = 1)
 axis(2,at = 1:length(mean.kappa), labels = names.plot, font = 3)

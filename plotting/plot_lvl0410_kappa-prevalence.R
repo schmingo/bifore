@@ -5,11 +5,11 @@ cat("\014")
 ##
 ##  Plot kappa vs. prevalence
 ##  
-##  Version: 2015-01-21
+##  Version: 2015-02-14
 ##  
 ################################################################################
 ##
-##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##  Copyright (C) 2015 Simon Schlauss (sschlauss@gmail.com)
 ##
 ##
 ##  This file is part of BiFoRe.
@@ -38,17 +38,19 @@ lib <- c("ggplot2")
 lapply(lib, function(...) library(..., character.only = TRUE))
 
 ## Set working directory
-# setwd("/home/schmingo/Daten/")
+# setwd("/home/sschlauss/")
 setwd("D:/")
 
 
 ### Set filepaths ##############################################################
 
-path.csv <- "Dropbox/Code/bifore/src/csv/kili/lvl0400_2015-01-24/"
-path.image <- "Dropbox/Code/bifore/src/images/"
-file.400.in <- paste0(path.csv, "lvl0400_prevalence.csv")
-file.410.in <- paste0(path.csv,"lvl0410_kappa.csv")
-file.out <- paste0(path.image,"lvl0410_kappa-prevalence.png")
+path.csv    <- "Code/bifore/src/csv/"
+path.fig    <- "Code/bifore/src/figures/"
+path.testing  <- paste0(path.csv, "lvl0400_2015-01-24/")
+
+file.400.in <- paste0(path.testing, "lvl0400_prevalence.csv")
+file.410.in <- paste0(path.testing, "lvl0410_kappa.csv")
+file.out    <- paste0(path.fig, "lvl0410_kappa-prevalence.png")
 
 
 ### Import data ################################################################

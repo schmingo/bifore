@@ -9,7 +9,7 @@ cat("\014")
 ##  
 ################################################################################
 ##
-##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##  Copyright (C) 2015 Simon Schlauss (sschlauss@gmail.com)
 ##
 ##
 ##  This file is part of BiFoRe.
@@ -38,17 +38,19 @@ lib <- c("ggplot2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
+# setwd("/home/sschlauss/")
 setwd("D:/")
 
 
 ### Set filepaths ##############################################################
 
-path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
-path.testing <- paste0(path.csv, "lvl0400_2015-01-24/")
-path.image <- "Dropbox/Code/bifore/src/images/"
+path.csv      <- "Code/bifore/src/csv/"
+path.fig      <- "Code/bifore/src/figures/"
+path.testing  <- paste0(path.csv, "lvl0400_2015-01-24/")
 
-file.in.prevalence <- paste0(path.testing,"lvl0400_prevalence.csv")
-file.out <- paste0(path.image, "lvl0400_prevalence.png")
+
+file.in.prevalence  <- paste0(path.testing, "lvl0400_prevalence.csv")
+file.out            <- paste0(path.fig, "lvl0400_prevalence.png")
 
 
 ### Import data ################################################################

@@ -20,11 +20,11 @@ cat("\014")
 ##     - Specificity
 ##     - DetectionRate
 ##  
-##  Version: 2015-01-24
+##  Version: 2015-02-14
 ##  
 ################################################################################
 ##
-##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##  Copyright (C) 2015 Simon Schlauss (sschlauss@gmail.com)
 ##
 ##
 ##  This file is part of BiFoRe.
@@ -59,7 +59,7 @@ lib <- c("sampling",
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-# setwd("/home/schmingo/Daten/")
+# setwd("/home/sschlauss/")
 setwd("D:/")
 
 ## Set number of CPU cores
@@ -83,15 +83,15 @@ starttime <- Sys.time()
 
 ### Set filepaths ##############################################################
 
-path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
-path.testing <- paste0(path.csv, "lvl0400_2015-01-24/")
+path.csv                  <- "Code/bifore/src/csv/"
+path.testing              <- paste0(path.csv, "lvl0400_2015-01-24/")
 
-file.in.0300 <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
-file.out.rf.output <- paste0(path.testing, "lvl0400_rf_all_25test.csv")
-file.out.validation <- paste0(path.testing, "lvl0400_validation_25test.csv")
-file.out.prediction <- paste0(path.testing, "lvl0400_prediction_25test.csv")
-file.out.importance <- paste0(path.testing, "lvl0400_importance_25test.csv")
-file.out.prevalence <- paste0(path.testing, "lvl0400_prevalence.csv")
+file.in.0300              <- paste0(path.csv,"lvl0300_biodiversity_data.csv")
+file.out.rf.output        <- paste0(path.testing, "lvl0400_rf_all_25test.csv")
+file.out.validation       <- paste0(path.testing, "lvl0400_validation_25test.csv")
+file.out.prediction       <- paste0(path.testing, "lvl0400_prediction_25test.csv")
+file.out.importance       <- paste0(path.testing, "lvl0400_importance_25test.csv")
+file.out.prevalence       <- paste0(path.testing, "lvl0400_prevalence.csv")
 file.out.validation.final <- paste0(path.testing, "lvl0400_final_validation_25test.csv")
 
 if (!file.exists(path.testing)) {dir.create(file.path(path.testing))}
@@ -218,10 +218,10 @@ stratified = function(df, class, size) {
 }
 
 ## Initiate dataframe for all Random Forest runs
-df.rf.output <- data.frame()
-df.rf.validation <- data.frame()
-df.rf.prediction <- data.frame()
-df.rf.importance <- data.frame()
+df.rf.output      <- data.frame()
+df.rf.validation  <- data.frame()
+df.rf.prediction  <- data.frame()
+df.rf.importance  <- data.frame()
 
 
 ## Loop stratified-function 100 times
@@ -244,19 +244,6 @@ for (i in seq(1:rf.runs)) {
   lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
   lst.species
   
-  #   ## Remove species without any observations (just to be sure ;) )
-  #   index <- which(colSums(data.str[, lst.species]) > 0) + 
-  #     grep("coordN", names(data.str))
-  #   
-  #   data.str <- data.frame(data.str[, 1:grep("coordN", names(data.str))], 
-  #                          data.str[, index], 
-  #                          data.str[, grep("greyval_band_1", 
-  #                                          names(data.str))[1]:ncol(data.str)])
-  #   
-  #   ## Update species list
-  #   lst.species <- names(data.str[(which(names(data.str) == "coordN")+1):(which(names(data.str) == "greyval_band_1")-1)])
-  
-  
   ## Create dataframe for Random Forest
   ## (Plot, observation date, MODIS image date, greyvalues & prevalence)
   df.randomForest <- cbind(data.str[, 1:3],
@@ -277,15 +264,14 @@ for (i in seq(1:rf.runs)) {
   df.rf.train <- df.randomForest[index, ]
   df.rf.test <- df.randomForest[-index, ]
   
-  
   ## Subset training dataset
-  df.rf.train.basics <- data.frame(df.rf.train[, 1:3])
-  df.rf.train.predict <- df.rf.train[(which(names(df.rf.train) == "greyval_band_1")):(which(names(df.rf.train) == "greyval_band_36"))]
-  df.rf.train.response <- df.rf.train[(which(names(df.rf.train) == "greyval_band_36")+1):ncol(df.rf.train)]
+  df.rf.train.basics    <- data.frame(df.rf.train[, 1:3])
+  df.rf.train.predict   <- df.rf.train[(which(names(df.rf.train) == "greyval_band_1")):(which(names(df.rf.train) == "greyval_band_36"))]
+  df.rf.train.response  <- df.rf.train[(which(names(df.rf.train) == "greyval_band_36")+1):ncol(df.rf.train)]
   
   ## Subset test dataset
-  df.rf.test.basics <- data.frame(df.rf.test[, 1:3])
-  df.rf.test.predict <- df.rf.test[(which(names(df.rf.test) == "greyval_band_1")):(which(names(df.rf.test) == "greyval_band_36"))]
+  df.rf.test.basics   <- data.frame(df.rf.test[, 1:3])
+  df.rf.test.predict  <- df.rf.test[(which(names(df.rf.test) == "greyval_band_1")):(which(names(df.rf.test) == "greyval_band_36"))]
   df.rf.test.response <- df.rf.test[(which(names(df.rf.test) == "greyval_band_36")+1):ncol(df.rf.test)]
   
   
@@ -303,8 +289,8 @@ for (i in seq(1:rf.runs)) {
     ## Get response variable as factor
     tmp.rf.train.response <- as.factor(df.rf.train.response[, names(df.rf.train.response) %in% c(s)])
     tmp.rf.train.response <- factor(tmp.rf.train.response, levels = c("yes", "no"))
-    tmp.rf.test.response <- as.factor(df.rf.test.response[, names(df.rf.test.response) %in% c(s)])
-    tmp.rf.test.response <- factor(tmp.rf.test.response, levels = c("yes", "no"))
+    tmp.rf.test.response  <- as.factor(df.rf.test.response[, names(df.rf.test.response) %in% c(s)])
+    tmp.rf.test.response  <- factor(tmp.rf.test.response, levels = c("yes", "no"))
     
     
     ### Random Forest function #################################################
@@ -337,7 +323,6 @@ for (i in seq(1:rf.runs)) {
                                                    rownames(df.rf.test.predict)[r])
       }
       
-      
       ## Predict - get class probabilities
       tmp.test.predict.prob <- predict.train(tmp.train.rf, 
                                              newdata = df.rf.test.predict,
@@ -352,12 +337,12 @@ for (i in seq(1:rf.runs)) {
                                                 rownames(df.rf.test.predict)[p])
       }
       
-      
       ## Write response variables of test dataset into a dataframe (ROC curve)
       tmp.observed.classes <- data.frame(tmp.rf.test.response)
       tmp.observed.classes <- data.frame(ifelse(tmp.observed.classes == "yes",
                                                 1,
                                                 0))
+
       ## Set columnnames and rownames for response classes dataframe
       names(tmp.observed.classes) <- s
       for (r in 1:nrow(tmp.observed.classes)) {
@@ -381,32 +366,34 @@ for (i in seq(1:rf.runs)) {
     
     ## Extract Confusion Matrix values
     tmp.Oyes_Pyes <- tmp.confMatrix$table[1]
-    tmp.Oyes_Pno <- tmp.confMatrix$table[2]
-    tmp.Ono_Pyes <- tmp.confMatrix$table[3]
-    tmp.Ono_Pno <- tmp.confMatrix$table[4]
-    tmp.sum_Pyes <- sum(tmp.Ono_Pyes, tmp.Oyes_Pyes)
-    tmp.sum_Pno <- sum(tmp.Ono_Pno, tmp.Oyes_Pno)
-    tmp.sum_Ono <- sum(tmp.Ono_Pno, tmp.Ono_Pyes)
-    tmp.sum_Oyes <- sum(tmp.Oyes_Pno, tmp.Oyes_Pyes)
-    tmp.sum_obs <- sum(tmp.Ono_Pno, 
-                       tmp.Ono_Pyes, 
-                       tmp.Oyes_Pno, 
-                       tmp.Oyes_Pyes)
+    tmp.Oyes_Pno  <- tmp.confMatrix$table[2]
+    tmp.Ono_Pyes  <- tmp.confMatrix$table[3]
+    tmp.Ono_Pno   <- tmp.confMatrix$table[4]
+    tmp.sum_Pyes  <- sum(tmp.Ono_Pyes, tmp.Oyes_Pyes)
+    tmp.sum_Pno   <- sum(tmp.Ono_Pno, tmp.Oyes_Pno)
+    tmp.sum_Ono   <- sum(tmp.Ono_Pno, tmp.Ono_Pyes)
+    tmp.sum_Oyes  <- sum(tmp.Oyes_Pno, tmp.Oyes_Pyes)
+    tmp.sum_obs   <- sum(tmp.Ono_Pno,
+                         tmp.Ono_Pyes,
+                         tmp.Oyes_Pno,
+                         tmp.Oyes_Pyes)
+
     tmp.class.error.no <- tmp.Oyes_Pno/sum(tmp.Ono_Pno, 
                                            tmp.Oyes_Pno)
     tmp.class.error.yes <- tmp.Ono_Pyes/sum(tmp.Oyes_Pyes, 
                                             tmp.Ono_Pyes)
-    tmp.mtry <- tmp.train.rf$bestTune[1,1]
-    tmp.Accuracy <- tmp.confMatrix$overall[1]
-    tmp.Kappa <- tmp.confMatrix$overall[2]
-    tmp.AccuracyLower <- tmp.confMatrix$overall[3]
-    tmp.AccuracyUpper <- tmp.confMatrix$overall[4]
-    tmp.AccuracyNull <- tmp.confMatrix$overall[5]
-    tmp.AccuracyPValue <- tmp.confMatrix$overall[6]
-    tmp.McnemarPValue <- tmp.confMatrix$overall[7]
-    tmp.Sensitivity <- tmp.confMatrix$byClass[1]
-    tmp.Specificity <- tmp.confMatrix$byClass[1]
-    tmp.DetectionRate <- tmp.confMatrix$byClass[6]
+
+    tmp.mtry            <- tmp.train.rf$bestTune[1,1]
+    tmp.Accuracy        <- tmp.confMatrix$overall[1]
+    tmp.Kappa           <- tmp.confMatrix$overall[2]
+    tmp.AccuracyLower   <- tmp.confMatrix$overall[3]
+    tmp.AccuracyUpper   <- tmp.confMatrix$overall[4]
+    tmp.AccuracyNull    <- tmp.confMatrix$overall[5]
+    tmp.AccuracyPValue  <- tmp.confMatrix$overall[6]
+    tmp.McnemarPValue   <- tmp.confMatrix$overall[7]
+    tmp.Sensitivity     <- tmp.confMatrix$byClass[1]
+    tmp.Specificity     <- tmp.confMatrix$byClass[1]
+    tmp.DetectionRate   <- tmp.confMatrix$byClass[6]
     # tmp.POD <- tmp.Oyes_Pyes/tmp.sum_Pyes
     # tmp.FAR <- tmp.Ono_Pyes/tmp.sum_Pyes
     # tmp.CSI <- tmp.Oyes_Pyes/sum(tmp.Oyes_Pyes, tmp.Oyes_Pno, tmp.Ono_Pyes)
@@ -433,6 +420,7 @@ for (i in seq(1:rf.runs)) {
     
     ## Set colnames (species name)
     names(tmp.df.validation) <- s
+    
     
     ### Variable Importance ####################################################
     

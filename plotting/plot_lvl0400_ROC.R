@@ -9,7 +9,7 @@ cat("\014")
 ##  
 ################################################################################
 ##
-##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##  Copyright (C) 2015 Simon Schlauss (sschlauss@gmail.com)
 ##
 ##
 ##  This file is part of BiFoRe.
@@ -38,17 +38,18 @@ lib <- c("ROCR")
 lapply(lib, function(...) library(..., character.only = TRUE))
 
 ## Set working directory
-# setwd("/home/schmingo/Daten/")
+# setwd("/home/sschlauss/")
 setwd("D:/")
 
 
 ### Set filepaths ##############################################################
 
-path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
-path.testing <- paste0(path.csv, "lvl0400_2015-01-24/")
-path.image <- paste0("Dropbox/Code/bifore/src/images/")
-file.in.prediction <- paste0(path.testing,"lvl0400_prediction_25test.csv")
+path.csv 		<- "Code/bifore/src/csv/"
+path.fig 		<- "Code/bifore/src/figures/"
+path.testing 	<- paste0(path.csv, "lvl0400_2015-01-24/")
 
+file.in.prediction <- paste0(path.testing, "lvl0400_prediction_25test.csv")
+file.out 		   <- paste0(path.fig "lvl0400_ROC_tpr-fpr.png")
 
 
 ### Import data ################################################################
@@ -102,7 +103,7 @@ perf_auc@y.values[[1]]  # print AUC value
 ### Plot #######################################################################
 
 ## Define output image | open image port
-# png(paste0(path.image, "lvl0400_ROC_tpr-fpr.png"), 
+# png(file.out, 
 #     width = 1024 * 6, 
 #     height = 748 * 6, 
 #     units = "px", 

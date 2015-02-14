@@ -3,20 +3,20 @@ cat("\014")
 ##  
 ##  BiFoRe Scripts
 ##    
-## Prepare biodiversity table 
-## 
-## - Replace 0-values with NA
-## - Remove observations before MODIS launch date
-## - Remove observations without coordinates
-## - Remove species with less than 10 observations in different plots
-## - Calculate number of species
-## - Add LatLong Coordinates
+##  Prepare biodiversity table 
 ##  
-##  Version: 2014-06-20
+##  - Replace 0-values with NA
+##  - Remove observations before MODIS launch date
+##  - Remove observations without coordinates
+##  - Remove species with less than 10 observations in different plots
+##  - Calculate number of species
+##  - Add LatLong Coordinates
+##  
+##  Version: 2015-02-14
 ##  
 ################################################################################
 ##
-##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##  Copyright (C) 2015 Simon Schlauss (sschlauss@gmail.com)
 ##
 ##
 ##  This file is part of BiFoRe.
@@ -45,17 +45,18 @@ lapply(lib, function(...) require(..., character.only = TRUE))
 
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Code/bifore/src/")
-# setwd("D:/Dropbox/Code/bifore/src/")
+setwd("/home/sschlauss/")
 
 ## Set filepaths
-file.hemp.csv <- "csv/kili/abundance_matrix_hemp.csv"
-file.data.out <- "csv/kili/lvl0050_biodiversity_data.csv"
+path.csv  <- "Code/bifore/src/csv/"
+
+file.in   <- paste0(path.csv, "abundance_matrix_hemp.csv")
+file.out  <- paste0(path.csv, "lvl0050_biodiversity_data.csv")
 
 
 ### Read data ##################################################################
 
-data <- read.csv2(file.hemp.csv, 
+data <- read.csv2(file.in, 
                   header = TRUE, 
                   sep = ";",
                   dec = ".",
@@ -83,7 +84,7 @@ data[, 9:ncol(data)] <- data.species
 ## Note: MODIS TERRA launch: 1999-12-18
 ## MODIS AQUA launch: 2002-05-04
 
-modis.date <- as.Date("2002-07-03")
+modis.date <- as.Date("2002-07-03") # first available MYD02 data
 data <- subset(data, date > modis.date)
 
 
@@ -113,8 +114,8 @@ colnames(data)[9] <- "nr.of.species"
 #       data=data,
 #       geom="jitter",
 #       main=colnames(data[9]),
-#       xlab="Prävalenz",
-#       ylab="Zeit")
+#       xlab="Prevalence",
+#       ylab="Time")
 
 
 ### Transform UTM to LatLong coordinates #######################################
@@ -164,7 +165,7 @@ data0 <- data[, c(1:11, index.species0)]
 
 ### Write new csv ##############################################################
 
-write.table(data0, file = file.data.out, 
+write.table(data0, file = file.out, 
             dec = ",", 
             quote = FALSE, 
             col.names = TRUE, 

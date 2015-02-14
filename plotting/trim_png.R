@@ -38,7 +38,7 @@ lib <- c("ggplot2", "reshape2")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-# setwd("/home/schmingo/Dropbox/Code/bifore/src/")
+# setwd("/home/sschlauss/Dropbox/Code/bifore/src/")
 setwd("D:/Dropbox/Code/bifore/src/")
 
 ## Set output filepath

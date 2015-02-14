@@ -5,11 +5,11 @@ cat("\014")
 ##
 ##  Extraction of several valiadation parameters of lvl0400 data
 ##  
-##  Version: 2014-08-12
+##  Version: 2015-02-14
 ##  
 ################################################################################
 ##
-##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##  Copyright (C) 2015 Simon Schlauss (sschlauss@gmail.com)
 ##
 ##
 ##  This file is part of BiFoRe.
@@ -38,18 +38,18 @@ lib <- c()
 lapply(lib, function(...) library(..., character.only = TRUE))
 
 ## Set working directory
-# setwd("/home/schmingo/Daten/")
+# setwd("/home/sschlauss/")
 setwd("D:/")
 
 
 ### Set filepaths ##############################################################
 
-path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
+path.csv <- "Code/bifore/src/csv/"
 path.testing <- paste0(path.csv, "lvl0400_2015-01-24/")
-file.in.validation <- paste0(path.testing,"lvl0400_validation_25test.csv")
 
-file.out.accuracy <- paste0(path.testing, "lvl0410_accuracy.csv")
-file.out.kappa <- paste0(path.testing, "lvl0410_kappa.csv")
+file.in.validation  <- paste0(path.testing,"lvl0400_validation_25test.csv")
+file.out.accuracy   <- paste0(path.testing, "lvl0410_accuracy.csv")
+file.out.kappa      <- paste0(path.testing, "lvl0410_kappa.csv")
 
 
 

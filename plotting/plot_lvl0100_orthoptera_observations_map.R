@@ -5,11 +5,11 @@ cat("\014")
 ##
 ##  Plot Orthoptera observations at Mt. Kilimanjaro
 ##  
-##  Version: 2014-03-16
+##  Version: 2015-02-14
 ##  
 ################################################################################
 ##
-##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##  Copyright (C) 2015 Simon Schlauss (sschlauss@gmail.com)
 ##
 ##
 ##  This file is part of BiFoRe.
@@ -38,15 +38,23 @@ lib <- c("ggplot2", "ggmap", "RJSONIO")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-# setwd("/home/schmingo/Dropbox/Code/bifore/src/")
-setwd("D:/Dropbox/Code/bifore/src/")
+# setwd("/home/sschlauss/")
+setwd("D:/")
 
 
-################################################################################
+### Set filepaths ##############################################################
+
+path.csv <- "Code/bifore/src/csv/"
+path.fig <- "Code/bifore/src/figures/"
+
+file.in       <- paste0(path.csv, "lvl0100_biodiversity_data.csv")
+file.out.all  <- paste0(path.fig, "lvl0100_map_orthoptera_observations.png")
+file.out.year <- paste0(path.fig, "lvl0100_map_orthoptera_observations_year.png")
+
+
 ### Import data ################################################################
-################################################################################
 
-data.raw <- read.csv2("csv/kili/lvl0100_biodiversity_data.csv",
+data.raw <- read.csv2(file.in,
                      dec = ",",
                      header = TRUE, 
                      stringsAsFactors = TRUE,
@@ -58,9 +66,7 @@ data.raw$date_observation <- as.Date(data.raw$date_observation, format="%Y-%j")
 data.sp <- data.raw
 
 
-################################################################################
 ### Subsetting #################################################################
-################################################################################
 
 data.observations <- data.raw[,1:13]
 
@@ -68,12 +74,10 @@ data.observations <- data.raw[,1:13]
 data.observations$year <- as.numeric(format(data.observations$date_observation, "%Y"))
 
 
-################################################################################
 ### Plot all orthoptera observations ###########################################
-################################################################################
 
 ## Define output image | open image port
-png("images/lvl0100_map_orthoptera_observations.png", 
+png(file.out.all, 
     width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 
@@ -116,12 +120,10 @@ kilimap + orthoptera.obs1 + colourscale + labeling.plot1 + style.plot1 + theme_b
 graphics.off()
 
 
-################################################################################
 ### Plot Orthoptera Observations per year ######################################
-################################################################################
 
 ## Define output image | open image port
-png("images/lvl0100_map_orthoptera_observations_year.png", 
+png(file.out.year, 
     width = 1024 * 6, 
     height = 748 * 6, 
     units = "px", 

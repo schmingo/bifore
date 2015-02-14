@@ -5,11 +5,11 @@ cat("\014")
 ##  different setup parameters
 ##    eg.: Different training data set sizes
 ##  
-##  Version: 2014-08-18
+##  Version: 2015-02-14
 ##  
 ################################################################################
 ##
-##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##  Copyright (C) 2015 Simon Schlauss (sschlauss@gmail.com)
 ##
 ##
 ##  This file is part of BiFoRe.
@@ -38,27 +38,27 @@ lib <- c("reshape", "ggplot2", "reshape2")
 lapply(lib, function(...) library(..., character.only = TRUE))
 
 ## Set working directory
-# setwd("/home/schmingo/Daten/")
+# setwd("/home/sschlauss/")
 setwd("D:/")
 
 
 ### Set filepaths ##############################################################
 
-path.csv <- "Dropbox/Code/bifore/src/csv/kili/"
-path.img <- "Dropbox/Code/bifore/src/images/"
+path.csv <- "Dropbox/Code/bifore/src/csv/"
+path.fig <- "Dropbox/Code/bifore/src/figures/"
 
 file.out.comparison <- paste0(path.csv, "lvl0420_compare_validations.csv")
 
-image.out.hist.mean.kappa <- paste0(path.img, 
+image.out.hist.mean.kappa <- paste0(path.fig, 
                                     "lvl0420_histogram-mean-Kappa.png")
 
-image.out.hist.low.variance <- paste0(path.img, 
+image.out.hist.low.variance <- paste0(path.fig, 
                                       "lvl0420_histogram-lowest-variance-Kappa.png")
 
-image.out.line.mean.kappa <- paste0(path.img, 
+image.out.line.mean.kappa <- paste0(path.fig, 
                                     "lvl0420_lineplot-mean-Kappa.png")
 
-image.out.line.variance.kappa <- paste0(path.img, 
+image.out.line.variance.kappa <- paste0(path.fig, 
                                         "lvl0420_lineplot-variance-Kappa.png")
 
 
@@ -129,7 +129,6 @@ for(i in 1:length(files)) {
 df.mean <- df.Parameter[grep("_mean", rownames(df.Parameter)), ]
 df.variance <- df.Parameter[grep("_variance", rownames(df.Parameter)), ]
 
-
 ## Get best RandomForest validation name in a single row  (maximal mean)
 df.mean.max <- data.frame(t(apply(df.mean[1:ncol(df.mean)], 
                                   2, 
@@ -140,7 +139,6 @@ for(y in 1:ncol(df.mean.max)) {
   df.mean.max[, y] <- rownames(df.mean)[df.mean.max[, y]]
 }
 
-
 ## Get best RandomForest validation name in a single row  (minimum variance)
 df.variance.min <- data.frame(t(apply(df.variance[1:ncol(df.variance)], 
                                       2, 
@@ -150,8 +148,6 @@ rownames(df.variance.min)[1] <- "lowest_variance"
 for(k in 1:ncol(df.variance.min)) {
   df.variance.min[, k] <- rownames(df.variance)[df.variance.min[, k]]
 }
-
-
 
 
 ### Combine mean and variance tables ###########################################
@@ -298,7 +294,7 @@ plot.line.variance <- ggplot(data = df.variance.melt,
                                    size = 11),
         plot.title = element_text(lineheight = .8, 
                                   size = 20),
-        legend.title=element_blank())
+        legend.title = element_blank())
 
 
 png(image.out.line.variance.kappa, 

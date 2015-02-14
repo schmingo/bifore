@@ -3,13 +3,13 @@ cat("\014")
 ##  
 ##  BiFoRe Scripts
 ##    
-## Compare downloaded MYD02 with nocloud dates (.csv)
+##  Compare downloaded MYD02 with nocloud dates (.csv)
 ## 
-##  Version: 2014-06-20
+##  Version: 2015-02-14
 ##  
 ################################################################################
 ##
-##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##  Copyright (C) 2015 Simon Schlauss (sschlauss@gmail.com)
 ##
 ##
 ##  This file is part of BiFoRe.
@@ -36,7 +36,7 @@ lib <- c("foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Code/bifore/src/")
+setwd("/home/sschlauss/")
 
 ## Detect available CPU cores
 ncores <- detectCores()
@@ -44,10 +44,13 @@ ncores <- detectCores()
 
 ### Set filepaths ##############################################################
 
-path.biodiversity.csv <- "csv/kili/lvl0100_biodiversity_data.csv"
-path.myd02 <- "/home/schmingo/Daten/Code/bifore_src/myd02/"
-path.myd03 <- "/home/schmingo/Daten/Code/bifore_src/myd03-35_hdf_daytime/"
-path.myd02_03 <- "/home/schmingo/Daten/Code/bifore_src/myd02-03_hdf/"
+path.csv  <- "Code/bifore/src/csv/"
+path.sat  <- "Code/bifore/src/sat/"
+
+path.biodiversity.csv <- paste0(path.csv, "lvl0100_biodiversity_data.csv")
+path.myd02            <- paste0(path.sat, "myd02/")
+path.myd03            <- paste0(path.sat, "myd03-35_hdf_daytime/")
+path.myd02_03         <- paste0(path.sat, "myd02-03_hdf/")
 
 ## Create folders
 if (!file.exists(path.myd02_03)) {dir.create(file.path(path.myd02_03))}

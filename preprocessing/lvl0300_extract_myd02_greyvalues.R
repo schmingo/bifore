@@ -5,11 +5,11 @@ cat("\014")
 ##    
 ##  Extract greyvalues from MODIS .geotiff images for each observation (lvl0100).
 ##  
-##  Version: 2014-08-08
+##  Version: 2015-02-14
 ##  
 ################################################################################
 ##
-##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##  Copyright (C) 2015 Simon Schlauss (sschlauss@gmail.com)
 ##
 ##
 ##  This file is part of BiFoRe.
@@ -32,28 +32,31 @@ cat("\014")
 ## Clear workspace
 rm(list = ls(all = TRUE))
 
-
 ## Required libraries
 lib <- c("rgdal", "doParallel", "raster", "matrixStats", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/")
+setwd("/home/sschlauss/")
 
 ncores <- detectCores()
 
 
 ### Set filepaths ##############################################################
 
-path.hdf <- "Daten/Code/bifore_src/myd02-03_hdf/"
-path.tif <- "Daten/Code/bifore_src/myd02_tif/"
-path.tif.na <- "Daten/Code/bifore_src/myd02_tif_na/"
-path.tif.calc <- "Daten/Code/bifore_src/myd02_tif_calc/"
-path.biodiversity.csv <- "Dropbox/Code/bifore/src/csv/kili/lvl0100_biodiversity_data.csv"
-path.biodiversity.csv.out <- "Dropbox/Code/bifore/src/csv/kili/lvl0300_biodiversity_data.csv"
+path.csv      <- "Code/bifore/src/csv/"
+path.sat      <- "Code/bifore/src/sat/"
+path.modules  <- "Code/bifore/preprocessing/modules/"
+
+path.hdf                  <- paste0(path.sat, "myd02-03_hdf/")
+path.tif                  <- paste0(path.sat, "myd02_tif/")
+path.tif.na               <- paste0(path.sat, "myd02_tif_na/")
+path.tif.calc             <- paste0(path.sat, "myd02_tif_calc/")
+path.biodiversity.csv     <- paste0(path.csv, "lvl0100_biodiversity_data.csv")
+path.biodiversity.csv.out <- paste0(path.csv, "lvl0300_biodiversity_data.csv")
 
 ## Source modules
-source("Code/bifore/preprocessing/modules/lvl0320_hdfExtractScales.R")
+source(paste0(path.csv, "lvl0320_hdfExtractScales.R"))
 
 ## Create folders
 if (!file.exists(path.tif)) {dir.create(file.path(path.tif))}

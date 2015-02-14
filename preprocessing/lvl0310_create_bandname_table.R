@@ -5,11 +5,11 @@ cat("\014")
 ##    
 ##  Creates a table with MODIS bandnames.
 ##  
-##  Version: 2014-03-03
+##  Version: 2015-02-14
 ##  
 ################################################################################
 ##
-##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##  Copyright (C) 2015 Simon Schlauss (sschlauss@gmail.com)
 ##
 ##
 ##  This file is part of BiFoRe.
@@ -29,23 +29,20 @@ cat("\014")
 ##  
 ################################################################################
 
-
 ## Clear workspace
 rm(list = ls(all = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/Dropbox/Code/bifore/src/")
-# setwd("D:/Dropbox/Code/bifore/src/")
+setwd("/home/sschlauss/")
 
 ## Set filepath
-path.bandnames.csv <- "csv/kili/bandnames.csv"
+path.csv  <- "Code/bifore/src/csv/"
+
+file.out  <- paste0(path.csv, "bandnames.csv")
 
 
-################################################################################
 ### Create bandname sequences ##################################################
-################################################################################
 
-################################################################################
 ## "raw bandno."
 
 number <- c()
@@ -58,9 +55,7 @@ number[13:16] <- c("13.1",
 for (i in seq(15:36)) number[i + 16] <- i + 14
 
 
-################################################################################
 ## "band_"
-
 bands <- c()
 for (i in seq(1:9)) bands[i] <- paste0("band_0", i)
 for (i in seq(10:12)) bands[i + 9] <- paste0("band_", i + 9)
@@ -71,9 +66,7 @@ bands[13:16] <- c("band_13.1",
 for(i in seq(15:36)) bands[i+16] <- paste0("band_", i+14)
 
 
-################################################################################
 ## "greyvalue_band_"
-
 greyval_bands <- c()
 for (i in seq(1:9)) greyval_bands[i] <- paste0("greyvalue_band_0", i)
 for (i in seq(10:12)) greyval_bands[i + 9] <- paste0("greyvalue_band_", i + 9)
@@ -84,35 +77,7 @@ greyval_bands[13:16] <- c("greyvalue_band_13.1",
 for(i in seq(15:36)) greyval_bands[i + 16] <- paste0("greyvalue_band_", i + 14)
 
 
-################################################################################
-## "derivate_band_"
-
-diff_bands <- c()
-for (i in seq(1:9)) diff_bands[i] <- paste0("derivate_band_", i)
-for (i in seq(10:12)) diff_bands[i + 9] <- paste0("derivate_band_", i + 9)
-diff_bands[13:16] <- c("derivate_band_13.1",
-                       "derivate_band_13.2",
-                       "derivate_band_14.1",
-                       "derivate_band_14.2")
-for (i in seq(15:36)) diff_bands[i + 16] <- paste0("derivate_band_", i + 14)
-
-
-################################################################################
-## "sd_band_"
-
-sd_bands <- c()
-for (i in seq(1:9)) sd_bands[i] <- paste0("sd_band_", i)
-for (i in seq(10:12)) sd_bands[i + 9] <- paste0("sd_band_", i + 9)
-sd_bands[13:16] <- c("sd_band_13.1",
-                     "sd_band_13.2",
-                     "sd_band_14.1",
-                     "sd_band_14.2")
-for (i in seq(15:36)) sd_bands[i + 16] <- paste0("sd_band_", i + 14)
-
-
-################################################################################
 ### Combine bandname sequences in a dataframe ##################################
-################################################################################
 
 df.bandnames <- cbind.data.frame(number, 
                                  bands, 
@@ -121,12 +86,10 @@ df.bandnames <- cbind.data.frame(number,
                                  sd_bands)
 
 
-################################################################################
 ### Write .csv #################################################################
-################################################################################
 
 write.table(df.bandnames,
-            file = path.bandnames.csv,
+            file = file.out,
             quote = FALSE,
             col.names = TRUE,
             row.names = FALSE,

@@ -5,11 +5,11 @@ cat("\014")
 ##    
 ##  Convert MYD02 .hdf files to .geotiff
 ##  
-##  Version: 2014-06-20
+##  Version: 2015-02-14
 ##  
 ################################################################################
 ##
-##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##  Copyright (C) 2015 Simon Schlauss (sschlauss@gmail.com)
 ##
 ##
 ##  This file is part of BiFoRe.
@@ -37,25 +37,26 @@ lib <- c("modiscloud", "devtools", "foreach")
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/")
+setwd("/home/sschlauss/")
 
 
 ### Set filepaths ##############################################################
 
-path.hdf.in <- "Daten/Code/bifore_src/myd02-03_hdf/"
-tifsdir <- "Daten/Code/bifore_src/myd02_tif/"
-mrtpath <- "apps/MRTswath/bin/swath2grid"
+path.hdf.in   <- "Code/bifore/src/sat/myd02-03_hdf/"
+path.tif      <- "Code/bifore/src/sat/myd02_tif/"
+path.modules  <- "Code/bifore/preprocessing/modules/"
+path.mrt      <- "apps/MRTswath/bin/swath2grid"
 
 ## Create folders
 if (!file.exists(path.hdf.in)) {dir.create(file.path(path.hdf.in))}
-if (!file.exists(tifsdir)) {dir.create(file.path(tifsdir))}
+if (!file.exists(path.tif)) {dir.create(file.path(path.tif))}
 
 ## Load required modules
-source("Code/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_1000.R")
-source("Code/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_500.R")
-source("Code/bifore/preprocessing/modules/lvl0210_writeMRTSwathParamFile_250.R")
-source("Code/bifore/preprocessing/modules/lvl0220_runSwath2Grid.R")
-source("Code/bifore/preprocessing/modules/lvl0230_renameSuffix.R")
+source(paste0(path.modules, "lvl0210_writeMRTSwathParamFile_1000.R"))
+source(paste0(path.modules, "lvl0210_writeMRTSwathParamFile_500.R"))
+source(paste0(path.modules, "lvl0210_writeMRTSwathParamFile_250.R"))
+source(paste0(path.modules, "lvl0220_runSwath2Grid.R"))
+source(paste0(path.modules, "lvl0230_renameSuffix.R"))
 
 ## Runtime calculation
 starttime <- Sys.time()
@@ -91,7 +92,7 @@ fls.1km.matching
 ## Write parameterfile for MRTswath tool
 for (i in 1:nrow(fls.1km.matching)) {
   prmfn = writeMRTSwathParamFile_1000(prmfn = "tmpMRTparams.prm", 
-                                      tifsdir = tifsdir, 
+                                      tifsdir = path.tif, 
                                       modfn = fls.1km.matching$mod35_L2_fns[i], 
                                       geoloc_fn = fls.1km.matching$mod03_fns[i], 
                                       ul_lon = ul_lon, 
@@ -100,9 +101,9 @@ for (i in 1:nrow(fls.1km.matching)) {
                                       lr_lat = lr_lat)
   
   ## Convert .hdf to .geotiff using MRTswath tool
-  runSwath2Grid(mrtpath = mrtpath, 
+  runSwath2Grid(mrtpath = path.mrt, 
                 prmfn = "tmpMRTparams.prm", 
-                tifsdir = tifsdir, 
+                tifsdir = path.tif, 
                 modfn = fls.1km.matching$mod35_L2_fns[i], 
                 geoloc_fn = fls.1km.matching$mod03_fns[i], 
                 ul_lon = ul_lon, 
@@ -125,7 +126,7 @@ fls.hkm.matching
 ## Write parameterfile for MRTswath tool
 for (i in 1:nrow(fls.hkm.matching)) {
   prmfn = writeMRTSwathParamFile_500(prmfn = "tmpMRTparams.prm", 
-                                     tifsdir = tifsdir, 
+                                     tifsdir = path.tif, 
                                      modfn = fls.hkm.matching$mod35_L2_fns[i], 
                                      geoloc_fn = fls.hkm.matching$mod03_fns[i], 
                                      ul_lon = ul_lon, 
@@ -134,9 +135,9 @@ for (i in 1:nrow(fls.hkm.matching)) {
                                      lr_lat = lr_lat)
   
   ## Convert .hdf to .geotiff using MRTswath tool
-  runSwath2Grid(mrtpath = mrtpath, 
+  runSwath2Grid(mrtpath = path.mrt, 
                 prmfn = "tmpMRTparams.prm", 
-                tifsdir = tifsdir, 
+                tifsdir = path.tif, 
                 modfn = fls.hkm.matching$mod35_L2_fns[i], 
                 geoloc_fn = fls.hkm.matching$mod03_fns[i], 
                 ul_lon = ul_lon, 
@@ -159,7 +160,7 @@ fls.qkm.matching
 ## Write parameterfile for MRTswath tool
 for (i in 1:nrow(fls.qkm.matching)) {
   prmfn = writeMRTSwathParamFile_250(prmfn = "tmpMRTparams.prm", 
-                                     tifsdir = tifsdir, 
+                                     tifsdir = path.tif, 
                                      modfn = fls.qkm.matching$mod35_L2_fns[i], 
                                      geoloc_fn = fls.qkm.matching$mod03_fns[i], 
                                      ul_lon = ul_lon, 
@@ -168,9 +169,9 @@ for (i in 1:nrow(fls.qkm.matching)) {
                                      lr_lat = lr_lat)
   
   ## Convert .hdf to .geotiff using MRTswath tool
-  runSwath2Grid(mrtpath = mrtpath, 
+  runSwath2Grid(mrtpath = path.mrt, 
                 prmfn = "tmpMRTparams.prm", 
-                tifsdir = tifsdir, 
+                tifsdir = path.tif, 
                 modfn = fls.qkm.matching$mod35_L2_fns[i], 
                 geoloc_fn = fls.qkm.matching$mod03_fns[i], 
                 ul_lon = ul_lon, 
@@ -180,16 +181,9 @@ for (i in 1:nrow(fls.qkm.matching)) {
 }
 
 
-### Remove unnecessary tifs ####################################################
-
-# do.call(file.remove,list(list.files(tifsdir, pattern="Aggr", full.names=TRUE)))
-# do.call(file.remove,list(list.files(tifsdir, pattern="Uncert", full.names=TRUE)))
-# do.call(file.remove,list(list.files(tifsdir, pattern="Band26", full.names=TRUE)))
-
-
 ### Rename .tif to proper filename e.g.: *_B20.tif #############################
 
-lst.tif <- list.files(tifsdir, pattern=".tif", full.names=TRUE)
+lst.tif <- list.files(path.tif, pattern=".tif", full.names=TRUE)
 
 suffixes.in <- c("1KM_Emissive_b0.tif", 
                  "1KM_Emissive_b1.tif",
@@ -274,7 +268,7 @@ foreach(i = suffixes.in, j = suffixes.out) %do% {
   renameSuffix(files = lst.tif, 
                suffix.in = i, 
                suffix.out = j, 
-               tifsdir)
+               path.tif)
 }
 
 

@@ -8,11 +8,11 @@ cat("\014")
 ##  Ref.: - http://modis-atmos.gsfc.nasa.gov/_docs/CMUSERSGUIDE.pdf
 ##        - MYD35 .hdf metadata
 ##  
-##  Version: 2014-06-20
+##  Version: 2015-02-14
 ##  
 ################################################################################
 ##
-##  Copyright (C) 2014 Simon Schlauss (sschlauss@gmail.com)
+##  Copyright (C) 2015 Simon Schlauss (sschlauss@gmail.com)
 ##
 ##
 ##  This file is part of BiFoRe.
@@ -47,7 +47,7 @@ lib <- c("modiscloud",
 lapply(lib, function(...) require(..., character.only = TRUE))
 
 ## Set working directory
-setwd("/home/schmingo/")
+setwd("/home/sschlauss/")
 
 ## Detect available CPU cores
 ncores <- detectCores()
@@ -57,14 +57,18 @@ ncores <- detectCores()
 
 ## To preprocess MYD35_L2 and MYD03 files; both must be in the same directory.
 
-path.biodiversity.csv <- "Dropbox/Code/bifore/src/csv/kili/lvl0050_biodiversity_data.csv"
-path.nocloud.csv <- "Dropbox/Code/bifore/src/csv/kili/lvl0100_biodiversity_data.csv"
-path.hdf.in <- "Daten/Code/bifore_src/myd03-35_hdf/"
-path.hdf.sub <- "Daten/Code/bifore_src/myd03-35_hdf_daytime/"
-path.hdf.myd03 <- "Daten/Code/bifore_src/myd03/"
-path.hdf.myd35 <- "Daten/Code/bifore_src/myd35/"
-path.tif.cloudmask <- "Daten/Code/bifore_src/myd_cloudmask_tif_daytime/"
-mrtpath <- "/home/schmingo/apps/MRTswath/bin/swath2grid"
+path.csv  <- "Code/bifore/src/csv/"
+path.sat  <- "Code/bifore/src/sat/"
+path.mrt  <- "apps/MRTswath/bin/swath2grid"
+
+path.biodiversity.csv <- paste0(path.csv, "lvl0050_biodiversity_data.csv")
+path.nocloud.csv      <- paste0(path.csv, "lvl0100_biodiversity_data.csv")
+path.hdf.in           <- paste0(path.sat, "myd03-35_hdf/")
+path.hdf.sub          <- paste0(path.sat, "myd03-35_hdf_daytime/")
+path.hdf.myd03        <- paste0(path.sat, "myd03/")
+path.hdf.myd35        <- paste0(path.sat, "myd35/")
+path.tif.cloudmask    <- paste0(path.sat, "myd_cloudmask_tif_daytime/")
+
 
 ## Load required modules
 source("Code/bifore/preprocessing/modules/lvl0110_writeMRTSwathParamFile_cloudcheck.R")
@@ -192,7 +196,7 @@ for(i in 1:nrow(fls.matching)) {
                                        lr_lon = lr_lon, 
                                        lr_lat = lr_lat)
   
-  runSwath2Grid(mrtpath = mrtpath, 
+  runSwath2Grid(mrtpath = path.mrt, 
                 prmfn = "tmpMRTparams.prm", 
                 tifsdir = tifsdir, 
                 modfn = ffls.matching$mod35_L2_fns[i], 

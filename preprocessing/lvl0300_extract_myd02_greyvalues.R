@@ -56,7 +56,7 @@ path.biodiversity.csv     <- paste0(path.csv, "lvl0100_biodiversity_data.csv")
 path.biodiversity.csv.out <- paste0(path.csv, "lvl0300_biodiversity_data.csv")
 
 ## Source modules
-source(paste0(path.csv, "lvl0320_hdfExtractScales.R"))
+source(paste0(path.modules, "lvl0320_hdfExtractScales.R"))
 
 ## Create folders
 if (!file.exists(path.tif)) {dir.create(file.path(path.tif))}

@@ -63,7 +63,7 @@ bands[13:16] <- c("band_13.1",
                   "band_13.2",
                   "band_14.1",
                   "band_14.2")
-for(i in seq(15:36)) bands[i+16] <- paste0("band_", i+14)
+for(i in seq(15:36)) bands[i + 16] <- paste0("band_", i + 14)
 
 
 ## "greyvalue_band_"
@@ -81,9 +81,14 @@ for(i in seq(15:36)) greyval_bands[i + 16] <- paste0("greyvalue_band_", i + 14)
 
 df.bandnames <- cbind.data.frame(number, 
                                  bands, 
-                                 greyval_bands, 
-                                 diff_bands, 
-                                 sd_bands)
+                                 greyval_bands)
+
+
+# df.bandnames <- cbind.data.frame(number, 
+#                                  bands, 
+#                                  greyval_bands, 
+#                                  diff_bands, 
+#                                  sd_bands)
 
 
 ### Write .csv #################################################################

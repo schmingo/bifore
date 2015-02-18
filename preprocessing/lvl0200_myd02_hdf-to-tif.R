@@ -45,7 +45,7 @@ setwd("/home/sschlauss/")
 path.hdf.in   <- "Code/bifore/src/sat/myd02-03_hdf/"
 path.tif      <- "Code/bifore/src/sat/myd02_tif/"
 path.modules  <- "Code/bifore/preprocessing/modules/"
-path.mrt      <- "apps/MRTswath/bin/swath2grid"
+path.mrt      <- "apps/MRTSwath/bin/swath2grid"
 
 ## Create folders
 if (!file.exists(path.hdf.in)) {dir.create(file.path(path.hdf.in))}

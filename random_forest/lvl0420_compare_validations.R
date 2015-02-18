@@ -44,8 +44,8 @@ setwd("D:/")
 
 ### Set filepaths ##############################################################
 
-path.csv <- "Dropbox/Code/bifore/src/csv/"
-path.fig <- "Dropbox/Code/bifore/src/figures/"
+path.csv <- "Code/bifore/src/csv/"
+path.fig <- "Code/bifore/src/figures/"
 
 file.out.comparison <- paste0(path.csv, "lvl0420_compare_validations.csv")
 
@@ -60,6 +60,8 @@ image.out.line.mean.kappa <- paste0(path.fig,
 
 image.out.line.variance.kappa <- paste0(path.fig, 
                                         "lvl0420_lineplot-variance-Kappa.png")
+
+if (!file.exists(path.fig)) {dir.create(file.path(path.fig))}
 
 
 ### Import data ################################################################

@@ -52,6 +52,7 @@ file.400.in <- paste0(path.testing, "lvl0400_prevalence.csv")
 file.410.in <- paste0(path.testing, "lvl0410_kappa.csv")
 file.out    <- paste0(path.fig, "lvl0410_kappa-prevalence.png")
 
+if (!file.exists(path.fig)) {dir.create(file.path(path.fig))}
 
 ### Import data ################################################################
 

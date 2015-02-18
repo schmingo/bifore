@@ -50,6 +50,7 @@ path.fig      <- "Code/bifore/src/figures/"
 file.in   <- paste0(path.csv, "lvl0100_biodiversity_data.csv")
 file.out  <- paste0(path.fig, "lvl0100_diff_days_no-cloud.png")
 
+if (!file.exists(path.fig)) {dir.create(file.path(path.fig))}
 
 ### Import dataset #############################################################
 

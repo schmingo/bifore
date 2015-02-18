@@ -51,6 +51,8 @@ file.in       <- paste0(path.csv, "lvl0100_biodiversity_data.csv")
 file.out.all  <- paste0(path.fig, "lvl0100_map_orthoptera_observations.png")
 file.out.year <- paste0(path.fig, "lvl0100_map_orthoptera_observations_year.png")
 
+if (!file.exists(path.fig)) {dir.create(file.path(path.fig))}
+
 
 ### Import data ################################################################
 

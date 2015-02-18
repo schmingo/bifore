@@ -49,8 +49,9 @@ path.fig 		<- "Code/bifore/src/figures/"
 path.testing 	<- paste0(path.csv, "lvl0400_2015-01-24/")
 
 file.in.prediction <- paste0(path.testing, "lvl0400_prediction_25test.csv")
-file.out 		   <- paste0(path.fig "lvl0400_ROC_tpr-fpr.png")
+file.out 		   <- paste0(path.fig, "lvl0400_ROC_tpr-fpr.png")
 
+if (!file.exists(path.fig)) {dir.create(file.path(path.fig))}
 
 ### Import data ################################################################
 

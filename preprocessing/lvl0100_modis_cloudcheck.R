@@ -59,7 +59,7 @@ ncores <- detectCores()
 
 path.csv  <- "Code/bifore/src/csv/"
 path.sat  <- "Code/bifore/src/sat/"
-path.mrt  <- "apps/MRTswath/bin/swath2grid"
+path.mrt  <- "apps/MRTSwath/bin/swath2grid"
 
 path.biodiversity.csv <- paste0(path.csv, "lvl0050_biodiversity_data.csv")
 path.nocloud.csv      <- paste0(path.csv, "lvl0100_biodiversity_data.csv")
@@ -198,7 +198,7 @@ for(i in 1:nrow(fls.matching)) {
   
   runSwath2Grid(mrtpath = path.mrt, 
                 prmfn = "tmpMRTparams.prm", 
-                tifsdir = tifsdir, 
+                tifsdir = path.tif.cloudmask, 
                 modfn = ffls.matching$mod35_L2_fns[i], 
                 geoloc_fn = fls.matching$mod03_fns[i], 
                 ul_lon = ul_lon, 

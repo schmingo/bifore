@@ -73,6 +73,7 @@ data.raw <- read.csv2(file.in.importance,
 
 
 
+df.varImp <- data.raw[-which(data.raw$parameters %in% data.raw$parameters[31:60]), ]
 # df.varImp <- rbind(
   
-df.varImp = data.raw[(which(data.raw$parameters == "varImp_band_1")]
+# df.varImp = data.raw[(which(data.raw$parameters == "varImp_band_1")]

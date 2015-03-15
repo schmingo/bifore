@@ -72,8 +72,18 @@ data.raw <- read.csv2(file.in.importance,
                       stringsAsFactors = FALSE)
 
 
+### prepare data ###############################################################
 
+## remove varimp rank from dataset
 df.varImp <- data.raw[-which(data.raw$parameters %in% data.raw$parameters[31:60]), ]
-# df.varImp <- rbind(
-  
-# df.varImp = data.raw[(which(data.raw$parameters == "varImp_band_1")]
+
+
+bands = df.varImp$parameters[1:30] 
+bands
+
+df.varImp1 <- df.varImp[order(df.varImp$parameters),]
+
+id = which(df.varImp$parameters %in% bands[1])
+id
+b <- for(i in id) sum(df.varImp[i,][3:ncol(df.varImp)])/ncol(df.varImp[3:ncol(df.varImp)])
+b

@@ -80,30 +80,32 @@ df.varImp <- data.raw[-which(data.raw$parameters %in% data.raw$parameters[31:60]
 ## reorder dataset
 # df.varImp1 <- df.varImp[order(df.varImp$parameters),]
 
-lst.bands   = unique(df.varImp$parameters)
-lst.species = names(df.varImp[3:ncol(df.varImp)])
-rf.runs     = unique(df.varImp$RandomForest_run)
+lst.parameter = unique(df.varImp$parameters)
+lst.species   = names(df.varImp[3:ncol(df.varImp)])
+rf.runs       = unique(df.varImp$RandomForest_run)
 
-
-df.all <- data.frame()
-tmp.df.spec <- data.frame()
 tmp.vec <- c()
+tmp.df.parameter <- data.frame()
+tmp.df.species <- data.frame()
+df.all <- data.frame()
 
-for(s in seq(1:length(lst.species))) {
+### Loop
+
+for(s in seq(1:length(lst.species))){
+# s=1 #species in lst.species
+
+  for(p in seq(1:length(lst.parameter))) {
+  # p=1 #parameter in lst.bands
   
-    ##
-    for(b in seq(1:length(lst.bands))) {
-      
-        lst.id = which(df.varImp$parameters %in% lst.bands[b])
-        
-        ## 
-        for(i in rf.runs) {
-          tmp <- df.varImp[lst.id[i],s+2]
-          tmp 
-          tmp.vec = c(tmp.vec,tmp)
-        }
-        tmp.vec.mean <- mean(tmp.vec)
-        tmp.df.spec <- rbind(tmp.df.spec,tmp.vec.mean)
+    lst.id = which(df.varImp$parameters %in% lst.parameter[p])
+    lst.id
+    for(i in lst.id) {
+      tmp <- df.varImp[i,s+2]
+      tmp.vec = c(tmp.vec,tmp)
     }
-    df.all <- cbind(df.all,tmp.df.spec)
+    tmp.mean <- mean(tmp.vec)
+    tmp.df.parameter <- rbind(tmp.df.parameter,tmp.mean)
+    names(tmp.df.parameter) <- lst.species[s]
+  }
+  df.all <- cbind(df.all,tmp.df.parameter)
 }

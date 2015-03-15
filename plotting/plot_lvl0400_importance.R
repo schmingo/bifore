@@ -77,13 +77,33 @@ data.raw <- read.csv2(file.in.importance,
 ## remove varimp rank from dataset
 df.varImp <- data.raw[-which(data.raw$parameters %in% data.raw$parameters[31:60]), ]
 
+## reorder dataset
+# df.varImp1 <- df.varImp[order(df.varImp$parameters),]
 
-bands = df.varImp$parameters[1:30] 
-bands
+lst.bands   = unique(df.varImp$parameters)
+lst.species = names(df.varImp[3:ncol(df.varImp)])
+rf.runs     = unique(df.varImp$RandomForest_run)
 
-df.varImp1 <- df.varImp[order(df.varImp$parameters),]
 
-id = which(df.varImp$parameters %in% bands[1])
-id
-b <- for(i in id) sum(df.varImp[i,][3:ncol(df.varImp)])/ncol(df.varImp[3:ncol(df.varImp)])
-b
+df.all <- data.frame()
+tmp.df.spec <- data.frame()
+tmp.vec <- c()
+
+for(s in seq(1:length(lst.species))) {
+  
+    ##
+    for(b in seq(1:length(lst.bands))) {
+      
+        lst.id = which(df.varImp$parameters %in% lst.bands[b])
+        
+        ## 
+        for(i in rf.runs) {
+          tmp <- df.varImp[lst.id[i],s+2]
+          tmp 
+          tmp.vec = c(tmp.vec,tmp)
+        }
+        tmp.vec.mean <- mean(tmp.vec)
+        tmp.df.spec <- rbind(tmp.df.spec,tmp.vec.mean)
+    }
+    df.all <- cbind(df.all,tmp.df.spec)
+}

@@ -48,20 +48,20 @@ cat("\014")
 rm(list = ls(all = TRUE))
 
 ## Required libraries
-lib <- c()
+lib <- c("dplyr")
 
 lapply(lib, function(...) require(..., character.only = TRUE))
 
-## Set working directory
-# setwd("/home/sschlauss/")
-setwd("D:/")
 
 ### Set filepaths ##############################################################
 
-path.csv                  <- "Code/bifore/src/csv/"
-path.testing              <- paste0(path.csv, "lvl0400_2015-01-24/")
+## Set working directory
+setwd("D:/")
 
-file.in.importance        <- paste0(path.testing,"lvl0400_importance_25test.csv")
+path.csv                  <- "Code/bifore/src/csv/lvl0400_2015-01-24/"
+file.in.importance        <- paste0(path.csv,"lvl0400_importance_25test.csv")
+file.out.singlespec.mean  <- paste0(path.csv,"lvl0400_importance_mean_singlespec.csv")
+file.out.allspec.mean     <- paste0(path.csv,"lvl0400_importance_mean_allspec.csv")
 
 
 ### Import data ################################################################
@@ -77,35 +77,52 @@ data.raw <- read.csv2(file.in.importance,
 ## remove varimp rank from dataset
 df.varImp <- data.raw[-which(data.raw$parameters %in% data.raw$parameters[31:60]), ]
 
-## reorder dataset
-# df.varImp1 <- df.varImp[order(df.varImp$parameters),]
-
-lst.parameter = unique(df.varImp$parameters)
-lst.species   = names(df.varImp[3:ncol(df.varImp)])
-rf.runs       = unique(df.varImp$RandomForest_run)
-
-tmp.vec <- c()
-tmp.df.parameter <- data.frame()
-tmp.df.species <- data.frame()
-df.all <- data.frame()
-
-### Loop
-
-for(s in seq(1:length(lst.species))){
-# s=1 #species in lst.species
-
-  for(p in seq(1:length(lst.parameter))) {
-  # p=1 #parameter in lst.bands
-  
-    lst.id = which(df.varImp$parameters %in% lst.parameter[p])
-    lst.id
-    for(i in lst.id) {
-      tmp <- df.varImp[i,s+2]
-      tmp.vec = c(tmp.vec,tmp)
-    }
-    tmp.mean <- mean(tmp.vec)
-    tmp.df.parameter <- rbind(tmp.df.parameter,tmp.mean)
-    names(tmp.df.parameter) <- lst.species[s]
+## Add leading zero to bandnames
+for(i in seq(1:nrow(df.varImp))) {
+  tmp.str <- unlist(strsplit(df.varImp$parameters[i],"_"))
+  if (nchar(tmp.str[3]) < 2) {
+    tmp.str[3] <- paste0("0",tmp.str[3])
   }
-  df.all <- cbind(df.all,tmp.df.parameter)
+  df.varImp$parameters[i] <- paste(tmp.str[1], 
+                                   tmp.str[2], 
+                                   tmp.str[3], 
+                                   sep = "_")
 }
+
+
+## Get mean variable importance (100 RF runs, 30 MODIS bands, 34 species)
+df.varImp %>% 
+  group_by(parameters) %>% 
+  summarise_each(funs(mean), -c(1, 2)) %>%
+  data.frame() -> df.varImp.mean
+
+
+
+
+## Calculate mean variable importance (all species)
+df.varImp.mean.all <- data.frame(cbind(df.varImp.mean[,1],
+                                       rowMeans(df.varImp.mean[2:ncol(df.varImp.mean)])))
+names(df.varImp.mean.all) <- c("Parameter", "Mean_VariableImportance")
+
+### plot data ##################################################################
+
+
+
+
+### write csv ##################################################################
+
+# write.table(df.varImp.mean,
+#             file = file.out.singlespec.mean,
+#             quote = FALSE,
+#             col.names = TRUE,
+#             row.names = FALSE,
+#             sep = ";",
+#             dec = ",")
+# 
+# write.table(df.varImp.mean.all,
+#             file = file.out.allspec.mean,
+#             quote = FALSE,
+#             col.names = TRUE,
+#             row.names = FALSE,
+#             sep = ";",
+#             dec = ",")

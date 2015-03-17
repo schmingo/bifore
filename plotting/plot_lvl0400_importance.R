@@ -57,6 +57,19 @@ file.out.allspec.mean     <- paste0(path.csv,"lvl0400_importance_mean_allspec.cs
 file.out.allspec.rank     <- paste0(path.csv,"lvl0400_importance_rank_allspec.csv")
 
 
+### Optional ###################################################################
+
+## reduce dataset to specific species
+
+# calculate mean VI and rank for all species: 
+lst.species.opt <- c()
+
+# Calculate mean VI and rank for list of species:
+lst.species.opt <- c("Chortoscirtes.pseudomeruensis", 
+                     "Orthochtha.dasycnemis", 
+                     "Parepistaurus.deses")
+
+
 ### Import data ################################################################
 
 data.raw <- read.csv2(file.in.importance,
@@ -132,6 +145,14 @@ for(i in seq(1:nrow(df.varImp))) {
                                    sep = " ")
 }
 
+### Optional: reduce dataset to specific species
+if (length(lst.species.opt) != 0) {
+print("nicht leer")
+df.varImp <- cbind(df.varImp[, 1:2],
+                   df.varImp[, which(names(df.varImp) %in% lst.species.opt)])
+}
+
+
 ## Get mean variable importance (100 RF runs, 30 MODIS bands, 34 species)
 df.varImp %>% 
   group_by(parameters) %>% 
@@ -165,7 +186,7 @@ plot.a <- ggplot(df.varImp.mean.all, aes(x=Parameter, y=Mean_VariableImportance)
   scale_fill_grey() +
   xlab("") +
   ylab("Mean Variable Importance") +
-  scale_y_continuous(breaks = seq(0,30,by = 5)) +
+  scale_y_continuous(breaks = seq(0,100,by = 5)) +
   theme_bw() +
   theme(axis.text.y = element_text(face = 'italic')) + 
   theme(panel.grid.major.x = element_line(colour = "black"))

@@ -65,9 +65,9 @@ file.out.allspec.rank     <- paste0(path.csv,"lvl0400_importance_rank_allspec.cs
 lst.species.opt <- c()
 
 # Calculate mean VI and rank for list of species:
-lst.species.opt <- c("Chortoscirtes.pseudomeruensis", 
-                     "Orthochtha.dasycnemis", 
-                     "Parepistaurus.deses")
+# lst.species.opt <- c("Chortoscirtes.pseudomeruensis", 
+#                      "Orthochtha.dasycnemis", 
+#                      "Parepistaurus.deses")
 
 
 ### Import data ################################################################
